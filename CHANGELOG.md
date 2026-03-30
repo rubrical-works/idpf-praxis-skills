@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-03-30
+
+### Added
+- Incremental minimization via `.last-run` timestamp tracking in `minimize-helper.js`
+- `stamp-run` command writes ISO 8601 timestamp after successful minimization
+- `changed` command lists files modified since last run (mtime comparison)
+- `/minimize-files` Step 1 now detects changed files and skips unchanged ones
+
 ## [0.2.0] - 2026-03-30
 
 ### Added

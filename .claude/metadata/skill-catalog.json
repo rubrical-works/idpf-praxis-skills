@@ -1,7 +1,7 @@
 {
   "catalogVersion": "1.0.0",
   "frameworkVersion": "0.76.0",
-  "generatedAt": "2026-03-30T20:28:24.663Z",
+  "generatedAt": "2026-03-30T22:21:43.273Z",
   "baseUrl": "https://github.com/rubrical-works/idpf-praxis-skills/releases/download",
   "skillCount": 38,
   "skills": [
@@ -22,7 +22,7 @@
         "csharp"
       ],
       "invocationMode": "auto",
-      "checksum": "c65112683f7134db9d061ff5f303e9c3cfa21b93c8d03a4f9dd2c1cfe385a444",
+      "checksum": "e8f929d6fb7e343ab97b0c95514377275cdd858786f6bfdd081864fe37c40ab1",
       "size": 43126,
       "lastUpdated": "2026-03-17",
       "assetFilename": "anti-pattern-analysis.zip",
@@ -42,7 +42,7 @@
         "express"
       ],
       "invocationMode": "auto",
-      "checksum": "95e2817bf136380d46bc76a4e4893b86ec0585eea8f8bf67c74cfa48f97d33f0",
+      "checksum": "c853bd819e41785d7e7507f67169822fad4b6b5ec071a7f91fd4ae8a594748c7",
       "size": 15687,
       "lastUpdated": "2026-03-17",
       "assetFilename": "api-versioning.zip"
@@ -62,7 +62,7 @@
         "svelte"
       ],
       "invocationMode": "auto",
-      "checksum": "ac1ba8fb997877bdd2a8cdd1a3e6f32343df6f7c06665dc4a9b4fe142b274a4a",
+      "checksum": "b7e04f9a4a1e8888485dc4912d316ecfa52975b7556e8be889950f7cfc853d41",
       "size": 14344,
       "lastUpdated": "2026-03-17",
       "assetFilename": "astro-development.zip"
@@ -81,7 +81,7 @@
         "typescript"
       ],
       "invocationMode": "direct-only",
-      "checksum": "f2a37a5c0a56b9467a1c6531fe0a7b8f13906bc3b5fb8d1cb21655876b4acdbd",
+      "checksum": "05acb1b00649fa99b5e93afd537f2ce39712c8d3f59ddad63d501b44b1805220",
       "size": 19963,
       "lastUpdated": "2026-03-17",
       "assetFilename": "bdd-writing.zip"
@@ -100,7 +100,7 @@
         "tdd"
       ],
       "invocationMode": "auto",
-      "checksum": "cc51a02cf752efa29b1939a3b9a939615554110c9a8b8a225068769c9e2ced34",
+      "checksum": "df20a4306a867e000114da3976596674e2067d709bf14072edc54b4f8aabe48f",
       "size": 9551,
       "lastUpdated": "2026-03-17",
       "assetFilename": "beginner-testing.zip"
@@ -119,7 +119,7 @@
         "kubernetes"
       ],
       "invocationMode": "direct-only",
-      "checksum": "56d69a4ac1b1f5b65a380eac57c92265211ef6232b8ea660af225365cd3a2a67",
+      "checksum": "bf36c4f6ef35f4fd7dbc1d34051619b3a31ddc23ecfcda0494b8694d01f32992",
       "size": 19178,
       "lastUpdated": "2026-03-17",
       "assetFilename": "ci-cd-pipeline-design.zip"
@@ -135,7 +135,7 @@
         "typescript"
       ],
       "invocationMode": "manual",
-      "checksum": "5c257387fbf63a8299ed947c1758910ee4af2a8722273826cfd18367ea80b313",
+      "checksum": "7fd2c4b26e23e120a3a36e2c227dfce3686023e82a8c43388b3dc9c2dd39cf6a",
       "size": 8485,
       "lastUpdated": "2026-03-17",
       "assetFilename": "code-path-discovery.zip",
@@ -162,7 +162,7 @@
         "csharp"
       ],
       "invocationMode": "direct-only",
-      "checksum": "ffbc60c2e60ce31518d3e2b43d4dc1dc114d88834293d2a543c18874dc7c785b",
+      "checksum": "8233793fd0bac7b7698af486a046fc7901dc70ed5447902004ca1595f572bf75",
       "size": 15497,
       "lastUpdated": "2026-03-17",
       "assetFilename": "codebase-analysis.zip",
@@ -176,7 +176,7 @@
       "description": "Evaluate command specifications for quality, completeness, and extension point coverage",
       "relevantTechStack": [],
       "invocationMode": "direct-only",
-      "checksum": "f3f178255611fff6bfda8b08969e621e088e3925e5e8faead49a70e7786f5d89",
+      "checksum": "82fa25609968a493c69ce1929463e5da7f92c6d1b8dcedda4f74ac61045505f9",
       "size": 3885,
       "lastUpdated": "2026-03-17",
       "assetFilename": "command-spec-audit.zip"
@@ -194,7 +194,7 @@
         "ruby"
       ],
       "invocationMode": "auto",
-      "checksum": "f14ee356822c0ad4107a1023b66d485ef4040f589a5190f5580e2351ea8ee066",
+      "checksum": "92b97b647e002b5c1e7bfb0d7a9542ff241a14b6dfa3349fc06c83a00355d4c1",
       "size": 12147,
       "lastUpdated": "2026-03-17",
       "assetFilename": "common-errors.zip"
@@ -212,7 +212,7 @@
         "python"
       ],
       "invocationMode": "direct-only",
-      "checksum": "9ce6331644db7a4dba7163dabce8a972dfc71e2e05343137c8ee98bc6fa1c7f8",
+      "checksum": "4357abbe6bc60ca7a9b9f8a6479d29935214f9e02a8139c75bef9408778e989a",
       "size": 3936,
       "lastUpdated": "2026-03-17",
       "assetFilename": "digitalocean-app-setup.zip"
@@ -231,7 +231,7 @@
         "documentation"
       ],
       "invocationMode": "auto",
-      "checksum": "1193b43ba60150397e9d9c7ade78079ae435c58b1a19d54300cf553d4d84c3fe",
+      "checksum": "f391c1ca8a07fee367f775ab65399e3c3dc751c29593e2cdce6368acb2b37a31",
       "size": 9994,
       "lastUpdated": "2026-03-17",
       "assetFilename": "drawio-generation.zip",
@@ -253,7 +253,7 @@
         "electron-forge"
       ],
       "invocationMode": "auto",
-      "checksum": "e2dd25f9d5e23d13fd10cd6ed6a5f5a599ad3f0dfbf2025c012aad659889f0b1",
+      "checksum": "637f4914b01f6f9559a7de22a2d43804fb137a2e43aad43c8c254a6e389f9e48",
       "size": 10517,
       "lastUpdated": "2026-03-17",
       "assetFilename": "electron-cross-build.zip"
@@ -272,7 +272,7 @@
         "windows"
       ],
       "invocationMode": "auto",
-      "checksum": "c4d2a7c2167e2384841450ca55360888f89386ebff3451a6d42f5d81eef10aca",
+      "checksum": "70ff9d4c5298b77a1f0dc47fdfa1f317e0df686160ead8f896c8cee36993529d",
       "size": 25931,
       "lastUpdated": "2026-03-17",
       "assetFilename": "electron-development.zip"
@@ -294,7 +294,7 @@
         "error-handling"
       ],
       "invocationMode": "auto",
-      "checksum": "5e39bdcf1653e8f7fe2453150785068d0abf8a2e9b1f3f9c1cc932d97962edf3",
+      "checksum": "cb878cce5b951f8b96792ddef69c0699c402cbb6106d2d6f6823b8d6d848ec18",
       "size": 16947,
       "lastUpdated": "2026-03-17",
       "assetFilename": "error-handling-patterns.zip",
@@ -313,7 +313,7 @@
         "pip"
       ],
       "invocationMode": "auto",
-      "checksum": "f2f944888658aeb57608d66140bc944e8bff150428c9eef62fe2116cacc770db",
+      "checksum": "5a43e3bfbe5566641a7c711ce7dc6463cabeff51746ef4363c8593ac780d847c",
       "size": 8157,
       "lastUpdated": "2026-03-17",
       "assetFilename": "flask-setup.zip"
@@ -332,7 +332,7 @@
         "localization"
       ],
       "invocationMode": "auto",
-      "checksum": "0e6dfc3b8e748d7d47c3c302b0c3f53a457d6fa9aae89fc8ca10f0b41e23fb45",
+      "checksum": "02f6f993df4074886f19da6c02228e81a48b44ec29edfe507966ee395c11e9d0",
       "size": 5099,
       "lastUpdated": "2026-03-17",
       "assetFilename": "i18n-setup.zip"
@@ -352,7 +352,7 @@
         "prisma"
       ],
       "invocationMode": "auto",
-      "checksum": "21c9c8bac3ec3adc112b77735851e3686ba7ca0eeb92b650588de07d4638e91e",
+      "checksum": "6906ffba911acd64ec69c6456c091e306524d3ee63276d950194d3b18d6fd8ed",
       "size": 14817,
       "lastUpdated": "2026-03-17",
       "assetFilename": "migration-patterns.zip"
@@ -370,7 +370,7 @@
         "typescript"
       ],
       "invocationMode": "direct-only",
-      "checksum": "c39e05ea2fe9e0dfc21c729101cd0aed328cd3d37352c201ece03aa448dbece5",
+      "checksum": "df26619dff0d88cf26b5c30d2ecb17e94c2526d69077ff320da32fdf295fbdf2",
       "size": 15220,
       "lastUpdated": "2026-03-17",
       "assetFilename": "mutation-testing.zip"
@@ -390,7 +390,7 @@
         "tracing"
       ],
       "invocationMode": "auto",
-      "checksum": "4e3f901f785abf2c7b5e25ea622ef0c1487dde1a6a37a3c6394f3677515870cd",
+      "checksum": "02f26367e2b771034b5f358ccd21fe867aabbd15fbce2172de607612c951187f",
       "size": 5123,
       "lastUpdated": "2026-03-17",
       "assetFilename": "observability-setup.zip"
@@ -409,7 +409,7 @@
         "frontend"
       ],
       "invocationMode": "direct-only",
-      "checksum": "0194d00718c69d126005d1fa6c8f395c46fb0e186123a89d3182e85977374292",
+      "checksum": "1804c0a1a5ab556c4d4b27acd4ba1887ca660d387d7a42eef7863e6964b0f578",
       "size": 2169,
       "lastUpdated": "2026-03-17",
       "assetFilename": "playwright-explorer.zip"
@@ -427,7 +427,7 @@
         "typescript"
       ],
       "invocationMode": "direct-only",
-      "checksum": "7d658331cca88f5d3c32cd98fef4a7d32283e2d6b2c5aa14db59fc2c538b2e46",
+      "checksum": "fa2d042ee537cef0718ae72e72387a30b3c63fbc0dc0f82bc2cf99014349ae93",
       "size": 12145,
       "lastUpdated": "2026-03-17",
       "assetFilename": "playwright-setup.zip"
@@ -446,7 +446,7 @@
         "pg"
       ],
       "invocationMode": "auto",
-      "checksum": "ef80384fccdf17b0ea1a07548173848e8dd6c638a40046ecafea999df10672ae",
+      "checksum": "507733bad5e67d9533b032a692a3bbdc5c201a7b378669aac9485ef584a7bfac",
       "size": 13032,
       "lastUpdated": "2026-03-17",
       "assetFilename": "postgresql-integration.zip"
@@ -465,7 +465,7 @@
         "consent"
       ],
       "invocationMode": "direct-only",
-      "checksum": "7dfb158a0a97774d64ddb611d3ebc30c19bd9fcdf87e902a4438f10457374362",
+      "checksum": "7f30bdcb87dfe1780874a8ad30e17646e917c3d7e55ce1f8b8148587c784eeec",
       "size": 20273,
       "lastUpdated": "2026-03-17",
       "assetFilename": "privacy-compliance.zip"
@@ -484,7 +484,7 @@
         "python"
       ],
       "invocationMode": "direct-only",
-      "checksum": "267d75a6101bda6a49143632724f65b81ab22fa6f86d12af64a6f564d7218853",
+      "checksum": "2d3dee2eb2f0c23066beebbc114a2b3d712d7ee5fd7e269e077a6470acc6a258",
       "size": 14744,
       "lastUpdated": "2026-03-17",
       "assetFilename": "property-based-testing.zip"
@@ -503,7 +503,7 @@
         "deployment"
       ],
       "invocationMode": "direct-only",
-      "checksum": "cbc9ed16f797c690eefa7a069e33c750e29bbbb2d6629f6e5641b15ca3ec1ae8",
+      "checksum": "b78a60ce5fec46bd429b93334bf3a318886c5deacc7564ed27e1172be20f63ae",
       "size": 3995,
       "lastUpdated": "2026-03-17",
       "assetFilename": "railway-project-setup.zip"
@@ -522,7 +522,7 @@
         "deployment"
       ],
       "invocationMode": "direct-only",
-      "checksum": "1e652c1ab5ac66fdcfe46efc67e21f105cff50af671895e754d5f2470812e3af",
+      "checksum": "75f6bf5e40c3717b8803e801efb91b558d7b0cc40834079a1595dc93688749e2",
       "size": 4084,
       "lastUpdated": "2026-03-17",
       "assetFilename": "render-project-setup.zip"
@@ -544,7 +544,7 @@
         "rust"
       ],
       "invocationMode": "auto",
-      "checksum": "daceba3130c0afeb4080c5648460058bd90cc266b029cf6fa8172d0432dfde12",
+      "checksum": "6126cae557298f40735e24917cc0a50f36e5d3731322dd10a85814d5c2761a88",
       "size": 7219,
       "lastUpdated": "2026-03-17",
       "assetFilename": "resilience-patterns.zip"
@@ -563,7 +563,7 @@
         "sitemap"
       ],
       "invocationMode": "direct-only",
-      "checksum": "709763ecdcb7e26f6bfc2fe65bdd4ba0d63c9271217d5a75da1ef00ee5919316",
+      "checksum": "767cf57fc2c32cb4dd01a25ff1a7bf95dc135ed5b6b0b59e17939f86fb7671c4",
       "size": 10754,
       "lastUpdated": "2026-03-17",
       "assetFilename": "seo-optimization.zip"
@@ -581,7 +581,7 @@
         "gem"
       ],
       "invocationMode": "auto",
-      "checksum": "9a0c2889018a0965c26fadf2f19302155d5a198df69aaabc0ad694aacde6e3bf",
+      "checksum": "75aecb47c4531f32495421ee1aef3a516aff54d846bfa83e729859ace9a03079",
       "size": 8760,
       "lastUpdated": "2026-03-17",
       "assetFilename": "sinatra-setup.zip"
@@ -601,7 +601,7 @@
         "ruby"
       ],
       "invocationMode": "auto",
-      "checksum": "1255dd885e8073eb4195c117d6d1ee0a95f8f626d9e3592f772a596efaaebd3f",
+      "checksum": "17b289093a351e8959d0e1afa21480bfc197ba56e959248d962a246eeed4578c",
       "size": 9368,
       "lastUpdated": "2026-03-17",
       "assetFilename": "sqlite-integration.zip"
@@ -623,7 +623,7 @@
         "testing"
       ],
       "invocationMode": "auto",
-      "checksum": "90094bd87cb77a51e8b871b76dbb517cfd955a95471fd1fa3f4768872122975e",
+      "checksum": "7d6338e4c7eb719ff7447a95cf425ef3ca112a430a94be53287288b09330a250",
       "size": 12675,
       "lastUpdated": "2026-03-17",
       "assetFilename": "tdd-failure-recovery.zip",
@@ -646,7 +646,7 @@
         "testing"
       ],
       "invocationMode": "auto",
-      "checksum": "5a137e57c76a5ea23680a75ff715f5eadae5958d9ec992321f309250b3f22705",
+      "checksum": "dc78a49baef5773df3d4bd2d17d02abb00b2713d4de4bf4606dfb858492283fa",
       "size": 11335,
       "lastUpdated": "2026-03-17",
       "assetFilename": "tdd-green-phase.zip",
@@ -669,7 +669,7 @@
         "testing"
       ],
       "invocationMode": "auto",
-      "checksum": "12b10ea14f51870a3f9b218a3d829bb145bb9775518a2f9c0068c3750171f7c5",
+      "checksum": "8592140c0a3b4e63600b7226d1de045c47bec313313704fc00ef0cb9dc6266ca",
       "size": 11275,
       "lastUpdated": "2026-03-17",
       "assetFilename": "tdd-red-phase.zip",
@@ -692,7 +692,7 @@
         "testing"
       ],
       "invocationMode": "auto",
-      "checksum": "3033056733c0c48d9794568bc977328f6b7b82cc6f71ae84871015fbaf93b0cb",
+      "checksum": "074679986f926c88999c31d3c9a28bb735142ae1de4a603a1de3bb2cf34cddd7",
       "size": 11557,
       "lastUpdated": "2026-03-17",
       "assetFilename": "tdd-refactor-phase.zip",
@@ -718,7 +718,7 @@
         "github-actions"
       ],
       "invocationMode": "auto",
-      "checksum": "3b5bef5158bad6a38167e52202a9d422cf6f35c20c2b263864451610437a69b5",
+      "checksum": "1e87d79e18ba4587f51d8891623bd0eb52bb91c07ecae050b564fba04a44c996",
       "size": 8157,
       "lastUpdated": "2026-03-17",
       "assetFilename": "test-scaffold.zip",
@@ -742,7 +742,7 @@
         "mocking"
       ],
       "invocationMode": "auto",
-      "checksum": "e208603b8cb175635131ec7d10fc1b05fdf8790d5c53c631816644cf52525858",
+      "checksum": "bd469553c1b41124ffe58b903d5709ceea2cf22679fc6d304b66fd762db54353",
       "size": 16773,
       "lastUpdated": "2026-03-17",
       "assetFilename": "test-writing-patterns.zip",
@@ -762,7 +762,7 @@
         "deployment"
       ],
       "invocationMode": "direct-only",
-      "checksum": "d654e16f94b6f10a49e51bcb318719277c103281bd157b83fcb946772a9bb67e",
+      "checksum": "6c59f8a2ce6a68b54d15e5bcdcd641e36153a73cabc2b2fc9a6a2735813eb093",
       "size": 4098,
       "lastUpdated": "2026-03-17",
       "assetFilename": "vercel-project-setup.zip"
