@@ -1,7 +1,7 @@
 {
   "catalogVersion": "1.0.0",
   "frameworkVersion": "0.76.0",
-  "generatedAt": "2026-03-30T17:29:11.120Z",
+  "generatedAt": "2026-03-30T20:28:24.663Z",
   "baseUrl": "https://github.com/rubrical-works/idpf-praxis-skills/releases/download",
   "skillCount": 38,
   "skills": [
@@ -22,8 +22,8 @@
         "csharp"
       ],
       "invocationMode": "auto",
-      "checksum": "862835380df3f757f9ddd3fcf03853ba4c2092831e3daca58dfaff2fc4297483",
-      "size": 44088,
+      "checksum": "c65112683f7134db9d061ff5f303e9c3cfa21b93c8d03a4f9dd2c1cfe385a444",
+      "size": 43126,
       "lastUpdated": "2026-03-17",
       "assetFilename": "anti-pattern-analysis.zip",
       "defaultSkill": true
@@ -42,8 +42,8 @@
         "express"
       ],
       "invocationMode": "auto",
-      "checksum": "0cbe55fa41f1e475d9f31ca22cd42f8f954f9c7e91393c44f39ef12d5ba64683",
-      "size": 16720,
+      "checksum": "95e2817bf136380d46bc76a4e4893b86ec0585eea8f8bf67c74cfa48f97d33f0",
+      "size": 15687,
       "lastUpdated": "2026-03-17",
       "assetFilename": "api-versioning.zip"
     },
@@ -62,8 +62,8 @@
         "svelte"
       ],
       "invocationMode": "auto",
-      "checksum": "e124853afe2e71eae7a7648d6297b1fee5aacc5e3e924c143b0036e6c6254ca9",
-      "size": 15106,
+      "checksum": "ac1ba8fb997877bdd2a8cdd1a3e6f32343df6f7c06665dc4a9b4fe142b274a4a",
+      "size": 14344,
       "lastUpdated": "2026-03-17",
       "assetFilename": "astro-development.zip"
     },
@@ -81,8 +81,8 @@
         "typescript"
       ],
       "invocationMode": "direct-only",
-      "checksum": "6638ecbe59834ab14446c071d5c4c8ada20630dd1ad127ca938b1f707bfb8007",
-      "size": 20954,
+      "checksum": "f2a37a5c0a56b9467a1c6531fe0a7b8f13906bc3b5fb8d1cb21655876b4acdbd",
+      "size": 19963,
       "lastUpdated": "2026-03-17",
       "assetFilename": "bdd-writing.zip"
     },
@@ -100,8 +100,8 @@
         "tdd"
       ],
       "invocationMode": "auto",
-      "checksum": "697ab25b193e103bc2bfe52a2d865ef2f1282c6f3ffffe5270ba6bdec21b5ac3",
-      "size": 11141,
+      "checksum": "cc51a02cf752efa29b1939a3b9a939615554110c9a8b8a225068769c9e2ced34",
+      "size": 9551,
       "lastUpdated": "2026-03-17",
       "assetFilename": "beginner-testing.zip"
     },
@@ -119,8 +119,8 @@
         "kubernetes"
       ],
       "invocationMode": "direct-only",
-      "checksum": "26afbd56ff278c290d212e9303b5cbba4df0db11e1204881326866d348bc3731",
-      "size": 21172,
+      "checksum": "56d69a4ac1b1f5b65a380eac57c92265211ef6232b8ea660af225365cd3a2a67",
+      "size": 19178,
       "lastUpdated": "2026-03-17",
       "assetFilename": "ci-cd-pipeline-design.zip"
     },
@@ -135,8 +135,8 @@
         "typescript"
       ],
       "invocationMode": "manual",
-      "checksum": "06d548f28ea16d76500ffac6e031ba7dd26757d4e563602304f8f3a3922fdf10",
-      "size": 9143,
+      "checksum": "5c257387fbf63a8299ed947c1758910ee4af2a8722273826cfd18367ea80b313",
+      "size": 8485,
       "lastUpdated": "2026-03-17",
       "assetFilename": "code-path-discovery.zip",
       "defaultSkill": false
@@ -162,8 +162,8 @@
         "csharp"
       ],
       "invocationMode": "direct-only",
-      "checksum": "365af40622e188bfb57d4b30fdaeeed8ff2d9d514bd2432733e59c683f1741b0",
-      "size": 16234,
+      "checksum": "ffbc60c2e60ce31518d3e2b43d4dc1dc114d88834293d2a543c18874dc7c785b",
+      "size": 15497,
       "lastUpdated": "2026-03-17",
       "assetFilename": "codebase-analysis.zip",
       "defaultSkill": true
@@ -176,8 +176,8 @@
       "description": "Evaluate command specifications for quality, completeness, and extension point coverage",
       "relevantTechStack": [],
       "invocationMode": "direct-only",
-      "checksum": "94a9b693e1090797b72af8441462d006d16860d848c1e408bef136c0fee3f2e7",
-      "size": 4148,
+      "checksum": "f3f178255611fff6bfda8b08969e621e088e3925e5e8faead49a70e7786f5d89",
+      "size": 3885,
       "lastUpdated": "2026-03-17",
       "assetFilename": "command-spec-audit.zip"
     },
@@ -194,8 +194,8 @@
         "ruby"
       ],
       "invocationMode": "auto",
-      "checksum": "deb19a0702a649c28e46f27d204314b2ecb7c9b67e2b7e1f04ef15096bae1089",
-      "size": 14639,
+      "checksum": "f14ee356822c0ad4107a1023b66d485ef4040f589a5190f5580e2351ea8ee066",
+      "size": 12147,
       "lastUpdated": "2026-03-17",
       "assetFilename": "common-errors.zip"
     },
@@ -212,8 +212,8 @@
         "python"
       ],
       "invocationMode": "direct-only",
-      "checksum": "8ff01330bb619de26d3feb45d0cb252b3cfe806cc2254cc6a4dc3e3317d79a7f",
-      "size": 4833,
+      "checksum": "9ce6331644db7a4dba7163dabce8a972dfc71e2e05343137c8ee98bc6fa1c7f8",
+      "size": 3936,
       "lastUpdated": "2026-03-17",
       "assetFilename": "digitalocean-app-setup.zip"
     },
@@ -231,8 +231,8 @@
         "documentation"
       ],
       "invocationMode": "auto",
-      "checksum": "cb38a0ad611c04543a0bc6729b7152060d1c75a63094e0e8eb9cd23dd0034942",
-      "size": 11619,
+      "checksum": "1193b43ba60150397e9d9c7ade78079ae435c58b1a19d54300cf553d4d84c3fe",
+      "size": 9994,
       "lastUpdated": "2026-03-17",
       "assetFilename": "drawio-generation.zip",
       "defaultSkill": true
@@ -253,8 +253,8 @@
         "electron-forge"
       ],
       "invocationMode": "auto",
-      "checksum": "7fa0bb925c7155413bcb6dba618dbe9e143e130ac0c06c093d637e7dfacb5cd4",
-      "size": 11018,
+      "checksum": "e2dd25f9d5e23d13fd10cd6ed6a5f5a599ad3f0dfbf2025c012aad659889f0b1",
+      "size": 10517,
       "lastUpdated": "2026-03-17",
       "assetFilename": "electron-cross-build.zip"
     },
@@ -272,8 +272,8 @@
         "windows"
       ],
       "invocationMode": "auto",
-      "checksum": "322176670a38f622aca662fb79c1bea244be645a989c737d256c5cb2aba0beed",
-      "size": 27412,
+      "checksum": "c4d2a7c2167e2384841450ca55360888f89386ebff3451a6d42f5d81eef10aca",
+      "size": 25931,
       "lastUpdated": "2026-03-17",
       "assetFilename": "electron-development.zip"
     },
@@ -294,8 +294,8 @@
         "error-handling"
       ],
       "invocationMode": "auto",
-      "checksum": "899c2f62045ffd7cb4b14901eddef51c8cdbfc0f8e39516eb34490c050369cb8",
-      "size": 18425,
+      "checksum": "5e39bdcf1653e8f7fe2453150785068d0abf8a2e9b1f3f9c1cc932d97962edf3",
+      "size": 16947,
       "lastUpdated": "2026-03-17",
       "assetFilename": "error-handling-patterns.zip",
       "defaultSkill": true
@@ -313,8 +313,8 @@
         "pip"
       ],
       "invocationMode": "auto",
-      "checksum": "f4a4018b6ebb919f507feeb6ed74bf4e3f587a36ee90f2e6b3bad5356519137a",
-      "size": 9522,
+      "checksum": "f2f944888658aeb57608d66140bc944e8bff150428c9eef62fe2116cacc770db",
+      "size": 8157,
       "lastUpdated": "2026-03-17",
       "assetFilename": "flask-setup.zip"
     },
@@ -332,8 +332,8 @@
         "localization"
       ],
       "invocationMode": "auto",
-      "checksum": "c238affb1b567fba6a9eb3d416e4903d91a3c4f1db4458a3436ea3ff8e84d4a3",
-      "size": 5343,
+      "checksum": "0e6dfc3b8e748d7d47c3c302b0c3f53a457d6fa9aae89fc8ca10f0b41e23fb45",
+      "size": 5099,
       "lastUpdated": "2026-03-17",
       "assetFilename": "i18n-setup.zip"
     },
@@ -352,8 +352,8 @@
         "prisma"
       ],
       "invocationMode": "auto",
-      "checksum": "0666aa6fbbbc173ed9ef0cd101890bd6b8ff74d162941ce94541b66baf543741",
-      "size": 15759,
+      "checksum": "21c9c8bac3ec3adc112b77735851e3686ba7ca0eeb92b650588de07d4638e91e",
+      "size": 14817,
       "lastUpdated": "2026-03-17",
       "assetFilename": "migration-patterns.zip"
     },
@@ -370,8 +370,8 @@
         "typescript"
       ],
       "invocationMode": "direct-only",
-      "checksum": "d28181de7067fbf6870d04ad8fe624b97224e4c8c3a57826659c2c8e9f9ac34e",
-      "size": 16304,
+      "checksum": "c39e05ea2fe9e0dfc21c729101cd0aed328cd3d37352c201ece03aa448dbece5",
+      "size": 15220,
       "lastUpdated": "2026-03-17",
       "assetFilename": "mutation-testing.zip"
     },
@@ -390,8 +390,8 @@
         "tracing"
       ],
       "invocationMode": "auto",
-      "checksum": "d182d4e8c3d0ffbb0cff54d17e618d1c14cea0da44b681ae5e4d51b4b8d3e5a2",
-      "size": 5421,
+      "checksum": "4e3f901f785abf2c7b5e25ea622ef0c1487dde1a6a37a3c6394f3677515870cd",
+      "size": 5123,
       "lastUpdated": "2026-03-17",
       "assetFilename": "observability-setup.zip"
     },
@@ -409,8 +409,8 @@
         "frontend"
       ],
       "invocationMode": "direct-only",
-      "checksum": "124f8ccf60eb3592d6b08166cd1b88da0d77cd75d6723bf0edc3717375ba941f",
-      "size": 2653,
+      "checksum": "0194d00718c69d126005d1fa6c8f395c46fb0e186123a89d3182e85977374292",
+      "size": 2169,
       "lastUpdated": "2026-03-17",
       "assetFilename": "playwright-explorer.zip"
     },
@@ -427,8 +427,8 @@
         "typescript"
       ],
       "invocationMode": "direct-only",
-      "checksum": "5585afcbf261e03045d704e311d636f2fcf2b5ecfe4bc3209673bc5d39647db5",
-      "size": 12839,
+      "checksum": "7d658331cca88f5d3c32cd98fef4a7d32283e2d6b2c5aa14db59fc2c538b2e46",
+      "size": 12145,
       "lastUpdated": "2026-03-17",
       "assetFilename": "playwright-setup.zip"
     },
@@ -446,8 +446,8 @@
         "pg"
       ],
       "invocationMode": "auto",
-      "checksum": "e26e2bb74001f0bb6041ed6ee1bee8a06f2b72b42c61a758f9b21bf7ada4bb80",
-      "size": 13973,
+      "checksum": "ef80384fccdf17b0ea1a07548173848e8dd6c638a40046ecafea999df10672ae",
+      "size": 13032,
       "lastUpdated": "2026-03-17",
       "assetFilename": "postgresql-integration.zip"
     },
@@ -465,8 +465,8 @@
         "consent"
       ],
       "invocationMode": "direct-only",
-      "checksum": "418f0caddb1d968a9dbb9654354af95ce53a742bff84037a777208693e21b5f4",
-      "size": 21210,
+      "checksum": "7dfb158a0a97774d64ddb611d3ebc30c19bd9fcdf87e902a4438f10457374362",
+      "size": 20273,
       "lastUpdated": "2026-03-17",
       "assetFilename": "privacy-compliance.zip"
     },
@@ -484,8 +484,8 @@
         "python"
       ],
       "invocationMode": "direct-only",
-      "checksum": "88929d82e473ddbecf47affaf0b9607e55a8ab0b705e0c7ab4a6bf52306f8915",
-      "size": 16362,
+      "checksum": "267d75a6101bda6a49143632724f65b81ab22fa6f86d12af64a6f564d7218853",
+      "size": 14744,
       "lastUpdated": "2026-03-17",
       "assetFilename": "property-based-testing.zip"
     },
@@ -503,8 +503,8 @@
         "deployment"
       ],
       "invocationMode": "direct-only",
-      "checksum": "c1f841166cd57f4a5d16fdd2f25e0fda9c86ff8ccb3f373a5555ace4b8813f2c",
-      "size": 5005,
+      "checksum": "cbc9ed16f797c690eefa7a069e33c750e29bbbb2d6629f6e5641b15ca3ec1ae8",
+      "size": 3995,
       "lastUpdated": "2026-03-17",
       "assetFilename": "railway-project-setup.zip"
     },
@@ -522,8 +522,8 @@
         "deployment"
       ],
       "invocationMode": "direct-only",
-      "checksum": "0cb893022af61292eb7f133a5337ff46056f2932439dd80bb2966478a47b1fd1",
-      "size": 4921,
+      "checksum": "1e652c1ab5ac66fdcfe46efc67e21f105cff50af671895e754d5f2470812e3af",
+      "size": 4084,
       "lastUpdated": "2026-03-17",
       "assetFilename": "render-project-setup.zip"
     },
@@ -544,8 +544,8 @@
         "rust"
       ],
       "invocationMode": "auto",
-      "checksum": "e1b74833c91f3b1e532ad0dd4688d48799318c367dce5eaee60ea1cf15ed4246",
-      "size": 7744,
+      "checksum": "daceba3130c0afeb4080c5648460058bd90cc266b029cf6fa8172d0432dfde12",
+      "size": 7219,
       "lastUpdated": "2026-03-17",
       "assetFilename": "resilience-patterns.zip"
     },
@@ -563,8 +563,8 @@
         "sitemap"
       ],
       "invocationMode": "direct-only",
-      "checksum": "69dc066ffb670e386eee163d8c8fe7ff2ffec87e5ec7443278f6dfc86fb05982",
-      "size": 12035,
+      "checksum": "709763ecdcb7e26f6bfc2fe65bdd4ba0d63c9271217d5a75da1ef00ee5919316",
+      "size": 10754,
       "lastUpdated": "2026-03-17",
       "assetFilename": "seo-optimization.zip"
     },
@@ -581,8 +581,8 @@
         "gem"
       ],
       "invocationMode": "auto",
-      "checksum": "7d154d987348da695601245f2d2a32d9bca28efb4519eba242ea052952736285",
-      "size": 10516,
+      "checksum": "9a0c2889018a0965c26fadf2f19302155d5a198df69aaabc0ad694aacde6e3bf",
+      "size": 8760,
       "lastUpdated": "2026-03-17",
       "assetFilename": "sinatra-setup.zip"
     },
@@ -601,8 +601,8 @@
         "ruby"
       ],
       "invocationMode": "auto",
-      "checksum": "c24ba6a910714d42c6e4b426a5001312bccc345ced33296a95c58e403c0a2ad3",
-      "size": 10705,
+      "checksum": "1255dd885e8073eb4195c117d6d1ee0a95f8f626d9e3592f772a596efaaebd3f",
+      "size": 9368,
       "lastUpdated": "2026-03-17",
       "assetFilename": "sqlite-integration.zip"
     },
@@ -623,8 +623,8 @@
         "testing"
       ],
       "invocationMode": "auto",
-      "checksum": "96b89edcd4fc5ab55ca64b1d361ca9c17472643faad3a98461bc254e485e50e5",
-      "size": 14011,
+      "checksum": "90094bd87cb77a51e8b871b76dbb517cfd955a95471fd1fa3f4768872122975e",
+      "size": 12675,
       "lastUpdated": "2026-03-17",
       "assetFilename": "tdd-failure-recovery.zip",
       "defaultSkill": true
@@ -646,8 +646,8 @@
         "testing"
       ],
       "invocationMode": "auto",
-      "checksum": "d7440cb6c08c47ae0b149af8a06af725b878e3093a7a7108f33115604606297a",
-      "size": 12394,
+      "checksum": "5a137e57c76a5ea23680a75ff715f5eadae5958d9ec992321f309250b3f22705",
+      "size": 11335,
       "lastUpdated": "2026-03-17",
       "assetFilename": "tdd-green-phase.zip",
       "defaultSkill": true
@@ -669,8 +669,8 @@
         "testing"
       ],
       "invocationMode": "auto",
-      "checksum": "58ab7ba20ef53d18e5b684ee84c9d1d0160d841074902f1da1c5255b1af335a2",
-      "size": 12232,
+      "checksum": "12b10ea14f51870a3f9b218a3d829bb145bb9775518a2f9c0068c3750171f7c5",
+      "size": 11275,
       "lastUpdated": "2026-03-17",
       "assetFilename": "tdd-red-phase.zip",
       "defaultSkill": true
@@ -692,8 +692,8 @@
         "testing"
       ],
       "invocationMode": "auto",
-      "checksum": "3abe8fa6c8836511aa3a1188ece1f382c7e39f729f3d21ad77dded29f164a01b",
-      "size": 12894,
+      "checksum": "3033056733c0c48d9794568bc977328f6b7b82cc6f71ae84871015fbaf93b0cb",
+      "size": 11557,
       "lastUpdated": "2026-03-17",
       "assetFilename": "tdd-refactor-phase.zip",
       "defaultSkill": true
@@ -718,8 +718,8 @@
         "github-actions"
       ],
       "invocationMode": "auto",
-      "checksum": "c4da0db5ab2b09be90803ea79f059d2752b18cf63117a42fcce4ed5a699cacba",
-      "size": 25238,
+      "checksum": "3b5bef5158bad6a38167e52202a9d422cf6f35c20c2b263864451610437a69b5",
+      "size": 8157,
       "lastUpdated": "2026-03-17",
       "assetFilename": "test-scaffold.zip",
       "defaultSkill": true
@@ -742,8 +742,8 @@
         "mocking"
       ],
       "invocationMode": "auto",
-      "checksum": "0183f0f6861fad4699e4c4554be4d85fb64db2ad6ae80620f70c2dc8429c9050",
-      "size": 19102,
+      "checksum": "e208603b8cb175635131ec7d10fc1b05fdf8790d5c53c631816644cf52525858",
+      "size": 16773,
       "lastUpdated": "2026-03-17",
       "assetFilename": "test-writing-patterns.zip",
       "defaultSkill": true
@@ -762,8 +762,8 @@
         "deployment"
       ],
       "invocationMode": "direct-only",
-      "checksum": "a608ad45fba4916cc1f1fe8aa8f7a83d43572b509eda87e79cc9345185bca8d6",
-      "size": 5117,
+      "checksum": "d654e16f94b6f10a49e51bcb318719277c103281bd157b83fcb946772a9bb67e",
+      "size": 4098,
       "lastUpdated": "2026-03-17",
       "assetFilename": "vercel-project-setup.zip"
     }

@@ -1,6 +1,6 @@
 # idpf-skills-dev
 
-**Version:** v0.1.0
+**Version:** v0.2.0
 
 [![Skill CI](https://github.com/rubrical-works/idpf-skills-dev/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-skills-dev/actions/workflows/skill-ci.yml)
 

@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-03-30
+
+### Added
+- Minimization pipeline: `minimize-config.json`, `minimize-helper.js`, `validate-minimization.js`
+- AI-driven two-pass minimization in `/minimize-files` command (85% quality gate)
+- `build-skill-packages.js` now sources from `.min-mirror/Skills/` when minimized versions exist
+- `/add-skill` command for scaffolding new skill directories with validation
+- `.claude/local-metadata/skill-requirements.json` — machine-readable skill requirements
+- `.claude/local-metadata/` directory (repo-owned, px-manager upgrade-safe)
+- MAINTENANCE.md auto-generation step in `/minimize-files` (Step 7)
+- Selective metadata deployment — only skill-related files deployed to dist repo
+- `/minimize-files` integrated as pre-phase-1 extension in `/prepare-release`
+- `.gitattributes` for LF line ending normalization
+
+### Changed
+- `deploy-dist.yml` copies only skill metadata (catalog, registry, keywords + schemas) instead of all `*.json`
+- `deploy-dist.yml` generates and copies `skill-registry.json` alongside catalog
+- `/skill-validate` now consumes `skill-requirements.json` for field validation
+
+### Fixed
+- CRLF line ending handling in frontmatter parsers (`build-skill-registry.js`) and all test files
+- Synced `command-spec-audit` SKILL.md with upstream `idpf-praxis-dev`
+
 ## [0.1.0] - 2026-03-30
 
 ### Added

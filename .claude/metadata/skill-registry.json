@@ -1,0 +1,768 @@
+{
+  "generatedAt": "2026-03-30T20:28:24.532Z",
+  "version": "1.0.0",
+  "skillCount": 38,
+  "skills": [
+    {
+      "name": "anti-pattern-analysis",
+      "description": "Systematic detection of anti-patterns during code review with actionable refactoring guidance",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "c65112683f7134db9d061ff5f303e9c3cfa21b93c8d03a4f9dd2c1cfe385a444",
+      "category": "code-quality",
+      "relevantTechStack": [
+        "javascript",
+        "typescript",
+        "python",
+        "java",
+        "go",
+        "rust",
+        "ruby",
+        "csharp"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "api-versioning",
+      "description": "Guide developers through API versioning strategies, deprecation workflows, and backward compatibility patterns",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "95e2817bf136380d46bc76a4e4893b86ec0585eea8f8bf67c74cfa48f97d33f0",
+      "category": "architecture",
+      "relevantTechStack": [
+        "rest",
+        "graphql",
+        "api",
+        "node",
+        "express"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "astro-development",
+      "description": "Architectural decision patterns for Astro web framework — Islands hydration, Content Collections, multi-framework integration, and deployment",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "ac1ba8fb997877bdd2a8cdd1a3e6f32343df6f7c06665dc4a9b4fe142b274a4a",
+      "category": "platform",
+      "relevantTechStack": [
+        "astro",
+        "javascript",
+        "typescript",
+        "react",
+        "vue",
+        "svelte"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "bdd-writing",
+      "description": "Guide developers on writing BDD specifications using Gherkin syntax, feature files, and step definitions",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "f2a37a5c0a56b9467a1c6531fe0a7b8f13906bc3b5fb8d1cb21655876b4acdbd",
+      "category": "testing",
+      "relevantTechStack": [
+        "cucumber",
+        "gherkin",
+        "bdd",
+        "javascript",
+        "typescript"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "beginner-testing",
+      "description": "Introduce test-driven development to beginners with simple Flask/Sinatra test examples and TDD concepts",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "cc51a02cf752efa29b1939a3b9a939615554110c9a8b8a225068769c9e2ced34",
+      "category": "testing",
+      "relevantTechStack": [
+        "flask",
+        "sinatra",
+        "python",
+        "ruby",
+        "tdd"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "ci-cd-pipeline-design",
+      "description": "Guide developers through CI/CD pipeline design including architecture patterns, stage design, and security considerations",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "56d69a4ac1b1f5b65a380eac57c92265211ef6232b8ea660af225365cd3a2a67",
+      "category": "devops",
+      "relevantTechStack": [
+        "github-actions",
+        "ci",
+        "cd",
+        "docker",
+        "kubernetes"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "code-path-discovery",
+      "description": "Scan TypeScript/JavaScript source files for behavioral paths and return candidates in 6-category format for /paths turn-based discovery",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "5c257387fbf63a8299ed947c1758910ee4af2a8722273826cfd18367ea80b313",
+      "category": "analysis",
+      "relevantTechStack": [
+        "javascript",
+        "typescript"
+      ],
+      "invocationMode": "manual",
+      "defaultSkill": false,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "codebase-analysis",
+      "description": "Analyze existing codebases to extract structure, tech stack, and patterns",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "ffbc60c2e60ce31518d3e2b43d4dc1dc114d88834293d2a543c18874dc7c785b",
+      "category": "code-quality",
+      "relevantTechStack": [
+        "javascript",
+        "typescript",
+        "python",
+        "java",
+        "go",
+        "rust",
+        "ruby",
+        "php",
+        "swift",
+        "elixir",
+        "kotlin",
+        "csharp"
+      ],
+      "invocationMode": "direct-only",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "command-spec-audit",
+      "description": "Evaluate command specifications for quality, completeness, and extension point coverage",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "f3f178255611fff6bfda8b08969e621e088e3925e5e8faead49a70e7786f5d89",
+      "category": "code-quality",
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "common-errors",
+      "description": "Diagnose and solve common beginner programming mistakes in Flask or Sinatra development with detailed explanations",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "f14ee356822c0ad4107a1023b66d485ef4040f589a5190f5580e2351ea8ee066",
+      "category": "debugging",
+      "relevantTechStack": [
+        "flask",
+        "sinatra",
+        "python",
+        "ruby"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "digitalocean-app-setup",
+      "description": "Configure automated preview, staging, and production deployments with DigitalOcean App Platform",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "9ce6331644db7a4dba7163dabce8a972dfc71e2e05343137c8ee98bc6fa1c7f8",
+      "category": "platform",
+      "relevantTechStack": [
+        "digitalocean",
+        "docker",
+        "node",
+        "python"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "drawio-generation",
+      "description": "Generate valid .drawio.svg diagrams with editable mxGraphModel structure",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "1193b43ba60150397e9d9c7ade78079ae435c58b1a19d54300cf553d4d84c3fe",
+      "category": "documentation",
+      "relevantTechStack": [
+        "drawio",
+        "diagrams",
+        "svg",
+        "uml",
+        "documentation"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "electron-cross-build",
+      "description": "Cross-compile Electron apps from Linux to produce Windows executables",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "e2dd25f9d5e23d13fd10cd6ed6a5f5a599ad3f0dfbf2025c012aad659889f0b1",
+      "category": "platform",
+      "relevantTechStack": [
+        "electron",
+        "linux",
+        "windows",
+        "wine",
+        "docker",
+        "electron-builder",
+        "electron-forge"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "electron-development",
+      "description": "Patterns and solutions for Electron app development with Vite, Playwright E2E testing, and Windows platform considerations",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "c4d2a7c2167e2384841450ca55360888f89386ebff3451a6d42f5d81eef10aca",
+      "category": "platform",
+      "relevantTechStack": [
+        "electron",
+        "vite",
+        "playwright",
+        "typescript",
+        "windows"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "error-handling-patterns",
+      "description": "Guide developers through consistent error handling including error hierarchies, API responses, and logging integration",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "5e39bdcf1653e8f7fe2453150785068d0abf8a2e9b1f3f9c1cc932d97962edf3",
+      "category": "architecture",
+      "relevantTechStack": [
+        "javascript",
+        "typescript",
+        "python",
+        "go",
+        "rust",
+        "java",
+        "node",
+        "error-handling"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "flask-setup",
+      "description": "Set up Python Flask development environment for beginners with step-by-step guidance, virtual environment creation, and troubleshooting",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "f2f944888658aeb57608d66140bc944e8bff150428c9eef62fe2116cacc770db",
+      "category": "platform",
+      "relevantTechStack": [
+        "flask",
+        "python",
+        "virtualenv",
+        "pip"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "i18n-setup",
+      "description": "Scaffold internationalization infrastructure including i18n library config, string extraction tooling, locale file scaffolding, and translation workflow setup",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "0e6dfc3b8e748d7d47c3c302b0c3f53a457d6fa9aae89fc8ca10f0b41e23fb45",
+      "category": "web",
+      "relevantTechStack": [
+        "i18n",
+        "i18next",
+        "react-intl",
+        "formatjs",
+        "localization"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "migration-patterns",
+      "description": "Guide developers through database migration best practices including versioning, rollbacks, and zero-downtime strategies",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "21c9c8bac3ec3adc112b77735851e3686ba7ca0eeb92b650588de07d4638e91e",
+      "category": "database",
+      "relevantTechStack": [
+        "sql",
+        "postgresql",
+        "mysql",
+        "migrations",
+        "knex",
+        "prisma"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "mutation-testing",
+      "description": "Guide developers through mutation testing to assess and improve test suite quality",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "c39e05ea2fe9e0dfc21c729101cd0aed328cd3d37352c201ece03aa448dbece5",
+      "category": "testing",
+      "relevantTechStack": [
+        "stryker",
+        "mutation-testing",
+        "javascript",
+        "typescript"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "observability-setup",
+      "description": "Scaffold observability infrastructure including OpenTelemetry SDK config, Grafana dashboards, alert rules, and structured logging setup",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "4e3f901f785abf2c7b5e25ea622ef0c1487dde1a6a37a3c6394f3677515870cd",
+      "category": "devops",
+      "relevantTechStack": [
+        "opentelemetry",
+        "grafana",
+        "prometheus",
+        "logging",
+        "metrics",
+        "tracing"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "playwright-explorer",
+      "description": "Interactive browser exploration using Playwright with natural language interaction, DOM reading, and session management",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "0194d00718c69d126005d1fa6c8f395c46fb0e186123a89d3182e85977374292",
+      "category": "testing",
+      "relevantTechStack": [
+        "playwright",
+        "e2e",
+        "browser-testing",
+        "web-app",
+        "frontend"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "playwright-setup",
+      "description": "Installation verification and troubleshooting for Playwright browser automation framework",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "7d658331cca88f5d3c32cd98fef4a7d32283e2d6b2c5aa14db59fc2c538b2e46",
+      "category": "testing",
+      "relevantTechStack": [
+        "playwright",
+        "e2e",
+        "browser-testing",
+        "typescript"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "postgresql-integration",
+      "description": "Guide developers through PostgreSQL setup, connection configuration, query patterns, and best practices",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "ef80384fccdf17b0ea1a07548173848e8dd6c638a40046ecafea999df10672ae",
+      "category": "database",
+      "relevantTechStack": [
+        "postgresql",
+        "sql",
+        "node",
+        "python",
+        "pg"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "privacy-compliance",
+      "description": "Provide structured privacy compliance guidance for web and mobile projects covering consent management, cookie compliance, dark pattern avoidance, and regulatory landscape",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "7dfb158a0a97774d64ddb611d3ebc30c19bd9fcdf87e902a4438f10457374362",
+      "category": "compliance",
+      "relevantTechStack": [
+        "gdpr",
+        "ccpa",
+        "privacy",
+        "cookies",
+        "consent"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "property-based-testing",
+      "description": "Guide developers through property-based testing including property definition, shrinking, and framework-specific implementation",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "267d75a6101bda6a49143632724f65b81ab22fa6f86d12af64a6f564d7218853",
+      "category": "testing",
+      "relevantTechStack": [
+        "fast-check",
+        "hypothesis",
+        "property-testing",
+        "javascript",
+        "python"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "railway-project-setup",
+      "description": "Configure automated preview, staging, and production deployments with Railway",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "cbc9ed16f797c690eefa7a069e33c750e29bbbb2d6629f6e5641b15ca3ec1ae8",
+      "category": "platform",
+      "relevantTechStack": [
+        "railway",
+        "docker",
+        "node",
+        "python",
+        "deployment"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "render-project-setup",
+      "description": "Configure automated preview, staging, and production deployments with Render",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "1e652c1ab5ac66fdcfe46efc67e21f105cff50af671895e754d5f2470812e3af",
+      "category": "platform",
+      "relevantTechStack": [
+        "render",
+        "docker",
+        "node",
+        "python",
+        "deployment"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "resilience-patterns",
+      "description": "Fault tolerance patterns for distributed systems — retry, circuit breaker, fallback, bulkhead, and timeout",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "daceba3130c0afeb4080c5648460058bd90cc266b029cf6fa8172d0432dfde12",
+      "category": "architecture",
+      "relevantTechStack": [
+        "distributed-systems",
+        "microservices",
+        "api",
+        "node",
+        "python",
+        "go",
+        "java",
+        "rust"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "seo-optimization",
+      "description": "Provide structured SEO guidance for web projects covering technical foundations and content optimization",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "709763ecdcb7e26f6bfc2fe65bdd4ba0d63c9271217d5a75da1ef00ee5919316",
+      "category": "web",
+      "relevantTechStack": [
+        "seo",
+        "html",
+        "meta-tags",
+        "structured-data",
+        "sitemap"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "sinatra-setup",
+      "description": "Set up Ruby Sinatra development environment for beginners with step-by-step guidance, Bundler setup, and troubleshooting",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "9a0c2889018a0965c26fadf2f19302155d5a198df69aaabc0ad694aacde6e3bf",
+      "category": "platform",
+      "relevantTechStack": [
+        "sinatra",
+        "ruby",
+        "bundler",
+        "gem"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "sqlite-integration",
+      "description": "Add SQLite database to Flask or Sinatra app with beginner-friendly code examples and teaching comments",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "1255dd885e8073eb4195c117d6d1ee0a95f8f626d9e3592f772a596efaaebd3f",
+      "category": "database",
+      "relevantTechStack": [
+        "sqlite",
+        "sql",
+        "flask",
+        "sinatra",
+        "python",
+        "ruby"
+      ],
+      "invocationMode": "auto",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "tdd-failure-recovery",
+      "description": "Guide experienced developers through TDD failure scenarios and recovery procedures when tests behave unexpectedly",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "90094bd87cb77a51e8b871b76dbb517cfd955a95471fd1fa3f4768872122975e",
+      "category": "testing",
+      "relevantTechStack": [
+        "tdd",
+        "jest",
+        "vitest",
+        "pytest",
+        "go",
+        "rust",
+        "rspec",
+        "testing"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "tdd-green-phase",
+      "description": "Guide experienced developers through GREEN phase of TDD cycle - writing minimal implementation to pass failing tests",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "5a137e57c76a5ea23680a75ff715f5eadae5958d9ec992321f309250b3f22705",
+      "category": "testing",
+      "relevantTechStack": [
+        "tdd",
+        "jest",
+        "vitest",
+        "pytest",
+        "go",
+        "rust",
+        "rspec",
+        "testing"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "tdd-red-phase",
+      "description": "Guide experienced developers through RED phase of TDD cycle - writing failing tests and verifying expected failures",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "12b10ea14f51870a3f9b218a3d829bb145bb9775518a2f9c0068c3750171f7c5",
+      "category": "testing",
+      "relevantTechStack": [
+        "tdd",
+        "jest",
+        "vitest",
+        "pytest",
+        "go",
+        "rust",
+        "rspec",
+        "testing"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "tdd-refactor-phase",
+      "description": "Guide experienced developers through REFACTOR phase of TDD cycle - improving code quality while maintaining green tests",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "3033056733c0c48d9794568bc977328f6b7b82cc6f71ae84871015fbaf93b0cb",
+      "category": "testing",
+      "relevantTechStack": [
+        "tdd",
+        "jest",
+        "vitest",
+        "pytest",
+        "go",
+        "rust",
+        "rspec",
+        "testing"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "test-scaffold",
+      "description": "Generate testing infrastructure from IDPF testing domain knowledge — configs, specs, CI workflows for accessibility, chaos, contract, performance, QA, and security testing",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "3b5bef5158bad6a38167e52202a9d422cf6f35c20c2b263864451610437a69b5",
+      "category": "testing",
+      "relevantTechStack": [
+        "testing",
+        "playwright",
+        "axe-core",
+        "k6",
+        "pact",
+        "semgrep",
+        "zap",
+        "gitleaks",
+        "toxiproxy",
+        "ci",
+        "github-actions"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "test-writing-patterns",
+      "description": "Guide experienced developers on test structure, patterns, assertions, and test doubles for effective test-driven development",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "e208603b8cb175635131ec7d10fc1b05fdf8790d5c53c631816644cf52525858",
+      "category": "testing",
+      "relevantTechStack": [
+        "jest",
+        "vitest",
+        "pytest",
+        "go",
+        "rust",
+        "rspec",
+        "testing",
+        "tdd",
+        "mocking"
+      ],
+      "invocationMode": "auto",
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "vercel-project-setup",
+      "description": "Configure automated preview, staging, and production deployments with Vercel",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-03-17",
+      "checksum": "d654e16f94b6f10a49e51bcb318719277c103281bd157b83fcb946772a9bb67e",
+      "category": "platform",
+      "relevantTechStack": [
+        "vercel",
+        "next",
+        "react",
+        "node",
+        "deployment"
+      ],
+      "invocationMode": "direct-only",
+      "copyright": "\"Rubrical Works (c) 2026\""
+    }
+  ]
+}
