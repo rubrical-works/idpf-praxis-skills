@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-03-31
+
+### Added
+- `build-skill-keywords.js` — generates `skill-keywords.json` from registry and curated data
+- `build-skill-catalog-schema.js` — generates JSON Schema for skill catalog
+- `build-skill-registry-schema.js` — generates JSON Schema for skill registry
+- `build-skill-keywords-schema.js` — generates JSON Schema for skill keywords
+- Unit tests for all 4 new build scripts (39 tests)
+
+### Fixed
+- Separate release creation from asset upload in `deploy-dist.yml`
+
 ## [0.2.1] - 2026-03-30
 
 ### Added

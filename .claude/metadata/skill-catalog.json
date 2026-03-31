@@ -1,7 +1,7 @@
 {
   "catalogVersion": "1.0.0",
-  "frameworkVersion": "0.76.0",
-  "generatedAt": "2026-03-30T22:21:43.273Z",
+  "frameworkVersion": "0.77.3",
+  "generatedAt": "2026-03-31T21:03:51.082Z",
   "baseUrl": "https://github.com/rubrical-works/idpf-praxis-skills/releases/download",
   "skillCount": 38,
   "skills": [
@@ -313,8 +313,8 @@
         "pip"
       ],
       "invocationMode": "auto",
-      "checksum": "5a43e3bfbe5566641a7c711ce7dc6463cabeff51746ef4363c8593ac780d847c",
-      "size": 8157,
+      "checksum": "af2ee67878912a8d3d8e3b6a0f3f0a2073030f70d4b85431451d0d2411e93bd7",
+      "size": 8160,
       "lastUpdated": "2026-03-17",
       "assetFilename": "flask-setup.zip"
     },
