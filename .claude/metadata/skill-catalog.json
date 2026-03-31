@@ -1,7 +1,7 @@
 {
   "catalogVersion": "1.0.0",
   "frameworkVersion": "0.77.3",
-  "generatedAt": "2026-03-31T21:03:51.082Z",
+  "generatedAt": "2026-03-31T21:56:28.295Z",
   "baseUrl": "https://github.com/rubrical-works/idpf-praxis-skills/releases/download",
   "skillCount": 38,
   "skills": [
@@ -302,7 +302,7 @@
     },
     {
       "name": "flask-setup",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "category": "platform",
       "description": "Set up Python Flask development environment for beginners with step-by-step guidance, virtual environment creation, and troubleshooting",
@@ -313,7 +313,7 @@
         "pip"
       ],
       "invocationMode": "auto",
-      "checksum": "af2ee67878912a8d3d8e3b6a0f3f0a2073030f70d4b85431451d0d2411e93bd7",
+      "checksum": "1583cc471252176680b5f82973a7ecfad6caf6bb76e89467461998dfbac335b2",
       "size": 8160,
       "lastUpdated": "2026-03-17",
       "assetFilename": "flask-setup.zip"

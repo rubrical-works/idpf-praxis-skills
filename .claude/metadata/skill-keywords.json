@@ -1,0 +1,273 @@
+{
+  "generatedAt": "2026-03-31T21:56:28.364Z",
+  "version": "1.0.0",
+  "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
+  "defaultSkills": [
+    "anti-pattern-analysis",
+    "codebase-analysis",
+    "drawio-generation",
+    "error-handling-patterns",
+    "tdd-failure-recovery",
+    "tdd-green-phase",
+    "tdd-red-phase",
+    "tdd-refactor-phase",
+    "test-scaffold",
+    "test-writing-patterns"
+  ],
+  "skillKeywords": {
+    "anti-pattern-analysis": [
+      "anti-pattern-analysis",
+      "anti",
+      "pattern",
+      "analysis"
+    ],
+    "api-versioning": [
+      "api-versioning",
+      "api",
+      "versioning"
+    ],
+    "astro-development": [
+      "astro-development",
+      "astro",
+      "development"
+    ],
+    "bdd-writing": [
+      "bdd-writing",
+      "bdd",
+      "writing"
+    ],
+    "beginner-testing": [
+      "beginner-testing",
+      "beginner",
+      "testing"
+    ],
+    "ci-cd-pipeline-design": [
+      "ci-cd-pipeline-design",
+      "ci",
+      "cd",
+      "pipeline",
+      "design"
+    ],
+    "code-path-discovery": [
+      "code-path-discovery",
+      "code",
+      "path",
+      "discovery"
+    ],
+    "codebase-analysis": [
+      "codebase-analysis",
+      "codebase",
+      "analysis"
+    ],
+    "command-spec-audit": [
+      "command-spec-audit",
+      "command",
+      "spec",
+      "audit"
+    ],
+    "common-errors": [
+      "common-errors",
+      "common",
+      "errors"
+    ],
+    "digitalocean-app-setup": [
+      "digitalocean-app-setup",
+      "digitalocean",
+      "app",
+      "setup"
+    ],
+    "drawio-generation": [
+      "drawio-generation",
+      "drawio",
+      "generation"
+    ],
+    "electron-cross-build": [
+      "electron-cross-build",
+      "electron",
+      "cross",
+      "build"
+    ],
+    "electron-development": [
+      "electron-development",
+      "electron",
+      "development"
+    ],
+    "error-handling-patterns": [
+      "error-handling-patterns",
+      "error",
+      "handling",
+      "patterns"
+    ],
+    "flask-setup": [
+      "flask-setup",
+      "flask",
+      "setup"
+    ],
+    "i18n-setup": [
+      "i18n-setup",
+      "i18n",
+      "setup"
+    ],
+    "migration-patterns": [
+      "migration-patterns",
+      "migration",
+      "patterns"
+    ],
+    "mutation-testing": [
+      "mutation-testing",
+      "mutation",
+      "testing"
+    ],
+    "observability-setup": [
+      "observability-setup",
+      "observability",
+      "setup"
+    ],
+    "playwright-explorer": [
+      "playwright-explorer",
+      "playwright",
+      "explorer"
+    ],
+    "playwright-setup": [
+      "playwright-setup",
+      "playwright",
+      "setup"
+    ],
+    "postgresql-integration": [
+      "postgresql-integration",
+      "postgresql",
+      "integration"
+    ],
+    "privacy-compliance": [
+      "privacy-compliance",
+      "privacy",
+      "compliance"
+    ],
+    "property-based-testing": [
+      "property-based-testing",
+      "property",
+      "based",
+      "testing"
+    ],
+    "railway-project-setup": [
+      "railway-project-setup",
+      "railway",
+      "project",
+      "setup"
+    ],
+    "render-project-setup": [
+      "render-project-setup",
+      "render",
+      "project",
+      "setup"
+    ],
+    "resilience-patterns": [
+      "resilience-patterns",
+      "resilience",
+      "patterns"
+    ],
+    "seo-optimization": [
+      "seo-optimization",
+      "seo",
+      "optimization"
+    ],
+    "sinatra-setup": [
+      "sinatra-setup",
+      "sinatra",
+      "setup"
+    ],
+    "sqlite-integration": [
+      "sqlite-integration",
+      "sqlite",
+      "integration"
+    ],
+    "tdd-failure-recovery": [
+      "tdd-failure-recovery",
+      "tdd",
+      "failure",
+      "recovery"
+    ],
+    "tdd-green-phase": [
+      "tdd-green-phase",
+      "tdd",
+      "green",
+      "phase"
+    ],
+    "tdd-red-phase": [
+      "tdd-red-phase",
+      "tdd",
+      "red",
+      "phase"
+    ],
+    "tdd-refactor-phase": [
+      "tdd-refactor-phase",
+      "tdd",
+      "refactor",
+      "phase"
+    ],
+    "test-scaffold": [
+      "test-scaffold",
+      "test",
+      "scaffold"
+    ],
+    "test-writing-patterns": [
+      "test-writing-patterns",
+      "test",
+      "writing",
+      "patterns"
+    ],
+    "vercel-project-setup": [
+      "vercel-project-setup",
+      "vercel",
+      "project",
+      "setup"
+    ]
+  },
+  "groupKeywords": {},
+  "skillCategories": {
+    "anti-pattern-analysis": "code-quality",
+    "api-versioning": "architecture",
+    "astro-development": "platform",
+    "bdd-writing": "testing",
+    "beginner-testing": "testing",
+    "ci-cd-pipeline-design": "devops",
+    "code-path-discovery": "analysis",
+    "codebase-analysis": "code-quality",
+    "command-spec-audit": "code-quality",
+    "common-errors": "debugging",
+    "digitalocean-app-setup": "platform",
+    "drawio-generation": "documentation",
+    "electron-cross-build": "platform",
+    "electron-development": "platform",
+    "error-handling-patterns": "architecture",
+    "flask-setup": "platform",
+    "i18n-setup": "web",
+    "migration-patterns": "database",
+    "mutation-testing": "testing",
+    "observability-setup": "devops",
+    "playwright-explorer": "testing",
+    "playwright-setup": "testing",
+    "postgresql-integration": "database",
+    "privacy-compliance": "compliance",
+    "property-based-testing": "testing",
+    "railway-project-setup": "platform",
+    "render-project-setup": "platform",
+    "resilience-patterns": "architecture",
+    "seo-optimization": "web",
+    "sinatra-setup": "platform",
+    "sqlite-integration": "database",
+    "tdd-failure-recovery": "testing",
+    "tdd-green-phase": "testing",
+    "tdd-red-phase": "testing",
+    "tdd-refactor-phase": "testing",
+    "test-scaffold": "testing",
+    "test-writing-patterns": "testing",
+    "vercel-project-setup": "platform"
+  },
+  "_schema": {
+    "defaultSkills": "Array of skill names to auto-install for all projects regardless of tech stack. These are universally applicable skills (development infrastructure, code review, TDD methodology). Merged before keyword matching in /charter; re-added on /charter refresh.",
+    "skillKeywords": "Map of skill-name to array of keywords that indicate the skill is relevant",
+    "groupKeywords": "Keywords that suggest multiple related skills as a group",
+    "skillCategories": "Map of skill-name to category string for display grouping (mirrors skill-registry.json categories)"
+  }
+}

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-03-31
+
+### Fixed
+- Add 4 new build scripts to `deploy-dist.yml` workflow for dist repo deployment
+- Relax `skill-versioning.test.js` from exact `1.0.0` to `>= 1.0.0` for version-bumped skills
+- Document root cause of MAINTENANCE.md version drift during v0.3.0 release
+
+### Changed
+- Add dependency audit and cross-OS testing to `skill-ci.yml`
+
 ## [0.3.0] - 2026-03-31
 
 ### Added
