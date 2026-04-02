@@ -1,17 +1,15 @@
 {
-  "generatedAt": "2026-03-31T21:56:28.364Z",
+  "generatedAt": "2026-04-02T14:49:48.312Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
     "anti-pattern-analysis",
-    "codebase-analysis",
-    "drawio-generation",
     "error-handling-patterns",
     "tdd-failure-recovery",
     "tdd-green-phase",
+    "tdd-process",
     "tdd-red-phase",
     "tdd-refactor-phase",
-    "test-scaffold",
     "test-writing-patterns"
   ],
   "skillKeywords": {
@@ -193,6 +191,11 @@
       "green",
       "phase"
     ],
+    "tdd-process": [
+      "tdd-process",
+      "tdd",
+      "process"
+    ],
     "tdd-red-phase": [
       "tdd-red-phase",
       "tdd",
@@ -226,7 +229,7 @@
   "groupKeywords": {},
   "skillCategories": {
     "anti-pattern-analysis": "code-quality",
-    "api-versioning": "architecture",
+    "api-versioning": "api",
     "astro-development": "platform",
     "bdd-writing": "testing",
     "beginner-testing": "testing",
@@ -234,12 +237,12 @@
     "code-path-discovery": "analysis",
     "codebase-analysis": "code-quality",
     "command-spec-audit": "code-quality",
-    "common-errors": "debugging",
+    "common-errors": "code-quality",
     "digitalocean-app-setup": "platform",
     "drawio-generation": "documentation",
     "electron-cross-build": "platform",
     "electron-development": "platform",
-    "error-handling-patterns": "architecture",
+    "error-handling-patterns": "development",
     "flask-setup": "platform",
     "i18n-setup": "web",
     "migration-patterns": "database",
@@ -252,12 +255,13 @@
     "property-based-testing": "testing",
     "railway-project-setup": "platform",
     "render-project-setup": "platform",
-    "resilience-patterns": "architecture",
+    "resilience-patterns": "development",
     "seo-optimization": "web",
     "sinatra-setup": "platform",
     "sqlite-integration": "database",
     "tdd-failure-recovery": "testing",
     "tdd-green-phase": "testing",
+    "tdd-process": "tdd",
     "tdd-red-phase": "testing",
     "tdd-refactor-phase": "testing",
     "test-scaffold": "testing",

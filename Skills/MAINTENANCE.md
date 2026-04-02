@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.3.1
+**Version:** v0.4.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -14,7 +14,7 @@
 
 | Skill | Version | Last Updated | Status |
 |-------|---------|--------------|--------|
-| anti-pattern-analysis | 1.0.0 | 2026-03-17 | Active |
+| anti-pattern-analysis | 1.0.0 | 2026-04-01 | Active |
 | api-versioning | 1.0.0 | 2026-03-17 | Active |
 | astro-development | 1.0.0 | 2026-03-17 | Active |
 | bdd-writing | 1.0.0 | 2026-03-17 | Active |
@@ -29,7 +29,7 @@
 | electron-cross-build | 1.0.0 | 2026-03-17 | Active |
 | electron-development | 1.0.0 | 2026-03-17 | Active |
 | error-handling-patterns | 1.0.0 | 2026-03-17 | Active |
-| flask-setup | 1.0.1 | 2026-03-17 | Active |
+| flask-setup | 1.0.1 | 2026-04-01 | Active |
 | i18n-setup | 1.0.0 | 2026-03-17 | Active |
 | migration-patterns | 1.0.0 | 2026-03-17 | Active |
 | mutation-testing | 1.0.0 | 2026-03-17 | Active |
@@ -41,17 +41,18 @@
 | property-based-testing | 1.0.0 | 2026-03-17 | Active |
 | railway-project-setup | 1.0.0 | 2026-03-17 | Active |
 | render-project-setup | 1.0.0 | 2026-03-17 | Active |
-| resilience-patterns | 1.0.0 | 2026-03-17 | Active |
-| seo-optimization | 1.0.0 | 2026-03-17 | Active |
-| sinatra-setup | 1.0.0 | 2026-03-17 | Active |
-| sqlite-integration | 1.0.0 | 2026-03-17 | Active |
+| resilience-patterns | 1.0.0 | 2026-04-01 | Active |
+| seo-optimization | 1.0.0 | 2026-04-01 | Active |
+| sinatra-setup | 1.0.0 | 2026-04-01 | Active |
+| sqlite-integration | 1.0.0 | 2026-04-01 | Active |
 | tdd-failure-recovery | 1.0.0 | 2026-03-17 | Active |
-| tdd-green-phase | 1.0.0 | 2026-03-17 | Active |
-| tdd-red-phase | 1.0.0 | 2026-03-17 | Active |
-| tdd-refactor-phase | 1.0.0 | 2026-03-17 | Active |
-| test-scaffold | 1.0.0 | 2026-03-17 | Active |
-| test-writing-patterns | 1.0.0 | 2026-03-17 | Active |
-| vercel-project-setup | 1.0.0 | 2026-03-17 | Active |
+| tdd-green-phase | 1.0.0 | 2026-04-01 | Active |
+| tdd-process | 1.0.0 | 2026-04-01 | Active |
+| tdd-red-phase | 1.0.0 | 2026-04-01 | Active |
+| tdd-refactor-phase | 1.0.0 | 2026-04-01 | Active |
+| test-scaffold | 1.0.0 | 2026-04-01 | Active |
+| test-writing-patterns | 1.0.0 | 2026-04-01 | Active |
+| vercel-project-setup | 1.0.0 | 2026-04-01 | Active |
 
 **Status Values:** Active, Deprecated, Archived
 

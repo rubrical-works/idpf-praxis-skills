@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-04-02
+
+### Added
+- Skill type taxonomy — all 39 skills classified as injector, invokable, reference, or educational via `type` field in frontmatter
+- `tdd-process` injector skill with `tdd-checklist.json` for structured TDD enforcement (RED/GREEN/REFACTOR gates + failure recovery)
+- `resources/HOW-TO.md` for all 5 injector skills — usage guides for non-IDPF projects
+- Type-aware minimization pipeline — injector and educational skills copied as-is, invokable and reference AI-minimized
+- `/fw-add-skill` interactive skill scaffolding command
+- `/fw-edit-skill` interactive skill editing with type-aware cascading updates
+- `/fw-audit-skills` command for auditing skills against development guide
+- Skill metadata regeneration as pre-phase-1 extension in `/prepare-release`
+- `SKILL-DEVELOPMENT-GUIDE.md` with full type taxonomy, frontmatter reference, and HOW-TO template
+- `README-DIST.md` with per-type skill tables and usage examples
+- Frontmatter hints added to `/minimize-files` command spec
+- Publish unpackaged skill directories to dist repo
+
+### Changed
+- Default skills reduced from 10 to 7
+- Skill registry reads version from `package.json` instead of hardcoding
+- Removed skill-catalog files (replaced by registry)
+- Build script output moved from `metadata/` to `local-metadata/`
+
+### Fixed
+- Added `type` field and removed deprecated `invocationMode` from all 39 skills
+- CRLF line ending handling in frontmatter parsers
+
 ## [0.3.1] - 2026-03-31
 
 ### Fixed
