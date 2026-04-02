@@ -1,12 +1,6 @@
 # Feature File Template
-**Version:** v0.5.0
-
-Use this template as a starting point for new feature files.
-
----
-
+**Version:** v0.6.0
 ## Basic Template
-
 ```gherkin
 @tag1 @tag2
 Feature: [Feature Name]
@@ -38,11 +32,7 @@ Feature: [Feature Name]
     When [action that triggers error]
     Then [error handling behavior]
 ```
-
----
-
 ## Example: E-commerce Cart Feature
-
 ```gherkin
 @cart @shopping
 Feature: Shopping Cart Management
@@ -63,14 +53,6 @@ Feature: Shopping Cart Management
     Then my cart contains 1 item
     And the cart shows "Blue T-Shirt"
     And the cart total is $29.99
-
-  @happy-path
-  Scenario: Add multiple items to cart
-    Given my shopping cart is empty
-    When I add "Blue T-Shirt" to my cart
-    And I add "Black Jeans" to my cart
-    Then my cart contains 2 items
-    And the cart total is $79.98
 
   Scenario: Increase item quantity
     Given my cart contains 1 "Blue T-Shirt"
@@ -104,61 +86,7 @@ Feature: Shopping Cart Management
       | PERCENT20 | $20.00   | $80.00 |
       | INVALID   | $0.00    | $100.00|
 ```
-
----
-
-## Example: User Authentication Feature
-
-```gherkin
-@authentication @security
-Feature: User Authentication
-  Secure login and logout functionality
-
-  As a registered user
-  I want to securely access my account
-  So that my personal information is protected
-
-  Background:
-    Given I am on the login page
-
-  @smoke @critical
-  Scenario: Successful login with valid credentials
-    Given a user exists with email "alice@example.com" and password "SecurePass123!"
-    When I enter email "alice@example.com"
-    And I enter password "SecurePass123!"
-    And I click the login button
-    Then I am redirected to the dashboard
-    And I see "Welcome, Alice"
-
-  @security
-  Scenario: Failed login with incorrect password
-    Given a user exists with email "alice@example.com"
-    When I enter email "alice@example.com"
-    And I enter password "WrongPassword"
-    And I click the login button
-    Then I see an error "Invalid email or password"
-    And I remain on the login page
-    And no session is created
-
-  @security
-  Scenario: Account lockout after failed attempts
-    Given a user exists with email "alice@example.com"
-    When I enter incorrect password 5 times
-    Then the account is locked
-    And I see "Account locked. Please try again in 30 minutes."
-
-  Scenario: Logout ends session
-    Given I am logged in as "alice@example.com"
-    When I click the logout button
-    Then I am redirected to the login page
-    And my session is terminated
-    And I cannot access protected pages
-```
-
----
-
 ## Example: API Feature
-
 ```gherkin
 @api @orders
 Feature: Order API
@@ -200,31 +128,14 @@ Feature: Order API
     When I GET "/api/orders/nonexistent"
     Then the response status is 404
     And the response contains error "Order not found"
-
-  Scenario: Update order status
-    Given an order exists with ID "order-789" and status "pending"
-    When I PATCH "/api/orders/order-789" with:
-      """json
-      {"status": "shipped"}
-      """
-    Then the response status is 200
-    And the order status is "shipped"
 ```
-
----
-
 ## File Naming Conventions
-
 | Pattern | Example |
 |---------|---------|
 | `[feature-name].feature` | `shopping-cart.feature` |
 | `[domain]/[feature].feature` | `orders/create-order.feature` |
 | `[number]-[feature].feature` | `001-user-login.feature` |
-
----
-
 ## Directory Structure
-
 ```
 features/
 ├── authentication/
@@ -244,7 +155,3 @@ features/
     ├── orders-api.feature
     └── products-api.feature
 ```
-
----
-
-**End of Feature File Template**

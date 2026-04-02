@@ -7,7 +7,11 @@
       "Test run executed and FAILS with expected error",
       "Failure message is meaningful (not a generic assertion error)"
     ],
-    "gate": "Do not proceed to GREEN until test failure confirmed with expected error"
+    "gate": "Do not proceed to GREEN until test failure confirmed with expected error",
+    "deepReference": {
+      "skill": "tdd-red-phase",
+      "when": "Load this skill if stuck at gate or guidance needed"
+    }
   },
   "green": {
     "required": [
@@ -16,7 +20,11 @@
       "No additional functionality beyond what the test requires",
       "Test run executed and PASSES"
     ],
-    "gate": "Do not proceed to REFACTOR until test passes"
+    "gate": "Do not proceed to REFACTOR until test passes",
+    "deepReference": {
+      "skill": "tdd-green-phase",
+      "when": "Load this skill if stuck at gate or guidance needed"
+    }
   },
   "refactor": {
     "required": [
@@ -25,7 +33,11 @@
       "If refactoring: changes improve clarity without altering behavior",
       "Test run executed and still PASSES after refactoring"
     ],
-    "gate": "Do not proceed to next AC until commit made for this TDD cycle"
+    "gate": "Do not proceed to next AC until commit made for this TDD cycle",
+    "deepReference": {
+      "skill": "tdd-refactor-phase",
+      "when": "Load this skill if stuck at gate or guidance needed"
+    }
   },
   "failure-recovery": {
     "triggers": [
@@ -42,6 +54,10 @@
       "Review test dependencies: external services, file system, network?",
       "Simplify: reduce test to smallest reproducing case",
       "If flaky: check for timing dependencies, async issues, or race conditions"
-    ]
+    ],
+    "deepReference": {
+      "skill": "tdd-failure-recovery",
+      "when": "Load this skill if stuck during failure diagnosis or recovery"
+    }
   }
 }

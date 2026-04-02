@@ -12,45 +12,48 @@ relevantTechStack: [rest, graphql, api, node, express]
 copyright: "Rubrical Works (c) 2026"
 ---
 # API Versioning
-## When to Use This Skill
+Guide for API versioning strategies including URL-based, header-based, and content negotiation approaches, plus deprecation workflows and backward compatibility patterns.
+## When to Use
 - Designing a new API that will evolve over time
 - Planning breaking changes to an existing API
 - Establishing deprecation policies
 - Migrating clients between API versions
 - Choosing between versioning strategies
+## Why Version APIs?
+APIs change over time (new features, bug fixes, refactoring, security updates). Without versioning, changes break existing clients. Versioning allows evolution while maintaining backward compatibility, providing migration paths, and supporting multiple versions during transitions.
 ## Versioning Strategies
 ### 1. URL Path Versioning
 ```
 /api/v1/users
 /api/v2/users
 ```
-**Pros:** Highly visible, easy to route/cache, simple client implementation
-**Cons:** URL pollution, can't version individual resources differently
-**Best for:** Public APIs, major version changes
+- **Pros:** Highly visible, easy to route/cache, simple client implementation
+- **Cons:** URL pollution, can't version individual resources differently
+- **Best for:** Public APIs, major version changes, simple needs
 ### 2. Query Parameter Versioning
 ```
 /api/users?version=1
 /api/users?api-version=2024-01-01
 ```
-**Pros:** Optional (can default), single URL structure
-**Cons:** Easy to miss, can interfere with caching
-**Best for:** Optional versioning, date-based versions
+- **Pros:** Optional (can default), single URL structure, easy to add
+- **Cons:** Easy to miss, can interfere with caching
+- **Best for:** Optional versioning, date-based versions, gradual introduction
 ### 3. Header Versioning
 ```
 GET /api/users
 Accept-Version: v1
 ```
-**Pros:** Clean URLs, follows HTTP semantics
-**Cons:** Harder to test in browser, less visible
-**Best for:** Internal APIs, fine-grained versioning
+- **Pros:** Clean URLs, follows HTTP semantics, per-request versioning
+- **Cons:** Harder to test in browser, less visible
+- **Best for:** Internal APIs, URL cleanliness, fine-grained versioning
 ### 4. Content Negotiation (Media Type)
 ```
 GET /api/users
 Accept: application/vnd.company.users.v2+json
 ```
-**Pros:** RESTful, can version representations separately
-**Cons:** Complex implementation, harder for clients
-**Best for:** Strict REST, enterprise environments
+- **Pros:** RESTful, can version representations separately
+- **Cons:** Complex implementation, harder for clients
+- **Best for:** Strict REST, multiple representation formats, enterprise
 ## Decision Matrix
 | Factor | URL Path | Query Param | Header | Media Type |
 |--------|----------|-------------|--------|------------|
@@ -59,16 +62,34 @@ Accept: application/vnd.company.users.v2+json
 | RESTful | Medium | Low | Medium | High |
 | Caching | Easy | Medium | Complex | Complex |
 | Testing | Easy | Easy | Medium | Hard |
-**Recommendations:** Public APIs: URL path. Internal APIs: Header. Enterprise APIs: Media type. Simple APIs: Query parameter.
+**Recommendations:** Public APIs -> URL path | Internal APIs -> Header | Enterprise APIs -> Media type | Simple APIs -> Query parameter
 ## Version Numbering
-**Semantic Versioning:** `MAJOR.MINOR.PATCH` — MAJOR: Breaking changes, MINOR: Backward-compatible additions, PATCH: Backward-compatible fixes
-**Date-Based:** `YYYY-MM-DD` or `YYYY-MM` — For frequent releases, rolling deprecation windows
-**Simple Major:** `v1, v2, v3` — For infrequent major changes
+### Semantic Versioning
+```
+MAJOR.MINOR.PATCH
+MAJOR: Breaking changes
+MINOR: Backward-compatible additions
+PATCH: Backward-compatible fixes
+```
+### Date-Based Versioning
+```
+YYYY-MM-DD or YYYY-MM
+```
+Use for frequent releases, rolling deprecation windows, Azure/AWS style APIs.
+### Simple Major Versioning
+```
+v1, v2, v3
+```
+Use for infrequent major changes with clear breaking changes.
 ## Backward Compatibility
-**Safe changes (usually compatible):**
-- Adding new endpoints, optional parameters, new response fields, new enum values
+**Safe changes (compatible):**
+- Adding new endpoints, optional parameters, new response fields
+- Adding new enum values (if client handles unknown)
 **Breaking changes (require new version):**
-- Removing endpoints/fields, changing field types, renaming fields, changing required parameters, changing authentication
+- Removing endpoints or response fields
+- Changing field types, renaming fields
+- Changing required parameters or authentication
+### Compatibility Patterns
 **Additive changes:**
 ```json
 // v1 response
@@ -77,21 +98,20 @@ Accept: application/vnd.company.users.v2+json
 {"id": 1, "name": "Alice", "email": "alice@example.com"}
 ```
 ## Deprecation Workflow
-### Lifecycle
 ```
 Active -> Deprecated -> Sunset -> Removed
 ```
-1. Active: Fully supported
-2. Deprecated: Announced, still works, migration encouraged
-3. Sunset: Warning period, reduced support
-4. Removed: No longer available
+1. **Active:** Fully supported
+2. **Deprecated:** Announced, still works, migration encouraged
+3. **Sunset:** Warning period, reduced support
+4. **Removed:** No longer available
 **Deprecation header:**
 ```
 Deprecation: true
 Sunset: Sat, 01 Jun 2025 00:00:00 GMT
 Link: <https://api.example.com/docs/migration>; rel="deprecation"
 ```
-**During deprecation:** Provide migration guide, offer parallel versions, log deprecated endpoint usage, send notifications, provide tooling if complex
+**During deprecation:** Provide migration guide, offer parallel versions, log deprecated endpoint usage, notify heavy users.
 ### Timeline Example
 ```
 Month 0:  Announce v1 deprecation, v2 released
@@ -117,25 +137,24 @@ Month 9:  Remove v1 (or extend if needed)
 1. [Step 1]
 2. [Step 2]
 ```
+### Gradual Migration Strategies
+- **Shadow testing:** Send to v1, internally also send to v2, compare responses, switch when confident
+- **Feature flags:** `const API_VERSION = process.env.USE_V2_API ? 'v2' : 'v1';`
 ## REST API Patterns
 **Version the API, not resources:**
 ```
-/api/v1/users      correct
-/api/v1/products   correct
-/api/users/v1      incorrect (inconsistent)
+/api/v1/users      (correct)
+/api/users/v1      (inconsistent - avoid)
 ```
 **Envelope pattern:**
 ```json
 {
   "data": { ... },
-  "meta": {
-    "version": "1.2.0",
-    "deprecated": false
-  }
+  "meta": { "version": "1.2.0", "deprecated": false }
 }
 ```
 ## GraphQL Patterns
-**Deprecating Fields:**
+GraphQL naturally supports additive changes. Use `@deprecated` for fields:
 ```graphql
 type User {
   id: ID!
@@ -143,7 +162,7 @@ type User {
   fullName: String!
 }
 ```
-**Breaking changes:** Use separate endpoint `/graphql/v2`
+For breaking changes, use separate endpoints: `/graphql` and `/graphql/v2`.
 ## Implementation Checklist
 ### Before Releasing Versioned API
 - [ ] Versioning strategy chosen
@@ -164,9 +183,9 @@ type User {
 - [ ] Old version documentation archived
 - [ ] Redirects or error messages in place
 ## Resources
-See `resources/` directory for:
-- `strategy-comparison.md` - Detailed strategy analysis
-- `deprecation-workflow.md` - Step-by-step deprecation process
-- `compatibility-guide.md` - Backward compatibility patterns
+- `resources/strategy-comparison.md` - Detailed strategy analysis
+- `resources/deprecation-workflow.md` - Step-by-step deprecation process
+- `resources/compatibility-guide.md` - Backward compatibility patterns
 ## Relationship to Other Skills
-**Complements:** `error-handling-patterns`, `postgresql-integration`
+- **Complements:** `error-handling-patterns`, `postgresql-integration`
+- **Independent from:** TDD skills (this focuses on API design)

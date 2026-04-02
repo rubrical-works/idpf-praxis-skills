@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-04-02
+
+### Added
+- Destructive pattern detection (Category 5) in command-spec-audit skill
+- `defaultSkill: true` for command-spec-audit — auto-installed in IDPF projects
+- `deepReference` field in tdd-checklist.json for conditional skill loading
+- LICENSE and SECURITY.md to dist repo
+- CodeQL workflow to dist-workflows
+
+### Changed
+- Reclassified 5 skills to correct types: command-spec-audit (invokable→reference), codebase-analysis (invokable→reference+defaultSkill), bdd-writing (invokable→reference), observability-setup (invokable→educational), property-based-testing (invokable→educational)
+- Type-aware resource minimization — resource `.md` files for invokable/reference types now AI-minimized
+- Full `.min-mirror` reset with updated minimization pipeline
+- Removed `reference` from `minimizeTypes` — reference skills now copied as-is
+
+### Fixed
+- Copyright year updated to 2026 in all skill LICENSE.txt files
+- MAINTENANCE.md lastUpdated dates synced with SKILL.md frontmatter
+- Removed audit-commands directory (incorrectly copied from dev repo)
+
 ## [0.5.0] - 2026-04-02
 
 ### Added

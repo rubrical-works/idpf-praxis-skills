@@ -1,58 +1,43 @@
 # Platform-Specific Examples
-**Version:** v0.5.0
-
+**Version:** v0.6.0
 Complete CI/CD pipeline configurations for major platforms.
-
 ## GitHub Actions
-
 ### Complete Pipeline
-
 ```yaml
 name: CI/CD Pipeline
-
 on:
   push:
     branches: [main, develop]
   pull_request:
     branches: [main]
-
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-
 jobs:
-  # Build Stage
   build:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
       - name: Install dependencies
         run: npm ci
-
       - name: Build
         run: npm run build
-
       - name: Generate version
         id: version
         run: echo "version=$(date +%Y%m%d)-${{ github.sha }}" >> $GITHUB_OUTPUT
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ steps.version.outputs.version }}
           path: dist/
           retention-days: 7
-
-  # Test Stage
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -61,70 +46,54 @@ jobs:
         test-type: [unit, integration]
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
       - name: Install dependencies
         run: npm ci
-
       - name: Run tests
         run: npm run test:${{ matrix.test-type }}
-
       - name: Upload coverage
         if: matrix.test-type == 'unit'
         uses: codecov/codecov-action@v3
-
-  # Security Stage
   security:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Run SAST
         uses: github/codeql-action/analyze@v2
         with:
           languages: javascript
-
       - name: Dependency scan
         run: npm audit --audit-level=high
-
       - name: Secret scan
         uses: gitleaks/gitleaks-action@v2
-
-  # Build Container
   docker:
     needs: [test, security]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-
       - name: Login to Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
       - name: Scan container
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
-
-  # Deploy Staging
   deploy-staging:
     needs: docker
     runs-on: ubuntu-latest
@@ -133,13 +102,9 @@ jobs:
       - name: Deploy to staging
         run: |
           echo "Deploying ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          # kubectl set image deployment/app app=$IMAGE:$TAG
-
       - name: Smoke tests
         run: |
           curl -f https://staging.example.com/health || exit 1
-
-  # Deploy Production
   deploy-production:
     needs: deploy-staging
     runs-on: ubuntu-latest
@@ -148,17 +113,12 @@ jobs:
       - name: Deploy to production
         run: |
           echo "Deploying to production"
-          # kubectl set image deployment/app app=$IMAGE:$TAG
-
       - name: Verify deployment
         run: |
           curl -f https://api.example.com/health || exit 1
 ```
-
 ## GitLab CI
-
 ### Complete Pipeline
-
 ```yaml
 stages:
   - build
@@ -166,11 +126,8 @@ stages:
   - security
   - package
   - deploy
-
 variables:
   DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-
-# Build Stage
 build:
   stage: build
   image: node:20
@@ -185,8 +142,6 @@ build:
     paths:
       - dist/
     expire_in: 1 week
-
-# Test Stage
 unit-tests:
   stage: test
   image: node:20
@@ -200,7 +155,6 @@ unit-tests:
       coverage_report:
         coverage_format: cobertura
         path: coverage/cobertura-coverage.xml
-
 integration-tests:
   stage: test
   image: node:20
@@ -213,21 +167,15 @@ integration-tests:
   script:
     - npm ci
     - npm run test:integration
-
-# Security Stage
 sast:
   stage: security
   needs: [build]
-
 dependency_scanning:
   stage: security
   needs: [build]
-
 secret_detection:
   stage: security
   needs: [build]
-
-# Package Stage
 docker-build:
   stage: package
   image: docker:latest
@@ -240,14 +188,11 @@ docker-build:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE
-
 container_scanning:
   stage: package
   needs: [docker-build]
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-
-# Deploy Stage
 deploy-staging:
   stage: deploy
   image: alpine/k8s:1.28.0
@@ -260,7 +205,6 @@ deploy-staging:
   script:
     - kubectl set image deployment/app app=$DOCKER_IMAGE
     - kubectl rollout status deployment/app
-
 deploy-production:
   stage: deploy
   image: alpine/k8s:1.28.0
@@ -275,27 +219,21 @@ deploy-production:
     - kubectl set image deployment/app app=$DOCKER_IMAGE
     - kubectl rollout status deployment/app
 ```
-
 ## Jenkins (Declarative)
-
 ### Complete Pipeline
-
 ```groovy
 pipeline {
     agent any
-
     environment {
         REGISTRY = 'registry.example.com'
         IMAGE_NAME = 'myapp'
         IMAGE_TAG = "${BUILD_NUMBER}-${GIT_COMMIT.take(7)}"
     }
-
     options {
         timeout(time: 1, unit: 'HOURS')
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '10'))
     }
-
     stages {
         stage('Build') {
             steps {
@@ -308,7 +246,6 @@ pipeline {
                 }
             }
         }
-
         stage('Test') {
             parallel {
                 stage('Unit Tests') {
@@ -329,7 +266,6 @@ pipeline {
                 }
             }
         }
-
         stage('Security') {
             parallel {
                 stage('SAST') {
@@ -344,7 +280,6 @@ pipeline {
                 }
             }
         }
-
         stage('Docker Build') {
             when {
                 branch 'main'
@@ -359,7 +294,6 @@ pipeline {
                 }
             }
         }
-
         stage('Container Scan') {
             when {
                 branch 'main'
@@ -368,7 +302,6 @@ pipeline {
                 sh "trivy image ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
-
         stage('Deploy Staging') {
             when {
                 branch 'main'
@@ -381,7 +314,6 @@ pipeline {
                 sh 'kubectl rollout status deployment/app'
             }
         }
-
         stage('Deploy Production') {
             when {
                 branch 'main'
@@ -399,7 +331,6 @@ pipeline {
             }
         }
     }
-
     post {
         failure {
             slackSend channel: '#deployments',
@@ -414,28 +345,22 @@ pipeline {
     }
 }
 ```
-
 ## Azure DevOps
-
 ### Complete Pipeline
-
 ```yaml
 trigger:
   branches:
     include:
       - main
       - develop
-
 pool:
   vmImage: 'ubuntu-latest'
-
 variables:
   - group: app-settings
   - name: imageRepository
     value: 'myapp'
   - name: containerRegistry
     value: 'myregistry.azurecr.io'
-
 stages:
   - stage: Build
     jobs:
@@ -444,16 +369,12 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSpec: '20.x'
-
           - script: npm ci
             displayName: 'Install dependencies'
-
           - script: npm run build
             displayName: 'Build'
-
           - publish: dist
             artifact: build
-
   - stage: Test
     dependsOn: Build
     jobs:
@@ -462,20 +383,16 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSpec: '20.x'
-
           - script: npm ci && npm test -- --coverage
             displayName: 'Run tests'
-
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
               testResultsFiles: 'reports/junit.xml'
-
           - task: PublishCodeCoverageResults@1
             inputs:
               codeCoverageTool: 'Cobertura'
               summaryFileLocation: 'coverage/cobertura-coverage.xml'
-
   - stage: Security
     dependsOn: Build
     jobs:
@@ -484,7 +401,6 @@ stages:
           - task: WhiteSource@21
             inputs:
               cwd: '$(System.DefaultWorkingDirectory)'
-
   - stage: Docker
     dependsOn:
       - Test
@@ -501,7 +417,6 @@ stages:
               tags: |
                 $(Build.BuildId)
                 latest
-
   - stage: DeployStaging
     dependsOn: Docker
     condition: succeeded()
@@ -517,7 +432,6 @@ stages:
                     action: 'deploy'
                     kubernetesServiceConnection: 'k8s-staging'
                     manifests: 'manifests/staging.yaml'
-
   - stage: DeployProduction
     dependsOn: DeployStaging
     condition: succeeded()
@@ -534,7 +448,3 @@ stages:
                     kubernetesServiceConnection: 'k8s-production'
                     manifests: 'manifests/production.yaml'
 ```
-
----
-
-**See SKILL.md for complete CI/CD pipeline guidance**

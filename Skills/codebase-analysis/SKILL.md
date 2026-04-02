@@ -1,135 +1,83 @@
 ---
 name: codebase-analysis
 description: Analyze existing codebases to extract structure, tech stack, and patterns
-type: invokable
+type: reference
+disable-model-invocation: true
 version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-03-17"
+lastUpdated: "2026-04-02"
 license: Complete terms in LICENSE.txt
 category: code-quality
 relevantTechStack: [javascript, typescript, python, java, go, rust, ruby, php, swift, elixir, kotlin, csharp]
-defaultSkill: false
+defaultSkill: true
 copyright: "Rubrical Works (c) 2026"
 ---
 # Skill: codebase-analysis
-**Purpose:** Analyze existing codebases to extract structure, tech stack, and patterns
-**Audience:** Used by /create-prd extract, /charter extraction, and codebase exploration
-**Load with:** Anti-Hallucination-Rules-for-PRD-Work.md (for PRD/charter work)
-**Critical:** All analysis output must be traceable to code evidence. Never invent details not supported by actual files, tests, or code patterns. Mark all inferences with confidence levels.
-## When to Use
-- `/create-prd extract` - Analyzing codebase for PRD generation
-- `/charter` extraction mode - Analyzing codebase for charter generation
-- `/charter refresh` - Re-analyzing codebase for charter updates
-- General codebase exploration and understanding
-- Legacy code analysis
-- Onboarding assistance — exploring unfamiliar codebases
-## Analysis Capabilities
-### 1. Tech Stack Detection
-| File Pattern | Detects | Example |
-|--------------|---------|---------|
-| `package.json` | Node.js, npm deps | `"express": "4.x"` -> Express.js |
-| `requirements.txt`, `pyproject.toml` | Python, pip deps | `flask==2.0` -> Flask |
-| `go.mod` | Go, modules | `require github.com/gin-gonic/gin` -> Gin |
-| `Gemfile` | Ruby, gems | `gem 'rails'` -> Ruby on Rails |
-| `pom.xml`, `build.gradle` | Java, Maven/Gradle | Spring, Hibernate |
-| `Cargo.toml` | Rust, crates | `tokio`, `actix-web` |
-| `.csproj`, `packages.config` | .NET, NuGet | ASP.NET, Entity Framework |
-| `Package.swift` | Swift, SPM | Vapor, SwiftUI |
-| `composer.json` | PHP, Composer | Laravel, Symfony |
-| `mix.exs` | Elixir, Mix | Phoenix, Ecto |
-| `pubspec.yaml` | Dart/Flutter | Flutter, Dart packages |
-| `build.gradle.kts` | Kotlin, Gradle | Ktor, Spring (Kotlin) |
-| `build.sbt` | Scala, sbt | Play, Akka |
-**Secondary Sources:**
+Load with Anti-Hallucination-Rules-for-PRD-Work.md for PRD/charter work.
+All analysis output must be traceable to code evidence. Never invent details not supported by actual files. Mark inferences with confidence levels.
+## Tech Stack Detection
+Detect languages, frameworks, dependencies from project files.
 | File Pattern | Detects |
 |--------------|---------|
-| `Dockerfile` | Containerization, base images |
-| `.github/workflows/*.yml` | CI/CD, GitHub Actions |
-| `docker-compose.yml` | Service architecture |
-| `*.config`, `*.yaml` | Configuration patterns |
-### 2. Architecture Inference
-**Directory Pattern Detection:**
+| `package.json` | Node.js, npm deps |
+| `requirements.txt`, `pyproject.toml` | Python, pip deps |
+| `go.mod` | Go modules |
+| `Gemfile` | Ruby gems |
+| `pom.xml`, `build.gradle` | Java, Maven/Gradle |
+| `Cargo.toml` | Rust crates |
+| `.csproj`, `packages.config` | .NET, NuGet |
+| `Package.swift` | Swift SPM |
+| `composer.json` | PHP Composer |
+| `mix.exs` | Elixir Mix |
+| `pubspec.yaml` | Dart/Flutter |
+| `build.gradle.kts` | Kotlin Gradle |
+| `build.sbt` | Scala sbt |
+Secondary: `Dockerfile` (containerization), `.github/workflows/*.yml` (CI/CD), `docker-compose.yml` (service arch), `*.config`/`*.yaml` (config patterns).
+## Architecture Inference
 | Pattern | Architecture Style |
 |---------|-------------------|
-| `src/`, `lib/`, `app/` | Monolith (single-tier) |
-| `frontend/`, `backend/`, `api/` | Multi-tier separation |
+| `src/`, `lib/`, `app/` | Monolith |
+| `frontend/`, `backend/`, `api/` | Multi-tier |
 | `services/*/`, `microservices/` | Microservices |
 | `domain/`, `infrastructure/`, `application/` | Clean/Hexagonal |
-| `models/`, `views/`, `controllers/` | MVC pattern |
+| `models/`, `views/`, `controllers/` | MVC |
 | `components/`, `pages/`, `hooks/` | Frontend component-based |
-**Layer Detection:**
-| Layer | Indicators |
-|-------|------------|
-| Presentation | `views/`, `templates/`, `components/`, `pages/` |
-| API | `routes/`, `api/`, `endpoints/`, `handlers/` |
-| Business Logic | `services/`, `domain/`, `core/`, `usecases/` |
-| Data Access | `repositories/`, `models/`, `db/`, `data/` |
-| Infrastructure | `config/`, `infrastructure/`, `utils/` |
-### 3. Test Parsing
-| Framework | File Pattern | Feature Extraction |
-|-----------|--------------|-------------------|
+Layer indicators: Presentation (`views/`, `templates/`, `components/`), API (`routes/`, `api/`, `handlers/`), Business Logic (`services/`, `domain/`, `core/`), Data Access (`repositories/`, `models/`, `db/`), Infrastructure (`config/`, `utils/`).
+## Test Parsing
+| Framework | File Pattern | Extraction |
+|-----------|--------------|------------|
 | pytest | `test_*.py`, `*_test.py` | Function names, docstrings, parametrize |
 | Jest | `*.test.js`, `*.spec.js` | describe/it blocks |
-| JUnit | `*Test.java`, `*Tests.java` | @Test methods, @DisplayName |
-| RSpec | `*_spec.rb` | describe/context/it blocks |
+| JUnit | `*Test.java` | @Test, @DisplayName |
+| RSpec | `*_spec.rb` | describe/context/it |
 | Go testing | `*_test.go` | Test* functions |
-| xUnit | `*.Tests.cs` | [Fact], [Theory] methods |
-### 4. NFR Detection
-**Security Patterns:**
-| Pattern | NFR Inference |
-|---------|---------------|
-| `bcrypt`, `argon2`, password hashing | Password security required |
-| JWT, OAuth, session management | Authentication required |
-| CORS configuration | Cross-origin access control |
-| Input validation, sanitization | Input security required |
-| Rate limiting middleware | Rate limiting required |
-**Performance Patterns:**
-| Pattern | NFR Inference |
-|---------|---------------|
-| Redis, Memcached usage | Caching required |
-| Connection pooling | Database performance |
-| Async/await, promises | Non-blocking I/O |
-| CDN configuration | Content delivery |
-| Load balancer config | Horizontal scaling |
-**Reliability Patterns:**
-| Pattern | NFR Inference |
-|---------|---------------|
-| Retry logic, circuit breakers | Fault tolerance |
-| Health check endpoints | Monitoring required |
-| Logging (structured) | Observability |
-| Error handling patterns | Error recovery |
-| Transaction management | Data consistency |
-**Accessibility Patterns:**
-| Pattern | NFR Inference |
-|---------|---------------|
-| ARIA attributes (`aria-label`, `role`) | Accessibility required |
-| Semantic HTML (`<nav>`, `<main>`, `<article>`) | Accessibility standards |
-| Skip navigation links | Screen reader support |
-| Alt text on images | Image accessibility |
-| Focus management, keyboard handlers | Keyboard accessibility |
-**Observability Patterns:**
-| Pattern | NFR Inference |
-|---------|---------------|
-| OpenTelemetry, Jaeger, Zipkin | Distributed tracing |
-| Prometheus metrics, StatsD | Metrics collection |
-| Structured logging (JSON logs) | Log aggregation |
-| Health check endpoints (`/health`, `/ready`) | Liveness/readiness probes |
-| Error tracking (Sentry, Bugsnag) | Error monitoring |
-**Internationalization Patterns:**
-| Pattern | NFR Inference |
-|---------|---------------|
-| i18n/l10n libraries (`i18next`, `gettext`, `fluent`) | Multi-language support |
-| Locale files (`locales/`, `translations/`) | Translation infrastructure |
-| `Intl` API usage, `formatMessage` | Runtime localization |
-| Right-to-left (RTL) CSS | Bidirectional text support |
-| ICU message format | Pluralization/gender handling |
+| xUnit | `*.Tests.cs` | [Fact], [Theory] |
+```
+Test File -> Test Suite -> Test Case -> Feature Description
+                                    -> Expected Behavior
+                                    -> Edge Cases
+```
+## NFR Detection
+Security: `bcrypt`/`argon2` (password security), JWT/OAuth (auth), CORS config, input validation, rate limiting.
+Performance: Redis/Memcached (caching), connection pooling, async/await, CDN config, load balancer.
+Reliability: retry/circuit breakers (fault tolerance), health checks, structured logging, error handling, transactions.
+Accessibility: ARIA attributes, semantic HTML, skip nav, alt text, focus/keyboard handlers.
+Observability: OpenTelemetry/Jaeger (tracing), Prometheus/StatsD (metrics), JSON logs, health endpoints, Sentry/Bugsnag.
+i18n: i18next/gettext (multi-language), locale files, `Intl` API, RTL CSS, ICU message format.
+## Usage
+| Phase | Output |
+|-------|--------|
+| Tech Stack Detection | Technology summary with confidence |
+| Architecture Inference | Structure, layers, patterns |
+| Test Parsing | Feature list with test evidence |
+| NFR Detection | NFR list with code evidence |
+| Full Analysis | Complete codebase summary |
 ## Confidence Levels
 | Level | Meaning | Action |
 |-------|---------|--------|
-| **High** | Direct code evidence (test file, config value) | Use directly |
-| **Medium** | Inferred from patterns (directory structure, naming) | Flag for validation |
-| **Low** | Weak signals, assumptions | Require user confirmation |
-**Format:**
+| High | Direct code evidence | Use directly |
+| Medium | Inferred from patterns | Flag for validation |
+| Low | Weak signals | Require user confirmation |
 ```markdown
 **Feature:** User Registration
 **Confidence:** High
@@ -138,23 +86,9 @@ copyright: "Rubrical Works (c) 2026"
 - POST /api/register endpoint
 - User model in models/user.py
 ```
-## Integration Points
-| Consumer | Uses For |
-|----------|----------|
-| `/create-prd extract` | PRD generation from codebase |
-| `/charter` extraction | Charter generation from codebase |
-| `/charter refresh` | Charter updates from code changes |
-| Anti-pattern analysis | Code quality assessment |
-## Resources
-| Resource | Purpose |
-|----------|---------|
-| `resources/test-parsing-guide.md` | Detailed test parsing patterns |
-| `resources/nfr-detection-guide.md` | NFR detection patterns by category |
-| `resources/tech-stack-detection.md` | Tech stack detection patterns |
-| `resources/architecture-inference.md` | Architecture inference patterns |
 ## Anti-Hallucination Rules
-1. **Only report what exists** - Don't invent features not found in code
-2. **Cite evidence** - Every finding must reference specific files/patterns
-3. **Use confidence levels** - Be honest about inference certainty
-4. **Flag gaps** - Note what's missing or unclear
-5. **Validate with user** - Medium/Low confidence items need confirmation
+1. Only report what exists in code
+2. Cite specific files/patterns as evidence
+3. Use confidence levels honestly
+4. Flag gaps and missing information
+5. Medium/Low confidence items need user confirmation

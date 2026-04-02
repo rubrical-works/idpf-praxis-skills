@@ -13,8 +13,8 @@ defaultSkill: true
 copyright: "Rubrical Works (c) 2026"
 ---
 # TDD RED Phase
-Guides experienced developers through the RED phase: writing failing tests and verifying expected failures.
-## When to Use This Skill
+Guide experienced developers through the RED phase of TDD: writing failing tests and verifying expected failures.
+## When to Use
 - Starting implementation of a new feature or behavior
 - User triggers `work #N` in IDPF-Agile framework
 - Beginning a new TDD iteration
@@ -23,87 +23,110 @@ Guides experienced developers through the RED phase: writing failing tests and v
 - Working development environment with test framework configured
 - Clear understanding of the behavior to be tested
 - Familiarity with TDD principles
-## RED Phase Objective
+## RED Phase Objectives
 **Write a test that fails for the right reason.**
-**Correct failure:** Test fails because feature/behavior doesn't exist yet; failure message clearly indicates what's missing
-**Incorrect failure:** Syntax error, missing imports, incorrect test setup, or test passes unexpectedly
-## Workflow
+**Correct failure:**
+- Test fails because feature doesn't exist yet
+- Failure message clearly indicates what's missing
+**Incorrect failure:**
+- Test fails due to syntax error, missing imports, or incorrect setup
+- Test passes unexpectedly (test is invalid)
+## RED Phase Workflow
 ### Step 1: Identify Testable Behavior
-One test per behavior, one behavior per test.
-**Good:** `"Function returns sum of two numbers"`, `"GET /users returns 200"`, `"Invalid email shows validation error"`
-**Poor:** `"User management works"` (too broad), `"Fix the bug"` (not a behavior)
+- "Decompose story into testable behaviors"
+- Focus on smallest testable behavior (one test case covering one behavior)
+- **Key principle:** One test per behavior, one behavior per test
+**Good behavior identification:**
+```
+"Function returns sum of two numbers"
+"GET /users returns 200 status"
+"Invalid email shows validation error"
+```
+**Poor behavior identification:**
+```
+"User management works" (too broad)
+"Fix the bug" (not a behavior)
+```
 ### Step 2: Write the Failing Test
 **Test structure (AAA):**
+```
 1. ARRANGE: Set up test data and preconditions
 2. ACT: Execute the behavior being tested
 3. ASSERT: Verify the expected outcome
+```
+1. Identify the test file (create if needed)
+2. Write the test with AAA structure
+3. Include all imports and setup
+4. Execute the test and verify it fails
 **Framework-specific syntax:**
 ```javascript
 // Jest / Vitest
 describe('featureName', () => {
   it('should behave as expected', () => {
-    // Arrange → Act → Assert
+    // Arrange -> Act -> Assert
   });
 });
 ```
 ```python
 # pytest
 def test_feature_name_expected_behavior():
-    # Arrange → Act → Assert
+    # Arrange -> Act -> Assert
     pass
 ```
 ```go
 // Go testing
 func TestFeatureName_ExpectedBehavior(t *testing.T) {
-    // Arrange → Act → Assert
+    // Arrange -> Act -> Assert
 }
 ```
 ```rust
 // Rust
 #[test]
 fn feature_name_expected_behavior() {
-    // Arrange → Act → Assert
+    // Arrange -> Act -> Assert
 }
 ```
 ```ruby
 # RSpec
 describe 'FeatureName' do
   it 'behaves as expected' do
-    # Arrange → Act → Assert
+    # Arrange -> Act -> Assert
   end
 end
 ```
 ### Step 3: Execute and Verify Failure
+Execute the test and verify it FAILS (not passes, not errors).
+**Verification checklist:**
 - [ ] Test executed without syntax errors
 - [ ] Test failed (not passed)
 - [ ] Failure message indicates missing implementation
 - [ ] Failure message is clear and understandable
 ### Step 4: Analyze Failure
-- **Fails as expected** → RED complete → proceed to GREEN phase
-- **Passes unexpectedly** → test is invalid → revise to target unimplemented behavior
-- **Errors instead of fails** → test has bugs → fix test code
+**If test fails as expected:** RED phase complete, proceed to GREEN phase
+**If test passes unexpectedly:** Test is invalid -- revise to target unimplemented behavior, repeat Step 2
+**If test errors instead of fails:** Test has bugs -- fix test code, repeat Step 2
 ## Best Practices
-**Minimal tests:** One behavior, simplest test data, single assertion (or closely related)
-**Clear test names:**
-```
-test_[feature]_[scenario]_[expected_result]
-Examples:
-- test_add_function_with_positive_numbers_returns_sum
-- test_get_users_when_authenticated_returns_200
-```
-**Descriptive assertions:** Clear comparison, helpful failure messages, test observable behavior not implementation
+- **Minimal tests:** One specific behavior, simplest test data, single assertion
+- **Clear test names:** `test_[feature]_[scenario]_[expected_result]`
+- **Descriptive assertions:** Include helpful failure messages, test observable behavior not implementation
 ## Common Mistakes
-1. **Test passes immediately** — feature already exists. Delete implementation first, re-run.
-2. **Test has syntax errors** — fix syntax, imports, framework setup.
-3. **Test too broad** — split into multiple tests, one behavior each.
-4. **Unclear failure message** — add descriptive assertion messages, clear variable names.
+1. **Test passes immediately** -- verify feature doesn't exist yet; delete implementation first
+2. **Test has syntax errors** -- fix syntax, imports, framework setup
+3. **Test too broad** -- split into multiple focused tests
+4. **Unclear failure message** -- add descriptive assertion messages
 ## Anti-Patterns
-1. **Writing implementation first** — must write failing test before code
-2. **Skipping failure verification** — must RUN test and VERIFY it fails before GREEN phase
-3. **Tolerating test errors** — fix test now so it fails cleanly, don't defer to GREEN phase
+- **Writing implementation first** -- always write failing test first
+- **Skipping failure verification** -- always RUN test and VERIFY it fails before GREEN phase
+- **Tolerating test errors** -- fix test so it fails cleanly, don't defer to GREEN phase
 ## Integration with IDPF-Agile
-RED phase is the first step of story implementation. The TDD cycle runs autonomously. The only user checkpoint is at story completion (In Review → Done).
+RED phase is the first step of story implementation. When `/work` triggers TDD:
+1. Break story into testable behaviors
+2. Write and run RED phase test
+3. Verify failure
+4. Proceed to GREEN phase
+The TDD cycle runs autonomously. The only user checkpoint is at story completion (In Review -> Done).
 ## RED Phase Checklist
+Before proceeding to GREEN phase:
 - [ ] Test code is complete and syntactically correct
 - [ ] Test executes without errors
 - [ ] Test FAILS (does not pass)
@@ -111,6 +134,16 @@ RED phase is the first step of story implementation. The TDD cycle runs autonomo
 - [ ] Test name clearly describes behavior being tested
 - [ ] Test is focused on single behavior
 - [ ] Test uses minimal, clear test data
+## Resources
+- `resources/red-phase-checklist.md` - Quick reference checklist
+- `resources/test-structure-patterns.md` - Common test structure patterns
+- `resources/failure-verification-guide.md` - How to verify test failures correctly
 ## Relationship to Other Skills
-- **Flows to:** `tdd-green-phase`
-- **Related:** `test-writing-patterns`, `tdd-failure-recovery`
+**Flows to:** `tdd-green-phase` - Next phase after RED phase success
+**Related:** `test-writing-patterns`, `tdd-failure-recovery`
+## Expected Outcome
+- One failing test exists
+- Failure is verified and understood
+- Test clearly defines expected behavior
+- Ready to implement minimum code to pass test (GREEN phase)
+- Autonomous progression to GREEN phase (no user command needed)

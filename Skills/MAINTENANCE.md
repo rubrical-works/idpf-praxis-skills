@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.5.0
+**Version:** v0.6.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -17,12 +17,12 @@
 | anti-pattern-analysis | 1.0.0 | 2026-04-01 | Active |
 | api-versioning | 1.0.0 | 2026-03-17 | Active |
 | astro-development | 1.0.0 | 2026-03-17 | Active |
-| bdd-writing | 1.0.0 | 2026-03-17 | Active |
+| bdd-writing | 1.0.0 | 2026-04-02 | Active |
 | beginner-testing | 1.0.0 | 2026-03-17 | Active |
 | ci-cd-pipeline-design | 1.0.0 | 2026-03-17 | Active |
 | code-path-discovery | 1.0.0 | 2026-03-17 | Active |
-| codebase-analysis | 1.0.0 | 2026-03-17 | Active |
-| command-spec-audit | 1.0.0 | 2026-03-17 | Active |
+| codebase-analysis | 1.0.0 | 2026-04-02 | Active |
+| command-spec-audit | 1.0.0 | 2026-04-02 | Active |
 | common-errors | 1.0.0 | 2026-03-17 | Active |
 | digitalocean-app-setup | 1.0.0 | 2026-03-17 | Active |
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
@@ -46,7 +46,7 @@
 | seo-optimization | 1.0.0 | 2026-04-01 | Active |
 | sinatra-setup | 1.0.0 | 2026-04-01 | Active |
 | sqlite-integration | 1.0.0 | 2026-04-01 | Active |
-| tdd-failure-recovery | 1.0.0 | 2026-03-17 | Active |
+| tdd-failure-recovery | 1.0.0 | 2026-04-02 | Active |
 | tdd-green-phase | 1.0.0 | 2026-04-01 | Active |
 | tdd-process | 1.0.0 | 2026-04-01 | Active |
 | tdd-red-phase | 1.0.0 | 2026-04-01 | Active |

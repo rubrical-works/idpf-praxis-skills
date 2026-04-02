@@ -1,9 +1,11 @@
 {
-  "generatedAt": "2026-04-02T18:27:39.884Z",
+  "generatedAt": "2026-04-02T22:04:42.983Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
     "anti-pattern-analysis",
+    "codebase-analysis",
+    "command-spec-audit",
     "error-handling-patterns",
     "tdd-failure-recovery",
     "tdd-green-phase",

@@ -12,7 +12,10 @@ copyright: "Rubrical Works (c) 2026"
 ---
 # Skill: digitalocean-app-setup
 **Purpose:** Guide developers through setting up DigitalOcean App Platform deployments with GitHub integration
+**Audience:** Developers deploying web applications, APIs, and static sites to DigitalOcean
 **Related Skills:** `ci-cd-pipeline-design` — for broader CI/CD pipeline architecture
+## Overview
+The `digitalocean-app-setup` skill provides structured guidance for configuring DigitalOcean App Platform deployments. App Platform uses an app spec (`app-spec.yaml`) for Infrastructure as Code, supports review apps for PRs, and offers native GitHub integration with automatic deployments.
 ## Initial Setup
 ### Prerequisites
 - DigitalOcean account
@@ -31,7 +34,7 @@ doctl auth init
 ```bash
 # From app spec file
 doctl apps create --spec resources/app-spec.yaml
-# Or via Dashboard: https://cloud.digitalocean.com/apps -> Create App -> Select GitHub repo
+# Or via Dashboard: https://cloud.digitalocean.com/apps → Create App → Select GitHub repo
 ```
 ## Environment Configuration
 ### Required Secrets
@@ -63,8 +66,9 @@ See `resources/env-setup.md` for a complete guide.
 ```
 ## Deployment Strategies
 ### Production via Branch Deploy
+App Platform auto-deploys from the configured branch:
 ```
-main branch -> Production app (automatic)
+main branch → Production app (automatic)
 ```
 ### Staging via Separate App
 ```bash
@@ -72,26 +76,25 @@ doctl apps create --spec staging-app-spec.yaml
 ```
 ### Manual Deployment
 ```bash
-# Trigger a new deployment
 doctl apps create-deployment <app-id>
-# List recent deployments
 doctl apps list-deployments <app-id>
 ```
 ### Rollback
 ```bash
-# List deployments to find the target
 doctl apps list-deployments <app-id> --format ID,Phase,Progress
-# Rollback to a specific deployment
 doctl apps create-deployment <app-id> --revision <deployment-id>
 ```
 ## Monitoring and Debugging
 ### Logs
 ```bash
-# Stream runtime logs
 doctl apps logs <app-id> --follow
-# View build logs
 doctl apps logs <app-id> --type build
 ```
+### Dashboard Metrics
+- CPU and memory usage per component
+- HTTP request rate, latency, and error rate
+- Bandwidth consumption
+- Container restart count
 ### Health Checks
 ```yaml
 services:
@@ -111,11 +114,17 @@ services:
 - **Static site routing**: For SPAs, configure catch-all routes in the app spec
 - **Database connections**: Use connection pools and DigitalOcean Managed Databases for production
 ### Review App Issues
-- **Cost awareness**: Review apps count as separate app instances. Monitor usage
+- **Cost awareness**: Review apps count as separate app instances
 - **Database isolation**: Review apps share the production database by default. Use separate dev databases
-- **Environment variable conflicts**: Review app env vars inherit from main app. Override per-component in the spec
+- **Environment variable conflicts**: Review app env vars inherit from the main app. Override per-component in the spec
 ## App Spec Reference
-The `app-spec.yaml` file defines your app's infrastructure. See `resources/app-spec.yaml` for a reference configuration covering: service definitions, database provisioning, environment variables, build/run commands, domain configuration, health checks.
+The `app-spec.yaml` file defines your app's infrastructure. See `resources/app-spec.yaml` for a reference configuration covering:
+- Service definitions (web, worker, job)
+- Database provisioning
+- Environment variables
+- Build and run commands
+- Domain configuration
+- Health checks
 ## Resources
 - `resources/app-spec.yaml` — Reference DigitalOcean App Platform spec
 - `resources/deploy.yml` — GitHub Actions workflow for DigitalOcean deployment

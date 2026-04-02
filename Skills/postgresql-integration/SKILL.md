@@ -11,11 +11,11 @@ relevantTechStack: [postgresql, sql, node, python, pg]
 copyright: "Rubrical Works (c) 2026"
 ---
 # PostgreSQL Integration
-Database integration guide covering connection setup, query patterns, transaction handling, and connection pooling.
-## When to Use
+Guides developers through PostgreSQL database integration including connection setup, query patterns, transaction handling, and connection pooling.
+## When to Use This Skill
 - Setting up PostgreSQL connection in a new project
 - Implementing database queries and operations
-- Configuring connection pooling
+- Configuring connection pooling (pgbouncer, etc.)
 - Handling transactions
 - Troubleshooting common PostgreSQL issues
 - Using PostgreSQL with ORMs (Sequelize, Prisma)
@@ -28,8 +28,14 @@ Database integration guide covering connection setup, query patterns, transactio
 ```
 postgresql://[user[:password]@][host][:port][/dbname][?param1=value1&...]
 ```
+- `user` - Database username
+- `password` - Database password (consider environment variables)
+- `host` - Server hostname (default: localhost)
+- `port` - Server port (default: 5432)
+- `dbname` - Database name
 ### Security Best Practices
 **NEVER hardcode credentials in source code.**
+Recommended approaches:
 1. Environment variables
 2. Configuration files (not committed to version control)
 3. Secret management services
@@ -46,12 +52,11 @@ DATABASE_URL=postgresql://user:password@localhost:5432/mydb
 | `verify-ca` | Require SSL with CA verification |
 | `verify-full` | Require SSL with full verification |
 ## Query Patterns
-### Parameterized Queries
 **ALWAYS use parameterized queries to prevent SQL injection.**
-```sql
--- CORRECT - Parameterized
+```
+# CORRECT - Parameterized
 SELECT * FROM users WHERE id = $1
--- WRONG - String interpolation (vulnerable)
+# WRONG - String interpolation (vulnerable)
 SELECT * FROM users WHERE id = {user_id}
 ```
 ### Common Operations
@@ -60,14 +65,20 @@ SELECT * FROM users WHERE id = {user_id}
 SELECT column1, column2 FROM table_name
 WHERE condition ORDER BY column1 LIMIT 100;
 -- INSERT with returning
-INSERT INTO table_name (column1, column2) VALUES ($1, $2) RETURNING id;
+INSERT INTO table_name (column1, column2)
+VALUES ($1, $2) RETURNING id;
 -- UPDATE with conditions
-UPDATE table_name SET column1 = $1, updated_at = NOW() WHERE id = $2 RETURNING *;
+UPDATE table_name
+SET column1 = $1, updated_at = NOW()
+WHERE id = $2 RETURNING *;
 -- DELETE with confirmation
 DELETE FROM table_name WHERE id = $1 RETURNING id;
--- Batch insert
-INSERT INTO table_name (column1, column2) VALUES ($1, $2), ($3, $4), ($5, $6);
--- Large dataset import
+```
+### Batch Operations
+```sql
+INSERT INTO table_name (column1, column2)
+VALUES ($1, $2), ($3, $4), ($5, $6);
+-- Large datasets
 COPY table_name FROM STDIN WITH (FORMAT csv);
 ```
 ## Transaction Handling
@@ -77,7 +88,7 @@ BEGIN;
 COMMIT;
 -- or ROLLBACK; if error
 ```
-### Isolation Levels
+### Transaction Isolation Levels
 | Level | Dirty Read | Non-repeatable Read | Phantom Read |
 |-------|------------|---------------------|--------------|
 | READ UNCOMMITTED | Possible | Possible | Possible |
@@ -94,35 +105,41 @@ BEGIN;
 INSERT INTO table1 ...;
 SAVEPOINT my_savepoint;
 INSERT INTO table2 ...;  -- might fail
-ROLLBACK TO SAVEPOINT my_savepoint;  -- undo table2 only
+ROLLBACK TO SAVEPOINT my_savepoint;
 INSERT INTO table2 ...;  -- retry
 COMMIT;
 ```
 ### Best Practices
-1. **Keep transactions short** -- long transactions block other operations
-2. **Handle errors explicitly** -- always have rollback logic
-3. **Use appropriate isolation** -- higher isolation = more overhead
-4. **Avoid user interaction** -- never wait for user input mid-transaction
+1. **Keep transactions short** - Long transactions block other operations
+2. **Handle errors explicitly** - Always have rollback logic
+3. **Use appropriate isolation** - Higher isolation = more overhead
+4. **Avoid user interaction** - Never wait for user input mid-transaction
 ## Connection Pooling
 Opening connections is expensive (TCP handshake, authentication, memory allocation). Pools maintain open connections for reuse.
-### Pool Configuration
-| Parameter | Description |
-|-----------|-------------|
-| `min_connections` | Minimum connections to maintain |
-| `max_connections` | Maximum connections allowed |
-| `connection_timeout` | Time to wait for available connection |
-| `idle_timeout` | Time before closing idle connection |
-| `max_lifetime` | Maximum connection lifetime |
+**Key parameters:**
+- `min_connections` - Minimum connections to maintain
+- `max_connections` - Maximum connections allowed
+- `connection_timeout` - Time to wait for available connection
+- `idle_timeout` - Time before closing idle connection
+- `max_lifetime` - Maximum connection lifetime
 ### Sizing Guidelines
 ```
 max_connections = (core_count * 2) + effective_spindle_count
-# SSD-based: max_connections = core_count * 2
+# SSD: max_connections = core_count * 2
 ```
-Monitor: active connections, idle connections, wait time, connection errors, pool exhaustion events.
+**Monitor:** Active connections, idle connections, wait time, connection errors, pool exhaustion events.
 ## Error Handling
 ### Common Error Categories
-**Connection errors:** `ECONNREFUSED` (server not running), `ETIMEDOUT` (network/firewall), `authentication failed` (wrong credentials)
-**Query errors:** `syntax error`, `relation does not exist`, `column does not exist`, `duplicate key` (unique constraint), `foreign key violation`
+**Connection errors:**
+- `ECONNREFUSED` - Server not running or wrong host/port
+- `ETIMEDOUT` - Network issue or firewall blocking
+- `authentication failed` - Wrong credentials
+**Query errors:**
+- `syntax error` - Invalid SQL
+- `relation does not exist` - Table/view not found
+- `column does not exist` - Invalid column reference
+- `duplicate key` - Unique constraint violation
+- `foreign key violation` - Referential integrity error
 ### Error Handling Pattern
 ```
 try:
@@ -147,16 +164,16 @@ finally:
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_orders_user_date ON orders(user_id, created_at);
 ```
-Create indexes for columns used in WHERE, JOIN, and ORDER BY clauses.
+Create indexes for: WHERE clauses, JOIN conditions, ORDER BY columns.
 ### Query Analysis
 ```sql
 EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@example.com';
 ```
 Look for: sequential scans on large tables, high cost estimates, actual vs estimated row counts.
 ## Resources
-- `resources/setup-guide.md` -- Detailed setup instructions
-- `resources/query-patterns.md` -- Additional query examples
-- `resources/common-errors.md` -- Error troubleshooting guide
+- `resources/setup-guide.md` - Detailed setup instructions
+- `resources/query-patterns.md` - Additional query examples
+- `resources/common-errors.md` - Error troubleshooting guide
 ## Related Skills
-- `sqlite-integration` -- Lighter-weight alternative for simpler needs
-- `migration-patterns` -- Schema versioning and changes
+- `sqlite-integration` - Lighter-weight alternative for simpler needs
+- `migration-patterns` - Schema versioning and changes

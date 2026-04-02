@@ -12,7 +12,8 @@ disable-model-invocation: true
 copyright: "Rubrical Works (c) 2026"
 ---
 # Migration Patterns
-## When to Use This Skill
+Guide for database migration best practices including schema versioning, rollback procedures, and zero-downtime migration patterns.
+## When to Use
 - Planning database schema changes
 - Setting up migration workflow for a new project
 - Implementing rollback procedures
@@ -30,14 +31,24 @@ copyright: "Rubrical Works (c) 2026"
 002_add_email_to_users.sql
 003_create_orders_table.sql
 ```
-Pros: Simple, clear ordering. Cons: Merge conflicts in teams.
+- **Pros:** Simple, clear ordering
+- **Cons:** Merge conflicts in teams, no parallel migrations
 ### Timestamp-Based
 ```
 20240115120000_create_users_table.sql
 20240115143022_add_email_to_users.sql
 ```
-Pros: Reduces merge conflicts, supports team development. Cons: Longer filenames.
-**When to use each:** Solo projects: Sequential. Team projects: Timestamp-based. Enterprise: Hybrid with release versions.
+- **Pros:** Reduces merge conflicts, supports team development
+- **Cons:** Longer filenames, depends on synchronized clocks
+### Hybrid Approach
+```
+V2024.01.15.1__create_users_table.sql
+V2024.01.15.2__add_email_to_users.sql
+```
+**When to use each:**
+- Solo projects: Sequential numbering
+- Team projects: Timestamp-based
+- Enterprise: Hybrid with release versions
 ## Migration File Structure
 ### Standard Structure
 ```
@@ -65,6 +76,7 @@ migrations/
 **Up migration:**
 ```sql
 -- Migration: 001_create_users
+-- Description: Create users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -81,8 +93,8 @@ DROP TABLE IF EXISTS users;
 ```
 ## Rollback Procedures
 ### Types of Rollbacks
-**Forward-only (recommended for production):** Never delete data, fix issues with new migrations, maintains audit trail.
-**Reversible:** Provide down migration for each up, allows rollback to any state, requires careful testing.
+- **Forward-only (recommended for production):** Never delete data, fix with new migrations, maintains audit trail
+- **Reversible:** Provide down migration for each up, allows rollback to any state, requires careful testing
 ### Safe Rollback Pattern
 ```sql
 DO $$
@@ -99,6 +111,7 @@ ALTER TABLE users RENAME TO users_backup_20240115;
 CREATE VIEW users AS SELECT * FROM users_backup_20240115;
 ```
 ### Rollback Testing
+Before deploying any migration:
 1. Run up migration
 2. Verify schema changes
 3. Run down migration
@@ -107,9 +120,9 @@ CREATE VIEW users AS SELECT * FROM users_backup_20240115;
 6. Verify final state
 ## Zero-Downtime Migrations
 ### Expand-Contract Pattern
-1. **Expand** -- Add new column/table, keep old structure working, deploy application changes
-2. **Migrate** -- Copy/transform data to new structure, run in batches if large
-3. **Contract** -- Remove old column/table, clean up compatibility code
+- **Phase 1: Expand** -- Add new column/table, keep old structure working
+- **Phase 2: Migrate** -- Copy/transform data in batches
+- **Phase 3: Contract** -- Remove old column/table, clean up
 ### Example: Renaming a Column
 **Phase 1 - Add new column:**
 ```sql
@@ -142,6 +155,8 @@ DROP FUNCTION sync_name_columns();
 ALTER TABLE users DROP COLUMN name;
 ```
 ### Large Table Migrations
+**Problem:** Altering large tables can lock them for extended periods.
+**Solution: Online schema changes**
 ```sql
 CREATE TABLE users_new (
     id SERIAL PRIMARY KEY,
@@ -149,28 +164,30 @@ CREATE TABLE users_new (
     full_name VARCHAR(255),
     created_at TIMESTAMP DEFAULT NOW()
 );
--- Copy data in batches
 INSERT INTO users_new (id, email, full_name, created_at)
 SELECT id, email, name, created_at
-FROM users WHERE id > $last_processed_id
-ORDER BY id LIMIT 10000;
--- Swap tables
+FROM users
+WHERE id > $last_processed_id
+ORDER BY id
+LIMIT 10000;
 BEGIN;
 ALTER TABLE users RENAME TO users_old;
 ALTER TABLE users_new RENAME TO users;
 COMMIT;
 DROP TABLE users_old;
 ```
-### Adding NOT NULL Constraint (Zero-Downtime)
+### Adding NOT NULL Constraint
+**Wrong way (causes lock):**
 ```sql
--- Step 1: Add check constraint (not validated)
+ALTER TABLE users ALTER COLUMN email SET NOT NULL;
+```
+**Right way (zero-downtime):**
+```sql
 ALTER TABLE users
 ADD CONSTRAINT users_email_not_null
 CHECK (email IS NOT NULL) NOT VALID;
--- Step 2: Validate constraint (allows reads)
 ALTER TABLE users
 VALIDATE CONSTRAINT users_email_not_null;
--- Step 3: Convert to NOT NULL (instant, constraint proven)
 ALTER TABLE users ALTER COLUMN email SET NOT NULL;
 ALTER TABLE users DROP CONSTRAINT users_email_not_null;
 ```
@@ -215,6 +232,11 @@ SELECT conname FROM pg_constraint WHERE conrelid = 'table_name'::regclass;
 2. **Use raw SQL for complex migrations** -- Better control
 3. **Keep ORM migrations reversible** -- Define both up and down
 4. **Test migrations with production-like data** -- Performance matters
-## Relationship to Other Skills
+## Resources
+See `resources/` directory for:
+- `versioning-strategies.md` -- Detailed versioning comparison
+- `rollback-guide.md` -- Comprehensive rollback procedures
+- `zero-downtime.md` -- Zero-downtime migration patterns
+## Related Skills
 - `postgresql-integration` -- Database-specific guidance
 - `sqlite-integration` -- Lighter-weight database patterns

@@ -11,20 +11,17 @@ relevantTechStack: [playwright, e2e, browser-testing, typescript]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Playwright Setup
-Installation verification, error solutions, and CI config for Playwright.
-**Prerequisites:** Node.js 18+, npm/yarn, Linux CI needs system deps or Docker.
-## When to Use
-- Setting up Playwright in a new project
-- Debugging "browser not found" or installation errors
-- Configuring Playwright for CI/CD pipelines
-- Troubleshooting tests that pass locally but fail in CI
+Installation verification, error solutions, and CI configuration for Playwright.
+## Prerequisites
+Node.js 18+, npm or yarn, Linux CI: system deps or Docker with Playwright image.
 ## Installation Checklist
+Complete setup requires three steps, not just `npm install`:
 | Step | Command | What It Does |
 |------|---------|--------------|
-| 1. Install | `npm install -D @playwright/test` | Adds to devDependencies |
-| 2. Browsers | `npx playwright install` | Downloads Chromium, Firefox, WebKit (~500MB) |
-| 3. Sys deps | `npx playwright install-deps` | Linux system libraries (requires sudo) |
-Stopping after step 1 causes "Executable doesn't exist" errors.
+| 1. Install package | `npm install -D @playwright/test` | Adds to devDependencies |
+| 2. Download browsers | `npx playwright install` | Downloads Chromium, Firefox, WebKit (~500MB) |
+| 3. System deps (Linux) | `npx playwright install-deps` | Installs system libraries (requires sudo) |
+Stopping after step 1 results in "Executable doesn't exist" errors.
 ## Verification
 ```bash
 npm ls @playwright/test
@@ -49,17 +46,17 @@ async function verify() {
 verify();
 ```
 ## Common Errors
-| Error Message | Cause | Fix |
-|---------------|-------|-----|
+| Error | Cause | Fix |
+|-------|-------|-----|
 | "Executable doesn't exist at ..." | Browsers not downloaded | `npx playwright install` |
-| "Host system is missing dependencies" | Linux system libs missing | `npx playwright install-deps` |
-| "browserType.launch: Browser closed unexpectedly" | Corrupted browser install | `npx playwright install --force` |
-| "Cannot find module '@playwright/test'" | Package not installed | `npm install -D @playwright/test` |
-| Tests hang in CI | Missing display server (Linux) | Use headless mode or `xvfb-run` |
+| "Host system is missing dependencies" | Linux libs missing | `npx playwright install-deps` |
+| "browserType.launch: Browser closed unexpectedly" | Corrupted install | `npx playwright install --force` |
+| "Cannot find module '@playwright/test'" | Not installed | `npm install -D @playwright/test` |
+| Tests hang in CI | Missing display server | Headless mode or `xvfb-run` |
 | "Target page, context or browser has been closed" | Race condition | Add explicit waits |
-| "Browser closed. Most likely the page has been closed" | Navigation timeout | Increase timeout or check network |
-See: [common-errors.md](resources/common-errors.md) for detailed solutions.
-## CI Configuration -- GitHub Actions
+| "Browser closed. Most likely the page has been closed" | Nav timeout | Increase timeout or check network |
+See [common-errors.md](resources/common-errors.md) for details.
+## CI: GitHub Actions
 ```yaml
 name: Playwright Tests
 on: [push, pull_request]
@@ -85,16 +82,11 @@ jobs:
           path: playwright-report/
           retention-days: 30
 ```
-- `--with-deps` combines browser download and system deps
-- Upload report artifact for debugging failures
-- Use `if: always()` to upload even on test failure
-See: [ci-patterns.md](resources/ci-patterns.md) for GitLab CI and other configurations.
+`--with-deps` combines browser download and system deps. Use `if: always()` to upload report even on failure. See [ci-patterns.md](resources/ci-patterns.md) for GitLab CI and others.
 ## Platform Notes
-| Platform | Browser Location | Notes |
-|----------|-----------------|-------|
-| Windows | `%USERPROFILE%\AppData\Local\ms-playwright` | No system deps needed |
-| macOS | `~/Library/Caches/ms-playwright` | No system deps; Rosetta 2 auto for Apple Silicon |
-| Linux | `~/.cache/ms-playwright` | System deps **required** -- `npx playwright install-deps` |
+Windows: browsers install to `%USERPROFILE%\AppData\Local\ms-playwright`, no system deps needed.
+macOS: browsers install to `~/Library/Caches/ms-playwright`, no system deps, Rosetta 2 automatic on Apple Silicon.
+Linux: browsers install to `~/.cache/ms-playwright`, system deps required via `npx playwright install-deps`, or use `mcr.microsoft.com/playwright` Docker image.
 ### CI Environments
 | Environment | Notes |
 |-------------|-------|
@@ -102,13 +94,13 @@ See: [ci-patterns.md](resources/ci-patterns.md) for GitLab CI and other configur
 | GitLab CI | Use official Playwright Docker image |
 | Jenkins | Pre-install browsers on agents |
 | CircleCI | Use orb or Playwright image |
-## Headless vs Headed Mode
+## Headless vs Headed
 ```javascript
-const browser = await chromium.launch();                          // Headless (default, for CI)
-const browser = await chromium.launch({ headless: false });       // Headed (debugging)
-const browser = await chromium.launch({ headless: false, slowMo: 100 }); // Slow motion (demos)
+const browser = await chromium.launch();                              // headless (CI)
+const browser = await chromium.launch({ headless: false });           // headed (debug)
+const browser = await chromium.launch({ headless: false, slowMo: 100 }); // slow motion
 ```
-**CI Requirement:** Always use headless mode in CI unless using Xvfb.
+Always use headless in CI unless using Xvfb.
 ## Browser Selection
 ```javascript
 // playwright.config.js
@@ -121,22 +113,20 @@ export default {
 };
 ```
 ```bash
-npx playwright install chromium              # Install only Chromium (faster CI)
-npx playwright install chromium --with-deps  # Chromium with system deps
+npx playwright install chromium              # single browser (faster CI)
+npx playwright install chromium --with-deps  # with system deps
 ```
-## Troubleshooting Matrix
-| Symptom | Check | Solution |
-|---------|-------|----------|
-| Works locally, fails in CI | Browser binaries | Add `npx playwright install` to CI |
-| Works in CI, fails locally | Version mismatch | `npx playwright install --force` |
-| Timeout on launch | Headless mode | Ensure `headless: true` in CI |
-| Random failures | Race conditions | Add explicit `waitFor*` calls |
-| Memory issues | Browser leaks | Ensure `browser.close()` in `afterAll` |
-| Screenshot blank | Page not loaded | Wait for network idle |
+## Troubleshooting
+| Symptom | Solution |
+|---------|----------|
+| Works locally, fails in CI | Add `npx playwright install` to CI |
+| Works in CI, fails locally | `npx playwright install --force` |
+| Timeout on launch | Ensure `headless: true` in CI |
+| Random failures | Add `waitFor*` calls |
+| Memory issues | Ensure `browser.close()` in `afterAll` |
+| Screenshot blank | Wait for network idle |
 ## Resources
 | Resource | Description |
 |----------|-------------|
 | [ci-patterns.md](resources/ci-patterns.md) | GitHub Actions, GitLab CI, Jenkins configs |
-| [common-errors.md](resources/common-errors.md) | Detailed error to fix reference |
-## Related Skills
-- **electron-development** -- Playwright with Electron apps (fuse configuration, packaged app testing)
+| [common-errors.md](resources/common-errors.md) | Detailed error-fix reference |

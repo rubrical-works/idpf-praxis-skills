@@ -1,12 +1,6 @@
 # BDD Tool Comparison
-**Version:** v0.5.0
-
-Comparison of popular BDD frameworks across languages.
-
----
-
+**Version:** v0.6.0
 ## Quick Reference
-
 | Tool | Language | Gherkin | Best For |
 |------|----------|---------|----------|
 | Cucumber.js | JavaScript/TypeScript | Native | JS/TS projects, Playwright/Puppeteer |
@@ -16,31 +10,15 @@ Comparison of popular BDD frameworks across languages.
 | SpecFlow | C#/.NET | Native | .NET projects |
 | RSpec | Ruby | BDD-style | Ruby projects |
 | Karate | Java | Modified | API testing |
-
----
-
 ## Cucumber.js
-
 **Language:** JavaScript / TypeScript
-**Gherkin:** Full support
 **Website:** https://cucumber.io/docs/installation/javascript/
-
-### Strengths
-- Native Gherkin support
-- Large community
+- Native Gherkin support, large community
 - Integrates with Playwright, Puppeteer, WebDriverIO
-- TypeScript support
-- Parallel execution
-- Extensible with plugins
-
-### Installation
-
+- TypeScript support, parallel execution
 ```bash
 npm install --save-dev @cucumber/cucumber
 ```
-
-### Configuration
-
 ```javascript
 // cucumber.js
 module.exports = {
@@ -52,103 +30,47 @@ module.exports = {
   },
 };
 ```
-
-### Running Tests
-
 ```bash
 npx cucumber-js
 npx cucumber-js --tags "@smoke"
 npx cucumber-js features/login.feature
 ```
-
-### Best For
-- JavaScript/TypeScript projects
-- Browser automation with Playwright
-- API testing
-- Teams already using npm ecosystem
-
----
-
 ## pytest-bdd
-
 **Language:** Python
-**Gherkin:** Full support
 **Website:** https://pytest-bdd.readthedocs.io/
-
-### Strengths
-- Integrates with pytest ecosystem
-- Uses pytest fixtures
+- Integrates with pytest ecosystem and fixtures
 - Pytest plugins work (coverage, parallel, etc.)
-- IDE support (PyCharm)
-- Parametrized scenarios
-- Step argument converters
-
-### Installation
-
+- IDE support (PyCharm), parametrized scenarios
 ```bash
 pip install pytest-bdd
 ```
-
-### Configuration
-
 ```ini
 # pytest.ini
 [pytest]
 bdd_features_base_dir = features/
 ```
-
-### Running Tests
-
 ```bash
 pytest
 pytest -m "smoke"
-pytest --bdd-report
 pytest tests/features/login.feature
 ```
-
-### Example
-
 ```python
 # test_login.py
 from pytest_bdd import scenarios, given, when, then
-
 scenarios('login.feature')
 
 @given('I am on the login page')
 def login_page(browser):
     browser.get('/login')
 ```
-
-### Best For
-- Python projects using pytest
-- Teams wanting pytest plugin ecosystem
-- Projects needing coverage integration
-- Selenium/Playwright with Python
-
----
-
 ## Behave
-
 **Language:** Python
-**Gherkin:** Full support
 **Website:** https://behave.readthedocs.io/
-
-### Strengths
-- Standalone BDD framework
-- Simple setup
-- Good documentation
-- Hooks and fixtures
-- Environment control
-- Tag expressions
-
-### Installation
-
+- Standalone BDD framework, simple setup
+- Good documentation, hooks and fixtures
 ```bash
 pip install behave
 ```
-
-### Project Structure
-
 ```
 features/
 ├── login.feature
@@ -156,39 +78,17 @@ features/
 └── steps/
     └── login_steps.py
 ```
-
-### Running Tests
-
 ```bash
 behave
 behave --tags=@smoke
 behave features/login.feature
-behave --format=json --outfile=report.json
 ```
-
-### Best For
-- Python projects not using pytest
-- Simpler BDD needs
-- Teams new to Python BDD
-
----
-
 ## Cucumber-JVM
-
 **Language:** Java / Kotlin
-**Gherkin:** Full support
 **Website:** https://cucumber.io/docs/installation/java/
-
-### Strengths
 - Official Cucumber implementation
-- Spring Boot integration
-- JUnit 5 support
-- Dependency injection
-- Parallel execution
-- Maven/Gradle plugins
-
-### Installation (Maven)
-
+- Spring Boot integration, JUnit 5 support
+- Dependency injection, parallel execution
 ```xml
 <dependency>
     <groupId>io.cucumber</groupId>
@@ -203,80 +103,31 @@ behave --format=json --outfile=report.json
     <scope>test</scope>
 </dependency>
 ```
-
-### Running Tests
-
 ```bash
 mvn test
 mvn test -Dcucumber.filter.tags="@smoke"
 ```
-
-### Best For
-- Java/Kotlin projects
-- Spring Boot applications
-- Enterprise environments
-- Teams using Maven/Gradle
-
----
-
 ## SpecFlow
-
 **Language:** C# / .NET
-**Gherkin:** Full support
 **Website:** https://specflow.org/
-
-### Strengths
-- .NET ecosystem integration
-- Visual Studio extension
-- Living documentation
-- Dependency injection
-- Parallel execution
-- SpecFlow+ tools
-
-### Installation
-
+- .NET ecosystem integration, Visual Studio extension
+- Living documentation, dependency injection
 ```bash
 dotnet add package SpecFlow
 dotnet add package SpecFlow.NUnit
 ```
-
-### Running Tests
-
 ```bash
 dotnet test
 dotnet test --filter "Category=Smoke"
 ```
-
-### Best For
-- .NET projects
-- Visual Studio users
-- Enterprise .NET shops
-- Teams using NUnit/xUnit
-
----
-
 ## RSpec (Ruby)
-
 **Language:** Ruby
-**Gherkin:** BDD-style (not Gherkin)
 **Website:** https://rspec.info/
-
-### Strengths
-- Ruby-native BDD
-- Expressive syntax
-- Excellent matchers
-- Mocking built-in
-- Large ecosystem
-- Rails integration
-
-### Installation
-
+- Ruby-native BDD (not Gherkin syntax)
+- Expressive syntax, excellent matchers, mocking built-in
 ```bash
 gem install rspec
 ```
-
-### Example (Not Gherkin)
-
 ```ruby
 RSpec.describe Order do
   describe '#total' do
@@ -286,45 +137,15 @@ RSpec.describe Order do
         expect(order.total).to eq(0)
       end
     end
-
-    context 'with items' do
-      it 'sums item prices' do
-        order = Order.new
-        order.add_item(Item.new(price: 10))
-        order.add_item(Item.new(price: 20))
-        expect(order.total).to eq(30)
-      end
-    end
   end
 end
 ```
-
-### Note
-RSpec uses a BDD-style syntax but NOT Gherkin. For Gherkin in Ruby, use Cucumber-Ruby.
-
-### Best For
-- Ruby projects
-- Rails applications
-- Teams preferring Ruby-native syntax
-
----
-
+For Gherkin in Ruby, use Cucumber-Ruby instead.
 ## Karate
-
 **Language:** Java (runs on JVM)
-**Gherkin:** Modified Gherkin
 **Website:** https://github.com/karatelabs/karate
-
-### Strengths
-- API testing focused
-- No code step definitions
-- Built-in assertions
-- JSON/XML support
-- Mock server
-- Performance testing
-
-### Example
-
+- API testing focused, no code step definitions
+- Built-in assertions, JSON/XML support, mock server
 ```gherkin
 Feature: User API
 
@@ -335,22 +156,8 @@ Feature: User API
     Then status 200
     And match response.name == 'Alice'
 ```
-
-### Note
-Karate uses a modified Gherkin where steps are built-in. No step definitions needed for most cases.
-
-### Best For
-- API testing
-- Teams wanting minimal code
-- Quick API test setup
-- Performance testing APIs
-
----
-
 ## Selection Guide
-
 ### By Language
-
 ```
 Python project?
 ├── Using pytest? → pytest-bdd
@@ -368,9 +175,7 @@ Ruby project?
 ├── Want Gherkin? → Cucumber-Ruby
 └── Want Ruby-native? → RSpec
 ```
-
 ### By Use Case
-
 | Use Case | Recommended Tool |
 |----------|------------------|
 | Web UI testing (JS) | Cucumber.js + Playwright |
@@ -381,10 +186,7 @@ Ruby project?
 | Mobile testing | Cucumber + Appium |
 | Enterprise Java | Cucumber-JVM |
 | Enterprise .NET | SpecFlow |
-| Startup/small team | Language-native tool |
-
 ### Feature Comparison
-
 | Feature | Cucumber.js | pytest-bdd | Behave | Cucumber-JVM | SpecFlow |
 |---------|-------------|------------|--------|--------------|----------|
 | Gherkin | Full | Full | Full | Full | Full |
@@ -393,28 +195,13 @@ Ruby project?
 | CI/CD | Easy | Easy | Easy | Easy | Easy |
 | Reporting | Good | pytest | Good | Good | Excellent |
 | Learning Curve | Low | Low | Low | Medium | Medium |
-
----
-
 ## Migration Considerations
-
-### From Tool A to Tool B
-
-**Feature files:** Usually portable (Gherkin is standard)
-
-**Step definitions:** Must be rewritten in target language
-
-**Configuration:** Tool-specific, needs recreation
-
-**Reports:** Different formats, may need report tool changes
-
-### Tips
-
+- **Feature files:** Usually portable (Gherkin is standard)
+- **Step definitions:** Must be rewritten in target language
+- **Configuration:** Tool-specific, needs recreation
+- **Reports:** Different formats, may need report tool changes
+**Migration steps:**
 1. Start with feature files - they're the spec
 2. Rewrite step definitions methodically
 3. Test each scenario as migrated
 4. Update CI/CD pipeline last
-
----
-
-**End of Tool Comparison**

@@ -19,6 +19,7 @@ Generate testing infrastructure from IDPF domain knowledge. Bridges testing meth
 - Adding accessibility, security, performance, chaos, contract, or QA testing
 - Generating CI workflows for test automation
 - Scaffolding test specs from existing routes and components
+- "scaffold testing", "set up testing", "add security testing", "generate test configs"
 ## Supported Domains
 | Domain | Source Framework | Key Tools | Artifacts |
 |--------|-----------------|-----------|-----------|
@@ -30,7 +31,7 @@ Generate testing infrastructure from IDPF domain knowledge. Bridges testing meth
 | **Security** | `Domains/Security/` | Semgrep, ZAP, Gitleaks | SAST/DAST/SCA configs, secret scanning, CI gates |
 ## Step 1: Project Detection
 ### 1a. Framework Detection
-Read `package.json` to detect:
+Read `package.json` and configuration files to detect:
 | Signal | Framework |
 |--------|-----------|
 | `react`, `react-dom` in dependencies | React |
@@ -41,7 +42,8 @@ Read `package.json` to detect:
 | `nuxt` in dependencies | Nuxt |
 | `astro` in dependencies | Astro |
 | None of the above | Vanilla/Unknown |
-If `package.json` missing: `"No package.json found — using default configuration."`
+Report: `Detected framework: {name}`
+If `package.json` missing: `"No package.json found — using default configuration. Some route-specific artifacts may be generic."`
 ### 1b. Package Manager Detection
 | Lock File | Package Manager |
 |-----------|----------------|
@@ -52,14 +54,14 @@ If `package.json` missing: `"No package.json found — using default configurati
 ### 1c. Existing Test Setup Detection
 | Config File | Tool |
 |-------------|------|
-| `playwright.config.ts` or `.js` | Playwright |
-| `vitest.config.ts` or `.js` | Vitest |
+| `playwright.config.ts` or `playwright.config.js` | Playwright |
+| `vitest.config.ts` or `vitest.config.js` | Vitest |
 | `jest.config.*` | Jest |
 | `cypress.config.*` | Cypress |
-| `.semgrep.yml` | Semgrep |
-| `axe.config.js` | axe-core |
-| `k6` scripts in `tests/perf/` | k6 |
-| `pact-config.json` | Pact |
+| `.semgrep.yml` | Semgrep (security) |
+| `axe.config.js` | axe-core (accessibility) |
+| `k6` scripts in `tests/perf/` | k6 (performance) |
+| `pact-config.json` | Pact (contract) |
 For detected tools: `"{Tool} already configured — scaffolding will extend existing setup"`
 ### 1d. Route/Page Discovery
 | Location | Pattern |
@@ -68,26 +70,27 @@ For detected tools: `"{Tool} already configured — scaffolding will extend exis
 | `src/routes/` | File-based routing (SvelteKit) |
 | `app/` | App Router (Next.js 13+) |
 | Router config files | `react-router`, `vue-router` configs |
-If no routes: `"No routes discovered — specs will use placeholder paths."`
+Collect route list for domain modules needing it (accessibility, QA, security DAST).
+If no routes found: `"No routes discovered — specs will use placeholder paths. Add routes later."`
 ### 1e. Existing Scaffolding Detection
 | Check | Meaning |
 |-------|---------|
-| `tests/a11y/` exists | Accessibility partially scaffolded |
-| `chaos/` exists | Chaos partially scaffolded |
-| `tests/contract/` exists | Contract testing partially scaffolded |
-| `tests/perf/` exists | Performance partially scaffolded |
-| `tests/e2e/pages/` exists | QA Page Objects partially scaffolded |
-| `.gitleaks.toml` exists | Security partially scaffolded |
-Report: `"{Domain} setup detected — will extend rather than overwrite"`
+| `tests/a11y/` exists | Accessibility already partially scaffolded |
+| `chaos/` directory exists | Chaos already partially scaffolded |
+| `tests/contract/` exists | Contract testing already partially scaffolded |
+| `tests/perf/` exists | Performance already partially scaffolded |
+| `tests/e2e/pages/` exists | QA Page Objects already partially scaffolded |
+| `.gitleaks.toml` exists | Security already partially scaffolded |
+Report per-domain: `"{Domain} setup detected — will extend rather than overwrite"`
 ## Step 2: Domain Selection
 ### Invocation Patterns
 | User Says | Action |
 |-----------|--------|
 | "scaffold testing" / "set up testing" | Present domain selection |
 | "scaffold all testing" | Select all 6 domains |
-| "scaffold security testing" | Select security only |
+| "scaffold security testing" | Select security domain only |
 | "scaffold a11y and security" | Select accessibility + security |
-| "add performance testing" | Select performance only |
+| "add performance testing" | Select performance domain only |
 ### Domain Selection Prompt
 ```
 Available testing domains:
@@ -100,36 +103,47 @@ Available testing domains:
 Select domains (comma-separated numbers, or "all"):
 ```
 ## Step 3: Generate Artifacts
-For each selected domain, load the corresponding module:
+For each selected domain, load the corresponding domain module:
 ```
 read Skills/test-scaffold/domains/{domain}.md
 ```
-Domain modules contain tool configs, test spec templates, CI workflow jobs, and manual testing next steps. Follow each module's generation instructions with project context from Step 1.
+Domain modules contain: tool configuration templates, test spec templates, CI workflow job definitions, manual testing next steps.
+Follow each domain module's generation instructions with the project context from Step 1.
 ## Step 4: Report Summary
 ```
 Testing Scaffold Complete
-
 Generated artifacts:
   {domain}: {list of files created}
   ...
-
 Packages to install:
   {package-manager} install -D {deduplicated list}
-
 Next steps (manual):
   - {per-domain manual testing guidance}
 ```
-## Multi-Domain Handling
-- **Package Deduplication:** Collect all required packages across domains and deduplicate before reporting install command
-- **CI Workflow Merging:** Offer single workflow (`testing.yml`) or per-domain workflows; default to single unless user specifies otherwise
+## Multi-Domain Package Deduplication
+When multiple domains selected, collect all required packages and deduplicate before reporting the install command. Shared packages (e.g., `@axe-core/playwright` used by both accessibility and QA) are listed once.
+## Multi-Domain CI Workflow Merging
+When multiple domains generate CI jobs, offer two options:
+1. **Single workflow** (`testing.yml`) — All domain jobs in one file
+2. **Per-domain workflows** — Separate file per domain (e.g., `a11y.yml`, `security.yml`)
+Default to single workflow unless user specifies otherwise.
 ## Error Handling
 | Situation | Response |
 |-----------|----------|
 | `package.json` missing | Warn, use defaults, continue |
 | No routes found | Warn, use placeholder paths, continue |
-| Domain template missing | Error for that domain, skip, continue with others |
+| Domain template file missing | Error for that domain, skip, continue with others |
 | Existing config detected | Extend rather than overwrite |
 | No domains selected | Error: "Select at least one domain" |
 ## Relationship to Other Skills
-**Companion Frameworks:** `Domains/Accessibility/`, `Domains/Chaos/`, `Domains/Contract-Testing/`, `Domains/Performance/`, `Domains/QA-Automation/`, `Domains/Security/`
-**Complementary Skills:** `playwright-setup`, `ci-cd-pipeline-design`, `test-writing-patterns`
+**Companion Frameworks (all 6 testing domains):**
+- `Domains/Accessibility/` — Source methodology for accessibility scaffolding
+- `Domains/Chaos/` — Source methodology for chaos engineering scaffolding
+- `Domains/Contract-Testing/` — Source methodology for contract testing scaffolding
+- `Domains/Performance/` — Source methodology for performance testing scaffolding
+- `Domains/QA-Automation/` — Source methodology for QA automation scaffolding
+- `Domains/Security/` — Source methodology for security testing scaffolding
+**Complementary Skills:**
+- `playwright-setup` — Playwright installation and CI configuration
+- `ci-cd-pipeline-design` — CI/CD pipeline architecture
+- `test-writing-patterns` — Test structure and assertions

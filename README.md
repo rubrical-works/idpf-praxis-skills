@@ -53,7 +53,7 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, Windows considerations |
 | [electron-cross-build](Skills/electron-cross-build/) | Platform | Cross-compile Electron apps from Linux to Windows |
 
-### Invokable Skills (19)
+### Invokable Skills (13)
 
 Interactive guided workflows. Install and use as slash commands.
 
@@ -70,16 +70,10 @@ Interactive guided workflows. Install and use as slash commands.
 | [postgresql-integration](Skills/postgresql-integration/) | Database | PostgreSQL setup and integration |
 | [sqlite-integration](Skills/sqlite-integration/) | Database | SQLite setup and integration |
 | [i18n-setup](Skills/i18n-setup/) | Infrastructure | Internationalization setup |
-| [observability-setup](Skills/observability-setup/) | Infrastructure | Logging and monitoring setup |
-| [bdd-writing](Skills/bdd-writing/) | Testing | Gherkin syntax and step definitions |
 | [code-path-discovery](Skills/code-path-discovery/) | Analysis | Path analysis patterns |
-| [codebase-analysis](Skills/codebase-analysis/) | Analysis | Codebase detection mappings |
-| [command-spec-audit](Skills/command-spec-audit/) | Framework | Command spec audit criteria |
-| [property-based-testing](Skills/property-based-testing/) | Testing | Property-based testing patterns |
-| [tdd-failure-recovery](Skills/tdd-failure-recovery/) | Testing | TDD failure diagnosis and recovery |
 | [json-validator](Skills/json-validator/) | Analysis | Validate JSON files against schemas |
 
-### Reference Skills (11)
+### Reference Skills (15)
 
 Domain knowledge loaded on demand during relevant work.
 
@@ -96,8 +90,12 @@ Domain knowledge loaded on demand during relevant work.
 | [tdd-red-phase](Skills/tdd-red-phase/) | Testing | Deep TDD RED phase guidance |
 | [tdd-green-phase](Skills/tdd-green-phase/) | Testing | Deep TDD GREEN phase guidance |
 | [tdd-refactor-phase](Skills/tdd-refactor-phase/) | Testing | Deep TDD REFACTOR phase guidance |
+| [tdd-failure-recovery](Skills/tdd-failure-recovery/) | Testing | TDD failure diagnosis and recovery |
+| [bdd-writing](Skills/bdd-writing/) | Testing | Gherkin syntax and step definitions |
+| [codebase-analysis](Skills/codebase-analysis/) | Analysis | Codebase detection mappings |
+| [command-spec-audit](Skills/command-spec-audit/) | Framework | Command spec audit criteria |
 
-### Educational Skills (5)
+### Educational Skills (7)
 
 Teaching material Claude provides when it detects a learning context.
 
@@ -108,6 +106,8 @@ Teaching material Claude provides when it detects a learning context.
 | [test-writing-patterns](Skills/test-writing-patterns/) | Testing | Test structure and smell identification |
 | [seo-optimization](Skills/seo-optimization/) | Web | Content and technical SEO |
 | [privacy-compliance](Skills/privacy-compliance/) | Compliance | Regulatory and consent management |
+| [observability-setup](Skills/observability-setup/) | Infrastructure | Logging and monitoring concepts |
+| [property-based-testing](Skills/property-based-testing/) | Testing | Property-based testing concepts |
 
 ## Compatibility
 

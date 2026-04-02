@@ -10,20 +10,35 @@ type: invokable
 relevantTechStack: [i18n, i18next, react-intl, formatjs, localization]
 copyright: "Rubrical Works (c) 2026"
 ---
-# i18n Setup
-Scaffolds i18n for web/mobile apps: string externalization, locale formatting, translation workflows.
-**Companion Domain:** Domains/i18n — provides evaluative review criteria
+# Internationalization (i18n) Setup
+**Companion Domain:** Domains/i18n -- provides evaluative review criteria
 ## When to Use
-- Setting up i18n for a new project
+- Setting up i18n for a new web or mobile project
 - Configuring i18next, react-intl, or FormatJS
 - Creating locale file structure and naming conventions
 - Setting up string extraction tooling
-- Establishing translation management workflow
-## Capabilities
-**Library Config:** i18next/react-intl/FormatJS with plugins, language detection (browser/URL/cookie/user preference), fallback chains, namespace organization
-**String Extraction:** Extract message IDs, generate templates, detect hardcoded strings, key naming enforcement
-**Locale Scaffolding:** Per-locale dirs (`locales/en/`, `locales/fr/`), JSON/YAML templates, namespace organization, default locale placeholders
-**Translation Workflow:** Crowdin/Lokalise config, CI sync, PR workflow for updates, context/screenshots for translators
+- Establishing a translation management workflow
+## Scaffolding Capabilities
+### i18n Library Configuration
+- i18next or react-intl/FormatJS setup with plugins
+- Language detection (browser, URL, cookie, user preference)
+- Fallback locale chain configuration
+- Namespace organization for large applications
+### String Extraction Tooling
+- Extract message IDs from source code
+- Generate translation file templates
+- Detect hardcoded strings in source files
+- Key naming convention enforcement
+### Locale File Scaffolding
+- Directory structure per locale (`locales/en/`, `locales/fr/`)
+- JSON or YAML translation file templates
+- Namespace-based file organization
+- Default locale with placeholder content
+### Translation Workflow Setup
+- Crowdin or Lokalise project configuration
+- CI integration for translation file sync
+- Pull request workflow for translation updates
+- Context and screenshot attachment for translators
 ## Related Skills
-- `seo-optimization` — hreflang tags and locale-specific URLs
-- `error-handling-patterns` — localized error messages
+- `seo-optimization` -- for hreflang tags and locale-specific URLs
+- `error-handling-patterns` -- for localized error messages

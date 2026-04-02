@@ -13,6 +13,23 @@
     "failure-recovery": { "$ref": "#/definitions/recoveryPhase" }
   },
   "definitions": {
+    "deepReference": {
+      "type": "object",
+      "required": ["skill", "when"],
+      "additionalProperties": false,
+      "properties": {
+        "skill": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Skill name to load for deeper guidance"
+        },
+        "when": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Condition describing when to load the referenced skill"
+        }
+      }
+    },
     "phase": {
       "type": "object",
       "required": ["required", "gate"],
@@ -28,6 +45,10 @@
           "type": "string",
           "minLength": 1,
           "description": "Condition that must be satisfied to proceed to next phase"
+        },
+        "deepReference": {
+          "$ref": "#/definitions/deepReference",
+          "description": "Optional pointer to a reference skill for deeper guidance when stuck"
         }
       }
     },
@@ -47,6 +68,10 @@
           "items": { "type": "string" },
           "minItems": 1,
           "description": "Ordered steps to diagnose and recover from test failures"
+        },
+        "deepReference": {
+          "$ref": "#/definitions/deepReference",
+          "description": "Optional pointer to a reference skill for deeper guidance when stuck"
         }
       }
     }

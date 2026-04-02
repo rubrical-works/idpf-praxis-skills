@@ -1,5 +1,5 @@
 # Code Review Checklist
-**Version:** v0.5.0
+**Version:** v0.6.0
 
 Structured checklist for systematic anti-pattern detection during code reviews.
 

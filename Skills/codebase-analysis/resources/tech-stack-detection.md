@@ -1,14 +1,8 @@
 # Tech Stack Detection Guide
-**Version:** v0.5.0
-
+**Version:** v0.6.0
 **Purpose:** Patterns for detecting technology stacks from codebase analysis
-
----
-
 ## Language Detection
-
 ### By File Extension
-
 | Extension | Language | Confidence |
 |-----------|----------|------------|
 | `.py` | Python | High |
@@ -25,9 +19,7 @@
 | `.scala` | Scala | High |
 | `.ex`, `.exs` | Elixir | High |
 | `.clj` | Clojure | High |
-
 ### By Package Manager File
-
 | File | Language/Runtime | Example Content |
 |------|------------------|-----------------|
 | `package.json` | Node.js | `{"name": "project"}` |
@@ -41,13 +33,8 @@
 | `composer.json` | PHP | `{"require": {}}` |
 | `Package.swift` | Swift | `Package(name:` |
 | `*.csproj` | .NET | `<Project Sdk=` |
-
----
-
 ## Framework Detection
-
 ### Python Frameworks
-
 | Dependency | Framework | Type |
 |------------|-----------|------|
 | `flask` | Flask | Web micro-framework |
@@ -58,9 +45,7 @@
 | `celery` | Celery | Task queue |
 | `pytest` | pytest | Testing |
 | `sqlalchemy` | SQLAlchemy | ORM |
-
 ### JavaScript/TypeScript Frameworks
-
 | Dependency | Framework | Type |
 |------------|-----------|------|
 | `express` | Express.js | Web server |
@@ -73,9 +58,7 @@
 | `angular` | Angular | Frontend |
 | `svelte` | Svelte | Frontend |
 | `nest` | NestJS | Backend |
-
 ### Go Frameworks
-
 | Import Path | Framework | Type |
 |-------------|-----------|------|
 | `github.com/gin-gonic/gin` | Gin | Web |
@@ -83,9 +66,7 @@
 | `github.com/gofiber/fiber` | Fiber | Web |
 | `github.com/gorilla/mux` | Gorilla Mux | Router |
 | `gorm.io/gorm` | GORM | ORM |
-
 ### Ruby Frameworks
-
 | Gem | Framework | Type |
 |-----|-----------|------|
 | `rails` | Ruby on Rails | Full-stack |
@@ -93,9 +74,7 @@
 | `hanami` | Hanami | Web |
 | `rspec` | RSpec | Testing |
 | `activerecord` | ActiveRecord | ORM |
-
 ### Java Frameworks
-
 | Dependency | Framework | Type |
 |------------|-----------|------|
 | `spring-boot` | Spring Boot | Application framework |
@@ -103,22 +82,15 @@
 | `hibernate` | Hibernate | ORM |
 | `micronaut` | Micronaut | Microservices |
 | `quarkus` | Quarkus | Cloud-native |
-
 ### .NET Frameworks
-
 | Package | Framework | Type |
 |---------|-----------|------|
 | `Microsoft.AspNetCore` | ASP.NET Core | Web |
 | `Microsoft.EntityFrameworkCore` | EF Core | ORM |
 | `xunit` | xUnit | Testing |
 | `NUnit` | NUnit | Testing |
-
----
-
 ## Database Detection
-
 ### From Dependencies
-
 | Dependency/Package | Database | Type |
 |--------------------|----------|------|
 | `pg`, `psycopg2`, `postgresql` | PostgreSQL | Relational |
@@ -129,22 +101,15 @@
 | `cassandra-driver` | Cassandra | Wide-column |
 | `neo4j` | Neo4j | Graph |
 | `elasticsearch` | Elasticsearch | Search |
-
 ### From Configuration Files
-
 | Pattern | Database |
 |---------|----------|
 | `DATABASE_URL=postgres://` | PostgreSQL |
 | `MONGO_URI=mongodb://` | MongoDB |
 | `REDIS_URL=redis://` | Redis |
 | Connection string in `.env` | Various |
-
----
-
 ## Infrastructure Detection
-
 ### From Dockerfile
-
 | Base Image Pattern | Infers |
 |--------------------|--------|
 | `FROM node:` | Node.js runtime |
@@ -152,18 +117,14 @@
 | `FROM golang:` | Go runtime |
 | `FROM nginx:` | Web server/reverse proxy |
 | `FROM postgres:` | PostgreSQL database |
-
 ### From docker-compose.yml
-
 | Service Pattern | Infers |
 |-----------------|--------|
 | `image: postgres` | PostgreSQL service |
 | `image: redis` | Redis service |
 | `image: nginx` | Nginx service |
 | `build: ./api` | Custom API service |
-
 ### From CI/CD Files
-
 | File | Platform |
 |------|----------|
 | `.github/workflows/*.yml` | GitHub Actions |
@@ -172,32 +133,19 @@
 | `.circleci/config.yml` | CircleCI |
 | `azure-pipelines.yml` | Azure DevOps |
 | `bitbucket-pipelines.yml` | Bitbucket Pipelines |
-
----
-
 ## Output Format
-
 ```markdown
 ## Tech Stack Summary
-
 **Language(s):**
 - Python 3.x (High confidence) - `*.py` files, `requirements.txt`
-
 **Framework(s):**
 - Flask 2.0 (High confidence) - `requirements.txt: flask==2.0`
 - SQLAlchemy (High confidence) - `requirements.txt: sqlalchemy`
-
 **Database(s):**
 - PostgreSQL (High confidence) - `requirements.txt: psycopg2`, `DATABASE_URL`
-
 **Infrastructure:**
 - Docker (High confidence) - `Dockerfile` present
 - GitHub Actions (High confidence) - `.github/workflows/` present
-
 **Testing:**
 - pytest (High confidence) - `requirements.txt: pytest`, `test_*.py` files
 ```
-
----
-
-**End of Tech Stack Detection Guide**
