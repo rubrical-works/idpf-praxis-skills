@@ -13,18 +13,16 @@ defaultSkill: false
 copyright: "Rubrical Works (c) 2026"
 ---
 # DrawIO Generation Skill
-**Purpose:** Complete technical specification for generating `.drawio.svg` files -- the dual-representation format that renders as SVG in browsers/GitHub while remaining fully editable in draw.io.
-**Audience:** Any command, extension, or workflow that needs to produce UML or architectural diagrams.
-**Load with:** `Skills/drawio-generation/SKILL.md`
+**Purpose:** Complete technical specification for generating `.drawio.svg` files — the dual-representation format that renders as SVG in browsers and GitHub while remaining fully editable in draw.io.
 ## When to Use This Skill
 - Generating UML diagrams (use case, activity, sequence, class, component, state)
 - Creating architectural diagrams for PRDs or design documents
 - Producing any `.drawio.svg` file that must open and edit correctly in draw.io
 - Validating existing `.drawio.svg` files for completeness
 ## File Format: Dual SVG + mxGraphModel Representation
-A `.drawio.svg` file is a standard SVG file with an embedded `mxfile` XML structure in the `<svg>` element's `content` attribute:
-- **SVG layer** -- renders visually in browsers, GitHub preview, and image viewers
-- **mxGraphModel layer** -- stores the editable graph structure that draw.io reads
+A `.drawio.svg` file is a standard SVG file with an embedded `mxfile` XML structure in the `<svg>` element's `content` attribute.
+- **SVG layer** — renders visually in browsers, GitHub preview, and image viewers
+- **mxGraphModel layer** — stores the editable graph structure that draw.io reads
 Both layers must describe the **same diagram**.
 ### File Structure
 ```xml
@@ -41,27 +39,25 @@ Both layers must describe the **same diagram**.
 </svg>
 ```
 **Key points:**
-- The `content` attribute contains the **entire mxfile XML**, HTML-encoded (`<` -> `&lt;`, `"` -> `&quot;`)
-- The `width`, `height`, and `viewBox` on `<svg>` should match the `dx`/`dy` on `<mxGraphModel>`
+- The `content` attribute contains the entire mxfile XML, HTML-encoded (`<` -> `&lt;`, `"` -> `&quot;`)
+- `width`, `height`, and `viewBox` on `<svg>` should match `dx`/`dy` on `<mxGraphModel>`
 - SVG elements inside `<g>` are the visual rendering; the `content` attribute is the editable model
 ## mxGraphModel Structure
 ```
 mxfile
- -> diagram (id, name)
-     -> mxGraphModel (dx, dy, grid, gridSize, ...)
-          -> root
-               +-- mxCell id="0"              <- root container (always present)
-               +-- mxCell id="1" parent="0"   <- default layer (always present)
-               +-- mxCell id="..." vertex="1" <- shape cells
-               +-- mxCell id="..." edge="1"   <- edge cells
+ └── diagram (id, name)
+      └── mxGraphModel (dx, dy, grid, gridSize, ...)
+           └── root
+                ├── mxCell id="0"              <- root container (always present)
+                ├── mxCell id="1" parent="0"   <- default layer (always present)
+                ├── mxCell id="..." vertex="1" <- shape cells
+                └── mxCell id="..." edge="1"   <- edge cells
 ```
 ### Required Root Cells
-Every mxGraphModel must start with:
 ```xml
 <mxCell id="0"/>
 <mxCell id="1" parent="0"/>
 ```
-Cell `0` is the root container. Cell `1` is the default layer; all other cells use `parent="1"`.
 ### Shape mxCell (vertex)
 ```xml
 <mxCell id="step1"
@@ -78,7 +74,6 @@ Cell `0` is the root container. Cell `1` is the default layer; all other cells u
 | `style` | Semicolon-delimited style properties |
 | `vertex="1"` | Marks this as a shape (not an edge) |
 | `parent="1"` | Belongs to the default layer |
-The `mxGeometry` child defines position (`x`, `y`) and size (`width`, `height`).
 ### Edge mxCell (edge)
 ```xml
 <mxCell id="e1"
@@ -91,67 +86,46 @@ The `mxGeometry` child defines position (`x`, `y`) and size (`width`, `height`).
 ```
 | Attribute | Purpose |
 |-----------|---------|
-| `id` | Unique identifier |
-| `value` | Edge label (empty string for unlabeled) |
-| `style` | Edge style (orthogonal, curved, endArrow type) |
-| `edge="1"` | Marks this as an edge (not a shape) |
 | `source` | ID of the source shape |
 | `target` | ID of the target shape |
-The `mxGeometry` for edges uses `relative="1"`.
-### Edge Labels
-Set the `value` attribute on the edge mxCell:
-```xml
-<mxCell id="e5" value="No"
-        style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;"
-        edge="1" parent="1"
-        source="decision" target="fix">
-  <mxGeometry relative="1" as="geometry"/>
-</mxCell>
-```
+| `edge="1"` | Marks this as an edge |
+Edge labels: set the `value` attribute on the edge mxCell.
 ## Critical Requirement: SVG <-> mxGraphModel Synchronization
 > **Every SVG visual element must have a corresponding mxCell in the mxGraphModel, and vice versa.**
 Violations cause:
-- **Missing mxCell for SVG arrow** -- arrow renders visually but is not editable in draw.io
-- **Missing SVG for mxCell** -- element exists in editor but is invisible in rendered SVG
-- **Mismatched coordinates** -- shape appears in one place visually but draw.io shows it elsewhere
+- **Missing mxCell for SVG arrow** — arrow renders but is not editable (ghost element)
+- **Missing SVG for mxCell** — element exists in editor but invisible in rendered SVG
+- **Mismatched coordinates** — shape appears in different places visually vs in draw.io
 ### Synchronization Checklist
 | Check | Verify |
 |-------|--------|
-| Shape count | Number of `vertex="1"` mxCells = number of SVG shapes (`<rect>`, `<ellipse>`, `<polygon>`) |
-| Edge count | Number of `edge="1"` mxCells = number of SVG lines/paths (`<line>`, `<path>`) |
+| Shape count | `vertex="1"` mxCells = SVG shapes (`<rect>`, `<ellipse>`, `<polygon>`) |
+| Edge count | `edge="1"` mxCells = SVG lines/paths (`<line>`, `<path>`) |
 | Coordinates | `mxGeometry x,y` matches SVG element `x,y` (or `cx,cy` for ellipses) |
 | Labels | `mxCell value` matches SVG `<text>` content |
-| Connections | Every `source`/`target` attribute references a valid shape ID |
-### Anti-Pattern
-```
-WRONG: Draw SVG arrows first, then add edge mxCells later
-RIGHT: Build the mxGraphModel first, then generate matching SVG
-```
+| Connections | Every `source`/`target` references a valid shape ID |
 ## Generation Pattern: Model-First Approach
 Generate `.drawio.svg` files in three sequential steps. Never skip or reorder.
 ### Step 1: Build mxGraphModel
-1. **Create shape mxCells** -- one `vertex="1"` mxCell per visual element
-2. **Create edge mxCells** -- one `edge="1"` mxCell per connection, with `source` and `target` referencing shape IDs
-3. **Assign unique IDs** -- use semantic names (e.g., `step1`, `decision`, `e1`) not GUIDs
-4. **Calculate geometry** -- set `x`, `y`, `width`, `height` on each `mxGeometry`; use 10px grid increments
-**Output:** A complete `<mxfile>` XML structure with all shapes and edges defined.
+1. **Create shape mxCells** — one `vertex="1"` mxCell per visual element
+2. **Create edge mxCells** — one `edge="1"` mxCell per connection, with `source` and `target` referencing shape IDs
+3. **Assign unique IDs** — use semantic names (e.g., `step1`, `decision`, `e1`) not GUIDs
+4. **Calculate geometry** — set `x`, `y`, `width`, `height`; use 10px grid increments
 ### Step 2: Generate SVG
 | mxCell Type | SVG Element | Coordinate Source |
 |-------------|-------------|-------------------|
 | `vertex="1"` with `rounded=1` | `<rect rx="10" ry="10">` | `mxGeometry x, y, width, height` |
-| `vertex="1"` with `ellipse` style | `<ellipse>` | `cx = x + width/2`, `cy = y + height/2`, `rx = width/2`, `ry = height/2` |
-| `vertex="1"` with `rhombus` style | `<polygon>` (4 points) | Derived from `mxGeometry` center and size |
+| `vertex="1"` with `ellipse` style | `<ellipse>` | `cx = x + width/2`, `cy = y + height/2` |
+| `vertex="1"` with `rhombus` style | `<polygon>` (4 points) | Derived from center and size |
 | `vertex="1"` with `shape=umlActor` | `<circle>` + `<line>` (stick figure) | Head at `(x + width/2, y + 10)` |
 | `edge="1"` | `<line>` or `<path>` | Calculated from source/target positions |
 | `mxCell value` text | `<text>` | Centered in shape geometry |
-**Coordinate alignment rule:** SVG element positions must match `mxGeometry` coordinates exactly.
 ### Step 3: Validate Synchronization
-1. **Count matching** -- `vertex="1"` mxCells vs SVG shapes; `edge="1"` mxCells vs SVG lines/paths
-2. **Edge reference verification** -- every `source`/`target` must reference an existing shape `id`
-3. **Label matching** -- `mxCell value` text appears in corresponding SVG `<text>`
-4. **Coordinate spot-check** -- verify first and last shape positions match between mxGeometry and SVG
-If validation fails, fix the **mxGraphModel first**, then regenerate SVG.
-> **Never write SVG elements without first creating the mxGraphModel equivalent.**
+1. Count matching — vertex mxCells vs SVG shapes; edge mxCells vs SVG lines/paths
+2. Edge reference verification — every `source`/`target` must reference existing shape `id`
+3. Label matching — `mxCell value` text in corresponding SVG `<text>`
+4. Coordinate spot-check — first and last shape positions match
+**Anti-Pattern:** Never write SVG elements without first creating the mxGraphModel equivalent. Model-first prevents ID mismatches and coordinate drift.
 ## UML Diagram Type Conventions
 ### Use Case Diagram
 | Element | mxCell Style | Layout |
@@ -174,68 +148,65 @@ If validation fails, fix the **mxGraphModel first**, then regenerate SVG.
 ### Sequence Diagram
 | Element | mxCell Style | Layout |
 |---------|-------------|--------|
-| Lifeline | `shape=umlLifeline;` | Top row, horizontally spaced 150px |
-| Sync Message | `endArrow=block;endFill=1;` | Left-to-right solid arrow |
-| Async Message | `endArrow=open;endFill=0;` | Left-to-right open arrow |
-| Return Message | `dashed=1;endArrow=open;` | Right-to-left dashed arrow |
-| Activation Box | `fillColor=#E3F2FD;` (narrow rect on lifeline) | Overlaid on lifeline |
-| Alt/Loop fragment | `dashed=1;rounded=0;` + label `[alt]`/`[loop]` | Enclosing rectangle |
+| Lifeline | `shape=umlLifeline;` | Top row, 150px horizontal spacing |
+| Sync Message | `endArrow=block;endFill=1;` | Solid arrow |
+| Async Message | `endArrow=open;endFill=0;` | Open arrow |
+| Return Message | `dashed=1;endArrow=open;` | Dashed arrow |
+| Activation Box | `fillColor=#E3F2FD;` (narrow rect) | On lifeline |
+| Alt/Loop fragment | `dashed=1;rounded=0;` + label | Enclosing rectangle |
 ### Class Diagram
-| Element | mxCell Style | Layout |
-|---------|-------------|--------|
-| Class box | `shape=classShape;` or 3-section rect | Grid layout, 200px spacing |
-| Interface | Same as class + `<<interface>>` label | Above implementing classes |
-| Inheritance | `endArrow=block;endFill=0;` (hollow triangle) | Child -> Parent |
-| Implementation | `dashed=1;endArrow=block;endFill=0;` | Class -> Interface |
-| Association | `endArrow=open;` | Between related classes |
-| Composition | `endArrow=diamond;endFill=1;` (filled) | Whole -> Part |
-| Aggregation | `endArrow=diamond;endFill=0;` (hollow) | Whole -> Part |
+| Element | mxCell Style |
+|---------|-------------|
+| Class box | `shape=classShape;` or 3-section rect |
+| Inheritance | `endArrow=block;endFill=0;` (hollow triangle) |
+| Implementation | `dashed=1;endArrow=block;endFill=0;` |
+| Composition | `endArrow=diamond;endFill=1;` (filled) |
+| Aggregation | `endArrow=diamond;endFill=0;` (hollow) |
 ### Color Scheme
 | Purpose | Fill Color | Stroke Color |
 |---------|-----------|-------------|
-| Primary action/entity | `#E3F2FD` (light blue) | `#1976D2` |
-| Decision/branch | `#FFF3E0` (light orange) | `#F57C00` |
+| Primary action/entity | `#E3F2FD` | `#1976D2` |
+| Decision/branch | `#FFF3E0` | `#F57C00` |
 | Start/End | `#000000` | `#000000` |
 | Actor | `#FFFFFF` | `#333333` |
-| System boundary | `#F5F5F5` (light gray) | `#9E9E9E` |
-| Error/exception path | `#FFEBEE` (light red) | `#D32F2F` |
-| Success/happy path | `#E8F5E9` (light green) | `#388E3C` |
+| System boundary | `#F5F5F5` | `#9E9E9E` |
+| Error/exception path | `#FFEBEE` | `#D32F2F` |
+| Success/happy path | `#E8F5E9` | `#388E3C` |
 ### Layout Best Practices
-1. **Grid alignment** -- use 10px grid increments for all coordinates
-2. **Minimum spacing** -- 60px between shapes, 120px between rows
-3. **Label positioning** -- center text in shapes; edge labels at midpoint
-4. **Consistent sizing** -- action boxes 280x60, decisions 120x80, actors 40x60
-5. **Flow direction** -- top-to-bottom for activity/sequence, left-to-right for use case
+1. **Grid alignment** — 10px grid increments
+2. **Minimum spacing** — 60px between shapes, 120px between rows
+3. **Label positioning** — center text in shapes; edge labels at midpoint
+4. **Consistent sizing** — action boxes 280x60, decisions 120x80, actors 40x60
+5. **Flow direction** — top-to-bottom for activity/sequence, left-to-right for use case
 ## Token Budget Considerations
-The dual-representation format means each diagram consumes roughly **~2x the tokens** of a single-format output.
-1. **One diagram per tool call** -- never batch multiple `.drawio.svg` writes in a single response
-2. **Complex diagram threshold** -- diagrams with **~15+ nodes** can approach output token limits. Split into sub-diagrams for large ones.
-3. **Separate skill reads from diagram writes** -- loading the skill and generating a diagram in the same response compounds token usage
-4. **Multi-diagram sequences** -- write each diagram in its own response cycle
+1. **One diagram per tool call** — never batch multiple writes
+2. **Complex diagram threshold** — ~15+ nodes can approach output limits; split into sub-diagrams
+3. **Separate skill reads from diagram writes**
+4. **Multi-diagram sequences** — write each diagram in its own response cycle
 ## Validation Checklist
 ### 1. mxGraphModel Completeness
 - [ ] Root cells present: `<mxCell id="0"/>` and `<mxCell id="1" parent="0"/>`
-- [ ] Every shape has `vertex="1"` and `<mxGeometry>` with `x`, `y`, `width`, `height`
+- [ ] Every shape has `vertex="1"` and child `<mxGeometry>` with `x`, `y`, `width`, `height`
 - [ ] Every edge has `edge="1"` with `source` and `target` attributes
 - [ ] Every `source`/`target` references a valid shape `id`
 - [ ] Every edge `mxGeometry` has `relative="1"`
 - [ ] All `id` values are unique
-- [ ] All cells have `parent="1"` (or appropriate parent for grouped elements)
+- [ ] All cells have `parent="1"` (or appropriate parent)
 ### 2. SVG <-> mxGraphModel Synchronization
 - [ ] Shape count matches: `vertex="1"` mxCells = SVG shapes
 - [ ] Edge count matches: `edge="1"` mxCells = SVG lines/paths
-- [ ] Coordinates aligned: `mxGeometry x,y` matches SVG element positioning
-- [ ] Labels match: `mxCell value` text appears in SVG `<text>` elements
+- [ ] Coordinates aligned
+- [ ] Labels match
 - [ ] `<svg>` dimensions match `<mxGraphModel>` `dx`, `dy`
 - [ ] `content` attribute contains complete HTML-encoded mxfile XML
 ### 3. Story Traceability (PRD diagrams only)
-- [ ] Use case diagrams: Each user story maps to a use case ellipse with story reference
-- [ ] Activity diagrams: Acceptance criteria steps map to activity nodes
-- [ ] All diagrams: Story IDs embedded in element labels for traceability
-- [ ] Diagram title references the epic or feature it illustrates
+- [ ] Use case diagrams: each story maps to a use case ellipse with story reference
+- [ ] Activity diagrams: acceptance criteria steps map to activity nodes
+- [ ] Story IDs embedded in element labels
+- [ ] Diagram title references epic or feature
 ### 4. Editability Verification
 - [ ] File opens in draw.io without errors
 - [ ] Shapes are selectable and movable
 - [ ] Connectors re-route when shapes are moved
-- [ ] Text labels are editable by double-clicking
-- [ ] Adding new shapes/connectors works without breaking existing elements
+- [ ] Text labels are editable
+- [ ] Adding new elements works without breaking existing ones

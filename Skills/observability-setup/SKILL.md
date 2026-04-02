@@ -12,7 +12,7 @@ copyright: "Rubrical Works (c) 2026"
 ---
 # Observability Setup
 Scaffolds observability for production services: structured logging, distributed tracing, metrics, alerting.
-**Companion Domain:** Domains/Observability
+**Companion Domain:** Domains/Observability — provides evaluative review criteria
 ## When to Use
 - Setting up structured logging for a new service
 - Configuring OpenTelemetry SDK for tracing/metrics
@@ -24,3 +24,6 @@ Scaffolds observability for production services: structured logging, distributed
 **Structured Logging:** JSON formatter, log level mapping (ERROR/WARN/INFO/DEBUG), correlation ID middleware, PII redaction patterns
 **Grafana Dashboards:** RED metrics (Rate/Errors/Duration), service health overview, endpoint latency percentiles (p50/p95/p99), error rate by status code
 **Alert Rules:** SLO burn rate alerts, error rate thresholds, latency p99 thresholds, routing and severity classification
+## Related Skills
+- `ci-cd-pipeline-design` — deploying observability configuration
+- `error-handling-patterns` — consistent error logging and classification

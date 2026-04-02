@@ -11,14 +11,14 @@ relevantTechStack: [cucumber, gherkin, bdd, javascript, typescript]
 copyright: "Rubrical Works (c) 2026"
 ---
 # BDD Writing
-Guide for writing Behavior-Driven Development specifications using Gherkin syntax, covering feature files, step definitions, and TDD integration.
+Guidance for writing Behavior-Driven Development specifications using Gherkin syntax, covering feature files, step definitions, and TDD integration.
 ## When to Use This Skill
 - Writing acceptance criteria as executable specifications
 - Creating feature files for new functionality
 - Defining step definitions for scenarios
 - Organizing BDD test suites
 - Integrating BDD with TDD workflow
-- Gherkin syntax questions
+- Questions about Gherkin syntax
 - Tool selection guidance (Cucumber, pytest-bdd, etc.)
 ## Prerequisites
 - Understanding of testing concepts
@@ -127,35 +127,15 @@ def verify_dashboard(page):
     assert page.url == '/dashboard'
 ```
 ### Step Definition Best Practices
-**1. Keep Steps Reusable**
-```gherkin
-# Good - Reusable
-Given a user "alice" exists
-# Poor - Too specific
-Given alice the admin user exists in the system
-```
-**2. Use Parameters**
-```javascript
-// Good - Single definition handles multiple cases
-Given('a user {string} with role {string}', (name, role) => { ... });
-```
-**3. Declarative Over Imperative**
-```gherkin
-# Good - Declarative (what, not how)
-Given the user is logged in
-# Poor - Imperative (too detailed)
-Given the user opens the login page
-And the user enters username "alice"
-And the user enters password "secret"
-And the user clicks login
-```
+1. **Keep Steps Reusable** — `Given a user "alice" exists` not `Given alice the admin user exists in the system`
+2. **Use Parameters** — Single definition handles multiple cases
+3. **Declarative Over Imperative** — `Given the user is logged in` not detailed click-by-click steps
 ## Best Practices
 ### Feature Organization
 ```
 features/
 ├── authentication/
 │   ├── login.feature
-│   ├── logout.feature
 │   └── password_reset.feature
 ├── orders/
 │   ├── create_order.feature
@@ -175,41 +155,16 @@ features/
 | Make scenarios independent | Create dependencies between scenarios |
 | Focus on behavior | Focus on UI mechanics |
 ## Anti-Patterns to Avoid
-**1. UI-Focused Steps**
-```gherkin
-# Poor
-When I click the button with id "submit-btn"
-# Good
-When I submit my order
-```
-**2. Too Many Steps** -- Split into focused scenarios:
-```gherkin
-Scenario: Enter shipping information
-Scenario: Select shipping method
-Scenario: Process payment
-Scenario: Confirm order
-```
-**3. Coupled Steps**
-```gherkin
-# Poor
-Given I set the username variable to "alice"
-When I use the username variable to login
-# Good
-When the user "alice" logs in
-```
-**4. Inconsistent Language** -- Use consistent terminology (pick "user", not "customer"/"client"/"user" interchangeably).
+1. **UI-Focused Steps** — `When I submit my order` not `When I click the button with id "submit-btn"`
+2. **Too Many Steps** — Split long scenarios into focused ones
+3. **Coupled Steps** — `When the user "alice" logs in` not `Given I set the username variable to "alice"`
+4. **Inconsistent Language** — Use same term (user/customer/client) throughout
 ## BDD + TDD Integration (Double Loop)
-```
-OUTER LOOP: BDD (Acceptance Tests)
-  1. Write failing acceptance scenario
-  INNER LOOP: TDD (Unit Tests)
-    2. RED: Write failing unit test
-    3. GREEN: Write minimal code to pass
-    4. REFACTOR: Improve code quality
-    5. Repeat until feature complete
-  6. Acceptance scenario passes
-  7. Move to next scenario
-```
+1. Write a BDD scenario (fails - feature doesn't exist)
+2. Write unit tests for required components (TDD inner loop)
+3. Implement until scenario passes
+4. Refactor
+5. Next scenario
 ## Tool Selection Guide
 | Tool | Language | Best For |
 |------|----------|----------|
@@ -217,9 +172,7 @@ OUTER LOOP: BDD (Acceptance Tests)
 | **pytest-bdd** | Python | Python projects, pytest integration |
 | **SpecFlow** | C#/.NET | .NET ecosystem |
 | **Behave** | Python | Python alternative to pytest-bdd |
-| **RSpec** | Ruby | Ruby with BDD-style syntax |
 | **Karate** | Java | API testing with BDD |
-### Quick Selection
 ```
 Python project?
 ├── Using pytest? -> pytest-bdd
@@ -239,4 +192,4 @@ See `resources/` directory for:
 - `tool-comparison.md` - Detailed tool comparison
 ## Relationship to Other Skills
 **Complements:** `test-writing-patterns`, `tdd-red-phase`, `beginner-testing`
-**Used by:** IDPF-Agile for user story validation and acceptance criteria verification
+**Used by:** IDPF-Agile - BDD for user story validation and acceptance criteria verification

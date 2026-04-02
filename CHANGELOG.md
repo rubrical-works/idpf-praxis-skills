@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-04-02
+
+### Added
+- `json-validator` invokable skill — validates JSON files against `$schema` references using Ajv (single file, `--all`, `--dir` modes)
+
+### Fixed
+- `fw-edit-skill` edit menu exceeded `AskUserQuestion` 4-option limit — consolidated 6 options to 4
+- `fw-add-skill` injector template missing `resources/HOW-TO.md` generation
+- README-DIST.md rewritten for dist repo audience (language, title, framework compatibility accuracy)
+- Minimization pipeline now copies companion files (`.json`, `.js`) and non-standard subdirectories (`lib/`, `scripts/`) to `.min-mirror/` and packages
+
+### Changed
+- Skill count increased from 39 to 40
+
 ## [0.4.0] - 2026-04-02
 
 ### Added

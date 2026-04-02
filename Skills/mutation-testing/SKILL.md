@@ -12,15 +12,13 @@ disable-model-invocation: true
 copyright: "Rubrical Works (c) 2026"
 ---
 # Mutation Testing
-This Skill guides developers through mutation testing -- a technique for evaluating test suite quality by introducing small changes (mutations) to code and checking if tests catch them.
 ## When to Use This Skill
 - Assessing test suite quality beyond code coverage
 - Identifying weak spots in test coverage
 - Evaluating whether tests are meaningful
 - Improving test effectiveness
 - Making decisions about test maintenance
-## What is Mutation Testing?
-### Core Concept
+## Core Concept
 1. **Mutate:** Make small changes to source code
 2. **Test:** Run test suite against mutated code
 3. **Evaluate:** Check if tests detect (kill) the mutations
@@ -174,7 +172,7 @@ mvn org.pitest:pitest-maven:mutationCoverage
 | Ruby | mutant | Semantic mutations |
 | Go | go-mutesting | Go support |
 ## Best Practices
-1. **Start small** -- begin with critical modules, expand gradually, focus on high-risk code first
+1. **Start small** -- critical modules first, expand gradually, focus on high-risk code
 2. **Set realistic goals** -- start with current score, set incremental targets, track progress
 3. **Address survivors systematically** -- equivalent? mark it. Test missing? add it. Acceptable risk? document why.
 4. **Integrate with CI** -- run on PRs (limited scope), block on score regression, provide clear feedback
@@ -184,11 +182,7 @@ mvn org.pitest:pitest-maven:mutationCoverage
 - **Ignoring equivalent mutants** -- score seems stuck below 80%. Review survivors, mark equivalents.
 - **Adding tests without understanding** -- tests added just to kill mutants. Understand what behavior changes.
 - **Over-testing to kill mutants** -- hundreds of tests for edge cases. Focus on meaningful mutations.
-## Resources
-See `resources/` directory for:
-- `operator-guide.md` - Detailed mutation operator reference
-- `score-interpretation.md` - Understanding and improving scores
-- `framework-examples.md` - Framework-specific setup and usage
 ## Relationship to Other Skills
-**Complements:** `property-based-testing`, `test-writing-patterns`, `tdd-refactor-phase`
-**Independent from:** Beginner skills -- assumes testing experience
+- `property-based-testing` -- Another advanced testing technique
+- `test-writing-patterns` -- Writing effective tests
+- `tdd-refactor-phase` -- Improving code with test safety

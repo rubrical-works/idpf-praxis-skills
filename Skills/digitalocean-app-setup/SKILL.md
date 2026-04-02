@@ -12,8 +12,7 @@ copyright: "Rubrical Works (c) 2026"
 ---
 # Skill: digitalocean-app-setup
 **Purpose:** Guide developers through setting up DigitalOcean App Platform deployments with GitHub integration
-**Audience:** Developers deploying web applications, APIs, and static sites to DigitalOcean
-**Related Skills:** `ci-cd-pipeline-design` -- for broader CI/CD pipeline architecture
+**Related Skills:** `ci-cd-pipeline-design` — for broader CI/CD pipeline architecture
 ## Initial Setup
 ### Prerequisites
 - DigitalOcean account
@@ -57,7 +56,6 @@ See `resources/env-setup.md` for a complete guide.
 3. Review apps are destroyed when the PR is closed
 ### GitHub Actions Deployment
 ```yaml
-# See resources/deploy.yml for complete workflow
 - uses: digitalocean/action-doctl@v2
   with:
     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
@@ -91,14 +89,9 @@ doctl apps create-deployment <app-id> --revision <deployment-id>
 ```bash
 # Stream runtime logs
 doctl apps logs <app-id> --follow
-# View build logs for a specific deployment
+# View build logs
 doctl apps logs <app-id> --type build
 ```
-### Dashboard Metrics
-- CPU and memory usage per component
-- HTTP request rate, latency, and error rate
-- Bandwidth consumption
-- Container restart count
 ### Health Checks
 ```yaml
 services:
@@ -118,18 +111,12 @@ services:
 - **Static site routing**: For SPAs, configure catch-all routes in the app spec
 - **Database connections**: Use connection pools and DigitalOcean Managed Databases for production
 ### Review App Issues
-- **Cost awareness**: Review apps count as separate app instances
+- **Cost awareness**: Review apps count as separate app instances. Monitor usage
 - **Database isolation**: Review apps share the production database by default. Use separate dev databases
-- **Environment variable conflicts**: Review app env vars inherit from the main app. Override per-component in the spec
+- **Environment variable conflicts**: Review app env vars inherit from main app. Override per-component in the spec
 ## App Spec Reference
-The `app-spec.yaml` file defines your app's infrastructure. See `resources/app-spec.yaml` for a reference configuration covering:
-- Service definitions (web, worker, job)
-- Database provisioning
-- Environment variables
-- Build and run commands
-- Domain configuration
-- Health checks
+The `app-spec.yaml` file defines your app's infrastructure. See `resources/app-spec.yaml` for a reference configuration covering: service definitions, database provisioning, environment variables, build/run commands, domain configuration, health checks.
 ## Resources
-- `resources/app-spec.yaml` -- Reference DigitalOcean App Platform spec
-- `resources/deploy.yml` -- GitHub Actions workflow for DigitalOcean deployment
-- `resources/env-setup.md` -- Environment variable setup guide
+- `resources/app-spec.yaml` — Reference DigitalOcean App Platform spec
+- `resources/deploy.yml` — GitHub Actions workflow for DigitalOcean deployment
+- `resources/env-setup.md` — Environment variable setup guide

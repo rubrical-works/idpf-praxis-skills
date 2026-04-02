@@ -1,5 +1,5 @@
 # Failure Verification Guide
-**Version:** v0.4.0
+**Version:** v0.4.1
 
 Techniques for verifying tests fail correctly in the RED phase of TDD.
 

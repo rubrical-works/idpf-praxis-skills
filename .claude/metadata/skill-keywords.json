@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-02T14:49:48.312Z",
+  "generatedAt": "2026-04-02T16:34:27.202Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
@@ -105,6 +105,11 @@
       "i18n-setup",
       "i18n",
       "setup"
+    ],
+    "json-validator": [
+      "json-validator",
+      "json",
+      "validator"
     ],
     "migration-patterns": [
       "migration-patterns",
@@ -245,6 +250,7 @@
     "error-handling-patterns": "development",
     "flask-setup": "platform",
     "i18n-setup": "web",
+    "json-validator": "analysis",
     "migration-patterns": "database",
     "mutation-testing": "testing",
     "observability-setup": "devops",

@@ -21,7 +21,8 @@ copyright: "Rubrical Works (c) 2026"
 - `/charter` extraction mode - Analyzing codebase for charter generation
 - `/charter refresh` - Re-analyzing codebase for charter updates
 - General codebase exploration and understanding
-- Legacy code analysis and onboarding assistance
+- Legacy code analysis
+- Onboarding assistance — exploring unfamiliar codebases
 ## Analysis Capabilities
 ### 1. Tech Stack Detection
 | File Pattern | Detects | Example |
@@ -73,12 +74,6 @@ copyright: "Rubrical Works (c) 2026"
 | RSpec | `*_spec.rb` | describe/context/it blocks |
 | Go testing | `*_test.go` | Test* functions |
 | xUnit | `*.Tests.cs` | [Fact], [Theory] methods |
-**Extraction Pattern:**
-```
-Test File -> Test Suite -> Test Case -> Feature Description
-                                     -> Expected Behavior
-                                     -> Edge Cases
-```
 ### 4. NFR Detection
 **Security Patterns:**
 | Pattern | NFR Inference |
@@ -128,21 +123,6 @@ Test File -> Test Suite -> Test Case -> Feature Description
 | `Intl` API usage, `formatMessage` | Runtime localization |
 | Right-to-left (RTL) CSS | Bidirectional text support |
 | ICU message format | Pluralization/gender handling |
-## Usage
-### Load for PRD/Charter Work
-```
-1. Load: Skills/codebase-analysis/SKILL.md
-2. Load: Assistant/Anti-Hallucination-Rules-for-PRD-Work.md
-3. Run analysis commands as needed
-```
-### Analysis Phases
-| Phase | Purpose | Output |
-|-------|---------|--------|
-| Tech Stack Detection | Detect languages, frameworks, dependencies | Tech-Stack summary |
-| Architecture Inference | Infer structure, layers, patterns | Architecture summary |
-| Test Parsing | Parse tests for features | Feature list with evidence |
-| NFR Detection | Detect NFRs from patterns | NFR list with evidence |
-| Full Analysis | Run all phases | Complete codebase summary |
 ## Confidence Levels
 | Level | Meaning | Action |
 |-------|---------|--------|

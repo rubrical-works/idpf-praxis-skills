@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-04-02T14:49:48.282Z",
+  "generatedAt": "2026-04-02T16:34:27.170Z",
   "version": "0.1.0",
-  "skillCount": 39,
+  "skillCount": 40,
   "skills": [
     {
       "name": "anti-pattern-analysis",
@@ -10,7 +10,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "e5b82d826135cea64697b4df738434ab37b5c7180ddd61e1de6dc2c50af06d6a",
+      "checksum": "1e6ee36cc462122d6dc186e3635d346ce47f49de0501921512095ad468d679d7",
       "category": "code-quality",
       "relevantTechStack": [
         "javascript",
@@ -32,7 +32,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "9acfdef91f3bf953860ff765e0b9a0843f4072a76c0b6d1a07408c835f69de75",
+      "checksum": "4b8ca2e086c6e1faf52d3a0ffdb267bfd652eb6db6312c74a41186cfaed34c42",
       "category": "api",
       "relevantTechStack": [
         "rest",
@@ -50,7 +50,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "56823fe8e3b33ebce3e962edf3c7b3fe50efc9ed085f529d2e9107660cefa7a9",
+      "checksum": "241447be89ffa64dbc05f0ea3f248ee19008a93e58307b9fc7e6853f08810434",
       "category": "platform",
       "relevantTechStack": [
         "astro",
@@ -69,7 +69,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "25edc4ac517b0055f28fc02077fd688bc917ed4ac847c6d01ce5bbeb0bf8400d",
+      "checksum": "8950318dc64b6b2b9c4351cdbc97c3112c467d05f5d2829e526c265e98f14444",
       "category": "testing",
       "relevantTechStack": [
         "cucumber",
@@ -87,7 +87,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "741db508d82fa5ecf7149e3c2a66ffc3d42ef0f5a675e9e8f29d570e2ac49a11",
+      "checksum": "8299d6826061f3fc448b1a2d9749244e61aee7d310d3e1a64d99ea3a42ea8696",
       "category": "testing",
       "relevantTechStack": [
         "flask",
@@ -105,7 +105,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "ef1067280a8b5d72bedfc9dc7fe17190383258bcd06b2c8f0ff289740722af8d",
+      "checksum": "d3ad40dbd1017324c49fbef3e2fd3fe2c0700c240f5da7fa743b03b1fcd19ff4",
       "category": "devops",
       "relevantTechStack": [
         "github-actions",
@@ -123,7 +123,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "44f2501ddbc96239bf8a41ddf86fff92beaea3590fc7ef07b82352ba892a31b9",
+      "checksum": "3e5de2f142efe694ae3f03a3649b54d7995054a82cb972b6b020f6172af01ca6",
       "category": "analysis",
       "relevantTechStack": [
         "javascript",
@@ -139,7 +139,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "2f89d110350761c380c679382f4cd2ffd0a84a5d9102fa70d1ece4a8047cc32d",
+      "checksum": "546b2d048d6f601ff3749fe98797fbe28a0b09c715b88abbccac8031a7be67b8",
       "category": "code-quality",
       "relevantTechStack": [
         "javascript",
@@ -165,7 +165,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "c565f6c03e187b6ef5ea1a7c9b6447edc991148b1b52675ea784eefcc6ddc05c",
+      "checksum": "b762457b88939fafbe2b63c60c4e320ebce005af5f167c5447a6b1caec0a39b4",
       "category": "code-quality",
       "copyright": "\"Rubrical Works (c) 2026\""
     },
@@ -176,7 +176,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "b11cc65f3384f202ad6650d1bbd9f8a8a722894c8692caa6fb3a0cb8cbecc64a",
+      "checksum": "d3e1c7874218f4778d05ea8edc48b1aa5d2a06bca50b2901d4a15b729428d16b",
       "category": "code-quality",
       "relevantTechStack": [
         "flask",
@@ -193,7 +193,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "429b35fbe5c453f8f25dbe0d75f1a01bcdf554c832c90eb63842413f12f00712",
+      "checksum": "1c6dce2c6c29bbf4ed5b1decafebb46bd9b16c4502178d7d6ca1ededd3cce071",
       "category": "platform",
       "relevantTechStack": [
         "digitalocean",
@@ -210,7 +210,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "32410b9dd285cfb96aaaa483ea66febb2595866de275a30ba461511a6a7fa751",
+      "checksum": "e7c347c8b661a7f1240b7ba2a99fb7081e23da109bd2288359506d065b6cb1b3",
       "category": "documentation",
       "relevantTechStack": [
         "drawio",
@@ -229,7 +229,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "af2aabf3d5c238193ab806e71d1182865107e1bf4f0de54f1e67203f0b199997",
+      "checksum": "6dfef4d98b6db6396dff14e5b1d9017387e2ddb5d915793f07bdf70b5fc66f15",
       "category": "platform",
       "relevantTechStack": [
         "electron",
@@ -249,7 +249,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "46f920f04a731e82d2a1b8ff2aa549bb0900f259de258ef64a114ee346bd9baf",
+      "checksum": "2a85854f7b8fe7559e9b4a177037dd4e2c73e1ed3315e11b18d8b9cd1e9b528a",
       "category": "platform",
       "relevantTechStack": [
         "electron",
@@ -267,7 +267,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "c7514c855d1c44b6091041e729f9529127ca1c62ccac735e60b28b43859e1026",
+      "checksum": "13fed443b5dd9778928ebfb47add31045f67c2c6d82dd4c0a7a324c3ce484bec",
       "category": "development",
       "relevantTechStack": [
         "javascript",
@@ -289,7 +289,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "08496d8ec5701f9e56c846121e7aeb5818925d99d13b5d6f739330d0c85a5a05",
+      "checksum": "617e15176d4a9a770660639a70bec9b491a6ecb4c37422bff5d3631ec8e1bf5c",
       "category": "platform",
       "relevantTechStack": [
         "flask",
@@ -306,7 +306,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "557c0681448c1bd988e55f44382f1fb4b1f570f30a1fe5a97984b3b2e5e63736",
+      "checksum": "86c68853c3bec4ca0666553700b058f8058158a42c786ae7d0dee18703a9b124",
       "category": "web",
       "relevantTechStack": [
         "i18n",
@@ -318,13 +318,30 @@
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
+      "name": "json-validator",
+      "description": "Validate JSON files against companion JSON Schema definitions",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-04-02",
+      "checksum": "a4c6311c3a54391912d6ada95e43ff72ea22757bceb073215a3c830985e8fa76",
+      "category": "analysis",
+      "relevantTechStack": [
+        "json",
+        "json-schema",
+        "ajv",
+        "validation"
+      ],
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
       "name": "migration-patterns",
       "description": "Guide developers through database migration best practices including versioning, rollbacks, and zero-downtime strategies",
       "triggers": [],
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "e2f537b22dd7939a4a619f6a1e71468a40bd3adce35f729f6f409f69748b1948",
+      "checksum": "1fe801f142c6383c7a7ac359e9cd79fcd5472cf13148c334cc2b5d316b74b9c1",
       "category": "database",
       "relevantTechStack": [
         "sql",
@@ -343,7 +360,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "497b1c9b0f952903500f6ef4db4a329a85921e6be00d8c3cd6674426ee8d3764",
+      "checksum": "99e716fffafc95b467faaeacbed3add3f47f7c4459fd7260dd0efaea0d54e4de",
       "category": "testing",
       "relevantTechStack": [
         "stryker",
@@ -360,7 +377,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "3bac77380b85c83a86a8dca253bea2fb3bd2f30ea2c11ed12fdb1a65b76daceb",
+      "checksum": "44ddca8f2abe5207edbacdd2e6c2a332249601a516b206855cb830b0bcd88bb3",
       "category": "devops",
       "relevantTechStack": [
         "opentelemetry",
@@ -379,7 +396,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "6157d7d610665e65a22f4393e45b51476e5d2c8e74343ab126cbd90896d2fbfd",
+      "checksum": "baafca01e0713f954a0cd062f882111d6c27ec1ac6b221002f4358d69e258e9f",
       "category": "testing",
       "relevantTechStack": [
         "playwright",
@@ -397,7 +414,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "aa3d47189363f9ad0fc93662017e5195b35111e874e71495e5bf6344a55762bb",
+      "checksum": "769498d91c36558eb3e017541b6ecce1d4092c7bfff03e0a9dd594ba37214aed",
       "category": "testing",
       "relevantTechStack": [
         "playwright",
@@ -414,7 +431,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "0efd1f5c0ee8c0e56a1d9cfc9de0514fe30b042cf18368fa255d7428129b639a",
+      "checksum": "fe7f288a7e0fd27009d63026c49e5da4297403a12fdbac3592af274fde9fc486",
       "category": "database",
       "relevantTechStack": [
         "postgresql",
@@ -432,7 +449,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "510a72b2fccbd8d9e73f7a0a8ddc9299a2020d146a0fc707bed3f35337e10ab6",
+      "checksum": "0e07c3f9e9756dd5e074408cae183c5f2e91f6636dd8a012c5206c43c2506398",
       "category": "compliance",
       "relevantTechStack": [
         "gdpr",
@@ -450,7 +467,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "cdcd821ce7a2b197d70f8c42af38ba5daa095399841ff8c3160b748abca19020",
+      "checksum": "5506c54af4651ae2eef35d75e96807e6cfae8086beb82baca91357c711cbaa70",
       "category": "testing",
       "relevantTechStack": [
         "fast-check",
@@ -468,7 +485,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "963efd153f5a22213b6129317b2867d26018a9c201177452979ce58544f0187e",
+      "checksum": "d5b3e1e3b77743bd8c4538dded190701e27b33deb5f5da387f2b86602a4052a5",
       "category": "platform",
       "relevantTechStack": [
         "railway",
@@ -486,7 +503,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "cc6129438686165d898b58d0a1e02566bbf2bbbc893c0348a417d34d61d1c438",
+      "checksum": "07149509b92f0cc7bb9b837ed5d93e2324b9275bc7baf19b448305fb33ee8e0e",
       "category": "platform",
       "relevantTechStack": [
         "render",
@@ -504,7 +521,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "57ba31022121bb799018b228261511271803f265655d3504cf1328cdf1cd9199",
+      "checksum": "822da5063d07cb1e8752accd87fc38b8bb216c03951aad5e6eff34338dd408b2",
       "category": "development",
       "relevantTechStack": [
         "distributed-systems",
@@ -525,7 +542,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "7154e6a0a6dbc3f575150cfed5b6e32c4c88dbf51cf70035d055ef2079e7b829",
+      "checksum": "99ee4e893a633c48ec309bfe61e95f411551048329dec3fcdc19c4e94666a9ce",
       "category": "web",
       "relevantTechStack": [
         "seo",
@@ -543,7 +560,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "0154fbc8db8b38475de04ff4830c5957f8eb0587effe607442962e6277029c86",
+      "checksum": "6887219b261729558420749acffb86d81ecf06c7bd568e134401cc55f43b004d",
       "category": "platform",
       "relevantTechStack": [
         "sinatra",
@@ -560,7 +577,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "98530226cfd35e5607beb26007be8097b9d65ab6dcc72eb86036ff3e59638645",
+      "checksum": "4e1a4db2593ac2ccb223edf825c6e897e853305a548e273991362b40f7b5fea6",
       "category": "database",
       "relevantTechStack": [
         "sqlite",
@@ -579,7 +596,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "d0f285e0ea2db7281fbbde5d6ac638721c780393db612604467b303f8da14865",
+      "checksum": "df0fc98131e6e06be2c442d8d23e4ae41de3031be15a03f82bd3c1dd3c2f5cb5",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -601,7 +618,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "26b1ab44ee39e2cf96521600fdc89cbbfc671f63d68a66955488de2d81cc665c",
+      "checksum": "afa18802e7c2efc6426e70587fb042227b39d5d7112fbcc77f1ad185825bdaba",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -617,7 +634,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "be9078bc664ea06e7e0e5df86d5cb7665db0958e5ad30bec626bbe21f60015ec",
+      "checksum": "b8343e3877d05ae05f8f90bf030a821c1909593df6dc8e920f50b1a7d5810f7b",
       "category": "tdd",
       "relevantTechStack": [
         "tdd",
@@ -633,7 +650,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "d432b1387f3f2a97f5156883ed896291ef41d2564c4f0762cd76add54bbb9f84",
+      "checksum": "c11741602e7f42dd9ddfc28da2f5d270bfd91cf4402de84d19010b8d211c777c",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -649,7 +666,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "9fd54f221e51d3eb01d59ac62209d27dcc1f28f0992bc12d28a88806724821e6",
+      "checksum": "5df85b50681c19316c1e21a461438083f6db74e8776d06474f5f9b363842a753",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -665,7 +682,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "9e2a582956596d152bd434adfeac543ea9be08107bc9e1e039900965a339c50e",
+      "checksum": "f1522d03730813628a87593b92c13371421f51aa35f2f98cffae31b7e6d33a04",
       "category": "testing",
       "relevantTechStack": [
         "testing",
@@ -690,7 +707,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "7ce0f1f51be751ef890de08e3697af88cb161b297edd24dad92a8cd4ee3868f7",
+      "checksum": "a6c767fb1d63aaff21f103899484112a8e8a5582a9f42197cfe5829c20fefbda",
       "category": "testing",
       "relevantTechStack": [
         "jest",
@@ -713,7 +730,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "493e9adf921b77f45e330c9e828b5edbf17287e524e8ffd3092b4c1c2d56d507",
+      "checksum": "045e1acf7a685536996396b502405a7ebfc5daf76508b85f31d04498ef74dfa6",
       "category": "platform",
       "relevantTechStack": [
         "vercel",

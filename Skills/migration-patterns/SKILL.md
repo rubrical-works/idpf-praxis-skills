@@ -12,7 +12,6 @@ disable-model-invocation: true
 copyright: "Rubrical Works (c) 2026"
 ---
 # Migration Patterns
-This Skill guides developers through database migration best practices including schema versioning, rollback procedures, and zero-downtime migration patterns.
 ## When to Use This Skill
 - Planning database schema changes
 - Setting up migration workflow for a new project
@@ -36,43 +35,36 @@ Pros: Simple, clear ordering. Cons: Merge conflicts in teams.
 ```
 20240115120000_create_users_table.sql
 20240115143022_add_email_to_users.sql
-20240116091500_create_orders_table.sql
 ```
 Pros: Reduces merge conflicts, supports team development. Cons: Longer filenames.
-### Hybrid Approach
-```
-V2024.01.15.1__create_users_table.sql
-V2024.01.15.2__add_email_to_users.sql
-```
 **When to use each:** Solo projects: Sequential. Team projects: Timestamp-based. Enterprise: Hybrid with release versions.
 ## Migration File Structure
 ### Standard Structure
 ```
 migrations/
-+-- up/
-|   +-- 001_create_users.sql
-|   +-- 002_add_indexes.sql
-+-- down/
-|   +-- 001_drop_users.sql
-|   +-- 002_drop_indexes.sql
-+-- seed/
-    +-- initial_data.sql
+├── up/
+│   ├── 001_create_users.sql
+│   └── 002_add_indexes.sql
+├── down/
+│   ├── 001_drop_users.sql
+│   └── 002_drop_indexes.sql
+└── seed/
+    └── initial_data.sql
 ```
 ### Self-Contained Structure
 ```
 migrations/
-+-- 001_create_users/
-|   +-- up.sql
-|   +-- down.sql
-+-- 002_add_indexes/
-    +-- up.sql
-    +-- down.sql
+├── 001_create_users/
+│   ├── up.sql
+│   └── down.sql
+└── 002_add_indexes/
+    ├── up.sql
+    └── down.sql
 ```
 ### Migration File Contents
 **Up migration:**
 ```sql
 -- Migration: 001_create_users
--- Description: Create users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -107,7 +99,6 @@ ALTER TABLE users RENAME TO users_backup_20240115;
 CREATE VIEW users AS SELECT * FROM users_backup_20240115;
 ```
 ### Rollback Testing
-Before deploying any migration:
 1. Run up migration
 2. Verify schema changes
 3. Run down migration
@@ -152,7 +143,6 @@ ALTER TABLE users DROP COLUMN name;
 ```
 ### Large Table Migrations
 ```sql
--- Create new table with desired schema
 CREATE TABLE users_new (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
@@ -162,16 +152,13 @@ CREATE TABLE users_new (
 -- Copy data in batches
 INSERT INTO users_new (id, email, full_name, created_at)
 SELECT id, email, name, created_at
-FROM users
-WHERE id > $last_processed_id
-ORDER BY id
-LIMIT 10000;
--- After all data copied, swap tables
+FROM users WHERE id > $last_processed_id
+ORDER BY id LIMIT 10000;
+-- Swap tables
 BEGIN;
 ALTER TABLE users RENAME TO users_old;
 ALTER TABLE users_new RENAME TO users;
 COMMIT;
--- Later, drop old table
 DROP TABLE users_old;
 ```
 ### Adding NOT NULL Constraint (Zero-Downtime)
@@ -228,11 +215,6 @@ SELECT conname FROM pg_constraint WHERE conrelid = 'table_name'::regclass;
 2. **Use raw SQL for complex migrations** -- Better control
 3. **Keep ORM migrations reversible** -- Define both up and down
 4. **Test migrations with production-like data** -- Performance matters
-## Resources
-See `resources/` directory for:
-- `versioning-strategies.md` - Detailed versioning comparison
-- `rollback-guide.md` - Comprehensive rollback procedures
-- `zero-downtime.md` - Zero-downtime migration patterns
 ## Relationship to Other Skills
-**Complements:** `postgresql-integration`, `sqlite-integration`
-**Independent from:** TDD skills -- focuses on database schema changes, not testing
+- `postgresql-integration` -- Database-specific guidance
+- `sqlite-integration` -- Lighter-weight database patterns

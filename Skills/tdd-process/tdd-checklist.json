@@ -1,0 +1,47 @@
+{
+  "red": {
+    "required": [
+      "Test file created or identified",
+      "Test describes ONE behavior (single assertion focus)",
+      "Test uses descriptive name reflecting expected behavior",
+      "Test run executed and FAILS with expected error",
+      "Failure message is meaningful (not a generic assertion error)"
+    ],
+    "gate": "Do not proceed to GREEN until test failure confirmed with expected error"
+  },
+  "green": {
+    "required": [
+      "Implementation is MINIMAL — passes test, nothing more",
+      "No refactoring during GREEN phase",
+      "No additional functionality beyond what the test requires",
+      "Test run executed and PASSES"
+    ],
+    "gate": "Do not proceed to REFACTOR until test passes"
+  },
+  "refactor": {
+    "required": [
+      "Analyzed: duplication, naming, complexity",
+      "Decision reported: refactor or skip with reason",
+      "If refactoring: changes improve clarity without altering behavior",
+      "Test run executed and still PASSES after refactoring"
+    ],
+    "gate": "Do not proceed to next AC until commit made for this TDD cycle"
+  },
+  "failure-recovery": {
+    "triggers": [
+      "Test passes when it should fail (false positive)",
+      "Wrong error message or unexpected failure reason",
+      "Test hangs or times out",
+      "Multiple tests fail unexpectedly after a change",
+      "Test is flaky (passes sometimes, fails sometimes)"
+    ],
+    "steps": [
+      "Isolate: run single test, not suite",
+      "Verify assertion: is the test checking the right thing?",
+      "Check setup/teardown: shared state leaking between tests?",
+      "Review test dependencies: external services, file system, network?",
+      "Simplify: reduce test to smallest reproducing case",
+      "If flaky: check for timing dependencies, async issues, or race conditions"
+    ]
+  }
+}

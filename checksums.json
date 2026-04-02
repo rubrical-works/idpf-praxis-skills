@@ -1,7 +1,53 @@
 {
   "manifestVersion": "1.0.0",
-  "frameworkVersion": "0.4.0",
-  "generatedAt": "2026-04-02T14:49:48.417Z",
-  "fileCount": 0,
-  "files": []
+  "frameworkVersion": "0.4.1",
+  "generatedAt": "2026-04-02T16:34:27.316Z",
+  "fileCount": 9,
+  "files": [
+    {
+      "relativePath": "Skills/json-validator/scripts/validate.js",
+      "sha256": "f7626f315c785b4f298660a264ce6939797d1e9af4510b9a5743e000d85672dc",
+      "sizeBytes": 5316
+    },
+    {
+      "relativePath": "Skills/playwright-explorer/lib/auto-install.js",
+      "sha256": "639bc4a2c7046ede2ce80bd29db1d1133ca19703aaf0e576c5757e4a18359ded",
+      "sizeBytes": 4529
+    },
+    {
+      "relativePath": "Skills/playwright-explorer/lib/browser-connection.js",
+      "sha256": "33c3d2aff548065e29ed5de5649391c8e2c55c7c8552a80c316a134a65d82143",
+      "sizeBytes": 4370
+    },
+    {
+      "relativePath": "Skills/playwright-explorer/lib/detect-components.js",
+      "sha256": "cb3edd9b6dc2c8ee7716d841569359a038d998c1112e88f31d19c64b9a942d23",
+      "sizeBytes": 5128
+    },
+    {
+      "relativePath": "Skills/playwright-explorer/lib/dom-reader.js",
+      "sha256": "b9976147b67f8dd7feacfa0aa9612ac5090f84b98edd67fcafe21b6206c1cf13",
+      "sizeBytes": 7333
+    },
+    {
+      "relativePath": "Skills/playwright-explorer/lib/error-recovery.js",
+      "sha256": "599bce1310aac85bf9285b3cb75d1f01d2fccc3b803cbc996ed730eddfc595a8",
+      "sizeBytes": 5994
+    },
+    {
+      "relativePath": "Skills/playwright-explorer/lib/nl-interaction.js",
+      "sha256": "be7cd26eae35d2d085b8dd053a7ea3253989e038d17c3e1d737a5c5b246ddcc5",
+      "sizeBytes": 7602
+    },
+    {
+      "relativePath": "Skills/playwright-explorer/lib/preflight.js",
+      "sha256": "8e776656deb5feb5ce8536c2d407970836f9e75343a522b2228322b26a993298",
+      "sizeBytes": 4629
+    },
+    {
+      "relativePath": "Skills/playwright-explorer/lib/session-lifecycle.js",
+      "sha256": "6a079301c70fd0e11f9a3ab1f70c9e820299dc29c6e993ccd5a158c2de457906",
+      "sizeBytes": 5311
+    }
+  ]
 }

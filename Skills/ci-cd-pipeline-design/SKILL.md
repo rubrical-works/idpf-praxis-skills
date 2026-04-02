@@ -21,12 +21,15 @@ copyright: "Rubrical Works (c) 2026"
 ## CI/CD Fundamentals
 ### Continuous Integration (CI)
 Automatically build and test code on every change.
-- Detect integration issues early, maintain code quality, fast feedback (<10 min ideal)
-- Frequent commits, automated builds, automated tests
+- Detect integration issues early
+- Maintain code quality
+- Fast feedback (under 10 minutes ideal)
+- Frequent commits, automated builds/tests
 ### Continuous Delivery (CD)
 Automatically prepare releases for deployment.
-- Always deployable main branch, consistent release process, reduced deployment risk
-- Automated deployment to staging, manual approval for production, rollback capability
+- Always deployable main branch
+- Automated deployment to staging, manual approval for production
+- Rollback capability, environment parity
 ### Continuous Deployment
 Automatically deploy every change to production.
 - Requires high test coverage, feature flags, monitoring/alerting, fast rollback
@@ -35,26 +38,26 @@ Automatically deploy every change to production.
 ```
 Build -> Test -> Security -> Deploy
 ```
-Best for simple projects, single deployment target.
+**Best for:** Simple projects, single deployment target
 ### Parallel Pipeline
 ```
-              ┌─ Unit Tests  ─┐
-Build ────────┼─ Lint/Format  ─┼──── Deploy
-              └─ SAST Scan   ─┘
+         ┌─ Unit Tests  ─┐
+Build ───┼─ Lint/Format  ─┼─── Deploy
+         └─ SAST Scan    ─┘
 ```
-Best for faster feedback, independent quality gates.
+**Best for:** Faster feedback, independent quality gates
 ### Fan-out/Fan-in
 ```
-              ┌─ Test DB1 ─┐
-Build ────────┼─ Test DB2 ─┼──── Integration
-              └─ Test DB3 ─┘
+         ┌─ Test DB1 ─┐
+Build ───┼─ Test DB2 ─┼─── Integration
+         └─ Test DB3 ─┘
 ```
-Best for matrix testing, multi-platform builds.
+**Best for:** Matrix testing, multi-platform builds
 ### Multi-Environment Pipeline
 ```
 Build -> Test -> Staging -> Approval -> Production
 ```
-Best for production deployments, compliance requirements.
+**Best for:** Production deployments, compliance requirements
 ## Stage Design
 ### Build Stage
 ```yaml
@@ -69,7 +72,7 @@ build:
     - docker image
     - deployment manifests
 ```
-Best practices: Cache dependencies, multi-stage builds, version artifacts, store build metadata.
+Best practices: Cache dependencies, use multi-stage builds, version artifacts, store build metadata
 ### Test Stage
 ```yaml
 test:
@@ -84,7 +87,6 @@ test:
       - deploy to test environment
       - run end-to-end tests
 ```
-**Test pyramid:** Many fast unit tests, some integration tests, few slow E2E tests.
 ### Security Stage
 ```yaml
 security:
@@ -98,11 +100,7 @@ security:
     container_scan:
       - scan container images
 ```
-**Tools by category:**
-- SAST: SonarQube, Semgrep, CodeQL
-- Dependencies: Dependabot, Snyk, OWASP Dependency-Check
-- Secrets: GitLeaks, TruffleHog
-- Containers: Trivy, Clair, Anchore
+**Tools:** SAST: SonarQube, Semgrep, CodeQL. Dependencies: Dependabot, Snyk, OWASP. Secrets: GitLeaks, TruffleHog. Containers: Trivy, Clair, Anchore.
 ### Deploy Stage
 ```yaml
 deploy:
@@ -123,20 +121,14 @@ deploy:
 ```
 ## Environment Promotion
 ### Sequential Promotion
-```
-Dev -> QA -> Staging -> Production
-```
-1. Deploy to Dev on every commit
-2. Promote to QA after Dev tests pass
-3. Promote to Staging after QA approval
-4. Promote to Production after final approval
+`Dev -> QA -> Staging -> Production`
 ### Blue-Green Deployment
 1. Deploy new version to Green
 2. Run tests on Green
 3. Switch traffic to Green
 4. Keep Blue for rollback
 ### Canary Deployment
-1. Deploy new version to subset (e.g., 10%)
+1. Deploy new version to subset (10%)
 2. Monitor errors and performance
 3. Gradually increase traffic
 4. Full rollout or rollback
@@ -161,8 +153,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build
         run: npm ci && npm run build
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: build
           path: dist/
@@ -171,29 +162,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run tests
-        run: npm ci && npm test
+      - run: npm ci && npm test
   security:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run security scan
-        uses: github/codeql-action/analyze@v2
+      - uses: github/codeql-action/analyze@v2
   deploy-staging:
     needs: [test, security]
     runs-on: ubuntu-latest
     environment: staging
     steps:
-      - name: Deploy to staging
-        run: ./deploy.sh staging
+      - run: ./deploy.sh staging
   deploy-production:
     needs: deploy-staging
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Deploy to production
-        run: ./deploy.sh production
+      - run: ./deploy.sh production
 ```
 ### GitLab CI
 ```yaml
@@ -239,8 +226,8 @@ deploy_production:
 ```
 ## Security Considerations
 ### Secrets Management
-**Never:** Hardcode secrets in code, commit to repo, log secrets.
-**Do:** Use environment variables, secret management services, rotate regularly, audit access.
+**Never:** Hardcode secrets in code, commit to repo, log secrets
+**Do:** Use environment variables, secret management services, rotate regularly, audit access
 ```yaml
 steps:
   - name: Deploy
@@ -252,36 +239,26 @@ steps:
 ```yaml
 dependencies:
   steps:
-    - name: Check dependencies
-      run: |
-        npm audit --audit-level=high
-    - name: SBOM generation
-      run: |
-        syft packages . -o spdx-json > sbom.json
+    - run: npm audit --audit-level=high
+    - run: syft packages . -o spdx-json > sbom.json
 ```
 ### Container Security
 ```yaml
 container:
   steps:
-    - name: Build image
-      run: docker build -t myapp .
-    - name: Scan image
-      run: trivy image myapp
-    - name: Sign image
-      run: cosign sign myapp
+    - run: docker build -t myapp .
+    - run: trivy image myapp
+    - run: cosign sign myapp
 ```
 ## Pipeline Best Practices
-1. **Fast Feedback:** Keep CI under 10 minutes, run fast tests first, parallelize, cache dependencies
-2. **Reliable Pipelines:** Reproducible builds, pin dependency versions, consistent environments, retry logic
-3. **Clear Visibility:** Good naming, clear stage purposes, meaningful error messages, failure notifications
-4. **Security First:** Scan early and often, block on security failures, minimal permissions, audit changes
-5. **Environment Parity:** Same configuration patterns, infrastructure as code, consistent deployment process
+1. **Fast Feedback** — Keep CI under 10 minutes, run fast tests first, parallelize, cache dependencies
+2. **Reliable Pipelines** — Reproducible builds, pin dependency versions, consistent environments, retry logic
+3. **Clear Visibility** — Good naming, clear stage purposes, meaningful errors, failure notifications
+4. **Security First** — Scan early and often, block on security failures, minimal permissions, audit changes
+5. **Environment Parity** — Same configuration patterns, IaC, consistent deployment, production-like test environments
 ## GitHub API Best Practices
-### Authentication Strategy
-- Fine-scoped PATs for specific permissions
-- GitHub Apps for organization-level automation
-- Reuse tokens across test runs; avoid rapidly creating/deleting tokens
-### Rate Limiting
+**Authentication:** Use fine-scoped PATs or GitHub Apps. Reuse tokens across test runs. Store in CI/CD secrets.
+**Rate Limiting:**
 ```yaml
 retry:
   max_attempts: 3
@@ -289,17 +266,18 @@ retry:
   multiplier: 2
   randomization_factor: 0.5
 ```
-- Add exponential backoff with jitter, stagger concurrent calls, monitor `X-RateLimit-Remaining`, cache API responses
-### Workflow Triggers
+- Add exponential backoff with jitter
+- Stagger concurrent API/workflow calls
+- Monitor `X-RateLimit-Remaining` headers
+**Workflow Triggers:**
 ```yaml
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 ```
-- Review triggers to avoid recursive runs, use `workflow_dispatch` for manual control
-### Abuse Detection Prevention
+**Abuse Detection Prevention:**
 - Use fine-scoped PATs instead of interactive auth
-- Implement request throttling in automation scripts
+- Implement request throttling
 - Add delays between bulk operations
 - Use GitHub Apps with proper rate limit handling
 ## Resources

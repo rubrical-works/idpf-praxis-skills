@@ -11,7 +11,13 @@ relevantTechStack: [playwright, e2e, browser-testing, typescript]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Playwright Setup
-Installation verification, error solutions, and CI config for Playwright. Prereqs: Node.js 18+, npm/yarn, Linux CI needs system deps or Docker.
+Installation verification, error solutions, and CI config for Playwright.
+**Prerequisites:** Node.js 18+, npm/yarn, Linux CI needs system deps or Docker.
+## When to Use
+- Setting up Playwright in a new project
+- Debugging "browser not found" or installation errors
+- Configuring Playwright for CI/CD pipelines
+- Troubleshooting tests that pass locally but fail in CI
 ## Installation Checklist
 | Step | Command | What It Does |
 |------|---------|--------------|
@@ -53,7 +59,7 @@ verify();
 | "Target page, context or browser has been closed" | Race condition | Add explicit waits |
 | "Browser closed. Most likely the page has been closed" | Navigation timeout | Increase timeout or check network |
 See: [common-errors.md](resources/common-errors.md) for detailed solutions.
-## CI Configuration — GitHub Actions
+## CI Configuration -- GitHub Actions
 ```yaml
 name: Playwright Tests
 on: [push, pull_request]
@@ -88,7 +94,7 @@ See: [ci-patterns.md](resources/ci-patterns.md) for GitLab CI and other configur
 |----------|-----------------|-------|
 | Windows | `%USERPROFILE%\AppData\Local\ms-playwright` | No system deps needed |
 | macOS | `~/Library/Caches/ms-playwright` | No system deps; Rosetta 2 auto for Apple Silicon |
-| Linux | `~/.cache/ms-playwright` | System deps **required** — `npx playwright install-deps` |
+| Linux | `~/.cache/ms-playwright` | System deps **required** -- `npx playwright install-deps` |
 ### CI Environments
 | Environment | Notes |
 |-------------|-------|
@@ -132,3 +138,5 @@ npx playwright install chromium --with-deps  # Chromium with system deps
 |----------|-------------|
 | [ci-patterns.md](resources/ci-patterns.md) | GitHub Actions, GitLab CI, Jenkins configs |
 | [common-errors.md](resources/common-errors.md) | Detailed error to fix reference |
+## Related Skills
+- **electron-development** -- Playwright with Electron apps (fuse configuration, packaged app testing)

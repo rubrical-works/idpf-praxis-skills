@@ -1,14 +1,22 @@
 # QA Automation Domain Module
+
 **Source:** `Domains/QA-Automation/`
 **Tools:** Playwright
 **Pattern:** Page Object Model (POM)
+
 ## Required Packages
+
 ```
 @playwright/test
 playwright
 ```
+
 ## Generated Artifacts
+
 ### Artifact 1: `tests/e2e/pages/BasePage.ts`
+
+Base page object with common functionality shared across all page objects.
+
 ```typescript
 // tests/e2e/pages/BasePage.ts
 import { Page, Locator, expect } from '@playwright/test';
@@ -16,36 +24,47 @@ import { Page, Locator, expect } from '@playwright/test';
 export abstract class BasePage {
   constructor(protected readonly page: Page) {}
 
+  /** Navigate to the page's URL */
   abstract goto(): Promise<void>;
 
+  /** Wait for the page to be fully loaded */
   async waitForLoad(): Promise<void> {
     await this.page.waitForLoadState('networkidle');
   }
 
+  /** Get the current page title */
   async getTitle(): Promise<string> {
     return this.page.title();
   }
 
+  /** Get the current URL path */
   getPath(): string {
     return new URL(this.page.url()).pathname;
   }
 
+  /** Check if an element is visible */
   async isVisible(selector: string): Promise<boolean> {
     return this.page.isVisible(selector);
   }
 
+  /** Wait for navigation to complete */
   async waitForNavigation(): Promise<void> {
     await this.page.waitForLoadState('networkidle');
   }
 }
 ```
+
 ### Artifact 2: `tests/e2e/pages/LoginPage.ts`
+
+Example page object using data-testid selectors and meaningful action methods.
+
 ```typescript
 // tests/e2e/pages/LoginPage.ts
 import { Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export class LoginPage extends BasePage {
+  // Locators — private, encapsulated
   private readonly emailInput = '[data-testid="email"]';
   private readonly passwordInput = '[data-testid="password"]';
   private readonly submitButton = '[data-testid="login-submit"]';
@@ -61,6 +80,7 @@ export class LoginPage extends BasePage {
     await this.waitForLoad();
   }
 
+  // Actions — public, meaningful names
   async login(email: string, password: string): Promise<void> {
     await this.page.fill(this.emailInput, email);
     await this.page.fill(this.passwordInput, password);
@@ -82,7 +102,11 @@ export class LoginPage extends BasePage {
   }
 }
 ```
+
 ### Artifact 3: `tests/e2e/pages/HomePage.ts`
+
+Home page object generated from discovered routes.
+
 ```typescript
 // tests/e2e/pages/HomePage.ts
 import { Page } from '@playwright/test';
@@ -110,7 +134,11 @@ export class HomePage extends BasePage {
   }
 }
 ```
+
 ### Artifact 4: `tests/e2e/fixtures/test-data.ts`
+
+Shared test data fixtures for authentication and common scenarios.
+
 ```typescript
 // tests/e2e/fixtures/test-data.ts
 export const testUsers = {
@@ -138,7 +166,11 @@ export const routes = {
   // {{DISCOVERED_ROUTES}}
 };
 ```
+
 ### Artifact 5: `tests/e2e/fixtures/auth.fixture.ts`
+
+Playwright fixture for authenticated test contexts.
+
 ```typescript
 // tests/e2e/fixtures/auth.fixture.ts
 import { test as base, expect } from '@playwright/test';
@@ -154,6 +186,7 @@ export const test = base.extend<AuthFixtures>({
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login(testUsers.standard.email, testUsers.standard.password);
+    // Verify login succeeded
     await expect(page).not.toHaveURL(/\/login/);
     await use(page);
   },
@@ -161,7 +194,11 @@ export const test = base.extend<AuthFixtures>({
 
 export { expect };
 ```
+
 ### Artifact 6: `tests/e2e/smoke.spec.ts`
+
+Critical path smoke tests executed after every deployment.
+
 ```typescript
 // tests/e2e/smoke.spec.ts
 import { test, expect } from '@playwright/test';
@@ -175,6 +212,7 @@ test.describe('Smoke Tests', () => {
   test('homepage loads successfully', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
+
     expect(homePage.getPath()).toBe('/');
     await expect(page).toHaveTitle(/.+/);
   });
@@ -182,6 +220,7 @@ test.describe('Smoke Tests', () => {
   test('login page loads successfully', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
+
     expect(loginPage.getPath()).toBe('/login');
   });
 
@@ -189,6 +228,7 @@ test.describe('Smoke Tests', () => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login(testUsers.standard.email, testUsers.standard.password);
+
     await expect(page).not.toHaveURL(/\/login/);
   });
 
@@ -196,11 +236,16 @@ test.describe('Smoke Tests', () => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login(testUsers.invalid.email, testUsers.invalid.password);
+
     expect(await loginPage.isErrorVisible()).toBeTruthy();
   });
 });
 ```
+
 ### Artifact 7: `tests/e2e/regression.spec.ts`
+
+Full feature coverage regression spec template.
+
 ```typescript
 // tests/e2e/regression.spec.ts
 import { test, expect } from './fixtures/auth.fixture';
@@ -210,21 +255,29 @@ test.describe('Regression Tests', () => {
   test('authenticated user sees navigation', async ({ authenticatedPage }) => {
     const homePage = new HomePage(authenticatedPage);
     await homePage.goto();
+
     expect(await homePage.isNavigationVisible()).toBeTruthy();
   });
 
   test('page heading is present', async ({ authenticatedPage }) => {
     const homePage = new HomePage(authenticatedPage);
     await homePage.goto();
+
     const heading = await homePage.getHeadingText();
     expect(heading.length).toBeGreaterThan(0);
   });
 
+  // Add regression tests for each discovered route
   // {{DISCOVERED_ROUTE_TESTS}}
 });
 ```
+
 ### Artifact 8: `playwright.config.ts` (updates)
+
+Playwright configuration additions for smoke, regression, and nightly tiers.
+
 ```typescript
+// Add to existing playwright.config.ts or create new
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
@@ -276,26 +329,34 @@ export default defineConfig({
       },
 });
 ```
+
 ### CI Job: `smoke`
+
 ```yaml
 smoke:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v4
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+
     - name: Install dependencies
       run: {{INSTALL_CMD}}
+
     - name: Install Playwright browsers
       run: npx playwright install chromium --with-deps
+
     - name: Build application
       run: npm run build
+
     - name: Run smoke tests
       run: npx playwright test --project=smoke
       env:
         BASE_URL: ${{ env.DEPLOY_URL || 'http://localhost:3000' }}
+
     - name: Upload smoke report
       if: always()
       uses: actions/upload-artifact@v4
@@ -303,7 +364,9 @@ smoke:
         name: smoke-report
         path: playwright-report/
 ```
+
 ### CI Job: `regression`
+
 ```yaml
 regression:
   runs-on: ubuntu-latest
@@ -312,18 +375,24 @@ regression:
       browser: [chromium, firefox, webkit]
   steps:
     - uses: actions/checkout@v4
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+
     - name: Install dependencies
       run: {{INSTALL_CMD}}
+
     - name: Install Playwright browsers
       run: npx playwright install --with-deps ${{ matrix.browser }}
+
     - name: Build application
       run: npm run build
+
     - name: Run regression tests
       run: npx playwright test --project=${{ matrix.browser }}
+
     - name: Upload regression report
       if: always()
       uses: actions/upload-artifact@v4
@@ -331,24 +400,33 @@ regression:
         name: regression-report-${{ matrix.browser }}
         path: playwright-report/
 ```
+
 ### CI Job: `nightly`
+
 ```yaml
 nightly:
   runs-on: ubuntu-latest
+  # Trigger via schedule in parent workflow: cron: '0 2 * * *'
   steps:
     - uses: actions/checkout@v4
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+
     - name: Install dependencies
       run: {{INSTALL_CMD}}
+
     - name: Install all Playwright browsers
       run: npx playwright install --with-deps
+
     - name: Build application
       run: npm run build
+
     - name: Run full test suite
       run: npx playwright test
+
     - name: Upload nightly report
       if: always()
       uses: actions/upload-artifact@v4
@@ -356,15 +434,21 @@ nightly:
         name: nightly-report
         path: playwright-report/
 ```
+
 ## Manual Testing Areas
-- **Visual regression** -- Verifying UI appearance, layout, styling (consider Percy or Applitools)
-- **Exploratory testing** -- Ad-hoc testing outside scripted paths
-- **Usability assessment** -- Evaluating workflow intuitiveness
-- **Cross-device testing** -- Physical device testing beyond browser emulation
-- **Test data design** -- Creating realistic datasets covering edge cases
-- **Flaky test investigation** -- Diagnosing root causes of inconsistent pass/fail (> 5% failure rate)
-- **Page Object maintenance** -- Updating selectors/actions when UI changes
-- **Mobile-specific interactions** -- Swipe, pinch-to-zoom, gesture-based interactions
+
+QA automation covers repeatable functional flows but several areas need human judgment:
+
+- **Visual regression** -- Verifying UI appearance, layout, and styling are correct (consider adding Percy or Applitools for automation)
+- **Exploratory testing** -- Ad-hoc testing outside scripted paths to discover unexpected behaviors
+- **Usability assessment** -- Evaluating whether workflows are intuitive and user-friendly
+- **Cross-device testing** -- Physical device testing for responsive design edge cases beyond browser emulation
+- **Test data design** -- Creating realistic test datasets that cover edge cases and boundary conditions
+- **Flaky test investigation** -- Diagnosing root causes of tests with inconsistent pass/fail results (> 5% failure rate)
+- **Page Object maintenance** -- Updating selectors and actions when the UI changes
+- **Mobile-specific interactions** -- Swipe, pinch-to-zoom, and gesture-based interactions require real device testing
+
+**Selector Priority (from framework):**
 
 | Priority | Selector Type | Reliability |
 |----------|---------------|-------------|
@@ -373,6 +457,8 @@ nightly:
 | 3 | ARIA role/label | Medium-High |
 | 4 | CSS class (stable) | Medium |
 | 5 | Text content | Low |
+
+**CI Tier Targets (from framework):**
 
 | Tier | Execution Time | Trigger |
 |------|---------------|---------|

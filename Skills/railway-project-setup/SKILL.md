@@ -12,7 +12,7 @@ copyright: "Rubrical Works (c) 2026"
 ---
 # railway-project-setup
 Configure Railway deployments with GitHub Actions integration for preview (PR), staging, and production environments.
-**Related Skills:** `ci-cd-pipeline-design` — broader CI/CD pipeline architecture
+**Related Skills:** `ci-cd-pipeline-design` -- broader CI/CD pipeline architecture
 ## Initial Setup
 ### Prerequisites
 - Railway account (free tier or Pro plan for team features)
@@ -104,6 +104,6 @@ healthcheckTimeout = 30
 ## Configuration Reference
 See `resources/railway.toml` for reference configuration covering build settings, deploy settings, health checks, replicas, and environment overrides.
 ## Resources
-- `resources/railway.toml` — Reference Railway configuration
-- `resources/deploy.yml` — GitHub Actions workflow
-- `resources/env-setup.md` — Environment variable setup guide
+- `resources/railway.toml` -- Reference Railway configuration
+- `resources/deploy.yml` -- GitHub Actions workflow
+- `resources/env-setup.md` -- Environment variable setup guide

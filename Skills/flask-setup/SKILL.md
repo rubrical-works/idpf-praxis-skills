@@ -11,7 +11,7 @@ relevantTechStack: [flask, python, virtualenv, pip]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Flask Setup for Beginners
-This Skill guides complete beginners through setting up a Flask development environment with detailed explanations and verification steps.
+Guides complete beginners through setting up a Flask development environment with detailed explanations and verification steps.
 ## When to Use This Skill
 - User wants to build a Flask web application
 - User is a beginner and needs Flask environment setup
@@ -19,46 +19,32 @@ This Skill guides complete beginners through setting up a Flask development envi
 - Building a Python web API or Python web server
 - Flask tutorial or learning resources needed
 ## Instructions for ASSISTANT
-**CRITICAL OUTPUT FORMAT:**
-When using this Skill's content, the ASSISTANT must format ALL technical instructions as **Claude Code copy/paste blocks**.
-**DO NOT provide manual instructions like:**
-- "Open File Explorer", "Navigate to folder", "Right-click", "Type in terminal"
+**CRITICAL OUTPUT FORMAT:** Format ALL technical instructions as **Claude Code copy/paste blocks**.
+**DO NOT provide manual instructions like:** "Open File Explorer", "Navigate to folder", "Right-click", "Type in terminal"
 **ALWAYS format as:**
 ```
 TASK: Set up Flask project
-
 STEP 1: Copy this entire code block (including this line)
 STEP 2: Open Claude Code
 STEP 3: Paste into Claude Code
 STEP 4: Claude Code will execute and report results
 STEP 5: Report back: What did Claude Code say?
-
 ---
-
 [Instructions for Claude Code to execute:]
-
 Navigate to project directory:
 cd [project-location]
-
 Create project folder:
 mkdir [project-name]
 cd [project-name]
-
 Check Python installed:
 python --version
-
 Create virtual environment:
 python -m venv venv
-
 [continue with commands...]
-
 Report:
 - What results did you see?
 ```
 ## Setup Knowledge
-The following content provides setup knowledge. ASSISTANT must convert this into Claude Code commands:
-### Create Project and Verify Python
-Opens a command line interface in your project directory. Verify: you should see your project folder path in the terminal.
 ### STEP 3: Create Virtual Environment
 ```bash
 python -m venv venv
@@ -69,41 +55,30 @@ python -m venv venv
 **Wait time:** 10-30 seconds
 **Verify:** New `venv` folder in project directory
 **Common issues:**
-- "python: command not found" -> Python not installed or not in PATH. Install from python.org, check "Add Python to PATH" on Windows.
+- "python: command not found" -> Python not installed or not in PATH. Install from python.org, check "Add Python to PATH"
 - Try `python3 -m venv venv` if `python` doesn't work
 ### STEP 4: Activate Virtual Environment
-**Windows PowerShell:**
-```bash
-venv\Scripts\Activate.ps1
-```
-**Windows Command Prompt:**
-```bash
-venv\Scripts\activate.bat
-```
-**Mac/Linux:**
-```bash
-source venv/bin/activate
-```
+**Windows PowerShell:** `venv\Scripts\Activate.ps1`
+**Windows Command Prompt:** `venv\Scripts\activate.bat`
+**Mac/Linux:** `source venv/bin/activate`
 **Success indicator:** `(venv)` appears at start of terminal prompt
 **Common issues:**
-- "Execution policy error" (Windows) -> Run: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
-- Nothing happens -> Make sure you're in the project directory
+- "Execution policy error" (Windows): `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+- Nothing happens: make sure you're in the project directory
 ### STEP 5: Install Flask
 ```bash
 pip install flask
 ```
-- Downloads Flask and dependencies (Werkzeug, Jinja2, Click) into virtual environment
+Installs Flask and dependencies (Werkzeug, Jinja2, Click) into virtual environment.
 **Wait time:** 30-60 seconds
-**Verify:** "Successfully installed flask-X.X.X" at the end
 **Common issues:**
-- "pip: command not found" -> Virtual environment not activated (see Step 4)
-- Permission errors -> Make sure virtual environment is activated
+- "pip: command not found" -> Virtual environment not activated
+- Permission errors -> Virtual environment not activated
 ### STEP 6: Create app.py File
-Save `app.py` in project folder (same level as `venv` folder):
 ```
 my-project/
-+-- venv/           <- Virtual environment folder
-+-- app.py          <- Your main Flask file (create this)
+├── venv/           <- Virtual environment folder
+└── app.py          <- Your main Flask file (create this)
 ```
 **Don't create app.py inside the venv folder!**
 ### STEP 7: Verify Installation
@@ -112,9 +87,7 @@ python --version
 pip list
 python -c "import flask; print(flask.__version__)"
 ```
-- Python 3.8+ required
-- Flask and dependencies should appear in `pip list`
-- Flask version number confirms successful import
+Expected: Python 3.8+, Flask in pip list, Flask version number prints.
 ## Troubleshooting Quick Reference
 See `resources/verification-checklist.md` for detailed troubleshooting steps.
 1. **Forgot to activate virtual environment** -> See Step 4

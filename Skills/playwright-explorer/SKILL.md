@@ -11,7 +11,8 @@ relevantTechStack: [playwright, e2e, browser-testing, web-app, frontend]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Playwright Explorer
-Interactive browser exploration via Playwright: natural language DOM inspection, element interaction, session management. Requires Node.js 18+, running dev server, Playwright/Chromium (auto-installed if missing).
+Interactive browser exploration via Playwright: natural language DOM inspection, element interaction, session management.
+**Prerequisites:** Node.js 18+, running dev server, Playwright/Chromium (auto-installed if missing)
 ## When to Use
 - Exploring a running web app interactively
 - Inspecting DOM structure, visible text, or interactive elements
@@ -38,4 +39,4 @@ Interactive browser exploration via Playwright: natural language DOM inspection,
    - **Selector priority** -- data-testid > ARIA role > visible text > CSS
 4. **Sessions:** File-based IPC (`.tmp-pw-cmd.json`, `.tmp-pw-result.json`). Health checks detect stale sessions. Recovery handles crashes, timeouts, connection loss.
 ## Error Handling
-All modules return `success`/`error` fields. Recovery: app crashes, timeouts (30s nav, 10s element), orphaned processes, connection loss.
+All modules return `success`/`error` fields. Recovery covers: app crashes, timeouts (30s nav, 10s element), orphaned processes, connection loss.

@@ -99,10 +99,10 @@ INSERT INTO table2 ...;  -- retry
 COMMIT;
 ```
 ### Best Practices
-1. **Keep transactions short** — long transactions block other operations
-2. **Handle errors explicitly** — always have rollback logic
-3. **Use appropriate isolation** — higher isolation = more overhead
-4. **Avoid user interaction** — never wait for user input mid-transaction
+1. **Keep transactions short** -- long transactions block other operations
+2. **Handle errors explicitly** -- always have rollback logic
+3. **Use appropriate isolation** -- higher isolation = more overhead
+4. **Avoid user interaction** -- never wait for user input mid-transaction
 ## Connection Pooling
 Opening connections is expensive (TCP handshake, authentication, memory allocation). Pools maintain open connections for reuse.
 ### Pool Configuration
@@ -154,9 +154,9 @@ EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@example.com';
 ```
 Look for: sequential scans on large tables, high cost estimates, actual vs estimated row counts.
 ## Resources
-- `resources/setup-guide.md` — Detailed setup instructions
-- `resources/query-patterns.md` — Additional query examples
-- `resources/common-errors.md` — Error troubleshooting guide
+- `resources/setup-guide.md` -- Detailed setup instructions
+- `resources/query-patterns.md` -- Additional query examples
+- `resources/common-errors.md` -- Error troubleshooting guide
 ## Related Skills
-- `sqlite-integration` — Lighter-weight alternative for simpler needs
-- `migration-patterns` — Schema versioning and changes
+- `sqlite-integration` -- Lighter-weight alternative for simpler needs
+- `migration-patterns` -- Schema versioning and changes

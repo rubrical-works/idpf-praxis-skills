@@ -1,31 +1,42 @@
 # Performance Domain Module
+
 **Source:** `Domains/Performance/`
 **Tools:** k6
 **Test Types:** Load, Stress, Spike, Soak/Endurance
+
 ## Required Packages
+
 ```
 k6
 wait-on
 ```
-k6 is a standalone binary, not an npm package. Install via `brew install k6`, `choco install k6`, or download from [k6.io](https://k6.io/docs/get-started/installation/). `wait-on` is used for CI server readiness checks.
+
+**Note:** k6 is a standalone binary, not an npm package. Install via `brew install k6`, `choco install k6`, or download from [k6.io](https://k6.io/docs/get-started/installation/). The `wait-on` package is used for CI server readiness checks.
+
 ## Generated Artifacts
+
 ### Artifact 1: `tests/perf/load-test.js`
+
+k6 load test script with configurable stages, thresholds, and tagged requests per discovered route.
+
 ```javascript
 // tests/perf/load-test.js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { Rate, Trend } from 'k6/metrics';
 
+// Custom metrics
 const errorRate = new Rate('errors');
 const responseTime = new Trend('response_time');
 
+// Load profile: ramp up, steady state, ramp down
 export const options = {
   stages: [
-    { duration: '2m', target: 50 },
-    { duration: '5m', target: 50 },
-    { duration: '2m', target: 100 },
-    { duration: '5m', target: 100 },
-    { duration: '2m', target: 0 },
+    { duration: '2m', target: 50 },   // Ramp up to 50 VUs
+    { duration: '5m', target: 50 },   // Steady state at 50 VUs
+    { duration: '2m', target: 100 },  // Ramp up to 100 VUs
+    { duration: '5m', target: 100 },  // Steady state at 100 VUs
+    { duration: '2m', target: 0 },    // Ramp down
   ],
   thresholds: {
     'http_req_duration': ['p(95)<500', 'p(99)<1000'],
@@ -37,6 +48,7 @@ export const options = {
 
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:3000';
 
+// Discovered routes — replace or extend with actual routes
 const routes = [
   { path: '/', name: 'homepage' },
   { path: '/api/health', name: 'health' },
@@ -58,7 +70,7 @@ export default function () {
     responseTime.add(res.timings.duration);
   }
 
-  sleep(1);
+  sleep(1); // Think time between iterations
 }
 
 export function handleSummary(data) {
@@ -67,7 +79,11 @@ export function handleSummary(data) {
   };
 }
 ```
+
 ### Artifact 2: `tests/perf/soak-test.js`
+
+Long-running endurance test to detect memory leaks and degradation over sustained load.
+
 ```javascript
 // tests/perf/soak-test.js
 import http from 'k6/http';
@@ -78,9 +94,9 @@ const errorRate = new Rate('errors');
 
 export const options = {
   stages: [
-    { duration: '5m', target: 100 },
-    { duration: '4h', target: 100 },
-    { duration: '5m', target: 0 },
+    { duration: '5m', target: 100 },  // Ramp up
+    { duration: '4h', target: 100 },  // Sustained load for 4 hours
+    { duration: '5m', target: 0 },    // Ramp down
   ],
   thresholds: {
     'http_req_duration': ['p(95)<500', 'p(99)<1500'],
@@ -109,7 +125,11 @@ export function handleSummary(data) {
   };
 }
 ```
+
 ### Artifact 3: `tests/perf/thresholds.json`
+
+Centralized threshold definitions for pass/fail criteria across test types.
+
 ```json
 {
   "load": {
@@ -142,29 +162,38 @@ export function handleSummary(data) {
   }
 }
 ```
+
 ### CI Job: `load-test`
+
 ```yaml
 load-test:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v4
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+
     - name: Install dependencies
       run: {{INSTALL_CMD}}
+
     - name: Build application
       run: npm run build
+
     - name: Start server
       run: npm run start &
+
     - name: Wait for server
       run: npx wait-on http://localhost:3000 --timeout 30000
+
     - name: Run k6 load test
       uses: grafana/k6-action@v0.3.1
       with:
         filename: tests/perf/load-test.js
         flags: --env BASE_URL=http://localhost:3000
+
     - name: Upload results
       if: always()
       uses: actions/upload-artifact@v4
@@ -172,24 +201,34 @@ load-test:
         name: load-test-results
         path: results/
 ```
+
 ### CI Job: `soak-test`
+
 ```yaml
 soak-test:
   runs-on: ubuntu-latest
+  # Soak tests run on a schedule, not on every push
+  # Trigger via workflow_dispatch or schedule in the parent workflow
   steps:
     - uses: actions/checkout@v4
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+
     - name: Install dependencies
       run: {{INSTALL_CMD}}
+
     - name: Build application
       run: npm run build
+
     - name: Start server
       run: npm run start &
+
     - name: Wait for server
       run: npx wait-on http://localhost:3000 --timeout 30000
+
     - name: Run k6 soak test
       uses: grafana/k6-action@v0.3.1
       with:
@@ -198,6 +237,7 @@ soak-test:
       env:
         K6_DURATION: '4h'
         K6_VUS: '100'
+
     - name: Upload results
       if: always()
       uses: actions/upload-artifact@v4
@@ -205,15 +245,21 @@ soak-test:
         name: soak-test-results
         path: results/
 ```
+
 ## Manual Testing Areas
-- **Workload modeling** -- Defining realistic load profiles based on production traffic patterns and growth projections
-- **Baseline establishment** -- Capturing and documenting initial performance baselines
+
+Performance testing requires human analysis for several aspects:
+
+- **Workload modeling** -- Defining realistic load profiles based on production traffic patterns, seasonal peaks, and growth projections
+- **Baseline establishment** -- Capturing and documenting initial performance baselines for comparison
 - **SLA/SLO definition** -- Working with stakeholders to define acceptable response times, throughput, and error rates
-- **Test data preparation** -- Creating realistic test datasets for parameterized tests
-- **Results analysis** -- Interpreting percentile distributions, identifying bottlenecks, correlating with infrastructure metrics
-- **Capacity planning** -- Extrapolating load test results to determine scaling requirements
-- **Environment parity** -- Ensuring test environment sufficiently represents production
-- **Regression comparison** -- Comparing results against historical baselines to detect degradation
+- **Test data preparation** -- Creating realistic test datasets (CSV files, JSON payloads, user credentials) for parameterized tests
+- **Results analysis** -- Interpreting percentile distributions, identifying bottlenecks, and correlating with infrastructure metrics
+- **Capacity planning** -- Extrapolating load test results to determine infrastructure scaling requirements
+- **Environment parity** -- Ensuring the test environment sufficiently represents production for meaningful results
+- **Regression comparison** -- Comparing current results against historical baselines to detect degradation trends
+
+**Key Metrics (from framework):**
 
 | Metric | Description | Target |
 |--------|-------------|--------|

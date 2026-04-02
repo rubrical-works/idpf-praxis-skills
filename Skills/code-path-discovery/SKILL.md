@@ -12,48 +12,36 @@ defaultSkill: false
 copyright: "Rubrical Works (c) 2026"
 ---
 # Code Path Discovery
-Scans TS/JS source code in a directory to detect behavioral patterns, mapping to the 6-category `/paths` format. Returns `{ shortLabel, description }` per category.
-## When to Invoke
-- `/paths --from-code [path]` -- called by `/paths` Step 3b
-- Manual code analysis of unfamiliar codebases
+Scans TS/JS source code to detect behavioral patterns, mapping to 6-category path format for `/paths`.
+## Invocation
+- `/paths --from-code [path]` — called by `/paths` Step 3b
+- Manual codebase exploration
 ## Parameters
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `path` | Yes | string | Source directory to scan |
-| `issueTitle` | Yes | string | Issue title for context |
-| `issueBody` | No | string | Issue body for context |
-## How to Use
-1. Receive parameters from `/paths` Step 3b
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `path` | Yes | Source directory to scan |
+| `issueTitle` | Yes | Issue title for context |
+| `issueBody` | No | Additional context |
+## Usage
+1. Receive params from `/paths` Step 3b
 2. Load `resources/skill-instructions.md`
-3. Follow scanning and mapping workflow
-4. Return results for `/paths` Step 5
-## Output Format
+3. Follow scanning/mapping workflow
+4. Return structured output for `/paths` Step 5
+## Output
+6 category keys, each with `{ shortLabel, description }` arrays:
 ```json
 {
-  "nominalPath": [
-    { "shortLabel": "User login flow", "description": "POST /login validates credentials and returns JWT token" }
-  ],
-  "alternativePaths": [
-    { "shortLabel": "OAuth redirect", "description": "GET /auth/callback handles third-party authentication" }
-  ],
-  "exceptionPaths": [
-    { "shortLabel": "Database connection error", "description": "catch block in db.connect() returns 503" }
-  ],
-  "edgeCases": [
-    { "shortLabel": "Empty request body", "description": "Guard clause returns 400 when req.body is null/undefined" }
-  ],
-  "cornerCases": [
-    { "shortLabel": "Concurrent session limit", "description": "Auth guard + session count check reject login at max sessions" }
-  ],
-  "negativeTestScenarios": [
-    { "shortLabel": "Invalid token format", "description": "JWT validation middleware rejects malformed tokens with 401" }
-  ]
+  "nominalPath": [{ "shortLabel": "...", "description": "..." }],
+  "alternativePaths": [],
+  "exceptionPaths": [],
+  "edgeCases": [],
+  "cornerCases": [],
+  "negativeTestScenarios": []
 }
 ```
-Each `shortLabel`/`description` maps to `/paths` Step 5a `AskUserQuestion` options.
-## Resources
-- [Skill Instructions](resources/skill-instructions.md) -- Pattern scanning rules and category mapping
+Maps to `/paths` Step 5a `AskUserQuestion` `options[].label`/`description`.
 ## Known Limitations
-Validated against `.claude/scripts/shared/` (36 JS files, CLI utilities).
-**False positives:** Guard clause detection (`if (!x)`) may match non-boundary control flow. `module.exports` as nominal path more useful in route/handler files than utilities. Catch blocks in utility code may not be meaningful exception paths. User validation in `/paths` Step 5b mitigates.
-**Not detected:** Implicit error flows via callbacks, promise chain propagation without `.catch()`, config-driven behavior not visible in code structure.
+- Guard clause detection (`if (!x)`) may match non-boundary conditions
+- `module.exports` detection more useful in route/handler files than utilities
+- Catch blocks in utility code may not represent meaningful exceptions
+- Not detected: callback error conventions, promise chain propagation without `.catch()`, config-driven behavior

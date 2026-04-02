@@ -57,8 +57,8 @@ For all inserts: len(list) increases by 1
 For all x: new_implementation(x) == reference_implementation(x)
 ```
 ### Writing Good Properties
-- **Describe what, not how** — "sorting preserves length" not "first pass puts smallest element first"
-- **Make properties specific** — `len(reverse(list)) == len(list)` not "reverse works correctly"
+- **Describe what, not how** -- "sorting preserves length" not "first pass puts smallest element first"
+- **Make properties specific** -- `len(reverse(list)) == len(list)` not "reverse works correctly"
 - **Combine multiple properties** for full coverage:
   1. `len(sort(list)) == len(list)` [preserves length]
   2. `is_sorted(sort(list)) == true` [ordering]
@@ -83,10 +83,10 @@ list_and_index = lists(integers(), min_size=1).flatmap(
 )
 ```
 ### Generator Best Practices
-1. Start simple — use built-in generators first
-2. Add constraints gradually — only constrain what's necessary
-3. Cover edge cases — include boundaries and special values
-4. Match domain — generate realistic data
+1. Start simple -- use built-in generators first
+2. Add constraints gradually -- only constrain what's necessary
+3. Cover edge cases -- include boundaries and special values
+4. Match domain -- generate realistic data
 ## Shrinking
 When a test fails, the framework finds a simpler input that still fails.
 ```
@@ -95,14 +95,14 @@ After shrinking:        [0, -1]
 ```
 **Strategies:** Integers try 0 then closer to 0. Strings try empty then shorter. Lists try empty then smaller then simpler elements. Composite shrinks each component independently.
 **Analyzing shrunk counterexamples:**
-1. Understand why it fails — the minimal case reveals the bug
+1. Understand why it fails -- the minimal case reveals the bug
 2. Add as regression test
 3. Fix the bug using the counterexample
 4. Re-run property test to confirm
 ## Integration with Test Suites
 1. Start with example tests for known important cases
 2. Add property tests for additional coverage
-3. Keep both — they serve different purposes
+3. Keep both -- they serve different purposes
 **Example tests for:** known edge cases, bug reproductions, documentation, fast deterministic checks.
 **Property tests for:** general invariants, random edge case discovery, mathematical properties, serialization roundtrips.
 ## Framework-Specific Guidance
@@ -140,11 +140,11 @@ test('sort preserves length', () => {
 | Go | gopter | Based on ScalaCheck |
 | Erlang | PropEr | For concurrent systems |
 ## Common Pitfalls
-1. **Overly constrained generators** — test with varying sizes including empty, not fixed sizes
-2. **Testing implementation details** — test properties (`is_sorted(sort(list))`) not implementation
-3. **Non-deterministic properties** — use deterministic properties only
-4. **Slow generators** — size inputs appropriately, use `max_examples` setting
-5. **Ignoring counterexamples** — fix the bug, don't seed around it
+1. **Overly constrained generators** -- test with varying sizes including empty, not fixed sizes
+2. **Testing implementation details** -- test properties (`is_sorted(sort(list))`) not implementation
+3. **Non-deterministic properties** -- use deterministic properties only
+4. **Slow generators** -- size inputs appropriately, use `max_examples` setting
+5. **Ignoring counterexamples** -- fix the bug, don't seed around it
 ## Debugging Failed Properties
 1. Read the counterexample
 2. Reproduce manually with the exact counterexample
@@ -153,10 +153,10 @@ test('sort preserves length', () => {
 5. Fix the bug
 6. Add regression test with the counterexample
 ## Resources
-- `resources/property-patterns.md` — Additional property patterns
-- `resources/shrinking-guide.md` — Detailed shrinking explanation
-- `resources/framework-examples.md` — Framework-specific code examples
+- `resources/property-patterns.md` -- Additional property patterns
+- `resources/shrinking-guide.md` -- Detailed shrinking explanation
+- `resources/framework-examples.md` -- Framework-specific code examples
 ## Related Skills
-- `test-writing-patterns` — Example-based testing patterns
-- `mutation-testing` — Test suite quality assessment
-- `tdd-red-phase` — Writing failing tests first
+- `test-writing-patterns` -- Example-based testing patterns
+- `mutation-testing` -- Test suite quality assessment
+- `tdd-red-phase` -- Writing failing tests first

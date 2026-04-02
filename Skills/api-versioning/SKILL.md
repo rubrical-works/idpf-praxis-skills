@@ -24,33 +24,33 @@ copyright: "Rubrical Works (c) 2026"
 /api/v1/users
 /api/v2/users
 ```
-- **Pros:** Highly visible, easy to route/cache, simple client implementation
-- **Cons:** URL pollution, can't version individual resources differently
-- **Best for:** Public APIs, major version changes
+**Pros:** Highly visible, easy to route/cache, simple client implementation
+**Cons:** URL pollution, can't version individual resources differently
+**Best for:** Public APIs, major version changes
 ### 2. Query Parameter Versioning
 ```
 /api/users?version=1
 /api/users?api-version=2024-01-01
 ```
-- **Pros:** Optional (can default), single URL structure
-- **Cons:** Easy to miss, can interfere with caching
-- **Best for:** Optional versioning, date-based versions
+**Pros:** Optional (can default), single URL structure
+**Cons:** Easy to miss, can interfere with caching
+**Best for:** Optional versioning, date-based versions
 ### 3. Header Versioning
 ```
 GET /api/users
 Accept-Version: v1
 ```
-- **Pros:** Clean URLs, follows HTTP semantics
-- **Cons:** Harder to test in browser, less visible
-- **Best for:** Internal APIs, fine-grained versioning
+**Pros:** Clean URLs, follows HTTP semantics
+**Cons:** Harder to test in browser, less visible
+**Best for:** Internal APIs, fine-grained versioning
 ### 4. Content Negotiation (Media Type)
 ```
 GET /api/users
 Accept: application/vnd.company.users.v2+json
 ```
-- **Pros:** RESTful approach, can version representations separately
-- **Cons:** Complex implementation, harder for clients
-- **Best for:** Strict REST, enterprise environments
+**Pros:** RESTful, can version representations separately
+**Cons:** Complex implementation, harder for clients
+**Best for:** Strict REST, enterprise environments
 ## Decision Matrix
 | Factor | URL Path | Query Param | Header | Media Type |
 |--------|----------|-------------|--------|------------|
@@ -59,31 +59,16 @@ Accept: application/vnd.company.users.v2+json
 | RESTful | Medium | Low | Medium | High |
 | Caching | Easy | Medium | Complex | Complex |
 | Testing | Easy | Easy | Medium | Hard |
-**Recommendations:** Public APIs -> URL path. Internal APIs -> Header. Enterprise -> Media type. Simple APIs -> Query parameter.
+**Recommendations:** Public APIs: URL path. Internal APIs: Header. Enterprise APIs: Media type. Simple APIs: Query parameter.
 ## Version Numbering
-### Semantic Versioning
-```
-MAJOR.MINOR.PATCH
-MAJOR: Breaking changes
-MINOR: Backward-compatible additions
-PATCH: Backward-compatible fixes
-```
-### Date-Based Versioning
-```
-YYYY-MM-DD or YYYY-MM
-```
-Use for frequent releases, rolling deprecation windows, Azure/AWS style APIs.
-### Simple Major Versioning
-```
-v1, v2, v3
-```
-Use for infrequent major changes, simple lifecycle.
+**Semantic Versioning:** `MAJOR.MINOR.PATCH` — MAJOR: Breaking changes, MINOR: Backward-compatible additions, PATCH: Backward-compatible fixes
+**Date-Based:** `YYYY-MM-DD` or `YYYY-MM` — For frequent releases, rolling deprecation windows
+**Simple Major:** `v1, v2, v3` — For infrequent major changes
 ## Backward Compatibility
-**Safe changes (compatible):**
+**Safe changes (usually compatible):**
 - Adding new endpoints, optional parameters, new response fields, new enum values
 **Breaking changes (require new version):**
 - Removing endpoints/fields, changing field types, renaming fields, changing required parameters, changing authentication
-### Compatibility Patterns
 **Additive changes:**
 ```json
 // v1 response
@@ -91,38 +76,22 @@ Use for infrequent major changes, simple lifecycle.
 // v1.1 response (compatible - added field)
 {"id": 1, "name": "Alice", "email": "alice@example.com"}
 ```
-**Optional fields:**
-```json
-{
-  "id": 1,
-  "name": "Alice",
-  "profile": null  // Optional, may not exist in v1 clients
-}
-```
 ## Deprecation Workflow
 ### Lifecycle
 ```
 Active -> Deprecated -> Sunset -> Removed
+```
 1. Active: Fully supported
 2. Deprecated: Announced, still works, migration encouraged
 3. Sunset: Warning period, reduced support
 4. Removed: No longer available
-```
-### Communication
-- Documentation updates, API response headers, email/changelog notifications
-- Minimum notice period (e.g., 6 months)
 **Deprecation header:**
 ```
 Deprecation: true
 Sunset: Sat, 01 Jun 2025 00:00:00 GMT
 Link: <https://api.example.com/docs/migration>; rel="deprecation"
 ```
-### Migration Support
-1. Provide migration guide
-2. Offer parallel versions
-3. Log deprecated endpoint usage
-4. Send notifications to heavy users
-5. Provide tooling if complex
+**During deprecation:** Provide migration guide, offer parallel versions, log deprecated endpoint usage, send notifications, provide tooling if complex
 ### Timeline Example
 ```
 Month 0:  Announce v1 deprecation, v2 released
@@ -131,7 +100,8 @@ Month 3:  Start warning notifications
 Month 6:  Enter sunset period
 Month 9:  Remove v1 (or extend if needed)
 ```
-## Client Migration Guide Template
+## Client Migration
+### Migration Guide Template
 ```markdown
 # Migration Guide: v1 to v2
 ## Overview
@@ -143,8 +113,6 @@ Month 9:  Remove v1 (or extend if needed)
    - Before: [v1 behavior]
    - After: [v2 behavior]
    - Migration: [steps]
-## New Features in v2
-- [Feature 1]
 ## Step-by-Step Migration
 1. [Step 1]
 2. [Step 2]
@@ -152,9 +120,9 @@ Month 9:  Remove v1 (or extend if needed)
 ## REST API Patterns
 **Version the API, not resources:**
 ```
-/api/v1/users      yes
-/api/v1/products   yes
-/api/users/v1      no (inconsistent)
+/api/v1/users      correct
+/api/v1/products   correct
+/api/users/v1      incorrect (inconsistent)
 ```
 **Envelope pattern:**
 ```json
@@ -167,16 +135,15 @@ Month 9:  Remove v1 (or extend if needed)
 }
 ```
 ## GraphQL Patterns
-GraphQL naturally supports additive changes:
+**Deprecating Fields:**
 ```graphql
 type User {
   id: ID!
   name: String! @deprecated(reason: "Use fullName instead")
   fullName: String!
-  email: String  # New optional field
 }
 ```
-For breaking changes: `/graphql` (current), `/graphql/v2` (new version).
+**Breaking changes:** Use separate endpoint `/graphql/v2`
 ## Implementation Checklist
 ### Before Releasing Versioned API
 - [ ] Versioning strategy chosen

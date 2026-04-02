@@ -12,7 +12,7 @@ copyright: "Rubrical Works (c) 2026"
 ---
 # i18n Setup
 Scaffolds i18n for web/mobile apps: string externalization, locale formatting, translation workflows.
-**Companion Domain:** Domains/i18n
+**Companion Domain:** Domains/i18n — provides evaluative review criteria
 ## When to Use
 - Setting up i18n for a new project
 - Configuring i18next, react-intl, or FormatJS
@@ -20,7 +20,10 @@ Scaffolds i18n for web/mobile apps: string externalization, locale formatting, t
 - Setting up string extraction tooling
 - Establishing translation management workflow
 ## Capabilities
-**Library Config:** i18next/react-intl/FormatJS with plugins, language detection (browser/URL/cookie), fallback chains, namespace organization
+**Library Config:** i18next/react-intl/FormatJS with plugins, language detection (browser/URL/cookie/user preference), fallback chains, namespace organization
 **String Extraction:** Extract message IDs, generate templates, detect hardcoded strings, key naming enforcement
 **Locale Scaffolding:** Per-locale dirs (`locales/en/`, `locales/fr/`), JSON/YAML templates, namespace organization, default locale placeholders
 **Translation Workflow:** Crowdin/Lokalise config, CI sync, PR workflow for updates, context/screenshots for translators
+## Related Skills
+- `seo-optimization` — hreflang tags and locale-specific URLs
+- `error-handling-patterns` — localized error messages

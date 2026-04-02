@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "tdd-checklist-schema.json",
+  "title": "TDD Checklist Schema",
+  "description": "Validates tdd-checklist.json structure for TDD phase enforcement",
+  "type": "object",
+  "required": ["red", "green", "refactor", "failure-recovery"],
+  "additionalProperties": false,
+  "properties": {
+    "red": { "$ref": "#/definitions/phase" },
+    "green": { "$ref": "#/definitions/phase" },
+    "refactor": { "$ref": "#/definitions/phase" },
+    "failure-recovery": { "$ref": "#/definitions/recoveryPhase" }
+  },
+  "definitions": {
+    "phase": {
+      "type": "object",
+      "required": ["required", "gate"],
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Checks that must pass before crossing the gate"
+        },
+        "gate": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Condition that must be satisfied to proceed to next phase"
+        }
+      }
+    },
+    "recoveryPhase": {
+      "type": "object",
+      "required": ["triggers", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "triggers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Conditions that indicate failure recovery is needed"
+        },
+        "steps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Ordered steps to diagnose and recover from test failures"
+        }
+      }
+    }
+  }
+}
