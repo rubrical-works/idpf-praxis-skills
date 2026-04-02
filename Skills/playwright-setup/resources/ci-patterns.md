@@ -1,6 +1,6 @@
 # CI/CD Patterns for Playwright
 
-**Version:** v0.4.2
+**Version:** v0.5.0
 
 Configuration patterns for running Playwright tests in various CI/CD environments.
 

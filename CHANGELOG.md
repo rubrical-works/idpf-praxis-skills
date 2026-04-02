@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-04-02
+
+### Added
+- `resources/HOWTO.md` for all 11 reference skills — usage guides for non-IDPF projects
+- CodeQL code scanning workflow for dist repo
+- SECURITY.md vulnerability disclosure policy for dist repo
+- Dependabot config for GitHub Actions scanning on dist repo
+- Branch protection (force-push/deletion blocked) on dist repo main
+- CodeQL badge to README-DIST.md
+- HOWTO.md check in `/fw-edit-skill` type-change cascading — prompts to create stub when switching to injector or reference
+- Reference skill HOWTO template in SKILL-DEVELOPMENT-GUIDE.md
+- Docker Development Skill proposal transferred from idpf-praxis-dev
+
+### Changed
+- Renamed `HOW-TO.md` to `HOWTO.md` across all skills and references (standard naming convention)
+- `SKILL-DEVELOPMENT-GUIDE.md` now documents HOWTO requirement for both injector and reference skill types
+- `/fw-add-skill` reference template now generates HOWTO stub (separated from educational template)
+- Dist repo CI workflow and deploy step added
+
 ## [0.4.2] - 2026-04-02
 
 ### Added

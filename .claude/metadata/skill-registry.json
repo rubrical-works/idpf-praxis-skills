@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-02T17:09:38.619Z",
+  "generatedAt": "2026-04-02T18:27:39.851Z",
   "version": "0.1.0",
   "skillCount": 40,
   "skills": [
@@ -10,7 +10,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "fc4c8e786941ff391616cbd80a0cd2d87cd9980eff3ad650c983bbb055b56148",
+      "checksum": "fdf8a5e5a272df6acf902e693f76534906de40258cea020774eea4436f1ecb45",
       "category": "code-quality",
       "relevantTechStack": [
         "javascript",
@@ -32,7 +32,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "16180c218f51eff0ab8b56d521d17afb9af26fcfd02ee5a8e6c90953e4fc1355",
+      "checksum": "f9029e9fd74d57033010693e4e4abae826051d82fa0f192171c58e39d70087c7",
       "category": "api",
       "relevantTechStack": [
         "rest",
@@ -50,7 +50,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "a610359578f60e08121e37ff76c3b5fa28d16d61237ced896b91faec6186ccf5",
+      "checksum": "9f075ff474171eafe5e0c9151b7a7dba623502ac411ce1b6696c8988a1c89c11",
       "category": "platform",
       "relevantTechStack": [
         "astro",
@@ -105,7 +105,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "d8930a113c1f45a4683bfb7afa03bc4d589f15aafdf6708c6fc2af3b737c9f79",
+      "checksum": "bba169da0ef73a0e455d404d9f19251a2c1fa53320f72a19907d455fec3d725c",
       "category": "devops",
       "relevantTechStack": [
         "github-actions",
@@ -210,7 +210,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "fa1edd48c152fa165aa29f6aba6a16b37410efa5c0ca174fe466a4a0e1247a1c",
+      "checksum": "a0686077b5e6618d9f4bf3f3de4c01bda952687d62eccd6b96111a431957f5f0",
       "category": "documentation",
       "relevantTechStack": [
         "drawio",
@@ -229,7 +229,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "ca2f303268e58558c66be67d861ab932262a2433952622eacb73bd53584ce2b3",
+      "checksum": "06e1461984cc0cc25c01dba6d84c8a076e23781b86de62d1c450c2d77e909948",
       "category": "platform",
       "relevantTechStack": [
         "electron",
@@ -249,7 +249,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "3b88ab045b7090e5b16f6a2b45aaf4f5b4216fe812e2d0bf3ea424ff13a81932",
+      "checksum": "6f767e530263a74a1c49637209d0077bebf7b2b3c983fb1859bfeee417b8aa60",
       "category": "platform",
       "relevantTechStack": [
         "electron",
@@ -267,7 +267,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "dffbe77fac627711c15e501f980bcefa7ac68786d49e52a4f604878bc561ba11",
+      "checksum": "e9c92d85b0665c31387ba716d97039b18712a36488b7600eff397deb06817f27",
       "category": "development",
       "relevantTechStack": [
         "javascript",
@@ -341,7 +341,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "df11976d01dd07136ea46626dfe8367703daf8cc20ad1700fb2ede8a0c2f5c74",
+      "checksum": "2961384a7f0e97f3a198040d322fd369911ef6cce81680998fed4979b1349d14",
       "category": "database",
       "relevantTechStack": [
         "sql",
@@ -360,7 +360,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "8e7e1e9bc5b07b07fd29d5437b3493f4284187ff9a9cf871c23f82f48f32b87f",
+      "checksum": "3a02671a5427e62d6b396119cc5ed5db6ac330f9da0893368801e6701d752cff",
       "category": "testing",
       "relevantTechStack": [
         "stryker",
@@ -521,7 +521,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "822da5063d07cb1e8752accd87fc38b8bb216c03951aad5e6eff34338dd408b2",
+      "checksum": "5a67b2f10ffb6e75da67955e4d90d71623897c89653c0e90fc308dc96dff5a10",
       "category": "development",
       "relevantTechStack": [
         "distributed-systems",
@@ -618,7 +618,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "afa18802e7c2efc6426e70587fb042227b39d5d7112fbcc77f1ad185825bdaba",
+      "checksum": "f52fbd3e87a36110fd41736f3fc5f97f9408ca6c8e73a6b5fdd377e373e523c1",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -634,7 +634,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "8d8990202ccda009f929759f17fe44c05a8844a0056a5c3372a2e6febb90db9c",
+      "checksum": "db226346d69e5543c77cfe452538953cbb7c3647db80a6710b97c2b17895eef6",
       "category": "tdd",
       "relevantTechStack": [
         "tdd",
@@ -650,7 +650,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "c11741602e7f42dd9ddfc28da2f5d270bfd91cf4402de84d19010b8d211c777c",
+      "checksum": "a85a1b754a78fff5e7a0dc3f1a4b07a1bc84d49474652e3afc196cfc0d7f1c8d",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -666,7 +666,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "5df85b50681c19316c1e21a461438083f6db74e8776d06474f5f9b363842a753",
+      "checksum": "a79bced0cfb2923d99e67507571d60dbe1be628fd1cf07b0673acf127be095e6",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -682,7 +682,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "f1522d03730813628a87593b92c13371421f51aa35f2f98cffae31b7e6d33a04",
+      "checksum": "b8347ce0fb169b7b7f92d87014a92832dd7e2d0ac779f314390f159ddf5d875a",
       "category": "testing",
       "relevantTechStack": [
         "testing",

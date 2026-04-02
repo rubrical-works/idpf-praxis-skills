@@ -43,7 +43,7 @@ Each skill directory in [Skills/](Skills/) contains the full documentation. Clic
 
 ### Injector Skills (5)
 
-These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf-praxis-dev). Framework commands read their config at runtime. Each includes a `resources/HOW-TO.md` explaining how to use the skill without the framework.
+These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf-praxis-dev). Framework commands read their config at runtime. Each includes a `resources/HOWTO.md` explaining how to use the skill without the framework.
 
 | Skill | Category | Description |
 |-------|----------|-------------|
@@ -111,7 +111,7 @@ Teaching material Claude provides when it detects a learning context.
 
 ## Compatibility
 
-All skills work with Claude Code. Injector skills are designed for the IDPF Praxis framework (>= 0.60.0), where commands consume their JSON automatically — but any Claude Code project can use them by wiring up a rule that reads the JSON. Each injector skill includes a `resources/HOW-TO.md` with instructions. Check individual skill frontmatter for specific version requirements.
+All skills work with Claude Code. Injector skills are designed for the IDPF Praxis framework (>= 0.60.0), where commands consume their JSON automatically — but any Claude Code project can use them by wiring up a rule that reads the JSON. Each injector skill includes a `resources/HOWTO.md` with instructions. Check individual skill frontmatter for specific version requirements.
 
 ## License
 

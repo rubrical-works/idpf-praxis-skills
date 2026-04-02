@@ -1,5 +1,5 @@
 # Go Anti-Patterns
-**Version:** v0.4.2
+**Version:** v0.5.0
 
 Common anti-patterns specific to Go development.
 

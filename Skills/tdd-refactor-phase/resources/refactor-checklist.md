@@ -1,5 +1,5 @@
 # REFACTOR Phase Checklist
-**Version:** v0.4.2
+**Version:** v0.5.0
 
 Quick reference for completing REFACTOR phase successfully.
 

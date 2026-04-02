@@ -1,5 +1,5 @@
 # TDD Failure Recovery Procedures
-**Version:** v0.4.2
+**Version:** v0.5.0
 
 Step-by-step procedures for recovering from common TDD failures.
 
