@@ -1,5 +1,5 @@
 # When to Skip Refactoring
-**Version:** v0.4.1
+**Version:** v0.4.2
 
 Decision criteria for determining when to skip the REFACTOR phase in TDD.
 

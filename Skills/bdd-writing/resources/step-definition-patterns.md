@@ -1,5 +1,5 @@
 # Step Definition Patterns
-**Version:** v0.4.1
+**Version:** v0.4.2
 
 Examples of step definitions across different BDD frameworks.
 

@@ -1,6 +1,6 @@
 # Common Playwright Errors and Solutions
 
-**Version:** v0.4.1
+**Version:** v0.4.2
 
 Detailed solutions for common Playwright installation and runtime errors.
 

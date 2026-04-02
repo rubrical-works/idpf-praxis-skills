@@ -15,7 +15,7 @@ Consistent error handling guidance including error hierarchy design, API error r
 
 > This is one approach. Adapt it to your project's structure.
 
-1. Install the skill into your project (e.g., via `px-manager` or by placing it in `.claude/skills/error-handling-patterns/`)
+1. Install the skill into your project (e.g., via Praxis Hub Manager or by placing it in `.claude/skills/error-handling-patterns/`)
 2. Add a rule in `.claude/rules/` or `CLAUDE.md` that references it:
 
 ```

@@ -1,5 +1,5 @@
 # BDD Tool Comparison
-**Version:** v0.4.1
+**Version:** v0.4.2
 
 Comparison of popular BDD frameworks across languages.
 

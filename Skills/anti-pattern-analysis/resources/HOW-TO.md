@@ -18,7 +18,7 @@ Structured guidance for identifying common anti-patterns across languages, archi
 
 > This is one approach. Adapt it to your project's structure.
 
-1. Install the skill into your project (e.g., via `px-manager` or by placing it in `.claude/skills/anti-pattern-analysis/`)
+1. Install the skill into your project (e.g., via Praxis Hub Manager or by placing it in `.claude/skills/anti-pattern-analysis/`)
 2. Add a rule in `.claude/rules/` or `CLAUDE.md` that references it:
 
 ```

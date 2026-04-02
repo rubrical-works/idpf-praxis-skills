@@ -1,5 +1,5 @@
 # Tech Stack Detection Guide
-**Version:** v0.4.1
+**Version:** v0.4.2
 
 **Purpose:** Patterns for detecting technology stacks from codebase analysis
 

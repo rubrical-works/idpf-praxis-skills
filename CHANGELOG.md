@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2026-04-02
+
+### Added
+- Tiered minimization thresholds based on source file size (<3KB: 98%, 3-5KB: 92%, 5-10KB: 88%, >10KB: 85%)
+- Summary report step in `/minimize-files` pipeline
+
+### Fixed
+- `LICENSE.txt` now copied to `.min-mirror/` for all skills — was missing from deployed unpacked directories
+- Replaced `px-manager` shorthand with `Praxis Hub Manager` across all documentation
+
 ## [0.4.1] - 2026-04-02
 
 ### Added
