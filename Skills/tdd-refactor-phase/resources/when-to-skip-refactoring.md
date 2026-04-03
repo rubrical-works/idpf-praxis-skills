@@ -1,5 +1,5 @@
 # When to Skip Refactoring
-**Version:** v0.6.0
+**Version:** v0.7.0
 Decision criteria for determining when to skip the REFACTOR phase in TDD.
 **Golden Rule:** Refactoring is optional. Tests passing is mandatory.
 Skip when cost/risk outweighs benefit for the current iteration.

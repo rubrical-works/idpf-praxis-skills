@@ -37,6 +37,8 @@ const args = process.argv.slice(2);
 let mode = 'single';
 let target = null;
 
+const schemaOverrides = new Map();
+
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--all') {
     mode = 'all';
@@ -46,6 +48,17 @@ for (let i = 0; i < args.length; i++) {
     if (!target) {
       console.log(JSON.stringify({ ok: false, error: '--dir requires a path argument' }));
       process.exit(1);
+    }
+  } else if (args[i] === '--schema-override') {
+    // Format: file=schemaPath
+    const mapping = args[++i];
+    if (mapping) {
+      const eqIdx = mapping.indexOf('=');
+      if (eqIdx > 0) {
+        const file = path.resolve(mapping.slice(0, eqIdx));
+        const schema = path.resolve(mapping.slice(eqIdx + 1));
+        schemaOverrides.set(file, schema);
+      }
     }
   } else if (!args[i].startsWith('-')) {
     mode = 'single';
@@ -63,7 +76,35 @@ if (mode === 'single' && !target) {
 const EXCLUDE_DIRS = new Set(['node_modules', '.git', '.vite', 'out', 'dist', '.min-mirror']);
 const EXCLUDE_FILES = new Set(['package-lock.json', 'tsconfig.json']);
 
-function findJsonFiles(dir) {
+function parseGitignore(gitignorePath) {
+  try {
+    const content = fs.readFileSync(gitignorePath, 'utf8');
+    return content.split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !line.startsWith('#'))
+      .map(line => line.replace(/\/$/, ''));
+  } catch {
+    return [];
+  }
+}
+
+function isGitignored(filePath, rootDir, patterns) {
+  if (patterns.length === 0) return false;
+  const relative = path.relative(rootDir, filePath).replace(/\\/g, '/');
+  const segments = relative.split('/');
+  for (const pattern of patterns) {
+    for (const segment of segments) {
+      if (segment === pattern) return true;
+    }
+  }
+  return false;
+}
+
+function findJsonFiles(dir, rootDir, gitignorePatterns) {
+  if (!rootDir) rootDir = dir;
+  if (!gitignorePatterns) {
+    gitignorePatterns = parseGitignore(path.join(rootDir, '.gitignore'));
+  }
   const results = [];
   let entries;
   try {
@@ -74,8 +115,9 @@ function findJsonFiles(dir) {
   for (const entry of entries) {
     if (EXCLUDE_DIRS.has(entry.name)) continue;
     const fullPath = path.join(dir, entry.name);
+    if (isGitignored(fullPath, rootDir, gitignorePatterns)) continue;
     if (entry.isDirectory()) {
-      results.push(...findJsonFiles(fullPath));
+      results.push(...findJsonFiles(fullPath, rootDir, gitignorePatterns));
     } else if (entry.isFile() && entry.name.endsWith('.json') && !EXCLUDE_FILES.has(entry.name)) {
       results.push(fullPath);
     }
@@ -137,6 +179,8 @@ function validateFile(filePath, schemaPath) {
   try {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+    // Remove meta-schema reference to avoid Ajv draft resolution issues
+    delete schema.$schema;
 
     const ajv = new Ajv({ allErrors: true, strict: false });
     const validate = ajv.compile(schema);
@@ -176,9 +220,18 @@ for (const filePath of files) {
     continue;
   }
 
-  const schema = resolveSchema(schemaRef, path.dirname(filePath));
+  let schema = resolveSchema(schemaRef, path.dirname(filePath));
 
-  if (!schema || !schema.resolved) {
+  // Check for schema override when schema is missing
+  const resolvedFilePath = path.resolve(filePath);
+  if (schema && schema.type === 'missing' && schemaOverrides.has(resolvedFilePath)) {
+    const overridePath = schemaOverrides.get(resolvedFilePath);
+    if (fs.existsSync(overridePath)) {
+      schema = { type: 'file', ref: schemaRef, resolved: overridePath };
+    }
+  }
+
+  if (!schema || schema.type === 'url' || schema.type === 'missing') {
     const reason = schema?.type === 'url'
       ? `Remote schema not supported: ${schema.ref}`
       : `Schema not found: ${schema?.ref || 'unknown'}`;

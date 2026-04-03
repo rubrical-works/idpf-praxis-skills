@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-04-03
+
+### Added
+- **hal-2026 skill** — JSON-driven parallel solution explorer with structured decision matrix, schema-validated references, and selective loading for minimal token usage
+- **json-validator: .gitignore support** (#119) — file discovery now parses `.gitignore` patterns to complement hardcoded exclusions
+- **json-validator: schema override** (#120) — `--schema-override` flag and SKILL.md prompt workflow when `$schema` references a missing file; also fixed latent bug where `type:'missing'` schemas with non-null resolved path fell through to validateFile
+- **$schema references** (#121) — added `$schema` to all project-owned JSON files; created `minimize-config-schema.json` and `framework-config-schema.json`; updated existing schemas to allow `$schema` property
+- **docs/ minimization exclusion** (#125) — `docs/` subdirectory convention for human-readable skill documentation, always copied as-is during minimization
+- Unit tests for minimization quality gate thresholds, json-validator gitignore parsing, and json-validator schema override
+
+### Changed
+- **Sliding-scale quality gate** (#116) — replaced step-function thresholds with a hyperbolic curve that smoothly scales from 100% (near-minimum 2KB files) to 82% floor (50KB+ files)
+- CI workflow now runs `npm ci` before tests (required for ajv dependency)
+
+### Fixed
+- json-validator `isCopyAsIs()` now always returns `true` for `docs/` paths regardless of skill type
+- Test runner uses `cwd: PROJECT_ROOT` instead of `NODE_PATH` env override for cross-platform CI compatibility
+
 ## [0.6.0] - 2026-04-02
 
 ### Added

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-02T22:04:42.983Z",
+  "generatedAt": "2026-04-03T18:18:26.851Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
@@ -102,6 +102,11 @@
       "flask-setup",
       "flask",
       "setup"
+    ],
+    "hal-2026": [
+      "hal-2026",
+      "hal",
+      "2026"
     ],
     "i18n-setup": [
       "i18n-setup",
@@ -251,6 +256,7 @@
     "electron-development": "platform",
     "error-handling-patterns": "development",
     "flask-setup": "platform",
+    "hal-2026": "problem-solving",
     "i18n-setup": "web",
     "json-validator": "analysis",
     "migration-patterns": "database",
@@ -269,7 +275,7 @@
     "sqlite-integration": "database",
     "tdd-failure-recovery": "testing",
     "tdd-green-phase": "testing",
-    "tdd-process": "tdd",
+    "tdd-process": "testing",
     "tdd-red-phase": "testing",
     "tdd-refactor-phase": "testing",
     "test-scaffold": "testing",

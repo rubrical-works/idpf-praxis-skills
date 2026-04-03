@@ -1,5 +1,5 @@
 # TDD Failure Recovery Procedures
-**Version:** v0.6.0
+**Version:** v0.7.0
 ## Test Pollution Recovery
 **Symptom:** Tests pass in isolation but fail when run together
 1. **Identify the polluting test** - Run failing test alone (passes), run full suite (fails), binary search: run half the tests with failing test

@@ -3,7 +3,7 @@
 [![Skill CI](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml)
 [![CodeQL](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml)
 [![Latest Release](https://img.shields.io/github/v/release/rubrical-works/idpf-praxis-skills)](https://github.com/rubrical-works/idpf-praxis-skills/releases/latest)
-[![Skills](https://img.shields.io/badge/skills-40-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
+[![Skills](https://img.shields.io/badge/skills-41-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 Ready-to-use skills for [Claude Code](https://claude.ai/code). Browse skill documentation below, then install what you need.
@@ -53,7 +53,7 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, Windows considerations |
 | [electron-cross-build](Skills/electron-cross-build/) | Platform | Cross-compile Electron apps from Linux to Windows |
 
-### Invokable Skills (13)
+### Invokable Skills (14)
 
 Interactive guided workflows. Install and use as slash commands.
 
@@ -72,6 +72,7 @@ Interactive guided workflows. Install and use as slash commands.
 | [i18n-setup](Skills/i18n-setup/) | Infrastructure | Internationalization setup |
 | [code-path-discovery](Skills/code-path-discovery/) | Analysis | Path analysis patterns |
 | [json-validator](Skills/json-validator/) | Analysis | Validate JSON files against schemas |
+| [hal-2026](Skills/hal-2026/) | Problem Solving | JSON-driven parallel solution explorer |
 
 ### Reference Skills (15)
 

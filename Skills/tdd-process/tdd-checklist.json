@@ -1,4 +1,5 @@
 {
+  "$schema": "tdd-checklist-schema.json",
   "red": {
     "required": [
       "Test file created or identified",

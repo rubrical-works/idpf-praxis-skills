@@ -9,7 +9,7 @@ version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
 lastUpdated: "2026-04-01"
 license: Complete terms in LICENSE.txt
-category: tdd
+category: testing
 relevantTechStack: [tdd, testing]
 copyright: "Rubrical Works (c) 2026"
 ---
