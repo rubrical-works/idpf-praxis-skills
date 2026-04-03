@@ -297,3 +297,55 @@ Strategies can often be **combined** — this is where genuinely novel algorithm
 When two paths already differ in paradigm and data structure, choosing different
 strategies from this list for each path almost guarantees that the two approaches
 will be *architecturally* different — not just implementation variants of each other.
+
+---
+
+## Software Engineering Strategies
+
+The following 13 strategy families extend Dimension 3 into software engineering domains.
+They are grouped by domain and provide a quick-reference overview; see the JSON resource
+files for full example tables and failure modes.
+
+### Architecture
+
+**Boundary Isolation** — Isolate concerns at process, module, or network boundaries (service boundaries, process boundaries, module federation) so each side can evolve, deploy, and test independently. Use when cross-process communication patterns emerge or module coupling causes rippling changes.
+
+**Fixture and Seed** — Generate test data through factories, builders, or snapshot seeding rather than constructing it inline in every test. Use when test data setup is verbose, duplicated, or requires complex object graphs with consistent relationships.
+
+**Environment Override** — Inject configuration at runtime by overriding environment variables, file paths, or config layers (dotenv cascade, config layering, path redirection). Use for multi-environment deployment where the same binary must behave differently based on its environment.
+
+### Database
+
+**Denormalization for Read** — Trade write complexity for read performance by precomputing and storing derived data (denormalized tables, materialized views, computed columns, read replicas). Use when slow queries are dominated by joins that could be precomputed once and read many times.
+
+**Schema Evolution** — Evolve database or API schemas incrementally (expand-contract, API versioning, backward-compatible migrations) while maintaining backward compatibility. Use when multiple consumers depend on the same schema and zero-downtime deployment is required.
+
+### API
+
+**API Versioning Strategy** — Manage multiple API versions (URL path versioning, header versioning, content negotiation) to give consumers a stable contract while allowing the API to evolve. Use when breaking changes are required but existing clients cannot update immediately.
+
+### Concurrency
+
+**Consistency Trade-off** — Choose the consistency level (strong, eventual, read-your-writes, causal) that matches business requirements rather than defaulting to strong consistency everywhere. Use when distributed state is replicated across nodes and latency-vs-correctness tension exists.
+
+**Idempotency Design** — Ensure operations produce the same result regardless of how many times they are executed (idempotency keys, deduplication tables, tombstones, conditional writes). Use when retry logic, at-least-once delivery, or duplicate requests are present in the system.
+
+### Frontend
+
+**Hydration Strategy** — Choose when and how client-side JavaScript activates server-rendered HTML (full hydration, partial hydration, progressive hydration, resumability). Use when time-to-interactive is significantly later than first contentful paint or JavaScript bundle size is disproportionate to interactivity.
+
+### Caching
+
+**Invalidation Pattern** — Define a strategy for keeping cached data fresh (TTL-based, event-driven, write-through, write-behind). Use when stale data causes incorrect behavior and you need to control the trade-off between freshness and performance.
+
+### Security
+
+**Zero Trust Approach** — Verify every request regardless of network location (mTLS, service mesh, identity-aware proxy). Use when internal service communication relies on network perimeter for security and lateral movement risk is a concern.
+
+### Deployment
+
+**Environment Promotion** — Move immutable build artifacts through a sequence of environments (GitOps, pipeline-driven, branch-per-environment) with increasing confidence gates. Use when deployment pipelines need repeatable, auditable promotions from dev through production.
+
+### Observability
+
+**Sampling Approach** — Decide which telemetry data to collect versus discard (head-based, tail-based, adaptive, always-on for errors) based on cost, volume, and debugging needs. Use when high-volume telemetry exceeds storage or processing budget and targeted debugging requires selective collection.

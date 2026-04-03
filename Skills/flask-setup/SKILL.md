@@ -11,59 +11,51 @@ relevantTechStack: [flask, python, virtualenv, pip]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Flask Setup for Beginners
-This Skill guides complete beginners through setting up a Flask development environment with detailed explanations and verification steps.
+Guides beginners through Flask development environment setup with verification steps.
 ## When to Use This Skill
 - User wants to build a Flask web application
-- User is a beginner and needs Flask environment setup
+- User is a beginner needing Flask environment setup
 - User asks "How do I set up Flask?" or "How do I start a Flask project?"
-- Building a Python web API or Python web server
+- Project type is web application using Flask
+- Building a Python web API or server
 - Flask tutorial or learning resources needed
 ## Instructions for ASSISTANT
 **CRITICAL OUTPUT FORMAT:**
-When using this Skill's content, the ASSISTANT must format ALL technical instructions as **Claude Code copy/paste blocks**.
+Format ALL technical instructions as **Claude Code copy/paste blocks**.
 **DO NOT provide manual instructions like:**
 - "Open File Explorer", "Navigate to folder", "Right-click", "Type in terminal"
 **ALWAYS format as:**
 ```
 TASK: Set up Flask project
-
 STEP 1: Copy this entire code block (including this line)
 STEP 2: Open Claude Code
 STEP 3: Paste into Claude Code
 STEP 4: Claude Code will execute and report results
 STEP 5: Report back: What did Claude Code say?
-
 ---
-
 [Instructions for Claude Code to execute:]
-
 Navigate to project directory:
 cd [project-location]
-
 Create project folder:
 mkdir [project-name]
 cd [project-name]
-
 Check Python installed:
 python --version
-
 Create virtual environment:
 python -m venv venv
-
 [continue with commands...]
-
 Report:
 - What results did you see?
 ```
 ## Setup Knowledge
-ASSISTANT must convert the following into Claude Code commands:
+ASSISTANT must convert this into Claude Code commands:
 ### Create Project and Verify Python
 Opens a command line interface in your project directory. Verify: You should see your project folder path in the terminal.
 ### STEP 3: Create Virtual Environment
 ```bash
 python -m venv venv
 ```
-- Creates isolated Python environment for the project
+- Creates isolated Python environment for this project
 - Prevents conflicts between different projects
 - Makes project portable and reproducible
 **Wait time:** 10-30 seconds
@@ -82,15 +74,14 @@ After:  (venv) C:\Projects\my-app>
 ```
 **Common issues:**
 - "Execution policy error" (Windows): `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
-- `(venv)` doesn't appear → Try closing and reopening terminal
+- `(venv)` doesn't appear → Close and reopen terminal
 ### STEP 5: Install Flask
 ```bash
 pip install flask
 ```
-- Downloads Flask and dependencies into virtual environment
+- Downloads Flask and dependencies (Werkzeug, Jinja2, Click) into virtual environment
 - **Wait time:** 30-60 seconds
 - Look for "Successfully installed flask-X.X.X"
-**Installed packages:** Flask, Werkzeug, Jinja2, Click, and dependencies
 **Common issues:**
 - "pip: command not found" → Virtual environment not activated
 - Permission errors → Virtual environment not activated
@@ -104,17 +95,14 @@ my-project/
 **Don't create app.py inside the venv folder!**
 ### STEP 7: Verify Installation
 ```bash
-python --version
-# Expected: Python 3.8.x or higher
-pip list
-# Expected: Flask and dependencies listed
-python -c "import flask; print(flask.__version__)"
-# Expected: Flask version number
+python --version          # Expect Python 3.8.x or higher
+pip list                  # Expect Flask and dependencies listed
+python -c "import flask; print(flask.__version__)"  # Expect version number
 ```
 ### STEP 8: Report Completion
 Report to ASSISTANT: "Setup complete! I see (venv) in my terminal and Flask is installed" or describe the error encountered.
 ## What Happens Next
-1. ASSISTANT guides through creating first Flask route
+1. Create first Flask route
 2. Write "Hello World" application
 3. Start Flask development server
 4. See first web page in browser
@@ -126,3 +114,4 @@ See `resources/verification-checklist.md` for detailed troubleshooting.
 3. **Wrong directory** → Use `cd` to navigate to project folder
 4. **Permission errors** → Virtual environment not activated
 5. **Port/firewall issues** → Address when running server
+**Remember:** Keep the terminal window with `(venv)` open while developing!

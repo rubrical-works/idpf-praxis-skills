@@ -507,6 +507,1052 @@
         "Task scheduler (simulation variant)",
         "Find the duplicate number (Floyd's cycle)"
       ]
+    },
+    {
+      "id": "layered-architecture",
+      "name": "Layered Architecture",
+      "coreIdea": "Separate concerns into layers with dependency rules, where each layer only depends on layers below it, enabling testability and independent evolution of each layer.",
+      "whenItApplies": [
+        "Complex domains needing testability and separation of concerns",
+        "Long-lived codebases requiring independent evolution of components",
+        "Systems where business logic must be isolated from infrastructure",
+        "Applications requiring multiple deployment targets or UI frontends"
+      ],
+      "subVariants": [
+        {
+          "name": "Hexagonal / Ports-and-Adapters",
+          "keyMechanism": "Core domain defines ports (interfaces); adapters implement them for specific technologies",
+          "archetypalProblem": "Swapping databases or UI frameworks without changing business logic"
+        },
+        {
+          "name": "Clean Architecture",
+          "keyMechanism": "Concentric rings with dependency rule pointing inward; entities at center, frameworks at edge",
+          "archetypalProblem": "Enterprise applications with complex domain logic and multiple delivery mechanisms"
+        },
+        {
+          "name": "Onion Architecture",
+          "keyMechanism": "Domain model at core, domain services wrap it, application services wrap those, infrastructure outermost",
+          "archetypalProblem": "Domain-driven design implementations with rich domain models"
+        },
+        {
+          "name": "Vertical Slice",
+          "keyMechanism": "Organize by feature rather than layer; each slice contains all layers for one use case",
+          "archetypalProblem": "Feature-oriented teams working independently on distinct capabilities"
+        }
+      ],
+      "redFlags": [
+        "Simple CRUD applications where layers add unnecessary indirection",
+        "Prototypes or throwaway projects where speed matters more than structure",
+        "Small scripts or utilities with minimal business logic"
+      ],
+      "classicProblems": [
+        "Enterprise applications with complex business rules",
+        "Microservices boundary definition",
+        "Systems requiring technology migration paths",
+        "Multi-platform applications sharing core logic"
+      ]
+    },
+    {
+      "id": "test-infrastructure",
+      "name": "Test Infrastructure",
+      "coreIdea": "Design the test environment as a first-class architectural concern, ensuring tests are reliable, isolated, and representative of production behavior.",
+      "whenItApplies": [
+        "E2E testing requiring realistic environment simulation",
+        "Integration testing across multiple system boundaries",
+        "CI pipeline reliability and reproducibility requirements",
+        "Applications with complex external dependencies (filesystem, network, databases)"
+      ],
+      "subVariants": [
+        {
+          "name": "Sandbox patterns",
+          "keyMechanism": "Temporary directories, mock filesystems, and isolated environments that reset between tests",
+          "archetypalProblem": "Electron app testing, CLI tool testing with filesystem side effects"
+        },
+        {
+          "name": "Fixture factories",
+          "keyMechanism": "Programmatic creation of test data with sensible defaults and composable overrides",
+          "archetypalProblem": "Database integration tests requiring complex entity graphs"
+        },
+        {
+          "name": "Environment isolation",
+          "keyMechanism": "Containers, VM snapshots, or process-level isolation ensuring no test-to-test contamination",
+          "archetypalProblem": "Parallel CI pipelines running tests against shared infrastructure"
+        },
+        {
+          "name": "Test doubles at boundaries",
+          "keyMechanism": "Mocks, stubs, and fakes placed at architectural boundaries to control external behavior",
+          "archetypalProblem": "Testing payment processing without hitting real payment APIs"
+        }
+      ],
+      "redFlags": [
+        "Unit-test-only projects with no external dependencies",
+        "Pure functions or stateless services with trivial test setup",
+        "Projects where test infrastructure cost exceeds application complexity"
+      ],
+      "classicProblems": [
+        "Electron application end-to-end testing",
+        "Database integration test suites",
+        "CI pipeline test reliability",
+        "Microservice contract testing"
+      ]
+    },
+    {
+      "id": "event-driven-architecture",
+      "name": "Event-Driven Architecture",
+      "coreIdea": "Components communicate through events, decoupling producers from consumers and enabling asynchronous, reactive workflows.",
+      "whenItApplies": [
+        "Asynchronous workflows where producers should not wait for consumers",
+        "Audit trail requirements where every state change must be recorded",
+        "Multi-consumer scenarios where the same event triggers different reactions",
+        "Systems requiring temporal decoupling between components"
+      ],
+      "subVariants": [
+        {
+          "name": "Pub/Sub",
+          "keyMechanism": "Publishers emit events to topics; subscribers receive all events on subscribed topics",
+          "archetypalProblem": "Notification systems, real-time dashboards"
+        },
+        {
+          "name": "Message Bus",
+          "keyMechanism": "Central bus routes messages between producers and consumers with guaranteed delivery",
+          "archetypalProblem": "Microservice integration, order processing pipelines"
+        },
+        {
+          "name": "Event Sourcing",
+          "keyMechanism": "Store state as an append-only sequence of events; rebuild current state by replaying",
+          "archetypalProblem": "Financial ledgers, audit-critical systems, temporal queries"
+        },
+        {
+          "name": "CQRS",
+          "keyMechanism": "Separate command (write) and query (read) models optimized for their respective access patterns",
+          "archetypalProblem": "High-read/low-write systems, complex reporting alongside transactional writes"
+        },
+        {
+          "name": "Domain Events",
+          "keyMechanism": "Business-meaningful events emitted by domain objects to trigger side effects outside the aggregate",
+          "archetypalProblem": "Order placed triggers inventory reservation, email notification, and analytics"
+        }
+      ],
+      "redFlags": [
+        "Simple request-response interactions with no async needs",
+        "Low-latency requirements where event routing adds unacceptable overhead",
+        "Systems where eventual consistency is not acceptable"
+      ],
+      "classicProblems": [
+        "Order processing with multiple downstream services",
+        "Notification and alerting systems",
+        "Activity feeds and audit logs",
+        "Real-time data synchronization across services"
+      ]
+    },
+    {
+      "id": "plugin-and-extension",
+      "name": "Plugin and Extension",
+      "coreIdea": "Design for extensibility through well-defined extension points, allowing behavior to be added or modified without changing core code.",
+      "whenItApplies": [
+        "Configurable behavior that varies by deployment or customer",
+        "Third-party extensibility requirements",
+        "Core framework with pluggable implementations",
+        "Cross-cutting concerns applied conditionally"
+      ],
+      "subVariants": [
+        {
+          "name": "Strategy Pattern",
+          "keyMechanism": "Define a family of algorithms behind an interface; swap implementations at runtime",
+          "archetypalProblem": "Payment processors, sorting strategies, rendering engines"
+        },
+        {
+          "name": "Hook Systems",
+          "keyMechanism": "Named lifecycle hooks that plugins register callbacks for; core invokes at defined points",
+          "archetypalProblem": "Git hooks, React lifecycle, WordPress actions/filters"
+        },
+        {
+          "name": "Middleware Chains",
+          "keyMechanism": "Ordered pipeline of handlers; each can transform request/response or short-circuit",
+          "archetypalProblem": "Express middleware, Redux middleware, HTTP interceptors"
+        },
+        {
+          "name": "Plugin Registries",
+          "keyMechanism": "Central registry discovers and loads plugins by convention; plugins declare capabilities via manifest",
+          "archetypalProblem": "VS Code extensions, webpack plugins, Babel plugins"
+        }
+      ],
+      "redFlags": [
+        "Fixed behavior with no variation across deployments or users",
+        "Simple applications where extension points add unnecessary complexity",
+        "Performance-critical paths where indirection cost matters"
+      ],
+      "classicProblems": [
+        "Express middleware stacks",
+        "VS Code extension development",
+        "Webpack plugin architecture",
+        "CMS theme and plugin systems"
+      ]
+    },
+    {
+      "id": "relational-modeling",
+      "name": "Relational Modeling",
+      "coreIdea": "Structure data using normalized relations with referential integrity, optimizing for consistency, complex queries, and ACID transactions.",
+      "whenItApplies": [
+        "Complex queries involving joins across multiple entities",
+        "ACID transaction requirements for data integrity",
+        "Reporting and analytics workloads with ad-hoc queries",
+        "Well-defined schemas with stable relationships"
+      ],
+      "subVariants": [
+        {
+          "name": "Normalization (3NF, BCNF)",
+          "keyMechanism": "Decompose tables to eliminate redundancy; each fact stored once",
+          "archetypalProblem": "Transactional systems with frequent writes and strict consistency"
+        },
+        {
+          "name": "Star Schema",
+          "keyMechanism": "Central fact table surrounded by dimension tables; optimized for analytical queries",
+          "archetypalProblem": "Data warehouses, business intelligence dashboards"
+        },
+        {
+          "name": "EAV (Entity-Attribute-Value)",
+          "keyMechanism": "Generic triple store within relational database; flexible but query-expensive",
+          "archetypalProblem": "Product catalogs with variable attributes, medical records"
+        },
+        {
+          "name": "Temporal Tables",
+          "keyMechanism": "Track historical state with valid-time and transaction-time columns",
+          "archetypalProblem": "Audit trails, regulatory compliance, point-in-time queries"
+        }
+      ],
+      "redFlags": [
+        "Unstructured or highly variable data without clear schema",
+        "Extreme write throughput requirements where normalization creates bottlenecks",
+        "Simple key-value access patterns with no joins"
+      ],
+      "classicProblems": [
+        "E-commerce order and inventory systems",
+        "Financial transaction processing",
+        "Enterprise resource planning (ERP)",
+        "Healthcare records with regulatory compliance"
+      ]
+    },
+    {
+      "id": "document-modeling",
+      "name": "Document Modeling",
+      "coreIdea": "Store data as self-contained documents optimized for read patterns, trading normalization for query simplicity and schema flexibility.",
+      "whenItApplies": [
+        "Flexible schemas where document structure varies across records",
+        "Hierarchical data that maps naturally to nested documents",
+        "Read-heavy workloads where denormalization improves performance",
+        "Rapid iteration where schema evolution must be frictionless"
+      ],
+      "subVariants": [
+        {
+          "name": "Embedded Documents",
+          "keyMechanism": "Nest related data within a single document; single read retrieves everything",
+          "archetypalProblem": "Blog posts with comments, user profiles with addresses"
+        },
+        {
+          "name": "Referenced Documents",
+          "keyMechanism": "Store IDs linking to other documents; application-level joins",
+          "archetypalProblem": "Many-to-many relationships, shared entities across collections"
+        },
+        {
+          "name": "Schema-on-Read",
+          "keyMechanism": "No enforced schema at write time; structure interpreted at query time",
+          "archetypalProblem": "Log ingestion, IoT telemetry, data lake queries"
+        },
+        {
+          "name": "Polymorphic Documents",
+          "keyMechanism": "Single collection stores documents of different shapes; discriminator field identifies type",
+          "archetypalProblem": "Content management with mixed content types, event stores"
+        }
+      ],
+      "redFlags": [
+        "Complex joins across multiple document types are frequent",
+        "Strict consistency and referential integrity requirements",
+        "Write patterns that update the same field across many documents"
+      ],
+      "classicProblems": [
+        "Content management systems",
+        "User profile and preference storage",
+        "Product catalogs with variable attributes",
+        "Real-time analytics event storage"
+      ]
+    },
+    {
+      "id": "polyglot-persistence",
+      "name": "Polyglot Persistence",
+      "coreIdea": "Use different storage engines for different data access patterns, optimizing each workload with the best-fit technology.",
+      "whenItApplies": [
+        "Diverse access patterns within a single application (transactional + search + caching)",
+        "Performance optimization requiring specialized storage per workload",
+        "Systems with both structured and unstructured data",
+        "Scaling requirements that differ across data types"
+      ],
+      "subVariants": [
+        {
+          "name": "SQL + NoSQL Hybrid",
+          "keyMechanism": "Relational database for transactional data alongside document store for flexible data",
+          "archetypalProblem": "E-commerce with SQL for orders and MongoDB for product catalogs"
+        },
+        {
+          "name": "Read/Write Store Separation",
+          "keyMechanism": "Optimized write store (normalized) feeds an optimized read store (denormalized)",
+          "archetypalProblem": "CQRS implementations, reporting databases fed by event streams"
+        },
+        {
+          "name": "Search Engine Overlay",
+          "keyMechanism": "Primary database synced to a search engine for full-text and faceted queries",
+          "archetypalProblem": "Product search with Elasticsearch alongside PostgreSQL for transactions"
+        },
+        {
+          "name": "Cache Layer",
+          "keyMechanism": "In-memory cache (Redis, Memcached) fronting a persistent store for hot data",
+          "archetypalProblem": "Session storage, leaderboards, rate limiting alongside persistent user data"
+        }
+      ],
+      "redFlags": [
+        "Small teams where operational burden of multiple databases is unsustainable",
+        "Simple access patterns served well by a single database",
+        "Data consistency requirements that make synchronization between stores prohibitive"
+      ],
+      "classicProblems": [
+        "E-commerce platforms (SQL for orders, Redis for sessions, Elasticsearch for search)",
+        "Social networks (graph DB for relationships, blob store for media, cache for feeds)",
+        "Analytics platforms (time-series DB for metrics, SQL for configuration, S3 for raw data)"
+      ]
+    },
+    {
+      "id": "resource-oriented",
+      "name": "Resource-Oriented",
+      "coreIdea": "Model the API as resources with standard operations, leveraging HTTP semantics for CRUD-dominant interactions with multiple clients.",
+      "whenItApplies": [
+        "CRUD-dominant data models with well-defined entities",
+        "Multiple client types (web, mobile, third-party) consuming the same API",
+        "Cacheable responses where HTTP caching reduces server load",
+        "Public APIs requiring broad developer accessibility"
+      ],
+      "subVariants": [
+        {
+          "name": "REST",
+          "keyMechanism": "Resources identified by URIs; standard HTTP methods map to operations; stateless interactions",
+          "archetypalProblem": "Public APIs, mobile backends, content management APIs"
+        },
+        {
+          "name": "HATEOAS",
+          "keyMechanism": "Responses include hypermedia links guiding clients to available state transitions",
+          "archetypalProblem": "Workflow-driven APIs, discoverable APIs with evolving capabilities"
+        },
+        {
+          "name": "Resource Nesting",
+          "keyMechanism": "Child resources nested under parent URIs to express ownership and containment",
+          "archetypalProblem": "Comments under posts, line items under orders"
+        },
+        {
+          "name": "Bulk Operations",
+          "keyMechanism": "Batch endpoints for creating, updating, or deleting multiple resources in one request",
+          "archetypalProblem": "Import/export features, batch status updates, data migration endpoints"
+        }
+      ],
+      "redFlags": [
+        "Complex workflows that don't map to CRUD operations",
+        "Real-time bidirectional communication needs",
+        "Highly interconnected data requiring multiple round trips to assemble"
+      ],
+      "classicProblems": [
+        "Public developer APIs (GitHub, Stripe, Twilio)",
+        "Mobile application backends",
+        "Content management and e-commerce APIs",
+        "Internal service APIs with well-defined entity models"
+      ]
+    },
+    {
+      "id": "query-oriented",
+      "name": "Query-Oriented",
+      "coreIdea": "Let clients specify exactly what data they need, reducing over-fetching and enabling rapid frontend iteration against complex data graphs.",
+      "whenItApplies": [
+        "Complex data graphs where different views need different subsets",
+        "Bandwidth-sensitive clients (mobile) needing minimal payloads",
+        "Rapid frontend iteration where backend changes should be minimal",
+        "Aggregation of data from multiple backend services into a single response"
+      ],
+      "subVariants": [
+        {
+          "name": "GraphQL",
+          "keyMechanism": "Typed schema with resolver functions; clients send queries specifying exact fields needed",
+          "archetypalProblem": "Social feeds, dashboards aggregating multiple data sources"
+        },
+        {
+          "name": "Query Builders",
+          "keyMechanism": "Structured query parameters allowing filtering, sorting, and field selection via URL or body",
+          "archetypalProblem": "Admin panels, report builders, data exploration tools"
+        },
+        {
+          "name": "Field Selection",
+          "keyMechanism": "Sparse fieldsets allowing clients to request only specific fields from REST-like endpoints",
+          "archetypalProblem": "Mobile APIs optimizing payload size, list views vs detail views"
+        },
+        {
+          "name": "Persisted Queries",
+          "keyMechanism": "Pre-registered query templates identified by hash; eliminates query parsing overhead and attack surface",
+          "archetypalProblem": "Production GraphQL with security constraints and performance requirements"
+        }
+      ],
+      "redFlags": [
+        "Simple data models where REST endpoints suffice",
+        "Caching-critical systems where query variability defeats cache hit rates",
+        "Small teams where GraphQL infrastructure overhead is not justified"
+      ],
+      "classicProblems": [
+        "Social media feeds with variable content types",
+        "Dashboard applications aggregating multiple data sources",
+        "Mobile applications with bandwidth constraints",
+        "Developer portals with complex data exploration"
+      ]
+    },
+    {
+      "id": "rpc-oriented",
+      "name": "RPC-Oriented",
+      "coreIdea": "Expose operations as typed function calls across process boundaries, prioritizing type safety, performance, and developer ergonomics for internal services.",
+      "whenItApplies": [
+        "Internal microservice communication with high call volume",
+        "Type safety is critical across service boundaries",
+        "Streaming data (server-push, client-push, or bidirectional)",
+        "Performance-sensitive paths where protocol overhead matters"
+      ],
+      "subVariants": [
+        {
+          "name": "gRPC (Protobuf)",
+          "keyMechanism": "Protocol Buffers define service contracts; HTTP/2 transport with streaming support",
+          "archetypalProblem": "Microservice mesh communication, mobile-to-server with code generation"
+        },
+        {
+          "name": "tRPC (TypeScript)",
+          "keyMechanism": "TypeScript types shared between client and server; no code generation needed",
+          "archetypalProblem": "Full-stack TypeScript applications, Next.js API routes"
+        },
+        {
+          "name": "JSON-RPC",
+          "keyMechanism": "Lightweight JSON-based RPC over HTTP or WebSocket; simple request-response with method names",
+          "archetypalProblem": "Ethereum node APIs, language server protocol, simple internal services"
+        },
+        {
+          "name": "Apache Thrift",
+          "keyMechanism": "Cross-language service framework with IDL and multiple transport/protocol options",
+          "archetypalProblem": "Polyglot microservice environments (Facebook, Apache ecosystem)"
+        }
+      ],
+      "redFlags": [
+        "Browser clients without a proxy layer to handle binary protocols",
+        "Human-readable debugging requirements where binary formats are opaque",
+        "Public APIs where REST discoverability is more important than performance"
+      ],
+      "classicProblems": [
+        "Microservice-to-microservice communication",
+        "Mobile-to-server with generated client libraries",
+        "Real-time streaming between services",
+        "Full-stack TypeScript API layers"
+      ]
+    },
+    {
+      "id": "distributed-transaction",
+      "name": "Distributed Transaction",
+      "coreIdea": "Coordinate state changes across multiple services, ensuring consistency when a single database transaction is not possible.",
+      "whenItApplies": [
+        "Multi-service writes that must succeed or fail together",
+        "Business processes spanning multiple bounded contexts",
+        "Consistency requirements beyond what eventual consistency provides",
+        "Compensating action workflows where partial failure must be undone"
+      ],
+      "subVariants": [
+        {
+          "name": "SAGA (Choreography)",
+          "keyMechanism": "Each service publishes events triggering the next step; compensating events handle rollback",
+          "archetypalProblem": "E-commerce order flow: reserve inventory -> charge payment -> ship"
+        },
+        {
+          "name": "SAGA (Orchestration)",
+          "keyMechanism": "Central orchestrator coordinates steps and compensations; explicit workflow definition",
+          "archetypalProblem": "Travel booking: flight + hotel + car with coordinated cancellation"
+        },
+        {
+          "name": "Two-Phase Commit (2PC)",
+          "keyMechanism": "Coordinator asks all participants to prepare, then commit or rollback atomically",
+          "archetypalProblem": "Distributed database writes, XA transactions across data sources"
+        },
+        {
+          "name": "TCC (Try-Confirm-Cancel)",
+          "keyMechanism": "Reserve resources (try), confirm reservation, or cancel if any step fails",
+          "archetypalProblem": "Seat reservation systems, inventory holds with timeout"
+        },
+        {
+          "name": "Transactional Outbox",
+          "keyMechanism": "Write events to an outbox table in the same transaction as data; relay process publishes them",
+          "archetypalProblem": "Reliable event publishing without dual-write problems"
+        }
+      ],
+      "redFlags": [
+        "Single database where local transactions suffice",
+        "Eventual consistency is acceptable and simpler patterns work",
+        "Low-volume operations where manual reconciliation is feasible"
+      ],
+      "classicProblems": [
+        "Order fulfillment across inventory, payment, and shipping services",
+        "Payment processing with multi-step verification",
+        "Travel booking with multi-vendor coordination",
+        "Financial transfers between accounts in different systems"
+      ]
+    },
+    {
+      "id": "consensus-protocol",
+      "name": "Consensus Protocol",
+      "coreIdea": "Achieve agreement among distributed nodes despite failures, ensuring consistent state across replicas or coordinated cluster behavior.",
+      "whenItApplies": [
+        "Distributed databases requiring consistent replication",
+        "Leader election in clustered systems",
+        "Replicated state machines needing deterministic execution",
+        "Conflict resolution in multi-writer scenarios"
+      ],
+      "subVariants": [
+        {
+          "name": "Raft",
+          "keyMechanism": "Leader-based consensus with term-based elections and log replication; designed for understandability",
+          "archetypalProblem": "etcd, Consul, distributed key-value stores"
+        },
+        {
+          "name": "Paxos",
+          "keyMechanism": "Proposers, acceptors, and learners reach agreement through two-phase protocol; theoretical foundation",
+          "archetypalProblem": "Google Chubby, foundational consensus in distributed systems courses"
+        },
+        {
+          "name": "CRDT (Conflict-Free Replicated Data Types)",
+          "keyMechanism": "Data structures that merge concurrent updates without coordination; eventual consistency guaranteed",
+          "archetypalProblem": "Collaborative editing, shopping carts, distributed counters"
+        },
+        {
+          "name": "Vector Clocks",
+          "keyMechanism": "Logical timestamps tracking causal ordering of events across nodes",
+          "archetypalProblem": "Conflict detection in distributed databases (Dynamo-style), causal message ordering"
+        }
+      ],
+      "redFlags": [
+        "Single-node systems where local concurrency primitives suffice",
+        "Strong consistency not needed and simpler eventual consistency works",
+        "Low-scale systems where consensus overhead is disproportionate"
+      ],
+      "classicProblems": [
+        "Distributed key-value stores (etcd, Consul)",
+        "Cluster coordination and leader election",
+        "Collaborative real-time editing",
+        "Distributed database replication"
+      ]
+    },
+    {
+      "id": "actor-model",
+      "name": "Actor Model",
+      "coreIdea": "Encapsulate state and behavior in actors that communicate exclusively via asynchronous messages, providing natural concurrency and fault isolation.",
+      "whenItApplies": [
+        "High concurrency with many independent stateful entities",
+        "Fault isolation where one component's failure must not cascade",
+        "Natural message-passing domains where entities interact asynchronously",
+        "Systems requiring supervision hierarchies for self-healing"
+      ],
+      "subVariants": [
+        {
+          "name": "Erlang/OTP-style",
+          "keyMechanism": "Lightweight processes with mailboxes; supervisors restart failed processes; let-it-crash philosophy",
+          "archetypalProblem": "Telecom switches, WhatsApp messaging, real-time bidding"
+        },
+        {
+          "name": "Akka",
+          "keyMechanism": "JVM actor framework with typed actors, clustering, and persistence; supervision trees",
+          "archetypalProblem": "Financial trading systems, IoT device management"
+        },
+        {
+          "name": "Virtual Actors (Orleans)",
+          "keyMechanism": "Actors activated on demand and transparently placed across cluster; no explicit lifecycle management",
+          "archetypalProblem": "Game servers (Halo), IoT digital twins, shopping cart per user"
+        },
+        {
+          "name": "Process Supervision Trees",
+          "keyMechanism": "Hierarchical supervisors define restart strategies (one-for-one, one-for-all) for child actors",
+          "archetypalProblem": "Self-healing services, connection pool management, workflow engines"
+        }
+      ],
+      "redFlags": [
+        "Synchronous request-response workflows where message-passing adds complexity",
+        "Shared-state-critical operations where actors must coordinate frequently",
+        "Simple stateless services where actor overhead is unnecessary"
+      ],
+      "classicProblems": [
+        "Telecom systems with millions of concurrent sessions",
+        "IoT platforms managing device state",
+        "Game servers with per-player state",
+        "Chat systems with per-conversation actors"
+      ]
+    },
+    {
+      "id": "rendering-architecture",
+      "name": "Rendering Architecture",
+      "coreIdea": "Choose when and where HTML is generated to balance SEO, time-to-interactive, and developer experience based on content and interaction patterns.",
+      "whenItApplies": [
+        "SEO requirements demanding server-rendered HTML",
+        "Time-to-interactive targets for content-heavy sites",
+        "Hybrid applications with both static and dynamic content",
+        "Progressive enhancement strategies for diverse client capabilities"
+      ],
+      "subVariants": [
+        {
+          "name": "SSR (Server-Side Rendering)",
+          "keyMechanism": "Server generates full HTML per request; client hydrates for interactivity",
+          "archetypalProblem": "E-commerce product pages, news sites, landing pages"
+        },
+        {
+          "name": "CSR (Client-Side Rendering)",
+          "keyMechanism": "Server sends minimal HTML; JavaScript renders everything in the browser",
+          "archetypalProblem": "Dashboards, admin panels, highly interactive applications"
+        },
+        {
+          "name": "ISR (Incremental Static Regeneration)",
+          "keyMechanism": "Static pages regenerated on-demand after stale time; combines static performance with dynamic freshness",
+          "archetypalProblem": "Blogs, documentation sites, product catalogs with infrequent updates"
+        },
+        {
+          "name": "Streaming SSR",
+          "keyMechanism": "Server streams HTML chunks as data becomes available; progressive rendering without waiting for all data",
+          "archetypalProblem": "Data-heavy pages with slow backend services, personalized content"
+        },
+        {
+          "name": "Islands Architecture",
+          "keyMechanism": "Static HTML with isolated interactive components (islands) hydrated independently",
+          "archetypalProblem": "Content-heavy sites with isolated interactive widgets (Astro, Fresh)"
+        }
+      ],
+      "redFlags": [
+        "Fully interactive applications where CSR is sufficient and simpler",
+        "Internal tools where SEO is irrelevant",
+        "Simple static sites where a basic static generator works"
+      ],
+      "classicProblems": [
+        "E-commerce storefronts balancing SEO and interactivity",
+        "Content publishing platforms with dynamic personalization",
+        "Documentation sites with search and navigation",
+        "Marketing sites with performance budgets"
+      ]
+    },
+    {
+      "id": "component-architecture",
+      "name": "Component Architecture",
+      "coreIdea": "Structure UI as composable, reusable building blocks with well-defined interfaces, enabling design system consistency and independent development.",
+      "whenItApplies": [
+        "Design systems requiring consistent UI patterns across applications",
+        "Shared component libraries consumed by multiple teams",
+        "Complex UIs with deeply nested interactive elements",
+        "Applications requiring accessible, theme-able UI primitives"
+      ],
+      "subVariants": [
+        {
+          "name": "Atomic Design",
+          "keyMechanism": "Hierarchy of atoms, molecules, organisms, templates, and pages; bottom-up composition",
+          "archetypalProblem": "Design system creation, style guide documentation"
+        },
+        {
+          "name": "Compound Components",
+          "keyMechanism": "Parent component shares implicit state with children; flexible composition with coordinated behavior",
+          "archetypalProblem": "Tabs, accordions, select dropdowns with customizable rendering"
+        },
+        {
+          "name": "Render Props / Slots",
+          "keyMechanism": "Components accept functions or templates that control rendering of internal parts",
+          "archetypalProblem": "Data tables with custom cell rendering, virtualized lists"
+        },
+        {
+          "name": "Headless UI",
+          "keyMechanism": "Logic and accessibility separated from presentation; consumers provide their own styling",
+          "archetypalProblem": "Accessible comboboxes, date pickers, and menus across different design systems"
+        }
+      ],
+      "redFlags": [
+        "One-off pages with no reuse potential",
+        "Simple forms where component abstraction adds overhead",
+        "Prototypes where speed matters more than reusability"
+      ],
+      "classicProblems": [
+        "Enterprise design systems (Material UI, Ant Design)",
+        "Form builders with dynamic field types",
+        "Data table components with sorting, filtering, and pagination",
+        "Accessible widget libraries"
+      ]
+    },
+    {
+      "id": "cache-architecture",
+      "name": "Cache Architecture",
+      "coreIdea": "Store computed results closer to consumers to reduce latency and load, applying caching at the appropriate tier for the access pattern.",
+      "whenItApplies": [
+        "Read-heavy workloads where the same data is requested repeatedly",
+        "Latency-sensitive applications with performance SLAs",
+        "Expensive computations or slow backend queries that can be reused",
+        "Distributed systems needing to reduce cross-service call volume"
+      ],
+      "subVariants": [
+        {
+          "name": "CDN Edge Cache",
+          "keyMechanism": "Cache static and dynamic content at edge locations geographically close to users",
+          "archetypalProblem": "Static asset delivery, API response caching for global users"
+        },
+        {
+          "name": "Application Cache (In-Memory LRU)",
+          "keyMechanism": "In-process cache with eviction policy; fastest access, limited by process memory",
+          "archetypalProblem": "Hot configuration data, parsed templates, computed aggregations"
+        },
+        {
+          "name": "Database Query Cache",
+          "keyMechanism": "Cache query results at the database or ORM layer; invalidate on writes",
+          "archetypalProblem": "Repeated analytical queries, slow join results, materialized views"
+        },
+        {
+          "name": "Multi-Tier Cache",
+          "keyMechanism": "L1 (in-process) -> L2 (distributed Redis) -> L3 (database); check each tier in order",
+          "archetypalProblem": "High-traffic web applications needing both speed and capacity"
+        }
+      ],
+      "redFlags": [
+        "Write-heavy workloads where cache invalidation dominates",
+        "Consistency-critical data where stale reads are unacceptable",
+        "Small datasets that fit entirely in memory without caching infrastructure"
+      ],
+      "classicProblems": [
+        "Content delivery for global web applications",
+        "API response caching with TTL management",
+        "Session storage and user preference caching",
+        "Database query result caching for dashboards"
+      ]
+    },
+    {
+      "id": "optimization-approach",
+      "name": "Optimization Approach",
+      "coreIdea": "Reduce resource consumption through deferred, batched, or eliminated computation, applied when measurable performance targets are not being met.",
+      "whenItApplies": [
+        "Performance budgets that are being exceeded",
+        "Large bundles causing slow initial load times",
+        "Cold start issues in serverless or container environments",
+        "Resource contention under high concurrency"
+      ],
+      "subVariants": [
+        {
+          "name": "Lazy Loading",
+          "keyMechanism": "Defer loading of resources until they are needed; reduce initial payload and startup time",
+          "archetypalProblem": "Image loading below the fold, route-based code splitting in SPAs"
+        },
+        {
+          "name": "Prefetching",
+          "keyMechanism": "Predict and load resources before they are requested; trade bandwidth for perceived speed",
+          "archetypalProblem": "Link prefetch on hover, predictive data loading, DNS prefetch"
+        },
+        {
+          "name": "Code Splitting",
+          "keyMechanism": "Break application bundle into chunks loaded on demand; reduce initial JavaScript payload",
+          "archetypalProblem": "SPA route splitting, dynamic imports for heavy features"
+        },
+        {
+          "name": "Connection Pooling",
+          "keyMechanism": "Reuse pre-established connections instead of creating new ones per request",
+          "archetypalProblem": "Database connection management, HTTP keep-alive, gRPC channel reuse"
+        },
+        {
+          "name": "Request Coalescing",
+          "keyMechanism": "Combine multiple concurrent requests for the same resource into a single backend call",
+          "archetypalProblem": "DataLoader pattern in GraphQL, singleflight in Go, cache stampede prevention"
+        }
+      ],
+      "redFlags": [
+        "Already meeting performance targets (premature optimization)",
+        "Complexity cost exceeds performance gain",
+        "Development-only environments where optimization obscures debugging"
+      ],
+      "classicProblems": [
+        "SPA bundle optimization and code splitting",
+        "Database connection management under load",
+        "Image and media loading optimization",
+        "API request batching and deduplication"
+      ]
+    },
+    {
+      "id": "auth-architecture",
+      "name": "Auth Architecture",
+      "coreIdea": "Verify identity and establish trust for system access, choosing the authentication mechanism that matches the client type, security requirements, and user experience goals.",
+      "whenItApplies": [
+        "User-facing applications requiring login and session management",
+        "Service-to-service authentication in distributed systems",
+        "Multi-tenant systems needing identity isolation",
+        "API access requiring credential management"
+      ],
+      "subVariants": [
+        {
+          "name": "Session-Based (Server-Side)",
+          "keyMechanism": "Server stores session state; client sends session ID via cookie; server validates on each request",
+          "archetypalProblem": "Traditional web applications, server-rendered sites"
+        },
+        {
+          "name": "Token-Based (JWT)",
+          "keyMechanism": "Self-contained signed tokens carrying claims; stateless server validation",
+          "archetypalProblem": "SPA authentication, mobile app auth, stateless API access"
+        },
+        {
+          "name": "OAuth2/OIDC Flows",
+          "keyMechanism": "Delegated authorization and federated identity; authorization code, client credentials, device flows",
+          "archetypalProblem": "Social login, third-party API access, enterprise SSO"
+        },
+        {
+          "name": "API Keys",
+          "keyMechanism": "Long-lived secret tokens identifying the calling application; simple but limited",
+          "archetypalProblem": "Developer API access, service integration, webhook verification"
+        },
+        {
+          "name": "mTLS (Mutual TLS)",
+          "keyMechanism": "Both client and server present certificates; transport-layer identity verification",
+          "archetypalProblem": "Service mesh authentication, zero-trust network access"
+        }
+      ],
+      "redFlags": [
+        "Public read-only APIs where authentication adds unnecessary friction",
+        "Internal tools in trusted networks where simpler mechanisms suffice",
+        "Prototypes where auth complexity delays core feature development"
+      ],
+      "classicProblems": [
+        "SaaS application login and session management",
+        "Mobile application authentication flows",
+        "Microservice mesh identity and trust",
+        "Third-party API integration with OAuth2"
+      ]
+    },
+    {
+      "id": "authorization-model",
+      "name": "Authorization Model",
+      "coreIdea": "Determine what authenticated entities are allowed to do, selecting the model that matches the complexity of permission hierarchies and audit requirements.",
+      "whenItApplies": [
+        "Complex permission hierarchies with multiple roles and scopes",
+        "Multi-tenant systems where data isolation is critical",
+        "Audit requirements demanding explainable access decisions",
+        "Dynamic permissions based on resource relationships or attributes"
+      ],
+      "subVariants": [
+        {
+          "name": "RBAC (Role-Based Access Control)",
+          "keyMechanism": "Permissions assigned to roles; users assigned to roles; simple and widely understood",
+          "archetypalProblem": "Admin/editor/viewer access levels, departmental access control"
+        },
+        {
+          "name": "ABAC (Attribute-Based Access Control)",
+          "keyMechanism": "Access decisions based on attributes of user, resource, and environment; highly flexible",
+          "archetypalProblem": "Time-based access, location-based restrictions, classification-based document access"
+        },
+        {
+          "name": "ReBAC (Relationship-Based Access Control)",
+          "keyMechanism": "Access determined by relationships between entities in a graph; supports inheritance and nesting",
+          "archetypalProblem": "Google Drive sharing model, organizational hierarchies, social network privacy"
+        },
+        {
+          "name": "Policy-as-Code (OPA/Cedar)",
+          "keyMechanism": "Authorization rules defined in a declarative policy language; evaluated by a policy engine",
+          "archetypalProblem": "Enterprise IAM with auditable policies, multi-service authorization consistency"
+        }
+      ],
+      "redFlags": [
+        "Single-role applications where owner-only access is sufficient",
+        "Simple public/private visibility without granular permissions",
+        "Small applications where hardcoded checks are clear and maintainable"
+      ],
+      "classicProblems": [
+        "Enterprise identity and access management",
+        "Document sharing with granular permissions",
+        "Healthcare systems with patient data access controls",
+        "Multi-tenant SaaS with tenant isolation"
+      ]
+    },
+    {
+      "id": "deployment-model",
+      "name": "Deployment Model",
+      "coreIdea": "Strategy for releasing new versions with controlled risk, balancing deployment speed with the ability to detect and recover from problems.",
+      "whenItApplies": [
+        "Production deployments requiring zero or minimal downtime",
+        "Gradual rollout needs to limit blast radius of defects",
+        "A/B testing or feature experimentation requirements",
+        "Regulated environments requiring deployment audit trails"
+      ],
+      "subVariants": [
+        {
+          "name": "Blue-Green",
+          "keyMechanism": "Two identical environments; deploy to inactive, swap traffic atomically, keep old as rollback",
+          "archetypalProblem": "Database migration deployments, critical service updates"
+        },
+        {
+          "name": "Canary",
+          "keyMechanism": "Route small percentage of traffic to new version; monitor metrics; gradually increase",
+          "archetypalProblem": "SaaS releases with error rate monitoring, API version rollouts"
+        },
+        {
+          "name": "Rolling",
+          "keyMechanism": "Replace instances incrementally; always some old and some new running during deployment",
+          "archetypalProblem": "Kubernetes deployments, auto-scaling group updates"
+        },
+        {
+          "name": "Feature Flags",
+          "keyMechanism": "Deploy code dark; enable features per user/segment via runtime configuration",
+          "archetypalProblem": "Trunk-based development, gradual feature rollout, kill switches"
+        },
+        {
+          "name": "A/B Testing",
+          "keyMechanism": "Split traffic between variants; measure business metrics to determine winner",
+          "archetypalProblem": "UI experiments, pricing page optimization, onboarding flow testing"
+        }
+      ],
+      "redFlags": [
+        "Development-only environments where deployment strategy is irrelevant",
+        "Single-user systems with no uptime requirements",
+        "Batch jobs where scheduled restarts are acceptable"
+      ],
+      "classicProblems": [
+        "SaaS continuous deployment pipelines",
+        "Mobile app staged rollouts",
+        "Infrastructure migration with zero downtime",
+        "Feature experimentation platforms"
+      ]
+    },
+    {
+      "id": "scaling-architecture",
+      "name": "Scaling Architecture",
+      "coreIdea": "Handle increasing load by adding capacity, choosing the scaling strategy that matches the workload characteristics and cost constraints.",
+      "whenItApplies": [
+        "Traffic growth exceeding single-instance capacity",
+        "Variable load patterns with peaks and valleys",
+        "Cost optimization requiring right-sizing of resources",
+        "Availability requirements demanding redundancy"
+      ],
+      "subVariants": [
+        {
+          "name": "Horizontal Scaling",
+          "keyMechanism": "Add more instances behind a load balancer; requires stateless or externalized state",
+          "archetypalProblem": "Web application servers, API gateways, worker pools"
+        },
+        {
+          "name": "Vertical Scaling",
+          "keyMechanism": "Increase CPU, memory, or storage of existing instances; simpler but has upper limits",
+          "archetypalProblem": "Database servers, in-memory caches, single-threaded bottlenecks"
+        },
+        {
+          "name": "Serverless/FaaS",
+          "keyMechanism": "Cloud provider manages scaling to zero and up; pay per invocation; no server management",
+          "archetypalProblem": "Event-driven processing, webhook handlers, scheduled tasks"
+        },
+        {
+          "name": "Edge Compute",
+          "keyMechanism": "Run computation at CDN edge locations close to users; reduce latency for geographically distributed users",
+          "archetypalProblem": "Personalization at edge, A/B testing, auth token validation"
+        }
+      ],
+      "redFlags": [
+        "Fixed load with no growth trajectory where scaling adds unnecessary complexity",
+        "Single-machine workloads that are not resource-constrained",
+        "Development and testing environments"
+      ],
+      "classicProblems": [
+        "Web applications handling traffic spikes",
+        "API services with variable request rates",
+        "Batch processing with elastic compute",
+        "Global applications requiring low-latency access"
+      ]
+    },
+    {
+      "id": "observability-pillar",
+      "name": "Observability Pillar",
+      "coreIdea": "Gain insight into system behavior through telemetry, choosing the observability signal that best answers the questions you need to ask about your system.",
+      "whenItApplies": [
+        "Production systems requiring operational visibility",
+        "Debugging distributed system issues across service boundaries",
+        "SLO management and reliability engineering",
+        "Performance optimization requiring data-driven decisions"
+      ],
+      "subVariants": [
+        {
+          "name": "Metrics-Driven",
+          "keyMechanism": "Numeric time-series data (counters, gauges, histograms) aggregated and alerted on",
+          "archetypalProblem": "Dashboard monitoring, SLO tracking, capacity planning"
+        },
+        {
+          "name": "Log-Driven",
+          "keyMechanism": "Structured event records with context; searchable and filterable for investigation",
+          "archetypalProblem": "Error investigation, audit trails, debugging request flows"
+        },
+        {
+          "name": "Trace-Driven",
+          "keyMechanism": "Distributed traces following requests across service boundaries with timing data",
+          "archetypalProblem": "Latency investigation in microservices, dependency mapping, bottleneck identification"
+        },
+        {
+          "name": "Profile-Driven",
+          "keyMechanism": "CPU, memory, and allocation profiling to identify hot paths and resource consumption",
+          "archetypalProblem": "Memory leak detection, CPU hotspot optimization, garbage collection tuning"
+        },
+        {
+          "name": "Continuous Profiling",
+          "keyMechanism": "Always-on low-overhead profiling in production; correlate profiles with traces and metrics",
+          "archetypalProblem": "Production performance regression detection, cost attribution per endpoint"
+        }
+      ],
+      "redFlags": [
+        "Development-only environments where print debugging suffices",
+        "Simple single-process applications with obvious failure modes",
+        "Cost-constrained environments where telemetry overhead is prohibitive"
+      ],
+      "classicProblems": [
+        "Microservices monitoring and alerting",
+        "Incident response and root cause analysis",
+        "SLO definition and error budget tracking",
+        "Performance regression detection in CI/CD"
+      ]
+    },
+    {
+      "id": "monitoring-philosophy",
+      "name": "Monitoring Philosophy",
+      "coreIdea": "Structured approach to defining what to monitor and how to respond, reducing alert fatigue and ensuring actionable observability.",
+      "whenItApplies": [
+        "Establishing monitoring strategy for new services",
+        "Alert fatigue reduction when too many non-actionable alerts fire",
+        "SRE practices requiring systematic reliability measurement",
+        "On-call optimization to reduce toil and improve response time"
+      ],
+      "subVariants": [
+        {
+          "name": "USE Method",
+          "keyMechanism": "For every resource: check Utilization, Saturation, and Errors; systematic bottleneck identification",
+          "archetypalProblem": "Infrastructure monitoring, capacity planning, hardware troubleshooting"
+        },
+        {
+          "name": "RED Method",
+          "keyMechanism": "For every service: track Rate, Errors, and Duration; user-facing health at a glance",
+          "archetypalProblem": "Microservice health dashboards, API monitoring, request-driven services"
+        },
+        {
+          "name": "Golden Signals",
+          "keyMechanism": "Latency, traffic, errors, and saturation as the four essential signals for any service",
+          "archetypalProblem": "Google SRE monitoring, service-level dashboards, on-call runbooks"
+        },
+        {
+          "name": "SLO-Based Alerting",
+          "keyMechanism": "Alert on error budget burn rate rather than individual failures; reduces noise, focuses on user impact",
+          "archetypalProblem": "Multi-window burn rate alerts, error budget policies, reliability contracts"
+        }
+      ],
+      "redFlags": [
+        "Ad-hoc monitoring is sufficient for the system's scale and criticality",
+        "Single-developer projects where formal monitoring methodology adds overhead",
+        "Non-production environments where monitoring investment is premature"
+      ],
+      "classicProblems": [
+        "SRE team monitoring strategy definition",
+        "On-call alert optimization and fatigue reduction",
+        "Service reliability contracts with SLO/SLA",
+        "Infrastructure capacity planning and forecasting"
+      ]
     }
   ],
   "crossParadigmGuide": [
@@ -541,6 +1587,98 @@
     {
       "signal": "Problem has self-similar recursive structure",
       "leanToward": "Divide and conquer"
+    },
+    {
+      "signal": "Complex domain with testability needs",
+      "leanToward": "Layered Architecture"
+    },
+    {
+      "signal": "E2E test environment design",
+      "leanToward": "Test Infrastructure"
+    },
+    {
+      "signal": "Async workflows or event audit trail",
+      "leanToward": "Event-Driven Architecture"
+    },
+    {
+      "signal": "Extensible behavior with third-party plugins",
+      "leanToward": "Plugin and Extension"
+    },
+    {
+      "signal": "Complex queries with ACID transactions",
+      "leanToward": "Relational Modeling"
+    },
+    {
+      "signal": "Flexible schema with read-heavy access",
+      "leanToward": "Document Modeling"
+    },
+    {
+      "signal": "Multiple storage engines for different workloads",
+      "leanToward": "Polyglot Persistence"
+    },
+    {
+      "signal": "CRUD-dominant API with multiple clients",
+      "leanToward": "Resource-Oriented"
+    },
+    {
+      "signal": "Complex data graph with bandwidth-sensitive clients",
+      "leanToward": "Query-Oriented"
+    },
+    {
+      "signal": "Type-safe internal service communication",
+      "leanToward": "RPC-Oriented"
+    },
+    {
+      "signal": "Multi-service state coordination",
+      "leanToward": "Distributed Transaction"
+    },
+    {
+      "signal": "Distributed node agreement",
+      "leanToward": "Consensus Protocol"
+    },
+    {
+      "signal": "High concurrency with fault isolation",
+      "leanToward": "Actor Model"
+    },
+    {
+      "signal": "SEO-critical content rendering",
+      "leanToward": "Rendering Architecture"
+    },
+    {
+      "signal": "Reusable UI component library",
+      "leanToward": "Component Architecture"
+    },
+    {
+      "signal": "Read-heavy with latency targets",
+      "leanToward": "Cache Architecture"
+    },
+    {
+      "signal": "Performance budget optimization",
+      "leanToward": "Optimization Approach"
+    },
+    {
+      "signal": "User authentication and session management",
+      "leanToward": "Auth Architecture"
+    },
+    {
+      "signal": "Complex permission hierarchies",
+      "leanToward": "Authorization Model"
+    },
+    {
+      "signal": "Zero-downtime production releases",
+      "leanToward": "Deployment Model"
+    },
+    {
+      "signal": "Traffic growth and variable load",
+      "leanToward": "Scaling Architecture"
+    },
+    {
+      "signal": "Production system telemetry",
+      "leanToward": "Observability Pillar"
+    },
+    {
+      "signal": "Structured monitoring strategy",
+      "leanToward": "Monitoring Philosophy"
     }
   ]
 }

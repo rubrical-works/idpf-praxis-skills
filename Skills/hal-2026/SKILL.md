@@ -1,9 +1,6 @@
 ---
 name: hal-2026
-description: >-
-  JSON-driven parallel solution explorer with schema-validated references,
-  deterministic path selection via structured signal matching, and
-  selective loading for minimal token usage.
+description: JSON-driven parallel solution explorer with schema-validated references, deterministic path selection via structured signal matching, and selective loading for minimal token usage.
 type: invokable
 version: "1.0.0"
 frameworkCompatibility: ">=0.80.0"
@@ -24,6 +21,7 @@ Fan out into N independent solution paths in parallel, then synthesize the best 
 ```
 PRIMARY AGENT
      │
+     ├── 0. [Optional] Detect domain → load relevant skills for context
      ├── 1. Parse problem → extract signal keywords
      ├── 2. Match signals → load matched JSON entries selectively
      ├── 3. Score matches → select N paths (deterministic)
@@ -34,16 +32,31 @@ PRIMARY AGENT
      │       ├── Path 2: [approach] ──► JSON report
      │       └── Path N: [approach] ──► JSON report
      │
-     └── 6. SYNTHESIS: validate, score, optionally hybridize ──► recommendation
+     ├── 6. SYNTHESIS: validate, score, optionally hybridize ──► recommendation
+     └── 7. [Default] Write exploration proposal to Proposal/HAL-{slug}.md
 ```
+**Opt-out:** Pass `--no-proposal` to skip document generation (Step 7).
+## Step 0 — Context Gathering (Optional)
+**Skip for algorithmic-only problems** (competitive programming, data structure selection, pure algorithm design).
+**Run for architecture/design problems** — existing codebases, infrastructure decisions, testing strategies, system design.
+### Domain Detection
+Scan problem for keywords: architecture, design, infrastructure, testing, deployment, database, API, auth, cache, scale, microservice, pipeline, CI/CD, sandbox, migration, security. If any match, proceed with context gathering.
+### Skill Loading
+Read `resources/skill-context-map.json` for domain-to-skill mapping.
+- **Maximum 3 skills** per invocation
+- Select by relevance to detected keywords (highest match count first)
+- Loading is **read-only** — context for path selection, not implementation
+- If `codebase-analysis` is relevant AND existing codebase present, prioritize it
+### What Context Provides
+Loaded skills enrich Step 1's signal extraction — e.g., knowing PostgreSQL boosts database signals, Playwright boosts test infrastructure signals. Context is passed as additional keywords and constraints; it does not change the signal matching algorithm.
 ## Step 1 — Parse Problem and Match Signals
-1. Parse the problem — identify core algorithmic challenge, constraints, success criteria
-2. Extract signal keywords from the problem statement
+1. Parse the problem — identify core challenge, constraints, success criteria
+2. Extract signal keywords from problem statement and Step 0 context (if run)
 3. Read `resources/cross-references.json` — match keywords against `signals[].keywords` arrays
 4. For each matched signal, collect paradigm, structure, and strategy references with weights
 5. Aggregate scores — highest cumulative weights are best candidates
 ### Selective Loading
-For each top-scoring paradigm ID, read only that entry from `resources/paradigms.json` (matching `id`). Do NOT load the entire file. Repeat for `resources/structures.json` and `resources/strategies.json` — load only matched entries.
+For each top-scoring paradigm ID, read only that entry from `resources/paradigms.json` (matching `id`). Do NOT load the entire file. Repeat for `resources/structures.json` and `resources/strategies.json`.
 ### No Signal Matches
 If no signals match: report "No matching paradigms found for the given problem characteristics" with unmatched keywords. Suggest user broaden or rephrase. **Do not proceed to subagent dispatch.**
 ## Step 2 — Determine N and Name Paths
@@ -54,9 +67,9 @@ If no signals match: report "No matching paradigms found for the given problem c
 | Multiple competing paradigms with real trade-offs | 3 (default) |
 | Underspecified or unusual constraint combinations | 4 |
 | User explicitly specifies (e.g., `--paths 3`) | User's N |
-**Never go below 2.** Above 4 is rarely useful — prefer depth over breadth.
+**Never below 2.** Above 4 rarely useful — prefer depth over breadth.
 ### Path Naming
-Encode **both** paradigm and key structure/strategy. Use loaded JSON entries for specific, non-overlapping names.
+Encode **both** paradigm and key structure/strategy. Non-overlapping names from loaded JSON entries.
 ```
 ✅ "Min-heap greedy with lazy deletion"
 ✅ "Bottom-up interval DP on sorted endpoints"
@@ -87,7 +100,7 @@ Each subagent performs **reasoning and planning only** — no code execution:
 - Note key implementation considerations
 - Honest assessment of strengths and weaknesses
 ### Report Format
-Subagents return JSON conforming to `resources/report-template.json`. Read `resources/report-schema.json` to validate each report. If malformed: identify failed fields, exclude from synthesis, warn user.
+Subagents return JSON conforming to `resources/report-template.json`. Read `resources/report-schema.json` to validate. If malformed: identify failed fields, exclude from synthesis, warn user.
 ## Step 4 — Synthesis
 Read `resources/synthesis-config.json` for scoring rubric. Follow defined phases:
 1. **Validate** — check complexity claims and edge case reasoning independently
@@ -110,6 +123,29 @@ How: [1–2 sentences on combination and gains]
 ### Implementation Sketch
 [Pseudocode or high-level outline — enough to communicate the algorithm unambiguously.]
 ```
+## Step 5 — Generate Exploration Proposal Document
+**Skip if `--no-proposal` was specified.**
+Write to `Proposal/HAL-{problem-slug}.md` (lowercase-hyphenated summary of problem title).
+### Document Structure
+Read `resources/proposal-template.json` for structure. Sections:
+1. **Metadata** — Date, skill name, signals matched, paths explored count
+2. **Problem Statement** — Original user query
+3. **Context Sources** (optional) — Present only when Step 0 ran. Lists loaded skills, codebase analysis findings, tech stack. Omitted for algorithmic-only problems.
+4. **Signal Analysis** — Matched signals with weights, loaded paradigms/structures/strategies
+5. **Path sections** (one per path) — Brief given, full structured report (core idea, walkthrough, complexity, edge cases, strengths/weaknesses, fit score)
+6. **Synthesis** — Scoring matrix, validation notes, hybridization analysis
+7. **Recommendation** — Final recommendation with implementation sketch
+8. **Rejected Paths** — Considered but not selected, with reasons
+### Capture Points
+| Step | What to Capture |
+|------|----------------|
+| Step 0 | Loaded skills, domain detection results (if run) |
+| Step 1 | Matched signals, keyword extractions, loaded JSON entry IDs |
+| Step 2 | Selected paths, rejected paths with reasons, N value |
+| Step 3 | Each subagent's filled brief |
+| Step 3 (return) | Each subagent's JSON report |
+| Step 4 | Scoring matrix, validation notes, hybrid analysis, recommendation |
+Document generation failure is **non-blocking** — conversation output remains valid.
 ## Error Handling
 | Failure Mode | Expected Behavior |
 |---|---|
@@ -130,10 +166,12 @@ How: [1–2 sentences on combination and gains]
 All in `resources/`. Each JSON data file has a colocated schema for validation.
 | File | Purpose |
 |---|---|
-| `cross-references.json` | Decision matrix: maps problem signals to paradigm/structure/strategy keys |
-| `paradigms.json` | Dimension 1: algorithmic paradigms (8 families with sub-variants) |
-| `structures.json` | Dimension 2: data structures (8 families with variants) |
-| `strategies.json` | Dimension 3: decomposition strategies (9 strategies) |
+| `cross-references.json` | Decision matrix: maps problem signals → paradigm/structure/strategy keys |
+| `paradigms.json` | Dimension 1: paradigms (31 families — 8 algorithmic + 23 software engineering) |
+| `structures.json` | Dimension 2: structures (22 families — 8 algorithmic + 14 software engineering) |
+| `strategies.json` | Dimension 3: strategies (22 families — 9 algorithmic + 13 software engineering) |
 | `brief-template.json` | Subagent brief slot template with constraint fields |
 | `report-template.json` | Expected subagent report structure |
 | `synthesis-config.json` | Scoring rubric and synthesis rules |
+| `skill-context-map.json` | Domain-to-skill mapping for Step 0 context gathering |
+| `proposal-template.json` | Document structure template for Step 5 proposal generation |

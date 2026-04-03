@@ -1,5 +1,5 @@
 # Common Playwright Errors and Solutions
-**Version:** v0.7.1
+**Version:** v0.8.0
 ## Installation Errors
 ### "Executable doesn't exist"
 ```

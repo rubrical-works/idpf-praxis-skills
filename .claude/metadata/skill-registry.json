@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-03T18:55:33.483Z",
+  "generatedAt": "2026-04-03T21:02:30.676Z",
   "version": "0.1.0",
   "skillCount": 41,
   "skills": [
@@ -290,7 +290,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "341e2996bf8564caafe05f7f204f06b7c87f0d6216fc1908ff2edc95037fab99",
+      "checksum": "ba57ca0109dbad1cde6411378c388bb6e7e373c57beb4c46e1e371eb346b7779",
       "category": "platform",
       "relevantTechStack": [
         "flask",
@@ -302,12 +302,12 @@
     },
     {
       "name": "hal-2026",
-      "description": ">-",
+      "description": "JSON-driven parallel solution explorer with schema-validated references, deterministic path selection via structured signal matching, and selective loading for minimal token usage.",
       "triggers": [],
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-03",
-      "checksum": "7596250672547e5e8fc8a101b6cbf5f1a30c2a6a2517a03ba1f6dc50d8d77a23",
+      "checksum": "49648292a0bf94f053b70402ca6c0b7d48f14c8e22bdc368d70ceadf1218a51f",
       "category": "problem-solving",
       "relevantTechStack": [
         "algorithms",

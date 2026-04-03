@@ -449,6 +449,669 @@
         "Operations require ordering or range queries (bits don't have positional meaning beyond index)",
         "Problem involves arithmetic that doesn't reduce to bit tricks"
       ]
+    },
+    {
+      "id": "service-container",
+      "name": "Service Container / Dependency Injection",
+      "coreContract": "Manage object creation and dependency resolution through a centralized registry. Consumers declare dependencies; the container provides concrete implementations at construction time or on demand.",
+      "whenToPrefer": [
+        "Testability requires swapping real implementations for mocks or stubs",
+        "Loose coupling between modules with configurable dependency graphs",
+        "Multiple implementations of the same interface selected at runtime"
+      ],
+      "variants": [
+        {
+          "name": "Constructor injection",
+          "characteristic": "Dependencies passed as constructor parameters; immutable after creation",
+          "bestUsedWhen": "Default choice for DI; clear dependency declaration, easy to test"
+        },
+        {
+          "name": "Property injection",
+          "characteristic": "Dependencies set via setters or public properties after construction",
+          "bestUsedWhen": "Optional dependencies, circular dependency resolution, framework-managed lifecycle"
+        },
+        {
+          "name": "Service locator",
+          "characteristic": "Global registry queried at runtime; consumers pull dependencies",
+          "bestUsedWhen": "Legacy codebases, plugin systems where consumers are unknown at compile time"
+        },
+        {
+          "name": "Factory registry",
+          "characteristic": "Registry maps keys to factory functions; creates instances on demand",
+          "bestUsedWhen": "Dynamic object creation, strategy selection, handler dispatch by type"
+        }
+      ],
+      "implementationTraps": [
+        "Service locator hides dependencies — call sites don't declare what they need, making refactoring and testing harder",
+        "Circular dependencies cause infinite loops or incomplete initialization; detect cycles at registration time",
+        "Singleton vs transient lifetime confusion: shared mutable state leaks between consumers if lifetime is wrong",
+        "Over-abstraction: injecting interfaces for every dependency when only one implementation will ever exist"
+      ],
+      "disqualifiers": [
+        "Simple scripts or utilities with no dependency graph",
+        "Performance-critical hot paths where indirection overhead matters",
+        "Projects with fewer than 3-4 modules — direct instantiation is simpler"
+      ]
+    },
+    {
+      "id": "message-channel",
+      "name": "Message Channel / Event Bus",
+      "coreContract": "Decouple producers from consumers by routing messages through a shared channel. Publishers emit events without knowing who listens; subscribers react without knowing who published.",
+      "whenToPrefer": [
+        "Decoupled communication between modules or processes",
+        "Async workflows where producer should not block on consumer",
+        "Cross-process or cross-service messaging"
+      ],
+      "variants": [
+        {
+          "name": "In-process event emitter",
+          "characteristic": "Synchronous or microtask-based dispatch within a single process",
+          "bestUsedWhen": "Module decoupling in Node.js/browser, UI component communication"
+        },
+        {
+          "name": "IPC channel (Electron/Node)",
+          "characteristic": "Structured message passing between OS processes with serialization boundary",
+          "bestUsedWhen": "Electron main/renderer communication, Node child_process, worker threads"
+        },
+        {
+          "name": "Message broker (RabbitMQ/Redis pub-sub)",
+          "characteristic": "Network-based message routing with persistence, fan-out, and acknowledgment",
+          "bestUsedWhen": "Microservice communication, event-driven architecture, workload distribution"
+        },
+        {
+          "name": "Command bus (CQRS-style)",
+          "characteristic": "One-to-one dispatch: each command has exactly one handler",
+          "bestUsedWhen": "CQRS pattern, explicit command/query separation, audit trail"
+        }
+      ],
+      "implementationTraps": [
+        "Memory leaks from unremoved event listeners — always unsubscribe on teardown",
+        "Event ordering assumptions: async channels may deliver out of order; design for idempotency",
+        "Serialization boundary: IPC and broker channels require serializable payloads — no functions, circular refs, or class instances",
+        "Silent failures: events with no listeners vanish silently; add dead-letter or unhandled-event logging"
+      ],
+      "disqualifiers": [
+        "Synchronous function call is sufficient and simpler",
+        "Single-process application with no isolation or decoupling needs",
+        "Strict ordering and transactional guarantees required without additional infrastructure"
+      ]
+    },
+    {
+      "id": "sandbox-environment",
+      "name": "Sandbox Environment / Test Isolation",
+      "coreContract": "Create an isolated execution context where side effects (filesystem, environment, network, process state) are contained and do not leak into the host or other tests.",
+      "whenToPrefer": [
+        "Integration or E2E tests that touch filesystem, network, or environment variables",
+        "CI pipelines requiring hermetic test execution",
+        "Test isolation to prevent cross-test contamination"
+      ],
+      "variants": [
+        {
+          "name": "Temp directory isolation",
+          "characteristic": "Tests operate in an OS-provided temporary directory; cleaned up after each run",
+          "bestUsedWhen": "File I/O tests, config file generation, snapshot testing"
+        },
+        {
+          "name": "Virtual/mock filesystem",
+          "characteristic": "In-memory filesystem that intercepts fs calls without touching disk",
+          "bestUsedWhen": "Unit-level file tests, fast feedback loops, no disk cleanup needed"
+        },
+        {
+          "name": "Env var sandboxing",
+          "characteristic": "Save, override, and restore environment variables per test",
+          "bestUsedWhen": "Testing configuration layers, feature flag behavior, multi-environment logic"
+        },
+        {
+          "name": "Process fork with clean state",
+          "characteristic": "Spawn a child process with controlled env, args, and working directory",
+          "bestUsedWhen": "CLI tool testing, testing process lifecycle, signal handling"
+        },
+        {
+          "name": "Docker container isolation",
+          "characteristic": "Full OS-level isolation with reproducible image and network namespace",
+          "bestUsedWhen": "Database integration tests, multi-service E2E, environment parity with production"
+        }
+      ],
+      "implementationTraps": [
+        "Temp directory cleanup failures leave test artifacts on disk; use try/finally or afterEach hooks",
+        "Mock filesystem divergence from real fs behavior (permissions, symlinks, encoding) causes false positives",
+        "Env var restoration order matters when tests run in parallel — use per-test snapshots, not global save/restore",
+        "Docker startup latency can dominate test runtime; use persistent containers with state reset between tests"
+      ],
+      "disqualifiers": [
+        "Unit tests with mocks and stubs provide sufficient isolation",
+        "No file, process, or environment side effects in the code under test",
+        "Test runtime budget does not allow container or process startup overhead"
+      ]
+    },
+    {
+      "id": "configuration-layer",
+      "name": "Configuration Layer",
+      "coreContract": "Externalize runtime settings from code into a layered, validated, environment-aware configuration system. Later layers override earlier ones; schemas catch invalid values before they reach application logic.",
+      "whenToPrefer": [
+        "Multi-environment deployment (dev, staging, production) with different settings",
+        "Gradual feature rollout via feature flags",
+        "Validated settings that must conform to a known schema"
+      ],
+      "variants": [
+        {
+          "name": "Environment variable cascade (dotenv)",
+          "characteristic": "Layered .env files with precedence: .env.local > .env.{NODE_ENV} > .env",
+          "bestUsedWhen": "12-factor apps, container deployments, platform-provided config"
+        },
+        {
+          "name": "Feature flag service (LaunchDarkly, Unleash)",
+          "characteristic": "Remote flag evaluation with targeting rules, percentage rollouts, kill switches",
+          "bestUsedWhen": "Gradual rollouts, A/B testing, instant kill switch without deploy"
+        },
+        {
+          "name": "Schema-validated JSON/YAML config",
+          "characteristic": "Config files validated against JSON Schema or Zod/Yup at load time",
+          "bestUsedWhen": "Complex configuration with nested objects, type safety, documentation-as-schema"
+        },
+        {
+          "name": "Runtime config reload",
+          "characteristic": "Watch config source for changes; hot-reload without process restart",
+          "bestUsedWhen": "Long-running services, tuning parameters in production, feature flag sync"
+        },
+        {
+          "name": "Config inheritance (base + override)",
+          "characteristic": "Base config merged with environment-specific overrides using deep merge",
+          "bestUsedWhen": "Monorepo shared config, white-label apps, tenant-specific settings"
+        }
+      ],
+      "implementationTraps": [
+        "Env var type coercion: everything is a string — '0' is truthy in JS; parse explicitly",
+        "Secret leakage: config dumps or error messages may expose sensitive values; redact before logging",
+        "Override precedence confusion: document the merge order clearly; conflicting sources cause silent bugs",
+        "Schema drift: config schema and code expectations diverge over time; validate at startup, not just at build"
+      ],
+      "disqualifiers": [
+        "Single-environment application with no deployment variation",
+        "Hardcoded values are acceptable and unlikely to change",
+        "Configuration complexity exceeds the application complexity it serves"
+      ]
+    },
+    {
+      "id": "api-gateway",
+      "name": "API Gateway / Edge Layer",
+      "coreContract": "A single entry point that routes, transforms, authenticates, and rate-limits requests before they reach backend services. Clients see one API surface; the gateway handles cross-cutting concerns.",
+      "whenToPrefer": [
+        "Multiple backend services behind a unified API surface",
+        "Auth consolidation: one place for token validation, API keys, OAuth",
+        "Rate limiting, request transformation, or response aggregation at the edge"
+      ],
+      "variants": [
+        {
+          "name": "Reverse proxy (nginx, Envoy)",
+          "characteristic": "Path-based routing, TLS termination, load balancing; no application logic",
+          "bestUsedWhen": "Static routing, TLS offload, simple load balancing"
+        },
+        {
+          "name": "Backend-for-frontend (BFF)",
+          "characteristic": "Dedicated backend per client type (web, mobile, IoT) aggregating backend calls",
+          "bestUsedWhen": "Different clients need different data shapes, reduce over-fetching"
+        },
+        {
+          "name": "Edge function (Cloudflare Workers, Lambda@Edge)",
+          "characteristic": "Code runs at CDN edge; sub-millisecond cold start, geographic distribution",
+          "bestUsedWhen": "A/B testing at edge, geo-routing, auth token validation, header manipulation"
+        },
+        {
+          "name": "API gateway (Kong, AWS API Gateway)",
+          "characteristic": "Full-featured gateway with plugins for auth, rate limiting, transformation, observability",
+          "bestUsedWhen": "Enterprise API management, developer portal, quota enforcement, request/response transformation"
+        }
+      ],
+      "implementationTraps": [
+        "Single point of failure: gateway outage takes down all services; deploy with redundancy and health checks",
+        "Latency overhead: every request pays gateway processing cost; minimize middleware chain",
+        "Configuration sprawl: gateway routing rules become a second source of truth alongside service code",
+        "Over-aggregation in BFF: putting business logic in the gateway instead of backend services"
+      ],
+      "disqualifiers": [
+        "Single backend service with direct client access",
+        "Internal service-to-service communication that doesn't need edge concerns",
+        "Latency-sensitive paths where gateway overhead is unacceptable"
+      ]
+    },
+    {
+      "id": "contract-definition",
+      "name": "Contract Definition / API-First Design",
+      "coreContract": "Define the interface between systems as a machine-readable specification before implementation. The contract drives code generation, documentation, validation, and client SDKs.",
+      "whenToPrefer": [
+        "API-first design where contract is agreed before implementation",
+        "Client code generation from a specification",
+        "Documentation-as-code with guaranteed accuracy",
+        "Multi-team contracts where producer and consumer develop in parallel"
+      ],
+      "variants": [
+        {
+          "name": "OpenAPI/Swagger spec",
+          "characteristic": "YAML/JSON spec for REST APIs; drives codegen, docs, and validation middleware",
+          "bestUsedWhen": "REST APIs, broad tooling ecosystem, documentation portals"
+        },
+        {
+          "name": "GraphQL SDL + codegen",
+          "characteristic": "Schema Definition Language with type-safe client/server codegen",
+          "bestUsedWhen": "Flexible queries, strong typing, frontend-driven data requirements"
+        },
+        {
+          "name": "Protocol Buffers",
+          "characteristic": "Binary serialization format with strict schema evolution rules and gRPC integration",
+          "bestUsedWhen": "High-performance RPC, polyglot services, strict backward compatibility"
+        },
+        {
+          "name": "JSON Schema",
+          "characteristic": "Schema for JSON data structures; used for config validation, API payload validation",
+          "bestUsedWhen": "Validating request/response payloads, config files, event payloads"
+        },
+        {
+          "name": "AsyncAPI",
+          "characteristic": "OpenAPI-style spec for event-driven and message-based APIs",
+          "bestUsedWhen": "Message broker contracts, event-driven architecture documentation, async API portals"
+        }
+      ],
+      "implementationTraps": [
+        "Spec drift: implementation diverges from the contract; use CI validation (e.g., spectral lint, contract tests)",
+        "Over-specification: defining every possible field upfront; iterate with required fields first",
+        "Codegen lock-in: generated code becomes hard to customize; use extension points or partial generation",
+        "Version field omission: forgetting to version the contract makes breaking changes undetectable"
+      ],
+      "disqualifiers": [
+        "Internal-only API with a single consumer where direct function calls suffice",
+        "Rapid prototyping where the API shape changes every day",
+        "Overhead of maintaining the spec exceeds the coordination benefit"
+      ]
+    },
+    {
+      "id": "index-strategy",
+      "name": "Index Strategy (Database)",
+      "coreContract": "Create auxiliary data structures in the database that trade write-time overhead and storage for dramatically faster read queries. The right index turns a full table scan into an index lookup.",
+      "whenToPrefer": [
+        "Query optimization for frequently executed read patterns",
+        "Specific access patterns (range scans, equality checks, full-text search, spatial queries)",
+        "Read-heavy workloads where index maintenance cost is acceptable"
+      ],
+      "variants": [
+        {
+          "name": "B-tree (default, range queries)",
+          "characteristic": "Balanced tree supporting equality and range predicates; default index type in most RDBMS",
+          "bestUsedWhen": "General-purpose indexing, ORDER BY, BETWEEN, >, <, = queries"
+        },
+        {
+          "name": "Hash index (equality only)",
+          "characteristic": "O(1) average lookup for exact match; no range support",
+          "bestUsedWhen": "Exact-match lookups on high-cardinality columns, in-memory tables"
+        },
+        {
+          "name": "GIN (full-text, array containment)",
+          "characteristic": "Generalized Inverted Index; indexes composite values (arrays, JSONB, tsvector)",
+          "bestUsedWhen": "Full-text search, JSONB containment queries, array overlap/contains"
+        },
+        {
+          "name": "GiST (geometric, spatial)",
+          "characteristic": "Generalized Search Tree; supports spatial, range, and nearest-neighbor queries",
+          "bestUsedWhen": "PostGIS geometry, range types, nearest-neighbor search"
+        },
+        {
+          "name": "Partial index (filtered subset)",
+          "characteristic": "Index only rows matching a WHERE predicate; smaller and faster than full index",
+          "bestUsedWhen": "Indexing active records (WHERE deleted_at IS NULL), rare status values"
+        },
+        {
+          "name": "Covering index (index-only scan)",
+          "characteristic": "Index includes all columns needed by the query; avoids table heap lookup",
+          "bestUsedWhen": "High-frequency queries where eliminating heap access matters"
+        }
+      ],
+      "implementationTraps": [
+        "Over-indexing: each index slows writes and consumes storage; benchmark before adding",
+        "Index not used: query planner may ignore an index due to low selectivity, type mismatch, or function wrapping the column",
+        "Composite index column order matters: (a, b) supports WHERE a = ? AND b = ? but not WHERE b = ? alone",
+        "Partial index predicate mismatch: the query WHERE clause must match the index predicate exactly for the planner to use it"
+      ],
+      "disqualifiers": [
+        "Write-heavy tables where index maintenance cost dominates read benefit",
+        "Tiny tables (< 1000 rows) where sequential scan is faster than index overhead",
+        "Columns with very low cardinality (boolean flags) unless used as partial index predicate"
+      ]
+    },
+    {
+      "id": "migration-pipeline",
+      "name": "Migration Pipeline / Schema Evolution",
+      "coreContract": "Apply versioned, ordered, and reversible changes to a database schema or data model. Each migration is a discrete step with an up (apply) and optionally a down (rollback) operation.",
+      "whenToPrefer": [
+        "Schema evolution in production databases",
+        "Zero-downtime deployments requiring backward-compatible schema changes",
+        "Data transformation or backfill as part of a release"
+      ],
+      "variants": [
+        {
+          "name": "Sequential versioned migrations (Flyway/Knex)",
+          "characteristic": "Numbered or timestamped scripts executed in order; tracks applied versions in a metadata table",
+          "bestUsedWhen": "Standard schema evolution, most web applications, team-based development"
+        },
+        {
+          "name": "Idempotent migration scripts",
+          "characteristic": "Scripts use IF NOT EXISTS / IF EXISTS guards; safe to re-run",
+          "bestUsedWhen": "Environments where migration state tracking is unreliable, disaster recovery"
+        },
+        {
+          "name": "Expand-contract pattern",
+          "characteristic": "Add new column/table (expand), migrate data, remove old (contract) across multiple deploys",
+          "bestUsedWhen": "Zero-downtime deployments, renaming columns, changing types"
+        },
+        {
+          "name": "Blue-green schema migration",
+          "characteristic": "Maintain two schema versions simultaneously; switch traffic after validation",
+          "bestUsedWhen": "High-risk schema changes, large data migrations, rollback-critical deployments"
+        },
+        {
+          "name": "Shadow table approach",
+          "characteristic": "Create new table with desired schema, dual-write, backfill, then swap",
+          "bestUsedWhen": "Large table restructuring, adding indexes on huge tables without locking"
+        }
+      ],
+      "implementationTraps": [
+        "Irreversible migrations: some operations (DROP COLUMN, data truncation) cannot be rolled back; plan data preservation",
+        "Migration ordering conflicts in team development: use timestamps instead of sequential numbers",
+        "Long-running migrations lock tables: use online DDL (pt-online-schema-change, gh-ost) for large tables",
+        "Data migration mixed with schema migration: separate structure changes from data backfills for easier debugging"
+      ],
+      "disqualifiers": [
+        "Schema never changes after initial creation",
+        "Development-only database that can be recreated from scratch",
+        "NoSQL databases where schema is implicit (though data migrations may still apply)"
+      ]
+    },
+    {
+      "id": "distributed-lock",
+      "name": "Distributed Lock / Coordination Primitive",
+      "coreContract": "Ensure mutual exclusion across multiple processes or nodes. Only one holder can acquire the lock at a time; others block or fail fast. Locks must have TTL to prevent deadlocks from crashed holders.",
+      "whenToPrefer": [
+        "Distributed coordination where only one process should perform an action",
+        "Resource exclusivity: preventing double-processing of a job or message",
+        "Leader election in a cluster"
+      ],
+      "variants": [
+        {
+          "name": "Redis SETNX lock (Redlock)",
+          "characteristic": "Atomic set-if-not-exists with TTL; Redlock extends to multiple Redis instances for fault tolerance",
+          "bestUsedWhen": "Low-latency locking, Redis already in stack, short-lived locks"
+        },
+        {
+          "name": "ZooKeeper ephemeral node",
+          "characteristic": "Lock represented as ephemeral znode; automatically released if holder's session expires",
+          "bestUsedWhen": "Strong consistency requirements, leader election, configuration management"
+        },
+        {
+          "name": "Database advisory lock",
+          "characteristic": "Database-native lock (pg_advisory_lock, GET_LOCK) using existing database connection",
+          "bestUsedWhen": "No additional infrastructure needed, database already in stack, transaction-scoped locking"
+        },
+        {
+          "name": "etcd lease-based lock",
+          "characteristic": "Lock tied to a lease with TTL; revocation via lease expiry or explicit release",
+          "bestUsedWhen": "Kubernetes-native environments, strong consistency, watch-based coordination"
+        },
+        {
+          "name": "Optimistic locking (version column)",
+          "characteristic": "No explicit lock; read version, write with WHERE version = N, retry on conflict",
+          "bestUsedWhen": "Low contention scenarios, database-only coordination, no external lock service"
+        }
+      ],
+      "implementationTraps": [
+        "Clock skew in Redlock: nodes with drifting clocks can grant overlapping locks; use fencing tokens",
+        "Lock holder dies without releasing: always use TTL; design for lock expiry during normal operation",
+        "Retry storms: many clients retrying a contested lock simultaneously; use exponential backoff with jitter",
+        "Fencing token omission: downstream resources must validate the fencing token to prevent stale lock holders from acting"
+      ],
+      "disqualifiers": [
+        "Single-process application where in-memory mutex or semaphore suffices",
+        "Optimistic concurrency control (version column) is sufficient for the contention level",
+        "The coordination problem can be solved by partitioning work instead of locking"
+      ]
+    },
+    {
+      "id": "message-queue",
+      "name": "Message Queue / Delivery Semantics",
+      "coreContract": "Asynchronously deliver messages from producers to consumers with defined delivery guarantees. The queue decouples production rate from consumption rate and provides buffering, retry, and ordering semantics.",
+      "whenToPrefer": [
+        "Async processing where producer should not wait for consumer to finish",
+        "Workload distribution across multiple consumer instances",
+        "Retry semantics matter: at-least-once or exactly-once delivery required"
+      ],
+      "variants": [
+        {
+          "name": "Fire-and-forget (at-most-once)",
+          "characteristic": "Message sent without acknowledgment; may be lost but never duplicated",
+          "bestUsedWhen": "Metrics, telemetry, non-critical notifications where loss is acceptable"
+        },
+        {
+          "name": "Acknowledged delivery (at-least-once)",
+          "characteristic": "Consumer acknowledges processing; unacknowledged messages are redelivered",
+          "bestUsedWhen": "Default for most workloads; idempotent consumers handle duplicates"
+        },
+        {
+          "name": "Transactional outbox (exactly-once)",
+          "characteristic": "Write message to outbox table in same DB transaction as state change; relay to queue separately",
+          "bestUsedWhen": "Financial transactions, order processing, any state change that must not be lost or duplicated"
+        },
+        {
+          "name": "Dead letter queue",
+          "characteristic": "Messages that fail processing after N retries are routed to a separate queue for inspection",
+          "bestUsedWhen": "Poison message handling, debugging failed processing, compliance audit trail"
+        },
+        {
+          "name": "Priority queue",
+          "characteristic": "Messages assigned priority levels; higher-priority messages processed first",
+          "bestUsedWhen": "SLA-differentiated processing, urgent vs batch workloads, tiered service"
+        }
+      ],
+      "implementationTraps": [
+        "At-least-once without idempotency: duplicate processing causes double charges, double emails, duplicate records",
+        "Message ordering assumptions: most queues do not guarantee order across partitions; use partition keys for ordered delivery",
+        "Consumer lag monitoring: unmonitored queue depth leads to unbounded growth and eventual OOM or disk exhaustion",
+        "Retry without backoff: immediate retry of a failing message creates a tight loop consuming resources"
+      ],
+      "disqualifiers": [
+        "Synchronous RPC is sufficient and simpler for the use case",
+        "Message ordering is critical but the queue cannot guarantee it",
+        "The system has a single producer and single consumer with no buffering needs"
+      ]
+    },
+    {
+      "id": "state-store",
+      "name": "State Store / Client State Management",
+      "coreContract": "Centralize or distribute application state in a predictable, observable container. State changes flow through defined pathways, enabling debugging, persistence, and reactive UI updates.",
+      "whenToPrefer": [
+        "Shared UI state accessed by multiple components or routes",
+        "Server data synchronization with caching, invalidation, and optimistic updates",
+        "Reactive updates where state changes automatically propagate to dependent views"
+      ],
+      "variants": [
+        {
+          "name": "Global store (Redux, Zustand)",
+          "characteristic": "Single store with actions/reducers; predictable state transitions, devtools, middleware",
+          "bestUsedWhen": "Complex shared state, time-travel debugging, middleware for side effects"
+        },
+        {
+          "name": "Atomic state (Jotai, Recoil)",
+          "characteristic": "State split into independent atoms; components subscribe to only what they read",
+          "bestUsedWhen": "Fine-grained reactivity, avoiding unnecessary re-renders, bottom-up state design"
+        },
+        {
+          "name": "Signals/observables (Solid, RxJS)",
+          "characteristic": "Reactive primitives with automatic dependency tracking; synchronous fine-grained updates",
+          "bestUsedWhen": "High-frequency updates, derived state computation, real-time data streams"
+        },
+        {
+          "name": "Server state cache (TanStack Query, SWR)",
+          "characteristic": "Cached server responses with automatic refetch, stale-while-revalidate, and optimistic updates",
+          "bestUsedWhen": "API data fetching, server state synchronization, pagination, infinite scroll"
+        },
+        {
+          "name": "URL state (search params)",
+          "characteristic": "State encoded in URL query parameters; shareable, bookmarkable, history-integrated",
+          "bestUsedWhen": "Filter/sort state, pagination, shareable views, deep linking"
+        }
+      ],
+      "implementationTraps": [
+        "Global store over-use: putting everything in global state when local component state suffices; causes unnecessary re-renders",
+        "Stale closure bugs: event handlers capturing outdated state references in React; use refs or functional updates",
+        "Server state vs client state confusion: mixing fetched data with UI state in the same store; use separate layers",
+        "Selector instability: selectors returning new object references on every call trigger unnecessary re-renders; memoize selectors"
+      ],
+      "disqualifiers": [
+        "Local component state (useState/useReducer) is sufficient for the use case",
+        "Static pages or server-rendered content with no client-side interactivity",
+        "Simple forms where form state libraries (React Hook Form, Formik) are more appropriate"
+      ]
+    },
+    {
+      "id": "telemetry-pipeline",
+      "name": "Telemetry Pipeline / Observability Stack",
+      "coreContract": "Collect, process, store, and visualize signals (logs, metrics, traces) from running systems. The pipeline transforms raw telemetry into actionable insights for debugging, alerting, and capacity planning.",
+      "whenToPrefer": [
+        "Production systems requiring monitoring, alerting, and incident response",
+        "SLO tracking and reliability engineering",
+        "Distributed systems where request tracing across services is essential"
+      ],
+      "variants": [
+        {
+          "name": "OpenTelemetry collector",
+          "characteristic": "Vendor-neutral telemetry collection with receivers, processors, and exporters",
+          "bestUsedWhen": "Multi-vendor flexibility, standardized instrumentation, polyglot services"
+        },
+        {
+          "name": "Log aggregator (Fluentd, Logstash)",
+          "characteristic": "Collect, parse, transform, and route logs from multiple sources to storage backends",
+          "bestUsedWhen": "Centralized logging, log parsing and enrichment, compliance retention"
+        },
+        {
+          "name": "Time-series DB (Prometheus, InfluxDB)",
+          "characteristic": "Optimized for high-write, time-indexed numeric data with downsampling and retention policies",
+          "bestUsedWhen": "Metrics storage, alerting rules, Grafana dashboards, capacity planning"
+        },
+        {
+          "name": "Visualization (Grafana, Datadog)",
+          "characteristic": "Dashboards, alerting, and exploration across multiple telemetry backends",
+          "bestUsedWhen": "Operational dashboards, SLO visualization, incident investigation"
+        },
+        {
+          "name": "APM (New Relic, Dynatrace)",
+          "characteristic": "Full-stack application performance monitoring with auto-instrumentation and AI-assisted root cause analysis",
+          "bestUsedWhen": "End-to-end transaction tracing, performance bottleneck identification, business-impact correlation"
+        }
+      ],
+      "implementationTraps": [
+        "Cardinality explosion: high-cardinality labels (user ID, request ID) on metrics cause storage and query cost to explode",
+        "Alert fatigue: too many noisy alerts lead to ignored pages; use SLO-based alerting with burn-rate windows",
+        "Missing context in logs: structured logging (JSON) with correlation IDs is essential; free-text logs are unsearchable at scale",
+        "Sampling blind spots: aggressive sampling may drop the traces you need most — keep 100% sampling for errors and slow requests"
+      ],
+      "disqualifiers": [
+        "Development-only or local-only applications",
+        "Printf debugging is sufficient for the project's complexity",
+        "Cost of telemetry infrastructure exceeds the value of the insights it provides"
+      ]
+    },
+    {
+      "id": "credential-store",
+      "name": "Credential Store / Secrets Management",
+      "coreContract": "Store, access, rotate, and audit sensitive values (API keys, passwords, certificates) separately from application code. Secrets are never committed to version control or logged in plaintext.",
+      "whenToPrefer": [
+        "Production secrets that must be rotated, audited, or access-controlled",
+        "Credential rotation requirements (compliance, security policy)",
+        "Multi-environment secret management with different values per environment"
+      ],
+      "variants": [
+        {
+          "name": "HashiCorp Vault",
+          "characteristic": "Full-featured secrets engine with dynamic secrets, leasing, rotation, and fine-grained ACL",
+          "bestUsedWhen": "Enterprise secret management, dynamic database credentials, PKI certificate issuance"
+        },
+        {
+          "name": "Cloud secret manager (AWS Secrets Manager, GCP Secret Manager)",
+          "characteristic": "Managed service integrated with cloud IAM; automatic rotation for supported services",
+          "bestUsedWhen": "Cloud-native applications, IAM-based access control, managed rotation"
+        },
+        {
+          "name": "Encrypted config file",
+          "characteristic": "Secrets encrypted at rest in version control (SOPS, git-crypt); decrypted at deploy time",
+          "bestUsedWhen": "GitOps workflows, small teams, secrets-in-repo with encryption"
+        },
+        {
+          "name": "Environment variables",
+          "characteristic": "Secrets injected via env vars at runtime; no encryption at rest in the process",
+          "bestUsedWhen": "12-factor apps, container orchestration, platform-injected secrets (Heroku, Render)"
+        },
+        {
+          "name": "Hardware security module (HSM)",
+          "characteristic": "Tamper-resistant hardware for key storage; keys never leave the device",
+          "bestUsedWhen": "Regulatory compliance (PCI-DSS, FIPS 140-2), root CA key storage, signing operations"
+        }
+      ],
+      "implementationTraps": [
+        "Secret sprawl: secrets duplicated across env vars, config files, and vault; single source of truth is essential",
+        "Logging secrets: structured logging or error handlers may serialize and log secret values; redact before logging",
+        "Rotation downtime: rotating a secret without updating all consumers simultaneously causes auth failures; use grace periods",
+        "Overly broad access: granting all services access to all secrets; use least-privilege policies per service"
+      ],
+      "disqualifiers": [
+        "Development-only project with no sensitive credentials",
+        "Public configuration values that are not secret",
+        "The overhead of secret management exceeds the risk (single-developer hobby project)"
+      ]
+    },
+    {
+      "id": "orchestration-layer",
+      "name": "Orchestration Layer / Container Management",
+      "coreContract": "Automate deployment, scaling, networking, and lifecycle management of containerized or serverless workloads. The orchestrator ensures desired state matches actual state across the cluster.",
+      "whenToPrefer": [
+        "Multi-container applications requiring coordinated deployment",
+        "Auto-scaling based on load, schedule, or custom metrics",
+        "Multi-service deployment with service discovery and load balancing"
+      ],
+      "variants": [
+        {
+          "name": "Kubernetes (k8s)",
+          "characteristic": "Full-featured container orchestration with declarative config, extensibility via CRDs, and massive ecosystem",
+          "bestUsedWhen": "Large-scale production deployments, multi-team platform, complex networking and storage needs"
+        },
+        {
+          "name": "AWS ECS/Fargate",
+          "characteristic": "AWS-native container orchestration; Fargate removes server management entirely",
+          "bestUsedWhen": "AWS-centric workloads, simpler operational model than k8s, serverless containers"
+        },
+        {
+          "name": "Serverless platform (Lambda, Cloud Functions)",
+          "characteristic": "Event-driven function execution; zero idle cost, automatic scaling, no server management",
+          "bestUsedWhen": "Event-driven workloads, API endpoints, scheduled tasks, low-traffic or bursty traffic"
+        },
+        {
+          "name": "Nomad",
+          "characteristic": "HashiCorp orchestrator supporting containers, VMs, and standalone binaries; simpler than k8s",
+          "bestUsedWhen": "Mixed workloads (containers + legacy), simpler operational model, HashiCorp ecosystem"
+        },
+        {
+          "name": "Docker Compose (dev/small-scale)",
+          "characteristic": "Multi-container definition in a single YAML file; local orchestration with docker-compose up",
+          "bestUsedWhen": "Local development, small-scale production, demo environments, CI test environments"
+        }
+      ],
+      "implementationTraps": [
+        "Kubernetes complexity tax: k8s operational overhead is significant; don't adopt it for a single service",
+        "Cold start latency: serverless functions have variable cold start times; pre-warming or provisioned concurrency may be needed",
+        "Resource limit misconfiguration: too-tight CPU/memory limits cause OOM kills and throttling; too-loose wastes money",
+        "Service discovery assumptions: hardcoded hostnames break when orchestrators reassign IPs; use DNS-based service discovery"
+      ],
+      "disqualifiers": [
+        "Single server deployment where a process manager (systemd, PM2) suffices",
+        "Static hosting (CDN/S3) for frontend-only applications",
+        "The team does not have the operational expertise to run the chosen orchestrator"
+      ]
     }
   ],
   "crossStructureDecisionGuide": [
@@ -495,6 +1158,62 @@
     {
       "bottleneckOperation": "Contiguous subarray satisfying monotone constraint",
       "reachFor": "Sliding window / two pointer"
+    },
+    {
+      "bottleneckOperation": "Testability and swappable dependencies",
+      "reachFor": "Service container (constructor injection)"
+    },
+    {
+      "bottleneckOperation": "Decoupled inter-module or inter-process communication",
+      "reachFor": "Message channel (event emitter or IPC)"
+    },
+    {
+      "bottleneckOperation": "Test isolation from filesystem, env, or process side effects",
+      "reachFor": "Sandbox environment"
+    },
+    {
+      "bottleneckOperation": "Multi-environment settings with validation",
+      "reachFor": "Configuration layer"
+    },
+    {
+      "bottleneckOperation": "Unified API surface over multiple backends",
+      "reachFor": "API gateway"
+    },
+    {
+      "bottleneckOperation": "Machine-readable API contract for codegen and validation",
+      "reachFor": "Contract definition (OpenAPI, GraphQL SDL, protobuf)"
+    },
+    {
+      "bottleneckOperation": "Slow read queries on large tables",
+      "reachFor": "Index strategy (B-tree, GIN, partial, covering)"
+    },
+    {
+      "bottleneckOperation": "Schema evolution without downtime",
+      "reachFor": "Migration pipeline (expand-contract)"
+    },
+    {
+      "bottleneckOperation": "Mutual exclusion across distributed processes",
+      "reachFor": "Distributed lock (Redis, ZooKeeper, advisory lock)"
+    },
+    {
+      "bottleneckOperation": "Async workload distribution with retry semantics",
+      "reachFor": "Message queue"
+    },
+    {
+      "bottleneckOperation": "Shared reactive UI state across components",
+      "reachFor": "State store (Redux, Zustand, Jotai, signals)"
+    },
+    {
+      "bottleneckOperation": "Production monitoring, alerting, and tracing",
+      "reachFor": "Telemetry pipeline (OpenTelemetry, Prometheus, Grafana)"
+    },
+    {
+      "bottleneckOperation": "Secure storage and rotation of production secrets",
+      "reachFor": "Credential store (Vault, cloud secret manager)"
+    },
+    {
+      "bottleneckOperation": "Multi-container deployment with scaling and service discovery",
+      "reachFor": "Orchestration layer (Kubernetes, ECS, serverless)"
     }
   ]
 }

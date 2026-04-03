@@ -371,6 +371,677 @@
       "strategies": [
         { "id": "push-vs-pull-propagation", "weight": 0.9, "rationale": "Pull (bottom-up subtree DP) then push (top-down rerooting) covers full-tree answers." }
       ]
+    },
+    {
+      "id": "test-isolation-sandbox",
+      "description": "Problem involves isolating test environments, creating sandboxes for E2E or integration tests, and managing test fixtures.",
+      "keywords": ["sandbox", "E2E test", "integration test", "test isolation", "fixture", "environment separation", "temp directory"],
+      "paradigms": [
+        { "id": "test-infrastructure", "weight": 0.9, "rationale": "Test isolation is a core concern of test infrastructure design." },
+        { "id": "layered-architecture", "weight": 0.6, "rationale": "Sandboxed layers prevent test side effects from leaking across boundaries." }
+      ],
+      "structures": [
+        { "id": "sandbox-environment", "weight": 0.95, "rationale": "Sandbox environment is the canonical structure for test isolation." },
+        { "id": "configuration-layer", "weight": 0.6, "rationale": "Configuration layers allow environment-specific overrides for test contexts." }
+      ],
+      "strategies": [
+        { "id": "boundary-isolation", "weight": 0.9, "rationale": "Hard boundary isolation prevents shared state contamination between tests." },
+        { "id": "fixture-and-seed", "weight": 0.7, "rationale": "Fixtures and seed data provide repeatable, isolated starting states." }
+      ]
+    },
+    {
+      "id": "process-lifecycle-management",
+      "description": "Problem involves managing process lifecycles including main/renderer process communication, child processes, and IPC.",
+      "keywords": ["Electron", "main process", "renderer", "child process", "IPC", "process fork", "worker thread"],
+      "paradigms": [
+        { "id": "event-driven-architecture", "weight": 0.9, "rationale": "Process communication is fundamentally event-driven via IPC channels." },
+        { "id": "layered-architecture", "weight": 0.7, "rationale": "Main/renderer separation enforces layered process boundaries." }
+      ],
+      "structures": [
+        { "id": "message-channel", "weight": 0.9, "rationale": "IPC channels are message-based communication structures between processes." },
+        { "id": "service-container", "weight": 0.6, "rationale": "Service containers manage process-scoped dependencies and lifecycle." }
+      ],
+      "strategies": [
+        { "id": "boundary-isolation", "weight": 0.85, "rationale": "Process boundaries enforce isolation between main and renderer contexts." }
+      ]
+    },
+    {
+      "id": "dependency-injection-inversion",
+      "description": "Problem involves managing dependencies through injection, inversion of control, or service location patterns.",
+      "keywords": ["DI container", "service locator", "dependency injection", "inversion of control", "test double", "mock boundary"],
+      "paradigms": [
+        { "id": "layered-architecture", "weight": 0.85, "rationale": "DI enforces dependency direction rules across architectural layers." },
+        { "id": "plugin-and-extension", "weight": 0.7, "rationale": "Plugin architectures rely on DI to inject implementations at extension points." },
+        { "id": "test-infrastructure", "weight": 0.6, "rationale": "DI enables swapping real implementations for test doubles." }
+      ],
+      "structures": [
+        { "id": "service-container", "weight": 0.95, "rationale": "Service container is the canonical structure for dependency injection." },
+        { "id": "configuration-layer", "weight": 0.6, "rationale": "Configuration layers bind interfaces to concrete implementations." }
+      ],
+      "strategies": [
+        { "id": "boundary-isolation", "weight": 0.8, "rationale": "DI creates clear boundaries between modules by abstracting dependencies." }
+      ]
+    },
+    {
+      "id": "file-system-isolation",
+      "description": "Problem involves isolating file system operations using temp directories, virtual filesystems, or path redirection.",
+      "keywords": ["temp dir", "virtual filesystem", "mock FS", "path redirection", "symlink", "file system isolation"],
+      "paradigms": [
+        { "id": "test-infrastructure", "weight": 0.85, "rationale": "File system isolation is critical for reliable test infrastructure." },
+        { "id": "layered-architecture", "weight": 0.6, "rationale": "Abstracting file system access into layers enables substitution." }
+      ],
+      "structures": [
+        { "id": "sandbox-environment", "weight": 0.9, "rationale": "Sandboxed environments isolate file system operations from the host." },
+        { "id": "configuration-layer", "weight": 0.5, "rationale": "Configuration layers redirect file paths to isolated locations." }
+      ],
+      "strategies": [
+        { "id": "environment-override", "weight": 0.85, "rationale": "Environment overrides redirect file system paths for isolation." },
+        { "id": "boundary-isolation", "weight": 0.7, "rationale": "File system boundaries prevent tests from affecting production data." }
+      ]
+    },
+    {
+      "id": "api-boundary-design",
+      "description": "Problem involves designing API boundaries between system components, including IPC channels, preload bridges, and interface contracts.",
+      "keywords": ["IPC channel", "preload bridge", "context isolation", "API surface", "boundary contract", "interface design"],
+      "paradigms": [
+        { "id": "layered-architecture", "weight": 0.9, "rationale": "API boundaries define the contracts between architectural layers." },
+        { "id": "event-driven-architecture", "weight": 0.6, "rationale": "Event-driven boundaries decouple producers from consumers across API surfaces." }
+      ],
+      "structures": [
+        { "id": "contract-definition", "weight": 0.9, "rationale": "Contract definitions formalize API boundary agreements between components." },
+        { "id": "api-gateway", "weight": 0.7, "rationale": "API gateways mediate boundary crossings and enforce contracts." }
+      ],
+      "strategies": [
+        { "id": "boundary-isolation", "weight": 0.9, "rationale": "Strong boundary isolation ensures components interact only through defined APIs." },
+        { "id": "api-versioning-strategy", "weight": 0.6, "rationale": "Versioning strategies manage boundary evolution without breaking consumers." }
+      ]
+    },
+    {
+      "id": "state-management-architecture",
+      "description": "Problem involves choosing and implementing state management patterns including stores, event sourcing, CQRS, and reactive state.",
+      "keywords": ["state management", "store pattern", "event sourcing", "CQRS", "reactive state", "observable", "Redux"],
+      "paradigms": [
+        { "id": "event-driven-architecture", "weight": 0.85, "rationale": "Event sourcing and reactive state are fundamentally event-driven patterns." },
+        { "id": "component-architecture", "weight": 0.7, "rationale": "Component-level state management determines data flow architecture." }
+      ],
+      "structures": [
+        { "id": "state-store", "weight": 0.95, "rationale": "State stores are the canonical structure for managing application state." },
+        { "id": "message-channel", "weight": 0.6, "rationale": "Message channels propagate state changes through event streams." }
+      ],
+      "strategies": [
+        { "id": "hydration-strategy", "weight": 0.7, "rationale": "Hydration strategies determine how state is initialized and restored." },
+        { "id": "consistency-trade-off", "weight": 0.6, "rationale": "CQRS trades read/write consistency for scalability and separation." }
+      ]
+    },
+    {
+      "id": "build-and-bundle-pipeline",
+      "description": "Problem involves configuring build tools, bundlers, code splitting, and asset management pipelines.",
+      "keywords": ["Vite", "webpack", "code splitting", "bundler", "asset management", "tree shaking", "HMR"],
+      "paradigms": [
+        { "id": "plugin-and-extension", "weight": 0.85, "rationale": "Build tools use plugin architectures for extensible transformation pipelines." },
+        { "id": "layered-architecture", "weight": 0.6, "rationale": "Build pipelines process code through layered transformation stages." }
+      ],
+      "structures": [
+        { "id": "orchestration-layer", "weight": 0.85, "rationale": "Build orchestration manages the sequence and parallelism of build steps." },
+        { "id": "configuration-layer", "weight": 0.7, "rationale": "Build configuration layers define tool behavior and optimization settings." }
+      ],
+      "strategies": [
+        { "id": "environment-promotion", "weight": 0.7, "rationale": "Build artifacts are promoted through dev, staging, and production environments." }
+      ]
+    },
+    {
+      "id": "ci-cd-test-infrastructure",
+      "description": "Problem involves designing CI/CD pipelines, test sharding, matrix builds, and artifact caching strategies.",
+      "keywords": ["CI pipeline", "matrix build", "artifact caching", "test sharding", "parallel testing", "GitHub Actions"],
+      "paradigms": [
+        { "id": "test-infrastructure", "weight": 0.9, "rationale": "CI/CD pipelines are the deployment mechanism for test infrastructure." },
+        { "id": "deployment-model", "weight": 0.7, "rationale": "CI/CD defines how code moves from commit to deployment." }
+      ],
+      "structures": [
+        { "id": "orchestration-layer", "weight": 0.9, "rationale": "CI orchestration manages pipeline stages, dependencies, and parallelism." },
+        { "id": "sandbox-environment", "weight": 0.6, "rationale": "CI environments provide isolated sandboxes for reproducible builds." }
+      ],
+      "strategies": [
+        { "id": "environment-promotion", "weight": 0.85, "rationale": "CI/CD promotes artifacts through environment stages toward production." },
+        { "id": "fixture-and-seed", "weight": 0.5, "rationale": "Test fixtures ensure reproducible CI test runs across matrix configurations." }
+      ]
+    },
+    {
+      "id": "schema-design-trade-offs",
+      "description": "Problem involves choosing between normalization and denormalization, selecting schema patterns, and modeling data relationships.",
+      "keywords": ["normalization", "denormalization", "schema design", "EAV", "star schema", "data modeling"],
+      "paradigms": [
+        { "id": "relational-modeling", "weight": 0.9, "rationale": "Schema design is the core concern of relational data modeling." },
+        { "id": "document-modeling", "weight": 0.6, "rationale": "Document modeling offers an alternative schema approach with embedded data." }
+      ],
+      "structures": [
+        { "id": "index-strategy", "weight": 0.7, "rationale": "Schema design directly influences indexing requirements and strategies." },
+        { "id": "migration-pipeline", "weight": 0.6, "rationale": "Schema changes require migration pipelines for safe evolution." }
+      ],
+      "strategies": [
+        { "id": "denormalization-for-read", "weight": 0.85, "rationale": "Denormalization trades write complexity for read performance." },
+        { "id": "schema-evolution", "weight": 0.7, "rationale": "Schema evolution strategies manage how designs change over time." }
+      ]
+    },
+    {
+      "id": "indexing-strategy",
+      "description": "Problem involves selecting and optimizing database indexes for query performance.",
+      "keywords": ["index", "B-tree", "hash index", "query optimization", "covering index", "partial index", "explain plan"],
+      "paradigms": [
+        { "id": "relational-modeling", "weight": 0.8, "rationale": "Index strategy is tightly coupled with relational query patterns." },
+        { "id": "optimization-approach", "weight": 0.7, "rationale": "Index selection is a core database optimization technique." }
+      ],
+      "structures": [
+        { "id": "index-strategy", "weight": 0.95, "rationale": "Index structures are the direct subject of this signal." }
+      ],
+      "strategies": [
+        { "id": "denormalization-for-read", "weight": 0.7, "rationale": "Covering indexes are a form of denormalization that avoids table lookups." }
+      ]
+    },
+    {
+      "id": "data-migration-evolution",
+      "description": "Problem involves migrating database schemas, managing backward compatibility, and executing zero-downtime migrations.",
+      "keywords": ["migration", "schema evolution", "backward compatible", "expand-contract", "zero-downtime migration"],
+      "paradigms": [
+        { "id": "relational-modeling", "weight": 0.7, "rationale": "Schema migrations are a relational modeling lifecycle concern." },
+        { "id": "deployment-model", "weight": 0.6, "rationale": "Migration deployment requires careful coordination with application releases." }
+      ],
+      "structures": [
+        { "id": "migration-pipeline", "weight": 0.95, "rationale": "Migration pipelines are the canonical structure for schema evolution." },
+        { "id": "configuration-layer", "weight": 0.5, "rationale": "Configuration manages migration versioning and execution order." }
+      ],
+      "strategies": [
+        { "id": "schema-evolution", "weight": 0.95, "rationale": "Schema evolution is the primary strategy for managing database changes." },
+        { "id": "environment-promotion", "weight": 0.6, "rationale": "Migrations must be promoted through environments to validate safety." }
+      ]
+    },
+    {
+      "id": "multi-tenancy-isolation",
+      "description": "Problem involves isolating tenant data in multi-tenant systems using row-level security, schema separation, or shared databases.",
+      "keywords": ["multi-tenant", "tenant isolation", "row-level security", "schema per tenant", "shared database"],
+      "paradigms": [
+        { "id": "relational-modeling", "weight": 0.75, "rationale": "Multi-tenancy affects relational schema design and query patterns." },
+        { "id": "authorization-model", "weight": 0.7, "rationale": "Tenant isolation is an authorization concern enforced at the data layer." },
+        { "id": "polyglot-persistence", "weight": 0.5, "rationale": "Different tenants may warrant different storage strategies." }
+      ],
+      "structures": [
+        { "id": "index-strategy", "weight": 0.6, "rationale": "Tenant-aware indexes optimize queries scoped to a single tenant." },
+        { "id": "credential-store", "weight": 0.6, "rationale": "Per-tenant credentials require secure storage and rotation." }
+      ],
+      "strategies": [
+        { "id": "boundary-isolation", "weight": 0.9, "rationale": "Tenant boundaries must be strictly isolated to prevent data leakage." }
+      ]
+    },
+    {
+      "id": "api-style-selection",
+      "description": "Problem involves choosing between API styles such as REST, GraphQL, gRPC, or tRPC based on requirements.",
+      "keywords": ["REST", "GraphQL", "gRPC", "tRPC", "API design", "resource-oriented", "RPC"],
+      "paradigms": [
+        { "id": "resource-oriented", "weight": 0.85, "rationale": "REST follows resource-oriented design with standard HTTP methods." },
+        { "id": "rpc-oriented", "weight": 0.8, "rationale": "gRPC and tRPC follow RPC-oriented paradigms for service communication." },
+        { "id": "query-oriented", "weight": 0.7, "rationale": "GraphQL follows a query-oriented paradigm with client-driven data fetching." }
+      ],
+      "structures": [
+        { "id": "api-gateway", "weight": 0.85, "rationale": "API gateways route and mediate between different API styles." },
+        { "id": "contract-definition", "weight": 0.8, "rationale": "API contracts (OpenAPI, protobuf, schema) define the interface." }
+      ],
+      "strategies": [
+        { "id": "api-versioning-strategy", "weight": 0.7, "rationale": "API style choice affects versioning approach and evolution strategy." }
+      ]
+    },
+    {
+      "id": "versioning-strategy",
+      "description": "Problem involves managing API versioning, backward compatibility, deprecation, and breaking changes.",
+      "keywords": ["API versioning", "backward compatibility", "deprecation", "breaking change", "content negotiation"],
+      "paradigms": [
+        { "id": "resource-oriented", "weight": 0.7, "rationale": "REST versioning uses URI paths, headers, or content negotiation." },
+        { "id": "plugin-and-extension", "weight": 0.6, "rationale": "Extension points allow backward-compatible API evolution." }
+      ],
+      "structures": [
+        { "id": "contract-definition", "weight": 0.9, "rationale": "Versioned contracts formalize compatibility guarantees." },
+        { "id": "api-gateway", "weight": 0.6, "rationale": "Gateways can route between API versions transparently." }
+      ],
+      "strategies": [
+        { "id": "api-versioning-strategy", "weight": 0.95, "rationale": "API versioning strategy is the direct subject of this signal." },
+        { "id": "schema-evolution", "weight": 0.6, "rationale": "Schema evolution techniques apply to API payload evolution." }
+      ]
+    },
+    {
+      "id": "pagination-design",
+      "description": "Problem involves designing pagination for large result sets using cursor, offset, or keyset approaches.",
+      "keywords": ["pagination", "cursor", "offset", "keyset", "infinite scroll", "page token"],
+      "paradigms": [
+        { "id": "resource-oriented", "weight": 0.8, "rationale": "REST pagination follows resource collection conventions." },
+        { "id": "query-oriented", "weight": 0.7, "rationale": "GraphQL connections pattern defines cursor-based pagination." }
+      ],
+      "structures": [
+        { "id": "index-strategy", "weight": 0.7, "rationale": "Efficient pagination requires indexes aligned with sort and filter criteria." },
+        { "id": "api-gateway", "weight": 0.5, "rationale": "Gateways may aggregate paginated results from multiple services." }
+      ],
+      "strategies": [
+        { "id": "denormalization-for-read", "weight": 0.6, "rationale": "Materialized views optimize paginated read queries." }
+      ]
+    },
+    {
+      "id": "error-contract-design",
+      "description": "Problem involves designing error handling contracts, error codes, and error response schemas for APIs.",
+      "keywords": ["error handling", "error codes", "problem details", "error response", "HTTP status", "error schema"],
+      "paradigms": [
+        { "id": "resource-oriented", "weight": 0.7, "rationale": "REST uses HTTP status codes as part of the error contract." },
+        { "id": "rpc-oriented", "weight": 0.6, "rationale": "RPC frameworks define typed error responses in their contract definitions." }
+      ],
+      "structures": [
+        { "id": "contract-definition", "weight": 0.9, "rationale": "Error contracts are a critical part of API contract definitions." }
+      ],
+      "strategies": [
+        { "id": "api-versioning-strategy", "weight": 0.5, "rationale": "Error schema changes must be managed through versioning strategies." }
+      ]
+    },
+    {
+      "id": "real-time-communication",
+      "description": "Problem involves implementing real-time communication using WebSockets, SSE, or push notification patterns.",
+      "keywords": ["WebSocket", "SSE", "server-sent events", "real-time", "push notification", "long polling"],
+      "paradigms": [
+        { "id": "event-driven-architecture", "weight": 0.9, "rationale": "Real-time communication is fundamentally event-driven." },
+        { "id": "resource-oriented", "weight": 0.5, "rationale": "SSE extends REST with server-pushed resource updates." }
+      ],
+      "structures": [
+        { "id": "message-channel", "weight": 0.9, "rationale": "WebSocket and SSE connections are persistent message channels." },
+        { "id": "message-queue", "weight": 0.6, "rationale": "Message queues buffer and fan out real-time events to consumers." }
+      ],
+      "strategies": [
+        { "id": "consistency-trade-off", "weight": 0.6, "rationale": "Real-time systems trade strict consistency for low-latency delivery." }
+      ]
+    },
+    {
+      "id": "distributed-state-coordination",
+      "description": "Problem involves coordinating distributed state across services using sagas, outbox patterns, or two-phase commits.",
+      "keywords": ["distributed transaction", "SAGA", "two-phase commit", "outbox pattern", "distributed state"],
+      "paradigms": [
+        { "id": "distributed-transaction", "weight": 0.95, "rationale": "Distributed transactions are the defining paradigm for cross-service state coordination." },
+        { "id": "event-driven-architecture", "weight": 0.7, "rationale": "Saga patterns use event-driven choreography for distributed coordination." }
+      ],
+      "structures": [
+        { "id": "message-queue", "weight": 0.85, "rationale": "Message queues enable reliable event delivery between saga participants." },
+        { "id": "distributed-lock", "weight": 0.7, "rationale": "Distributed locks provide mutual exclusion for critical state transitions." }
+      ],
+      "strategies": [
+        { "id": "consistency-trade-off", "weight": 0.9, "rationale": "Distributed state requires explicit consistency vs availability trade-offs." },
+        { "id": "idempotency-design", "weight": 0.8, "rationale": "Idempotent operations enable safe retries in distributed transaction recovery." }
+      ]
+    },
+    {
+      "id": "consensus-requirements",
+      "description": "Problem involves achieving consensus across distributed nodes using Raft, Paxos, CRDTs, or leader election.",
+      "keywords": ["consensus", "Raft", "Paxos", "CRDT", "leader election", "quorum", "replicated state"],
+      "paradigms": [
+        { "id": "consensus-protocol", "weight": 0.95, "rationale": "Consensus protocols are the direct paradigm for distributed agreement." },
+        { "id": "actor-model", "weight": 0.6, "rationale": "Actor-based systems require consensus for coordination across actor instances." }
+      ],
+      "structures": [
+        { "id": "state-store", "weight": 0.8, "rationale": "Replicated state stores require consensus for consistent updates." },
+        { "id": "distributed-lock", "weight": 0.7, "rationale": "Leader election uses distributed locking mechanisms." }
+      ],
+      "strategies": [
+        { "id": "consistency-trade-off", "weight": 0.9, "rationale": "Consensus strength directly trades off against availability and latency." }
+      ]
+    },
+    {
+      "id": "transaction-boundary-design",
+      "description": "Problem involves defining transaction boundaries, isolation levels, and compensation strategies.",
+      "keywords": ["transaction boundary", "atomicity", "isolation level", "compensation", "rollback"],
+      "paradigms": [
+        { "id": "distributed-transaction", "weight": 0.85, "rationale": "Transaction boundaries define the scope of distributed consistency." },
+        { "id": "relational-modeling", "weight": 0.6, "rationale": "Relational databases provide native transaction isolation levels." }
+      ],
+      "structures": [
+        { "id": "distributed-lock", "weight": 0.7, "rationale": "Locks enforce transaction isolation at the structural level." },
+        { "id": "state-store", "weight": 0.6, "rationale": "Transactional state stores maintain atomicity guarantees." }
+      ],
+      "strategies": [
+        { "id": "idempotency-design", "weight": 0.8, "rationale": "Idempotent compensation enables safe rollback and retry." },
+        { "id": "consistency-trade-off", "weight": 0.75, "rationale": "Wider transaction boundaries increase consistency but reduce throughput." }
+      ]
+    },
+    {
+      "id": "eventual-consistency-tolerance",
+      "description": "Problem involves choosing consistency models and tolerating eventual consistency in distributed systems.",
+      "keywords": ["eventual consistency", "strong consistency", "read-your-writes", "causal consistency", "CAP theorem"],
+      "paradigms": [
+        { "id": "consensus-protocol", "weight": 0.7, "rationale": "Consistency models are implemented through consensus protocol choices." },
+        { "id": "distributed-transaction", "weight": 0.65, "rationale": "Distributed transactions can enforce stronger consistency guarantees." },
+        { "id": "event-driven-architecture", "weight": 0.6, "rationale": "Event-driven systems naturally exhibit eventual consistency." }
+      ],
+      "structures": [
+        { "id": "message-queue", "weight": 0.7, "rationale": "Message queues introduce eventual consistency through async processing." },
+        { "id": "state-store", "weight": 0.65, "rationale": "State store replication strategy determines consistency characteristics." }
+      ],
+      "strategies": [
+        { "id": "consistency-trade-off", "weight": 0.95, "rationale": "Consistency trade-off is the defining strategic concern of this signal." }
+      ]
+    },
+    {
+      "id": "rendering-strategy-selection",
+      "description": "Problem involves choosing rendering strategies such as SSR, CSR, ISR, streaming, or islands architecture.",
+      "keywords": ["SSR", "CSR", "ISR", "streaming", "hydration", "server component", "islands architecture"],
+      "paradigms": [
+        { "id": "rendering-architecture", "weight": 0.95, "rationale": "Rendering strategy selection is the core rendering architecture decision." },
+        { "id": "component-architecture", "weight": 0.7, "rationale": "Component boundaries determine where rendering strategies apply." }
+      ],
+      "structures": [
+        { "id": "state-store", "weight": 0.6, "rationale": "Server and client state stores must synchronize across rendering boundaries." }
+      ],
+      "strategies": [
+        { "id": "hydration-strategy", "weight": 0.95, "rationale": "Hydration strategy determines how server-rendered content becomes interactive." }
+      ]
+    },
+    {
+      "id": "client-state-management",
+      "description": "Problem involves selecting and implementing client-side state management solutions for frontend applications.",
+      "keywords": ["Redux", "Zustand", "Jotai", "signals", "observable", "server state", "TanStack Query"],
+      "paradigms": [
+        { "id": "component-architecture", "weight": 0.85, "rationale": "Client state management is shaped by component architecture patterns." },
+        { "id": "event-driven-architecture", "weight": 0.6, "rationale": "Observable and reactive state follows event-driven patterns." }
+      ],
+      "structures": [
+        { "id": "state-store", "weight": 0.95, "rationale": "Client state stores are the canonical structure for frontend state." }
+      ],
+      "strategies": [
+        { "id": "hydration-strategy", "weight": 0.7, "rationale": "Server-to-client state hydration determines initial client state." },
+        { "id": "invalidation-pattern", "weight": 0.6, "rationale": "Cache invalidation in server-state libraries manages data freshness." }
+      ]
+    },
+    {
+      "id": "component-composition-pattern",
+      "description": "Problem involves composing UI components using patterns like compound components, render props, or atomic design.",
+      "keywords": ["compound component", "render props", "headless UI", "atomic design", "slot pattern"],
+      "paradigms": [
+        { "id": "component-architecture", "weight": 0.95, "rationale": "Component composition is the defining concern of component architecture." },
+        { "id": "plugin-and-extension", "weight": 0.6, "rationale": "Headless UI and slot patterns provide extension points for customization." }
+      ],
+      "structures": [
+        { "id": "service-container", "weight": 0.6, "rationale": "Context providers act as dependency containers for component trees." }
+      ],
+      "strategies": [
+        { "id": "boundary-isolation", "weight": 0.7, "rationale": "Component boundaries isolate concerns and enable independent composition." }
+      ]
+    },
+    {
+      "id": "real-time-ui-updates",
+      "description": "Problem involves implementing real-time UI updates via optimistic updates, websockets, or live queries.",
+      "keywords": ["real-time UI", "optimistic update", "websocket", "subscription", "live query"],
+      "paradigms": [
+        { "id": "event-driven-architecture", "weight": 0.85, "rationale": "Real-time UI updates are driven by event subscriptions." },
+        { "id": "rendering-architecture", "weight": 0.7, "rationale": "Rendering architecture must support incremental updates for real-time UIs." }
+      ],
+      "structures": [
+        { "id": "message-channel", "weight": 0.85, "rationale": "WebSocket channels deliver real-time data to the UI layer." },
+        { "id": "state-store", "weight": 0.7, "rationale": "Optimistic state stores reflect predicted updates before server confirmation." }
+      ],
+      "strategies": [
+        { "id": "hydration-strategy", "weight": 0.6, "rationale": "Live queries require re-hydration when server state diverges from client predictions." },
+        { "id": "consistency-trade-off", "weight": 0.6, "rationale": "Optimistic updates trade consistency for perceived responsiveness." }
+      ]
+    },
+    {
+      "id": "cache-layer-selection",
+      "description": "Problem involves selecting caching layers including CDN, application cache, database cache, or browser cache.",
+      "keywords": ["CDN", "application cache", "database cache", "Redis", "Memcached", "browser cache", "service worker"],
+      "paradigms": [
+        { "id": "cache-architecture", "weight": 0.95, "rationale": "Cache layer selection is the primary cache architecture decision." },
+        { "id": "layered-architecture", "weight": 0.7, "rationale": "Caching occurs at multiple architectural layers with different characteristics." }
+      ],
+      "structures": [
+        { "id": "state-store", "weight": 0.8, "rationale": "Cache stores hold computed or fetched values for rapid retrieval." },
+        { "id": "api-gateway", "weight": 0.6, "rationale": "API gateways can implement response caching at the edge." }
+      ],
+      "strategies": [
+        { "id": "invalidation-pattern", "weight": 0.85, "rationale": "Cache invalidation is the primary concern when selecting cache layers." }
+      ]
+    },
+    {
+      "id": "invalidation-strategy",
+      "description": "Problem involves designing cache invalidation strategies including TTL, write-through, event-driven invalidation, and stampede prevention.",
+      "keywords": ["cache invalidation", "TTL", "write-through", "write-behind", "event-driven invalidation", "stampede"],
+      "paradigms": [
+        { "id": "cache-architecture", "weight": 0.9, "rationale": "Invalidation is the hardest problem in cache architecture." },
+        { "id": "event-driven-architecture", "weight": 0.6, "rationale": "Event-driven invalidation uses change events to trigger cache updates." }
+      ],
+      "structures": [
+        { "id": "message-queue", "weight": 0.7, "rationale": "Message queues propagate invalidation events across cache layers." },
+        { "id": "state-store", "weight": 0.6, "rationale": "Cache stores implement invalidation policies and TTL management." }
+      ],
+      "strategies": [
+        { "id": "invalidation-pattern", "weight": 0.95, "rationale": "Invalidation pattern is the direct strategic concern of this signal." },
+        { "id": "consistency-trade-off", "weight": 0.7, "rationale": "Invalidation timing trades freshness against performance." }
+      ]
+    },
+    {
+      "id": "read-write-ratio-optimization",
+      "description": "Problem involves optimizing for read-heavy or write-heavy workloads using replicas, CQRS, or materialized views.",
+      "keywords": ["read replica", "CQRS", "materialized view", "denormalization", "read-heavy", "write-heavy"],
+      "paradigms": [
+        { "id": "optimization-approach", "weight": 0.8, "rationale": "Read/write optimization is a core performance approach." },
+        { "id": "cache-architecture", "weight": 0.7, "rationale": "Caching is fundamentally a read-optimization strategy." }
+      ],
+      "structures": [
+        { "id": "state-store", "weight": 0.7, "rationale": "Read replicas and materialized views are specialized state stores." },
+        { "id": "index-strategy", "weight": 0.65, "rationale": "Index strategy heavily impacts read vs write performance trade-offs." }
+      ],
+      "strategies": [
+        { "id": "denormalization-for-read", "weight": 0.9, "rationale": "Denormalization optimizes read performance at the cost of write complexity." },
+        { "id": "consistency-trade-off", "weight": 0.7, "rationale": "Read replicas introduce eventual consistency for read scalability." }
+      ]
+    },
+    {
+      "id": "latency-budget-allocation",
+      "description": "Problem involves allocating latency budgets across system components including connection pools, prefetch, and cold start optimization.",
+      "keywords": ["latency budget", "P99", "response time", "cold start", "connection pool", "prefetch"],
+      "paradigms": [
+        { "id": "optimization-approach", "weight": 0.9, "rationale": "Latency budgeting is a systematic optimization approach." },
+        { "id": "layered-architecture", "weight": 0.6, "rationale": "Latency budgets are allocated across architectural layers." }
+      ],
+      "structures": [
+        { "id": "telemetry-pipeline", "weight": 0.7, "rationale": "Telemetry pipelines measure latency across system components." }
+      ],
+      "strategies": [
+        { "id": "sampling-approach", "weight": 0.6, "rationale": "Latency sampling captures P99 behavior without full instrumentation overhead." }
+      ]
+    },
+    {
+      "id": "authentication-architecture",
+      "description": "Problem involves designing authentication systems including OAuth, OIDC, JWT, sessions, SSO, and MFA.",
+      "keywords": ["authentication", "login", "OAuth", "OIDC", "JWT", "session", "SSO", "MFA", "passwordless"],
+      "paradigms": [
+        { "id": "auth-architecture", "weight": 0.95, "rationale": "Authentication architecture is the primary paradigm for identity verification." },
+        { "id": "layered-architecture", "weight": 0.6, "rationale": "Auth layers sit at the boundary between public and protected resources." }
+      ],
+      "structures": [
+        { "id": "credential-store", "weight": 0.9, "rationale": "Credential stores manage tokens, sessions, and authentication state." },
+        { "id": "api-gateway", "weight": 0.7, "rationale": "API gateways enforce authentication before routing to services." }
+      ],
+      "strategies": [
+        { "id": "zero-trust-approach", "weight": 0.7, "rationale": "Zero trust requires authentication at every boundary, not just the perimeter." }
+      ]
+    },
+    {
+      "id": "authorization-model-selection",
+      "description": "Problem involves selecting authorization models such as RBAC, ABAC, or policy-based access control.",
+      "keywords": ["RBAC", "ABAC", "authorization", "permission", "role", "policy", "access control"],
+      "paradigms": [
+        { "id": "authorization-model", "weight": 0.95, "rationale": "Authorization model selection is the defining paradigm for access control." },
+        { "id": "auth-architecture", "weight": 0.6, "rationale": "Authorization complements authentication as part of the overall auth architecture." }
+      ],
+      "structures": [
+        { "id": "configuration-layer", "weight": 0.7, "rationale": "Policy configurations define authorization rules declaratively." },
+        { "id": "credential-store", "weight": 0.6, "rationale": "Role and permission assignments are stored alongside credentials." }
+      ],
+      "strategies": [
+        { "id": "zero-trust-approach", "weight": 0.7, "rationale": "Zero trust applies authorization checks at every service boundary." },
+        { "id": "boundary-isolation", "weight": 0.6, "rationale": "Authorization enforces boundary isolation between user contexts." }
+      ]
+    },
+    {
+      "id": "secret-management",
+      "description": "Problem involves managing secrets, credentials, API keys, encryption, and secret rotation.",
+      "keywords": ["secret", "vault", "credential", "API key", "rotation", "encryption", "env variable", "HSM"],
+      "paradigms": [
+        { "id": "auth-architecture", "weight": 0.8, "rationale": "Secret management is a critical component of security architecture." },
+        { "id": "deployment-model", "weight": 0.6, "rationale": "Secret injection varies by deployment model and environment." }
+      ],
+      "structures": [
+        { "id": "credential-store", "weight": 0.95, "rationale": "Credential stores are the canonical structure for secret management." },
+        { "id": "configuration-layer", "weight": 0.6, "rationale": "Configuration layers reference secrets without embedding them." }
+      ],
+      "strategies": [
+        { "id": "zero-trust-approach", "weight": 0.8, "rationale": "Zero trust treats all credential access as potentially compromised." },
+        { "id": "environment-override", "weight": 0.6, "rationale": "Environment-specific overrides inject secrets per deployment context." }
+      ]
+    },
+    {
+      "id": "trust-boundary-design",
+      "description": "Problem involves designing trust boundaries, implementing zero trust, mTLS, or microsegmentation.",
+      "keywords": ["trust boundary", "zero trust", "mTLS", "service mesh", "perimeter", "microsegmentation"],
+      "paradigms": [
+        { "id": "auth-architecture", "weight": 0.85, "rationale": "Trust boundaries define where authentication and encryption are enforced." },
+        { "id": "layered-architecture", "weight": 0.7, "rationale": "Trust boundaries align with architectural layer transitions." }
+      ],
+      "structures": [
+        { "id": "api-gateway", "weight": 0.8, "rationale": "API gateways enforce trust boundaries at service entry points." },
+        { "id": "credential-store", "weight": 0.6, "rationale": "mTLS certificates and service identities require secure storage." }
+      ],
+      "strategies": [
+        { "id": "zero-trust-approach", "weight": 0.95, "rationale": "Zero trust approach is the direct strategic concern of trust boundary design." },
+        { "id": "boundary-isolation", "weight": 0.8, "rationale": "Microsegmentation enforces fine-grained boundary isolation." }
+      ]
+    },
+    {
+      "id": "deployment-strategy-selection",
+      "description": "Problem involves choosing deployment strategies such as blue-green, canary, rolling, or feature flags.",
+      "keywords": ["blue-green", "canary", "rolling", "feature flag", "deployment", "release", "rollback"],
+      "paradigms": [
+        { "id": "deployment-model", "weight": 0.95, "rationale": "Deployment strategy selection is the core deployment model decision." },
+        { "id": "scaling-architecture", "weight": 0.6, "rationale": "Deployment strategies must account for scaling characteristics." }
+      ],
+      "structures": [
+        { "id": "orchestration-layer", "weight": 0.9, "rationale": "Deployment orchestration manages rollout sequencing and health checks." },
+        { "id": "configuration-layer", "weight": 0.6, "rationale": "Feature flags and deployment configs control release behavior." }
+      ],
+      "strategies": [
+        { "id": "environment-promotion", "weight": 0.9, "rationale": "Deployment strategies define how artifacts are promoted to production." }
+      ]
+    },
+    {
+      "id": "scaling-architecture",
+      "description": "Problem involves designing scaling solutions including horizontal/vertical scaling, serverless, auto-scaling, and load balancing.",
+      "keywords": ["horizontal scaling", "vertical scaling", "serverless", "auto-scaling", "load balancer", "edge compute"],
+      "paradigms": [
+        { "id": "scaling-architecture", "weight": 0.95, "rationale": "Scaling architecture is the defining paradigm for capacity management." },
+        { "id": "deployment-model", "weight": 0.7, "rationale": "Scaling decisions are constrained by the deployment model." }
+      ],
+      "structures": [
+        { "id": "orchestration-layer", "weight": 0.8, "rationale": "Orchestration manages auto-scaling rules and instance lifecycle." },
+        { "id": "message-queue", "weight": 0.6, "rationale": "Message queues decouple producers from consumers for independent scaling." }
+      ],
+      "strategies": [
+        { "id": "environment-promotion", "weight": 0.6, "rationale": "Scaling configurations must be validated through environment promotion." }
+      ]
+    },
+    {
+      "id": "environment-management",
+      "description": "Problem involves managing staging, production, and environment parity using GitOps, IaC, or Terraform.",
+      "keywords": ["staging", "production", "environment parity", "GitOps", "infrastructure as code", "Terraform"],
+      "paradigms": [
+        { "id": "deployment-model", "weight": 0.9, "rationale": "Environment management is a core deployment model concern." },
+        { "id": "layered-architecture", "weight": 0.5, "rationale": "Environment layers separate development, staging, and production." }
+      ],
+      "structures": [
+        { "id": "configuration-layer", "weight": 0.9, "rationale": "Environment configurations define infrastructure and application settings." },
+        { "id": "orchestration-layer", "weight": 0.6, "rationale": "Orchestration layers manage environment provisioning and teardown." }
+      ],
+      "strategies": [
+        { "id": "environment-promotion", "weight": 0.95, "rationale": "Environment promotion is the direct strategy for managing deployments across stages." },
+        { "id": "environment-override", "weight": 0.7, "rationale": "Environment overrides customize behavior per deployment target." }
+      ]
+    },
+    {
+      "id": "artifact-pipeline",
+      "description": "Problem involves managing build artifacts, container registries, package registries, and reproducible builds.",
+      "keywords": ["container registry", "Docker", "CI/CD artifact", "package registry", "build cache", "reproducible build"],
+      "paradigms": [
+        { "id": "deployment-model", "weight": 0.85, "rationale": "Artifact pipelines feed the deployment model with versioned packages." },
+        { "id": "plugin-and-extension", "weight": 0.5, "rationale": "Build plugins extend artifact creation with custom steps." }
+      ],
+      "structures": [
+        { "id": "orchestration-layer", "weight": 0.85, "rationale": "Pipeline orchestration manages artifact build, test, and publish stages." },
+        { "id": "configuration-layer", "weight": 0.6, "rationale": "Build configurations define reproducible artifact creation." }
+      ],
+      "strategies": [
+        { "id": "environment-promotion", "weight": 0.8, "rationale": "Artifacts are promoted through environments as they pass validation gates." }
+      ]
+    },
+    {
+      "id": "observability-strategy",
+      "description": "Problem involves designing observability systems including monitoring, telemetry, OpenTelemetry, and APM.",
+      "keywords": ["observability", "monitoring", "telemetry", "OpenTelemetry", "APM", "SRE"],
+      "paradigms": [
+        { "id": "observability-pillar", "weight": 0.95, "rationale": "Observability strategy is the foundational pillar for system visibility." },
+        { "id": "monitoring-philosophy", "weight": 0.7, "rationale": "Monitoring philosophy shapes what is observed and how alerts are designed." }
+      ],
+      "structures": [
+        { "id": "telemetry-pipeline", "weight": 0.95, "rationale": "Telemetry pipelines collect, process, and export observability data." }
+      ],
+      "strategies": [
+        { "id": "sampling-approach", "weight": 0.8, "rationale": "Sampling strategies balance observability completeness against overhead." }
+      ]
+    },
+    {
+      "id": "alerting-design",
+      "description": "Problem involves designing alerting systems, on-call rotations, severity levels, and SLO-based alerts.",
+      "keywords": ["alerting", "on-call", "PagerDuty", "severity", "runbook", "alert fatigue", "SLO"],
+      "paradigms": [
+        { "id": "monitoring-philosophy", "weight": 0.9, "rationale": "Alerting design reflects the underlying monitoring philosophy." },
+        { "id": "observability-pillar", "weight": 0.7, "rationale": "Alerts are a key output of the observability system." }
+      ],
+      "structures": [
+        { "id": "telemetry-pipeline", "weight": 0.8, "rationale": "Alert rules consume telemetry pipeline data to trigger notifications." },
+        { "id": "configuration-layer", "weight": 0.6, "rationale": "Alert configurations define thresholds, routing, and escalation policies." }
+      ],
+      "strategies": [
+        { "id": "sampling-approach", "weight": 0.6, "rationale": "Sampling affects alert accuracy by determining data granularity." }
+      ]
+    },
+    {
+      "id": "distributed-tracing-needs",
+      "description": "Problem involves implementing distributed tracing with trace context propagation, spans, and request correlation.",
+      "keywords": ["distributed tracing", "trace context", "span", "Jaeger", "Zipkin", "request correlation"],
+      "paradigms": [
+        { "id": "observability-pillar", "weight": 0.9, "rationale": "Distributed tracing is a core observability pillar." },
+        { "id": "distributed-transaction", "weight": 0.5, "rationale": "Tracing follows distributed transaction paths across services." }
+      ],
+      "structures": [
+        { "id": "telemetry-pipeline", "weight": 0.9, "rationale": "Trace data flows through telemetry pipelines for collection and analysis." },
+        { "id": "message-channel", "weight": 0.6, "rationale": "Trace context propagates through message channels between services." }
+      ],
+      "strategies": [
+        { "id": "sampling-approach", "weight": 0.85, "rationale": "Trace sampling balances visibility against storage and performance costs." }
+      ]
+    },
+    {
+      "id": "log-aggregation-architecture",
+      "description": "Problem involves designing log aggregation systems with structured logging, centralized collection, and log level management.",
+      "keywords": ["log aggregation", "ELK", "Fluentd", "structured logging", "log level", "centralized logging"],
+      "paradigms": [
+        { "id": "observability-pillar", "weight": 0.85, "rationale": "Log aggregation is a fundamental observability pillar." },
+        { "id": "monitoring-philosophy", "weight": 0.6, "rationale": "Log philosophy determines what is logged and at what granularity." }
+      ],
+      "structures": [
+        { "id": "telemetry-pipeline", "weight": 0.9, "rationale": "Log pipelines collect, transform, and store logs centrally." },
+        { "id": "index-strategy", "weight": 0.6, "rationale": "Log indexes enable efficient search and aggregation over large volumes." }
+      ],
+      "strategies": [
+        { "id": "sampling-approach", "weight": 0.7, "rationale": "Log sampling reduces volume while preserving diagnostic capability." }
+      ]
     }
   ],
   "overlapThreshold": 0.6,
@@ -394,6 +1065,14 @@
     {
       "description": "No identical path triples: the ordered tuple (paradigm, structure, strategy) of primary keys must be unique per path.",
       "check": "For each path, form the tuple (highest-weight paradigm ID, highest-weight structure ID, highest-weight strategy ID). If any two paths produce the same tuple, they are duplicates and one must be replaced with a path producing a different tuple."
+    },
+    {
+      "description": "Cross-domain diversity: when paths span algorithmic and architectural domains, ensure at least one path from each domain type.",
+      "check": "Classify each signal as 'algorithmic' (original 23 signals covering data structures, algorithms, math) or 'architectural' (software engineering domain signals). When the candidate signal set spans both domain types, the final path selection must include at least one path rooted in each domain type."
+    },
+    {
+      "description": "Architecture paradigm uniqueness: no two paths should share the same architecture paradigm (e.g., both using layered-architecture).",
+      "check": "For paths using architectural paradigms (layered-architecture, event-driven-architecture, component-architecture, etc.), no two paths in the final selection may share the same highest-weight architectural paradigm ID. If a conflict exists, replace the lower-weighted path with one using a different architecture paradigm."
     }
   ]
 }

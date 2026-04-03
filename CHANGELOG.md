@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-04-03
+
+### Added
+- **hal-2026: software engineering domains** — expanded from 8 algorithmic-only paradigms to 31 paradigms (8 algorithmic + 23 SE), 22 structures (8 + 14), and 22 strategies (9 + 13) covering architecture, testing, deployment, security, and more
+- **hal-2026: context gathering pre-step** — optional Step 0 detects architecture/design keywords and loads up to 3 relevant skills via `skill-context-map.json` to enrich signal extraction
+- **hal-2026: exploration proposal generation** — new Step 5 writes a persistent `Proposal/HAL-{slug}.md` document capturing the full exploration lifecycle (signals, paths, reports, synthesis); opt-out via `--no-proposal`
+
+### Fixed
+- hal-2026 SKILL.md frontmatter `description` field converted from multi-line to single-line for parser compatibility
+
 ## [0.7.1] - 2026-04-03
 
 ### Fixed

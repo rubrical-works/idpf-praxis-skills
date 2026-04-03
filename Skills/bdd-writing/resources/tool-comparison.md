@@ -1,5 +1,5 @@
 # BDD Tool Comparison
-**Version:** v0.7.1
+**Version:** v0.8.0
 ## Quick Reference
 | Tool | Language | Gherkin | Best For |
 |------|----------|---------|----------|

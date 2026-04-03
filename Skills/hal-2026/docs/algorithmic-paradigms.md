@@ -287,3 +287,75 @@ When a problem could plausibly fall into multiple paradigms, use these tiebreake
 When truly ambiguous, assign the *more exotic* paradigm to one path (e.g., a mathematical
 reduction or randomized approach) — these are more likely to surface insights that a
 straightforward DP or greedy path would miss.
+
+---
+
+## Software Engineering Paradigms
+
+The following 23 paradigm families extend Dimension 1 into software engineering domains.
+They are grouped by domain and provide a quick-reference overview; see the JSON resource
+files for full sub-variant tables and red flags.
+
+### Architecture
+
+**Layered Architecture** — Separate concerns into layers (hexagonal, clean, onion, vertical slice) where each layer depends only on the layers below it. Use when business logic must be isolated from infrastructure for testability and independent evolution.
+
+**Test Infrastructure** — Treat the test environment as a first-class architectural concern with sandbox patterns, fixture factories, environment isolation, and test doubles at boundaries. Use when E2E or integration tests require reliable, reproducible environments.
+
+**Event-Driven Architecture** — Components communicate through events (pub/sub, message bus, event sourcing, CQRS, domain events), decoupling producers from consumers. Use for asynchronous workflows, audit trails, and multi-consumer scenarios.
+
+**Plugin and Extension** — Design for extensibility through strategy patterns, hook systems, middleware chains, and plugin registries. Use when behavior must be added or modified without changing core code.
+
+### Database
+
+**Relational Modeling** — Structure data using normalized relations (3NF, star schema, EAV, temporal tables) with referential integrity and ACID transactions. Use for complex join-heavy queries and strict consistency requirements.
+
+**Document Modeling** — Store data as self-contained documents (embedded, referenced, schema-on-read, polymorphic) optimized for read patterns. Use for flexible schemas, hierarchical data, and read-heavy workloads where denormalization is acceptable.
+
+**Polyglot Persistence** — Use different storage engines for different access patterns (SQL + NoSQL hybrid, read/write separation, search overlay, cache layer). Use when a single database cannot optimally serve all workloads.
+
+### API
+
+**Resource-Oriented** — Model the API as resources with standard HTTP operations (REST, HATEOAS, nesting, bulk operations). Use for CRUD-dominant data models with multiple client types and cacheable responses.
+
+**Query-Oriented** — Let clients specify exactly what data they need (GraphQL, query builders, field selection, persisted queries). Use for complex data graphs, bandwidth-sensitive clients, and rapid frontend iteration.
+
+**RPC-Oriented** — Expose operations as typed function calls across process boundaries (gRPC, tRPC, JSON-RPC, Thrift). Use for internal microservice communication where type safety, streaming, and performance matter.
+
+### Concurrency
+
+**Distributed Transaction** — Coordinate state changes across multiple services (SAGA choreography/orchestration, 2PC, TCC, transactional outbox). Use when multi-service writes must succeed or fail together.
+
+**Consensus Protocol** — Achieve agreement among distributed nodes (Raft, Paxos, CRDT, vector clocks) despite failures. Use for replicated state machines, leader election, and conflict resolution in multi-writer scenarios.
+
+**Actor Model** — Encapsulate state and behavior in actors (Erlang/OTP, Akka, Orleans, supervision trees) that communicate via asynchronous messages. Use for high concurrency with many independent stateful entities and fault isolation.
+
+### Frontend
+
+**Rendering Architecture** — Choose when and where HTML is generated (SSR, CSR, ISR, streaming SSR, islands architecture). Use to balance SEO, time-to-interactive, and developer experience based on content patterns.
+
+**Component Architecture** — Structure UI as composable building blocks (atomic design, compound components, render props, headless UI). Use for design systems, shared component libraries, and complex interactive UIs.
+
+### Caching
+
+**Cache Architecture** — Store computed results closer to consumers (CDN edge, application LRU, query cache, multi-tier). Use for read-heavy workloads with latency SLAs and expensive backend queries.
+
+**Optimization Approach** — Reduce resource consumption through lazy loading, prefetching, code splitting, connection pooling, and request coalescing. Use when measurable performance targets are not being met.
+
+### Security
+
+**Auth Architecture** — Verify identity and establish trust (session-based, JWT, OAuth2/OIDC, API keys, mTLS). Use to match the authentication mechanism to client type, security requirements, and user experience goals.
+
+**Authorization Model** — Determine what authenticated entities are allowed to do (RBAC, ABAC, ReBAC, policy-as-code). Use when permission hierarchies are complex and audit requirements demand explainable access decisions.
+
+### Deployment
+
+**Deployment Model** — Release new versions with controlled risk (blue-green, canary, rolling, feature flags, A/B testing). Use for production deployments requiring zero downtime and gradual rollout.
+
+**Scaling Architecture** — Handle increasing load by adding capacity (horizontal, vertical, serverless/FaaS, edge compute). Use when traffic growth exceeds single-instance capacity or load patterns are highly variable.
+
+### Observability
+
+**Observability Pillar** — Gain insight into system behavior through metrics, logs, traces, profiles, and continuous profiling. Use for production systems requiring operational visibility, SLO management, and performance optimization.
+
+**Monitoring Philosophy** — Structure what to monitor and how to respond (USE method, RED method, golden signals, SLO-based alerting). Use to reduce alert fatigue and ensure actionable observability for on-call teams.

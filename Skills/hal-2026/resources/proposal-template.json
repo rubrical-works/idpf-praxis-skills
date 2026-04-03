@@ -1,0 +1,77 @@
+{
+  "$schema": "proposal-template-schema.json",
+  "description": "Document structure template for hal-2026 exploration proposal generation (Step 5)",
+  "filePattern": "Proposal/HAL-{problem-slug}.md",
+  "sections": [
+    {
+      "id": "metadata",
+      "heading": "# Parallel Exploration: {problemTitle}",
+      "fields": [
+        { "key": "date", "label": "Date", "format": "YYYY-MM-DD" },
+        { "key": "skill", "label": "Skill", "value": "hal-2026" },
+        { "key": "signalsMatched", "label": "Signals Matched", "format": "comma-separated list" },
+        { "key": "pathsExplored", "label": "Paths Explored", "format": "integer" }
+      ]
+    },
+    {
+      "id": "problem-statement",
+      "heading": "## Problem Statement",
+      "content": "{originalUserQuery}"
+    },
+    {
+      "id": "context-sources",
+      "heading": "## Context Sources",
+      "optional": true,
+      "condition": "step0Ran",
+      "content": "Loaded skills, codebase analysis findings, tech stack detected. Omit this section entirely when Step 0 did not run."
+    },
+    {
+      "id": "signal-analysis",
+      "heading": "## Signal Analysis",
+      "content": "Matched signals with weights, loaded paradigms/structures/strategies with IDs and scores."
+    },
+    {
+      "id": "path",
+      "heading": "## Path {N}: {pathName}",
+      "repeating": true,
+      "subsections": [
+        {
+          "heading": "### Brief",
+          "content": "The filled brief sent to the subagent (slot values, constraints)."
+        },
+        {
+          "heading": "### Report",
+          "content": "Full structured report: core idea, walkthrough, complexity analysis, edge cases, implementation considerations, strengths, weaknesses, fit score."
+        }
+      ]
+    },
+    {
+      "id": "synthesis",
+      "heading": "## Synthesis",
+      "subsections": [
+        {
+          "heading": "### Scoring Matrix",
+          "content": "Table of dimension scores per path (always-relevant + conditionally-relevant dimensions)."
+        },
+        {
+          "heading": "### Validation Notes",
+          "content": "Errors found in subagent reasoning, complexity corrections, claims that don't hold up."
+        },
+        {
+          "heading": "### Hybridization Analysis",
+          "content": "Cross-path combination opportunities — can the best parts of two approaches be merged?"
+        }
+      ]
+    },
+    {
+      "id": "recommendation",
+      "heading": "## Recommendation",
+      "content": "Final recommendation with rationale and implementation sketch."
+    },
+    {
+      "id": "rejected-paths",
+      "heading": "## Rejected Paths",
+      "content": "Paths considered during signal matching but not selected. Each entry: path name, paradigm/structure/strategy, reason for rejection (e.g., too similar to selected path, low signal match score)."
+    }
+  ]
+}

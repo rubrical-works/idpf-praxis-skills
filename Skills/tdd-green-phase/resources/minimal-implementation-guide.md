@@ -1,5 +1,5 @@
 # Minimal Implementation Guide
-**Version:** v0.7.1
+**Version:** v0.8.0
 ## The GREEN Phase Goal
 **Write the simplest code that makes the test pass.** Not the best code. Not the most complete code. Just passing code.
 ## YAGNI Principle

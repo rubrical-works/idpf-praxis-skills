@@ -310,3 +310,55 @@ When the paradigm is fixed and you're choosing a data structure, use these signa
 | Contiguous subarray satisfying monotone constraint | Sliding window / two pointer |
 
 When two paths share a paradigm, pick structures from **different rows** of this table.
+
+---
+
+## Software Engineering Structures
+
+The following 14 structure families extend Dimension 2 into software engineering domains.
+They are grouped by domain and provide a quick-reference overview; see the JSON resource
+files for full variant tables and implementation traps.
+
+### Architecture
+
+**Service Container / Dependency Injection** — Manage object creation and dependency resolution through a centralized registry (constructor injection, property injection, service locator, factory registry). Use when testability requires swapping implementations or when modules need loose coupling with configurable dependency graphs.
+
+**Message Channel / Event Bus** — Decouple producers from consumers by routing messages through a shared channel (in-process emitter, IPC channel, message broker, command bus). Use for async workflows, cross-process messaging, and module decoupling.
+
+**Sandbox Environment / Test Isolation** — Create isolated execution contexts (temp directories, virtual filesystem, env var sandboxing, process forks, Docker containers) where side effects are contained. Use for integration and E2E tests that touch filesystem, network, or environment variables.
+
+**Configuration Layer** — Externalize runtime settings into a layered, validated, environment-aware system (dotenv cascade, feature flags, schema-validated config, hot reload, config inheritance). Use for multi-environment deployment with different settings per environment.
+
+### API
+
+**API Gateway / Edge Layer** — A single entry point (reverse proxy, BFF, edge function, full gateway) that routes, authenticates, and rate-limits requests before they reach backend services. Use when multiple backends need a unified API surface with cross-cutting concerns.
+
+**Contract Definition / API-First Design** — Define the interface between systems as a machine-readable spec (OpenAPI, GraphQL SDL, Protocol Buffers, JSON Schema, AsyncAPI) before implementation. Use when API contracts drive code generation, documentation, and multi-team parallel development.
+
+### Database
+
+**Index Strategy** — Create auxiliary data structures in the database (B-tree, hash, GIN, GiST, partial, covering indexes) that trade write overhead for faster reads. Use to optimize frequently executed query patterns on read-heavy workloads.
+
+**Migration Pipeline / Schema Evolution** — Apply versioned, ordered, and reversible schema changes (sequential migrations, idempotent scripts, expand-contract, blue-green schema, shadow tables). Use for production database evolution with zero-downtime deployment requirements.
+
+### Concurrency
+
+**Distributed Lock / Coordination Primitive** — Ensure mutual exclusion across processes or nodes (Redis SETNX, ZooKeeper ephemeral nodes, database advisory locks, etcd leases, optimistic locking). Use when only one process should perform an action at a time in a distributed system.
+
+**Message Queue / Delivery Semantics** — Asynchronously deliver messages with defined guarantees (at-most-once, at-least-once, exactly-once via outbox, dead letter queue, priority queue). Use to decouple production and consumption rates with buffering and retry semantics.
+
+### Frontend
+
+**State Store / Client State Management** — Centralize or distribute application state in a predictable container (global store, atomic state, signals/observables, server state cache, URL state). Use for shared UI state, server data synchronization, and reactive updates across components.
+
+### Observability
+
+**Telemetry Pipeline / Observability Stack** — Collect, process, store, and visualize signals (OpenTelemetry collector, log aggregator, time-series DB, visualization, APM). Use for production monitoring, SLO tracking, and distributed request tracing.
+
+### Security
+
+**Credential Store / Secrets Management** — Store, access, rotate, and audit sensitive values (Vault, cloud secret manager, encrypted config, env vars, HSM) separately from application code. Use when production secrets must be rotated, audited, or access-controlled.
+
+### Deployment
+
+**Orchestration Layer / Container Management** — Automate deployment, scaling, and lifecycle management (Kubernetes, ECS/Fargate, serverless, Nomad, Docker Compose). Use for multi-container applications requiring coordinated deployment and auto-scaling.

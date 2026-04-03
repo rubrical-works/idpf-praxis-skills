@@ -1,5 +1,5 @@
 # Gherkin Syntax Reference
-**Version:** v0.7.1
+**Version:** v0.8.0
 ## Keywords
 ### Primary Keywords
 | Keyword | Purpose | Required |

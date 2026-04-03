@@ -1,0 +1,80 @@
+{
+  "$schema": "skill-context-map-schema.json",
+  "description": "Maps problem domain keywords to skills that provide useful context for hal-2026 path selection",
+  "maxSkillsPerInvocation": 3,
+  "skills": [
+    {
+      "id": "codebase-analysis",
+      "type": "reference",
+      "keywords": ["existing codebase", "refactor", "improve", "current architecture", "tech stack", "legacy"],
+      "provides": "Tech stack detection, architecture inference, test coverage, dependency analysis",
+      "priority": "high",
+      "requiresCodebase": true
+    },
+    {
+      "id": "anti-pattern-analysis",
+      "type": "injector",
+      "keywords": ["refactor", "improve", "code smell", "anti-pattern", "technical debt", "cleanup"],
+      "provides": "Known anti-patterns to avoid in path recommendations",
+      "priority": "medium",
+      "requiresCodebase": false
+    },
+    {
+      "id": "error-handling-patterns",
+      "type": "injector",
+      "keywords": ["error handling", "fault tolerance", "exception", "retry", "graceful degradation"],
+      "provides": "Error hierarchy patterns, logging integration, recovery strategies",
+      "priority": "medium",
+      "requiresCodebase": false
+    },
+    {
+      "id": "resilience-patterns",
+      "type": "reference",
+      "keywords": ["resilience", "circuit breaker", "retry", "fallback", "distributed", "reliability", "fault tolerance"],
+      "provides": "Circuit breaker, retry, fallback, bulkhead patterns",
+      "priority": "medium",
+      "requiresCodebase": false
+    },
+    {
+      "id": "api-versioning",
+      "type": "reference",
+      "keywords": ["API", "versioning", "backward compatibility", "deprecation", "REST", "GraphQL"],
+      "provides": "Versioning strategies, deprecation workflows, migration paths",
+      "priority": "medium",
+      "requiresCodebase": false
+    },
+    {
+      "id": "migration-patterns",
+      "type": "reference",
+      "keywords": ["migration", "database", "schema", "zero-downtime", "data migration", "ETL"],
+      "provides": "Migration strategies, zero-downtime patterns, data transformation approaches",
+      "priority": "medium",
+      "requiresCodebase": false
+    },
+    {
+      "id": "ci-cd-pipeline-design",
+      "type": "reference",
+      "keywords": ["CI", "CD", "pipeline", "deployment", "GitHub Actions", "build", "release"],
+      "provides": "Pipeline architecture, stage design, artifact management",
+      "priority": "medium",
+      "requiresCodebase": false
+    },
+    {
+      "id": "test-scaffold",
+      "type": "reference",
+      "keywords": ["testing", "test infrastructure", "E2E", "integration test", "test setup", "sandbox"],
+      "provides": "Domain-specific test configurations, framework-aware test patterns",
+      "priority": "medium",
+      "requiresCodebase": false
+    },
+    {
+      "id": "code-path-discovery",
+      "type": "invokable",
+      "keywords": ["code paths", "behavioral analysis", "TypeScript", "JavaScript", "trace", "flow analysis"],
+      "provides": "Behavioral path scanning for TypeScript/JavaScript codebases",
+      "priority": "low",
+      "requiresCodebase": true
+    }
+  ],
+  "domainSkipKeywords": ["algorithm", "leetcode", "competitive", "data structure selection", "time complexity", "space complexity", "Big O"]
+}

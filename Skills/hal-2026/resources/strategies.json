@@ -375,6 +375,489 @@
         "Amortized analysis doesn't apply when individual worst-case latency matters (real-time systems)",
         "The amortized bound requires the sequence to start from an 'empty' state; if the structure is pre-loaded, the analysis changes"
       ]
+    },
+    {
+      "id": "boundary-isolation",
+      "name": "Boundary Isolation",
+      "coreReframe": "Isolate concerns at process, module, or network boundaries so that each side can evolve, deploy, and test independently. The boundary defines the contract; everything behind it is an implementation detail.",
+      "structuralSignals": [
+        "Cross-process communication patterns emerging (IPC, HTTP, message passing)",
+        "Module coupling making changes ripple across the codebase",
+        "Test isolation needs: tests for one module break when another module changes"
+      ],
+      "whatItUnlocks": [
+        "Independent deployment: change one side of the boundary without redeploying the other",
+        "Parallel development: teams work on different sides of the boundary simultaneously",
+        "Test sandboxing: mock one side of the boundary for fast, deterministic tests",
+        "Technology heterogeneity: different languages or frameworks on each side"
+      ],
+      "classicExamples": [
+        {
+          "category": "service-boundary",
+          "examples": "Microservice boundaries: each service owns its data and exposes an API; internal implementation is opaque"
+        },
+        {
+          "category": "process-boundary",
+          "examples": "Electron main/renderer split: main process handles OS access, renderer handles UI; IPC bridge connects them"
+        },
+        {
+          "category": "module-boundary",
+          "examples": "Module federation: independently built and deployed frontend modules loaded at runtime"
+        }
+      ],
+      "failureModes": [
+        "Over-isolation: too many boundaries create coordination overhead, distributed system complexity, and latency",
+        "Leaky abstractions: implementation details seep through the boundary (shared database, coupled schemas)",
+        "Boundary mismatch: the boundary doesn't align with the natural seams in the domain, causing cross-boundary transactions"
+      ]
+    },
+    {
+      "id": "fixture-and-seed",
+      "name": "Fixture and Seed",
+      "coreReframe": "Generate test data through factories, builders, or snapshot seeding rather than constructing it inline in every test. Centralize data creation to keep tests readable, maintainable, and deterministic.",
+      "structuralSignals": [
+        "Test data setup is verbose and duplicated across test files",
+        "Tests need reproducible state that is complex to construct manually",
+        "Complex object graphs with relationships that must be consistent"
+      ],
+      "whatItUnlocks": [
+        "Deterministic tests: same factory call produces same data every time",
+        "Fast setup: pre-built snapshots or seed data avoid expensive construction per test",
+        "Readable test code: factory calls express intent ('createActiveUser') rather than implementation details",
+        "Maintainable data: schema changes are absorbed in one place (the factory) rather than every test"
+      ],
+      "classicExamples": [
+        {
+          "category": "factory",
+          "examples": "factory-bot (Ruby), Fishery (TS): define a factory per model with sensible defaults and override capability"
+        },
+        {
+          "category": "builder",
+          "examples": "Test data builders: fluent API — new UserBuilder().withEmail('x').withRole('admin').build()"
+        },
+        {
+          "category": "snapshot",
+          "examples": "Database snapshots: dump a known-good state, restore before each test suite for integration tests"
+        },
+        {
+          "category": "fixture-file",
+          "examples": "Fixture files (JSON/YAML): static data files loaded per test; good for API response mocking"
+        }
+      ],
+      "failureModes": [
+        "Brittle fixtures coupled to schema: every schema change breaks fixtures; use factories with defaults instead",
+        "Snapshot rot: snapshots become stale as the schema evolves; automate snapshot regeneration",
+        "Factory proliferation: too many specialized factories; use traits or overrides on a base factory"
+      ]
+    },
+    {
+      "id": "environment-override",
+      "name": "Environment Override",
+      "coreReframe": "Inject configuration at runtime by overriding environment variables, file paths, or config layers rather than changing code. The same binary behaves differently based on its environment.",
+      "structuralSignals": [
+        "Multi-environment deployment: dev, staging, production need different settings",
+        "Test vs production config: tests need isolated databases, mock endpoints, or feature flags",
+        "Feature flags controlling behavior without code changes or redeployment"
+      ],
+      "whatItUnlocks": [
+        "Environment portability: same artifact runs anywhere with the right config",
+        "Test isolation: override DATABASE_URL, API_BASE, or feature flags per test suite",
+        "Gradual rollout: enable features for a percentage of users via config, not code branches",
+        "Debugging in production: toggle verbose logging or debug endpoints via config"
+      ],
+      "classicExamples": [
+        {
+          "category": "dotenv-cascade",
+          "examples": "dotenv cascades: .env.local > .env.test > .env with per-environment overrides"
+        },
+        {
+          "category": "config-layering",
+          "examples": "Config layering: base config merged with environment-specific overrides using deep merge"
+        },
+        {
+          "category": "path-redirect",
+          "examples": "Path redirection for tests: override DATA_DIR to a temp directory for filesystem isolation"
+        }
+      ],
+      "failureModes": [
+        "Env var sprawl: too many env vars with unclear naming; use a config schema to document and validate",
+        "Missing overrides in production: forgetting to set a required env var; fail fast with validation at startup",
+        "Config drift between environments: staging and production diverge silently; use config-as-code with diff tooling"
+      ]
+    },
+    {
+      "id": "denormalization-for-read",
+      "name": "Denormalization for Read",
+      "coreReframe": "Trade write complexity for read performance by precomputing and storing derived data. Accept data duplication to eliminate expensive joins, aggregations, or computations at query time.",
+      "structuralSignals": [
+        "Slow queries dominated by joins across multiple tables",
+        "Join-heavy reads that could be precomputed once and read many times",
+        "Reporting or analytics workloads with complex aggregations"
+      ],
+      "whatItUnlocks": [
+        "Fast reads: single-table lookups replace multi-table joins",
+        "Reduced query complexity: precomputed columns eliminate runtime calculations",
+        "Materialized views: database-managed denormalization with automatic or manual refresh",
+        "Read replicas: separate read-optimized copies with denormalized schemas"
+      ],
+      "classicExamples": [
+        {
+          "category": "denormalized-table",
+          "examples": "Denormalized tables: store user_name on order rows instead of joining to users table on every read"
+        },
+        {
+          "category": "materialized-view",
+          "examples": "Materialized views: CREATE MATERIALIZED VIEW monthly_revenue AS SELECT ... WITH DATA; REFRESH periodically"
+        },
+        {
+          "category": "computed-column",
+          "examples": "Computed columns: store total_price = quantity * unit_price instead of calculating per query"
+        },
+        {
+          "category": "read-replica",
+          "examples": "Read replicas: route reporting queries to a replica with denormalized indexes and views"
+        }
+      ],
+      "failureModes": [
+        "Stale data: denormalized values become inconsistent with source; define refresh strategy (trigger, schedule, event-driven)",
+        "Write amplification: every write to the source must update all denormalized copies; measure write overhead",
+        "Consistency gaps: application code updates the source but forgets to update the denormalized copy"
+      ]
+    },
+    {
+      "id": "schema-evolution",
+      "name": "Schema Evolution",
+      "coreReframe": "Evolve database or API schemas incrementally while maintaining backward compatibility with existing consumers. Every change must be deployable without breaking running systems.",
+      "structuralSignals": [
+        "Backward compatibility requirements: old clients must continue working during and after migration",
+        "Migration risk: schema changes could break production if not carefully sequenced",
+        "Multiple consumers: different services or client versions depend on the same schema"
+      ],
+      "whatItUnlocks": [
+        "Zero-downtime schema changes: deploy schema and code changes independently",
+        "Gradual migration: old and new schema coexist during transition period",
+        "Version coexistence: multiple schema versions serve different consumers simultaneously",
+        "Confident rollback: schema changes are reversible without data loss"
+      ],
+      "classicExamples": [
+        {
+          "category": "expand-contract",
+          "examples": "Expand-contract pattern: add new column (expand), migrate data, update code, drop old column (contract) across releases"
+        },
+        {
+          "category": "api-versioning",
+          "examples": "API versioning: /v1/users and /v2/users served simultaneously; v1 deprecated on timeline"
+        },
+        {
+          "category": "backward-compatible",
+          "examples": "Backward-compatible migrations: add columns with defaults, never rename in a single step, use views as abstraction layer"
+        }
+      ],
+      "failureModes": [
+        "Breaking changes in a 'compatible' release: removing a column that old code still reads",
+        "Orphaned columns: expand phase completes but contract phase is never executed; dead columns accumulate",
+        "Migration rollback failures: down migration doesn't restore data that was transformed during up migration"
+      ]
+    },
+    {
+      "id": "api-versioning-strategy",
+      "name": "API Versioning Strategy",
+      "coreReframe": "Manage multiple API versions to give consumers a stable contract while allowing the API to evolve. The versioning strategy determines how breaking changes are communicated, how long old versions live, and how clients migrate.",
+      "structuralSignals": [
+        "Breaking API change required but existing clients cannot update immediately",
+        "Multiple client versions in the wild (mobile apps, third-party integrations)",
+        "Need for a deprecation policy with defined sunset dates"
+      ],
+      "whatItUnlocks": [
+        "Backward compatibility: old clients continue working during migration window",
+        "Controlled deprecation: sunset dates and migration guides for each version",
+        "Client migration timeline: consumers move at their own pace within the support window",
+        "Independent API and client release cycles"
+      ],
+      "classicExamples": [
+        {
+          "category": "url-versioning",
+          "examples": "URL path versioning: /api/v1/users, /api/v2/users — simple, visible, cacheable"
+        },
+        {
+          "category": "header-versioning",
+          "examples": "Header versioning: Accept: application/vnd.myapp.v2+json — keeps URLs clean"
+        },
+        {
+          "category": "content-negotiation",
+          "examples": "Content negotiation: client requests a specific representation; server serves the best match"
+        }
+      ],
+      "failureModes": [
+        "Version proliferation: too many active versions; define maximum supported versions and sunset policy",
+        "Indefinite support burden: old versions never sunset; set and enforce deprecation timelines",
+        "Inconsistent behavior across versions: v1 and v2 diverge in subtle ways; shared test suites prevent drift"
+      ]
+    },
+    {
+      "id": "consistency-trade-off",
+      "name": "Consistency Trade-off",
+      "coreReframe": "Choose the consistency level that matches business requirements rather than defaulting to strong consistency everywhere. Weaker consistency enables better performance, availability, and partition tolerance.",
+      "structuralSignals": [
+        "Distributed state: data replicated across nodes or regions",
+        "Latency vs correctness tension: strong consistency adds round-trip latency",
+        "Business rules that tolerate eventual consistency (social feeds, view counts, recommendations)"
+      ],
+      "whatItUnlocks": [
+        "Performance in distributed systems: reads from local replica without cross-region round-trip",
+        "Partition tolerance: system continues operating during network splits",
+        "Read scaling: any replica can serve reads under eventual consistency",
+        "Tunable consistency: per-query consistency level based on the operation's requirements"
+      ],
+      "classicExamples": [
+        {
+          "category": "strong-consistency",
+          "examples": "Strong consistency (2PC): bank transfers, inventory reservation — correctness is non-negotiable"
+        },
+        {
+          "category": "eventual-consistency",
+          "examples": "Eventual consistency (CRDT): collaborative editing, shopping cart merge, distributed counters"
+        },
+        {
+          "category": "read-your-writes",
+          "examples": "Read-your-writes: user sees their own changes immediately; other users see changes eventually"
+        },
+        {
+          "category": "causal-consistency",
+          "examples": "Causal consistency: if A causes B, everyone sees A before B; concurrent events may appear in any order"
+        }
+      ],
+      "failureModes": [
+        "Phantom reads: reading stale data that leads to incorrect business decisions",
+        "Lost updates: concurrent writes overwrite each other without conflict detection",
+        "Split-brain decisions: partitioned nodes make conflicting decisions; use fencing tokens or consensus protocols"
+      ]
+    },
+    {
+      "id": "idempotency-design",
+      "name": "Idempotency Design",
+      "coreReframe": "Ensure operations produce the same result regardless of how many times they are executed. Safe retries, exactly-once semantics, and fault tolerance all depend on idempotent operations.",
+      "structuralSignals": [
+        "Retry logic in the system: network failures trigger automatic retries",
+        "At-least-once delivery: message queues may deliver the same message multiple times",
+        "Duplicate requests: users double-click, clients retry on timeout, load balancers replay"
+      ],
+      "whatItUnlocks": [
+        "Safe retries: any failed operation can be retried without side effects",
+        "Exactly-once semantics: at-least-once delivery + idempotent consumer = exactly-once processing",
+        "Fault tolerance: crashes during processing are recovered by re-executing the same operation",
+        "Simplified error handling: no need to distinguish 'already done' from 'succeeded'"
+      ],
+      "classicExamples": [
+        {
+          "category": "idempotency-key",
+          "examples": "Idempotency keys: client sends a unique key per request; server deduplicates by key (Stripe API pattern)"
+        },
+        {
+          "category": "deduplication-table",
+          "examples": "Deduplication tables: store processed message IDs; skip if already seen"
+        },
+        {
+          "category": "tombstone",
+          "examples": "Tombstone records: soft-delete with a marker rather than physical delete; re-delete is a no-op"
+        },
+        {
+          "category": "conditional-write",
+          "examples": "Conditional writes: UPDATE ... WHERE version = N; only succeeds if state hasn't changed"
+        }
+      ],
+      "failureModes": [
+        "Non-idempotent side effects: sending emails, charging credit cards, or incrementing counters on retry",
+        "Key collision: idempotency keys reused across different logical operations",
+        "Stale deduplication cache: evicting processed IDs too early allows duplicate processing"
+      ]
+    },
+    {
+      "id": "hydration-strategy",
+      "name": "Hydration Strategy",
+      "coreReframe": "Choose when and how client-side JavaScript activates server-rendered HTML. The hydration strategy controls the trade-off between initial paint speed, time-to-interactive, and JavaScript bundle size.",
+      "structuralSignals": [
+        "SSR performance concerns: server renders HTML but client-side JS takes too long to activate it",
+        "Time-to-interactive is significantly later than first contentful paint",
+        "JavaScript bundle size is large relative to the interactivity it provides"
+      ],
+      "whatItUnlocks": [
+        "Faster initial paint: server-rendered HTML is visible before any JS executes",
+        "Reduced JS overhead: partial or selective hydration skips non-interactive regions",
+        "Selective interactivity: only hydrate components that need client-side behavior",
+        "Streaming: progressive delivery of HTML and selective hydration of arrived components"
+      ],
+      "classicExamples": [
+        {
+          "category": "full-hydration",
+          "examples": "Full hydration: server renders HTML, client re-renders the entire tree to attach event handlers (React SSR default)"
+        },
+        {
+          "category": "partial-hydration",
+          "examples": "Partial hydration: only interactive 'islands' are hydrated; static content remains server-rendered HTML (Astro)"
+        },
+        {
+          "category": "progressive-hydration",
+          "examples": "Progressive hydration: defer hydration of below-fold components until they enter viewport or become idle"
+        },
+        {
+          "category": "resumability",
+          "examples": "Resumability (Qwik): serialize component state and event handlers into HTML; no replay of component tree on client"
+        }
+      ],
+      "failureModes": [
+        "Hydration mismatch errors: server HTML and client render produce different output; causes flicker or crash",
+        "Double-rendering: client re-executes all component logic that server already ran; wasted CPU",
+        "Layout shift: content moves when JS activates and changes dimensions of hydrated components"
+      ]
+    },
+    {
+      "id": "invalidation-pattern",
+      "name": "Invalidation Pattern",
+      "coreReframe": "Define a strategy for keeping cached data fresh. Every cache is a bet that the data won't change before the next read; the invalidation pattern determines how and when that bet is settled.",
+      "structuralSignals": [
+        "Stale data causing incorrect behavior or poor user experience",
+        "Cache consistency requirements: how fresh must the data be?",
+        "Write-through needs: writes must immediately reflect in cached reads"
+      ],
+      "whatItUnlocks": [
+        "Fresh reads without full recomputation: invalidate only what changed",
+        "Controlled staleness: TTL-based caching with known maximum age",
+        "Event-driven refresh: cache updated in response to write events, not polling",
+        "Read performance: cache absorbs read load while writes go to source of truth"
+      ],
+      "classicExamples": [
+        {
+          "category": "ttl-based",
+          "examples": "TTL-based: cache entries expire after a fixed duration; simple but allows staleness up to TTL"
+        },
+        {
+          "category": "event-driven",
+          "examples": "Event-driven invalidation: write event triggers cache delete or update; near-zero staleness"
+        },
+        {
+          "category": "write-through",
+          "examples": "Write-through cache: every write updates both cache and backing store synchronously"
+        },
+        {
+          "category": "write-behind",
+          "examples": "Write-behind cache: writes go to cache immediately; asynchronously flushed to backing store"
+        }
+      ],
+      "failureModes": [
+        "Cache stampede: many clients simultaneously miss an expired key and hit the backing store; use lock or stale-while-revalidate",
+        "Missed invalidation: write path forgets to invalidate; stale data persists indefinitely",
+        "Thundering herd: popular key expires and all requests flood the origin; use jittered TTL or request coalescing"
+      ]
+    },
+    {
+      "id": "zero-trust-approach",
+      "name": "Zero Trust Approach",
+      "coreReframe": "Verify every request regardless of network location. Never trust a request solely because it originates from the internal network; authenticate and authorize at every boundary.",
+      "structuralSignals": [
+        "Internal service-to-service communication currently relies on network perimeter for security",
+        "Network perimeter is insufficient: cloud, VPN, remote workers blur the boundary",
+        "Lateral movement risk: a compromised internal service can access everything on the network"
+      ],
+      "whatItUnlocks": [
+        "Defense in depth: compromise of one service doesn't grant access to others",
+        "Microsegmentation: fine-grained access control per service, per endpoint, per action",
+        "Identity-based access: authentication tied to service identity, not network location",
+        "Audit trail: every authenticated request is logged with identity context"
+      ],
+      "classicExamples": [
+        {
+          "category": "mtls",
+          "examples": "mTLS: mutual TLS between services; both client and server present certificates"
+        },
+        {
+          "category": "service-mesh",
+          "examples": "Service mesh (Istio): sidecar proxy handles mTLS, auth policy, and traffic control transparently"
+        },
+        {
+          "category": "identity-proxy",
+          "examples": "Identity-aware proxy: Google BeyondCorp — every request authenticated at the proxy regardless of network origin"
+        }
+      ],
+      "failureModes": [
+        "Certificate management overhead: mTLS requires CA infrastructure, cert rotation, and revocation handling",
+        "Latency from mutual auth: every request incurs TLS handshake cost; mitigate with connection pooling and session resumption",
+        "Complexity: zero trust adds configuration surface area; misconfigured policies can block legitimate traffic"
+      ]
+    },
+    {
+      "id": "environment-promotion",
+      "name": "Environment Promotion",
+      "coreReframe": "Move immutable build artifacts through a sequence of environments (dev, staging, production) with increasing confidence gates. The same artifact is tested at each stage; only configuration changes between environments.",
+      "structuralSignals": [
+        "Deployment pipeline with multiple environments before production",
+        "Environment parity concerns: what works in staging must work in production",
+        "Release approval gates: human or automated checks before promotion"
+      ],
+      "whatItUnlocks": [
+        "Repeatable deployments: same artifact, different config, predictable behavior",
+        "Audit trail: every promotion is recorded with who approved and what tests passed",
+        "Rollback capability: previous artifact is always available for re-deployment",
+        "Confidence escalation: each environment adds assurance before production"
+      ],
+      "classicExamples": [
+        {
+          "category": "gitops",
+          "examples": "GitOps (ArgoCD, Flux): desired state declared in Git; controller reconciles cluster state to match"
+        },
+        {
+          "category": "pipeline-driven",
+          "examples": "Pipeline-driven (Jenkins, GitHub Actions): build once, deploy to dev, run tests, promote to staging, approve, promote to prod"
+        },
+        {
+          "category": "branch-per-environment",
+          "examples": "Branch-per-environment: merge to 'staging' branch deploys to staging; merge to 'main' deploys to production"
+        }
+      ],
+      "failureModes": [
+        "Environment drift: staging and production diverge in config, data, or infrastructure; use infrastructure-as-code",
+        "Promotion without testing: skipping test gates under pressure; enforce gates in CI/CD pipeline",
+        "Manual hotfix bypasses: emergency changes skip the pipeline; create fast-track path that still runs critical tests"
+      ]
+    },
+    {
+      "id": "sampling-approach",
+      "name": "Sampling Approach",
+      "coreReframe": "Decide which telemetry data to collect versus discard based on cost, volume, and debugging needs. Sampling controls the trade-off between observability completeness and resource consumption.",
+      "structuralSignals": [
+        "High-volume telemetry exceeding storage or processing budget",
+        "Cost constraints: telemetry storage and ingestion costs growing faster than value",
+        "Debug vs production tracing needs: full traces needed for debugging but not for steady-state monitoring"
+      ],
+      "whatItUnlocks": [
+        "Cost control: collect a representative fraction instead of 100% of data",
+        "Manageable data volume: downstream systems (storage, indexing, querying) stay within capacity",
+        "Targeted debugging: increase sampling rate for specific services, errors, or slow requests",
+        "Adaptive capacity: sampling rate adjusts based on system load or error rate"
+      ],
+      "classicExamples": [
+        {
+          "category": "head-based",
+          "examples": "Head-based sampling: decide at trace start whether to sample (e.g., 10% of requests); simple, consistent per trace"
+        },
+        {
+          "category": "tail-based",
+          "examples": "Tail-based sampling: collect all spans, decide after trace completes whether to keep (e.g., keep errors and slow traces)"
+        },
+        {
+          "category": "adaptive",
+          "examples": "Adaptive sampling: increase sampling rate when error rate spikes or latency exceeds threshold"
+        },
+        {
+          "category": "always-on-errors",
+          "examples": "Always-on for errors: 100% sampling for error traces regardless of overall sampling rate"
+        }
+      ],
+      "failureModes": [
+        "Missing critical traces: the one request you need to debug was not sampled; use tail-based or error-aware sampling",
+        "Biased sampling: head-based sampling over-represents short traces; weight by duration or importance",
+        "Inconsistent sampling across services: parent sampled but child not, creating broken traces; propagate sampling decision in context"
+      ]
     }
   ],
   "crossStrategyInteractionGuide": [
@@ -397,6 +880,38 @@
     {
       "combination": "Eager/lazy + Amortization",
       "whatItProduces": "Lazy deletion in a heap is O(log n) amortized because stale entries are bounded by total inserts"
+    },
+    {
+      "combination": "Boundary isolation + Environment override",
+      "whatItProduces": "Isolated modules with per-environment config injection enable independent testing and deployment"
+    },
+    {
+      "combination": "Fixture and seed + Boundary isolation",
+      "whatItProduces": "Factory-generated test data within sandboxed boundaries for deterministic integration tests"
+    },
+    {
+      "combination": "Schema evolution + Denormalization for read",
+      "whatItProduces": "Expand-contract migrations that add denormalized read views before removing normalized originals"
+    },
+    {
+      "combination": "Idempotency design + Consistency trade-off",
+      "whatItProduces": "At-least-once delivery with idempotent consumers achieves exactly-once semantics under eventual consistency"
+    },
+    {
+      "combination": "Invalidation pattern + Denormalization for read",
+      "whatItProduces": "Event-driven cache invalidation keeps denormalized views fresh after source data writes"
+    },
+    {
+      "combination": "Zero trust + Environment promotion",
+      "whatItProduces": "Identity-verified promotions through environments with mTLS at every stage"
+    },
+    {
+      "combination": "Sampling approach + Hydration strategy",
+      "whatItProduces": "Sampled real-user monitoring traces reveal which hydration strategy performs best in production"
+    },
+    {
+      "combination": "API versioning + Schema evolution",
+      "whatItProduces": "Coordinated API version and database schema evolution with backward-compatible transition periods"
     }
   ]
 }
