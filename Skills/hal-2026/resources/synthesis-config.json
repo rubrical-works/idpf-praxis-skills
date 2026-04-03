@@ -1,0 +1,176 @@
+{
+  "$schema": "synthesis-schema.json",
+  "description": "Scoring rubric and synthesis rules for evaluating and combining subagent reports into a final recommendation.",
+  "phases": [
+    {
+      "id": "validate",
+      "order": 1,
+      "name": "Validate Each Report",
+      "description": "Check each report for correctness independently before scoring. Do not just accept the subagent's reasoning.",
+      "checks": [
+        {
+          "id": "complexity-check",
+          "name": "Complexity check",
+          "instructions": [
+            "Verify the time/space claims independently. Is O(n log n) actually right, or did the subagent undercount a nested loop? Are amortized costs labeled correctly?",
+            "Flag any claims that seem off. Write a one-line note: 'Path 2 claims O(n) but the inner loop makes this O(n^2) in the worst case.'"
+          ]
+        },
+        {
+          "id": "walkthrough-check",
+          "name": "Walkthrough check",
+          "instructions": [
+            "Trace the example yourself mentally. Does the algorithm produce the stated result?",
+            "If the walkthrough is vague or skips steps, note it."
+          ]
+        },
+        {
+          "id": "edge-case-check",
+          "name": "Edge case check",
+          "instructions": [
+            "Are the listed edge cases genuine? Do the explanations hold up?",
+            "Is there a critical edge case the subagent missed? Add it to your analysis."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "score",
+      "order": 2,
+      "name": "Score Each Approach",
+      "description": "Score on dimensions most relevant to the problem. Always include correctness and complexity. Add domain-specific dimensions as appropriate.",
+      "scoringScale": {
+        "values": ["Strong", "Adequate", "Weak", "Disqualifying"],
+        "disqualificationRule": "A single Disqualifying score on any dimension eliminates an approach from being the primary recommendation (though it may still contribute to a hybrid)."
+      },
+      "alwaysRelevantDimensions": [
+        {
+          "id": "correctness",
+          "name": "Correctness",
+          "whatToAssess": "Does the algorithm actually solve the problem? Any subtle bugs?"
+        },
+        {
+          "id": "time-complexity",
+          "name": "Time complexity",
+          "whatToAssess": "Is it optimal or near-optimal for the constraints?"
+        },
+        {
+          "id": "space-complexity",
+          "name": "Space complexity",
+          "whatToAssess": "Is memory usage acceptable? Any hidden allocations?"
+        },
+        {
+          "id": "edge-case-robustness",
+          "name": "Edge case robustness",
+          "whatToAssess": "How gracefully does it handle boundary inputs?"
+        },
+        {
+          "id": "implementation-difficulty",
+          "name": "Implementation difficulty",
+          "whatToAssess": "How easy is this to get right in real code?"
+        }
+      ],
+      "conditionallyRelevantDimensions": [
+        {
+          "id": "streaming-online-capability",
+          "name": "Streaming/online capability",
+          "useWhen": "Problem involves continuous or unbounded input"
+        },
+        {
+          "id": "parallelizability",
+          "name": "Parallelizability",
+          "useWhen": "User mentions distributed or concurrent context"
+        },
+        {
+          "id": "mutability",
+          "name": "Mutability",
+          "useWhen": "Input may change after initial processing"
+        },
+        {
+          "id": "constant-factors",
+          "name": "Constant factors",
+          "useWhen": "Two approaches share asymptotic complexity but differ in practice"
+        },
+        {
+          "id": "code-readability",
+          "name": "Code readability",
+          "useWhen": "User's codebase or team context suggests this matters"
+        }
+      ]
+    },
+    {
+      "id": "hybridize",
+      "order": 3,
+      "name": "Check for Hybridization",
+      "description": "Before picking a winner, check whether combining approaches yields a genuinely better solution.",
+      "questions": [
+        {
+          "id": "edge-case-hybrid",
+          "question": "Does Path A have the right algorithm but Path B handles edge cases better?",
+          "action": "Recommend Path A with Path B's edge case strategy incorporated."
+        },
+        {
+          "id": "common-vs-degenerate",
+          "question": "Does Path A excel at the common case and Path B at the degenerate case?",
+          "action": "Recommend Path A with a fallback to Path B's strategy under detected conditions."
+        },
+        {
+          "id": "complementary-decomposition",
+          "question": "Do two paths decompose the problem differently in complementary ways?",
+          "action": "Describe a hybrid decomposition."
+        }
+      ],
+      "constraint": "State hybrids explicitly and explain what you gain. Don't suggest a hybrid just to seem thorough — only if the combination is genuinely better than either alone."
+    },
+    {
+      "id": "output",
+      "order": 4,
+      "name": "Write the Final Output",
+      "description": "Follow the output format in SKILL.md exactly.",
+      "principles": [
+        {
+          "id": "be-direct",
+          "name": "Be direct",
+          "rule": "Name a winner. Hedging ('it depends') is only acceptable if you provide a concrete decision tree (e.g., 'use X if n < 10^5, use Y otherwise')."
+        },
+        {
+          "id": "show-your-work",
+          "name": "Show your work",
+          "rule": "The Analysis section must justify the recommendation, not just restate it."
+        },
+        {
+          "id": "highlight-errors",
+          "name": "Highlight errors found",
+          "rule": "If a subagent made a mistake, say so. This is valuable signal for the user that the synthesis step is doing real work."
+        },
+        {
+          "id": "implementation-sketch-mandatory",
+          "name": "Implementation sketch is mandatory",
+          "rule": "It doesn't need to be executable, but it must unambiguously communicate the algorithm — pseudocode, commented outline, or annotated steps."
+        }
+      ]
+    }
+  ],
+  "commonMistakesToAvoid": [
+    {
+      "id": "recency-bias",
+      "name": "Recency bias",
+      "description": "Don't favor the last path just because you read it last. Score all paths before concluding."
+    },
+    {
+      "id": "advocacy-drift",
+      "name": "Advocacy drift",
+      "description": "Subagents are briefed to explore one path. Their enthusiasm for their own approach isn't evidence of its quality."
+    },
+    {
+      "id": "false-hybrids",
+      "name": "False hybrids",
+      "description": "'Use both' is not a synthesis. A real hybrid has a specific integration point."
+    },
+    {
+      "id": "ignoring-constraints",
+      "name": "Ignoring constraints",
+      "description": "Re-read the original problem constraints before writing the recommendation. A beautiful O(n log n) solution is wrong if the problem requires O(n)."
+    }
+  ]
+}

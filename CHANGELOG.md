@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.1] - 2026-04-03
+
+### Fixed
+- **Minimization pipeline gap** (#140) — non-`.md` files in `resources/` and `docs/` directories (JSON, JS, YAML, etc.) were silently dropped during minimization. `cmdCopyCompanionFiles()` now copies non-`.md` files from `copyAsIsSubdirectories` instead of skipping those directories entirely.
+- Additional non-`.md` resource files discovered and copied across multiple skills (`.py`, `.rb`, `.yaml`, `.toml`, `.yml`)
+
+### Changed
+- SKILL-DEVELOPMENT-GUIDE.md updated to document that `resources/` supports any file type with hal-2026 example
+
 ## [0.7.0] - 2026-04-03
 
 ### Added

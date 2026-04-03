@@ -1,0 +1,101 @@
+{
+  "$schema": "brief-schema.json",
+  "description": "Template for subagent briefs. The primary agent fills the slot fields when spawning each subagent.",
+  "preamble": "You are exploring a single solution path for a coding problem. Your job is to reason deeply about ONE specific approach and report back in structured form.",
+  "slots": [
+    {
+      "field": "problemStatement",
+      "label": "The Problem",
+      "type": "string",
+      "required": true,
+      "description": "Full problem statement, including constraints and any examples. If the problem has stated constraints (e.g., 'memory-limited', 'must handle streaming'), include them verbatim for every subagent."
+    },
+    {
+      "field": "assignedApproach",
+      "label": "Your Assigned Approach",
+      "type": "object",
+      "required": true,
+      "description": "The specific approach this subagent should explore.",
+      "subfields": [
+        {
+          "field": "name",
+          "label": "Approach name",
+          "type": "string",
+          "required": true,
+          "description": "E.g., 'Segment tree with lazy propagation'. Vary wording across subagents to avoid accidentally constraining two toward the same direction."
+        },
+        {
+          "field": "description",
+          "label": "Approach description",
+          "type": "string",
+          "required": true,
+          "description": "1-2 sentences describing what this approach means at a high level, enough that the subagent understands the direction without being over-constrained."
+        }
+      ]
+    },
+    {
+      "field": "exclusions",
+      "label": "What NOT to do",
+      "type": "string",
+      "required": false,
+      "description": "Optional hint if worried a subagent will drift toward another path's territory (e.g., 'Do not use a heap in this path')."
+    },
+    {
+      "field": "maxSteps",
+      "label": "Maximum steps",
+      "type": "integer",
+      "required": true,
+      "description": "Maximum number of reasoning steps the subagent may take. Constrains subagent execution budget.",
+      "default": 50
+    },
+    {
+      "field": "maxOutputLines",
+      "label": "Maximum output lines",
+      "type": "integer",
+      "required": true,
+      "description": "Maximum number of lines in the subagent's report output. Constrains response size.",
+      "default": 200
+    }
+  ],
+  "taskInstructions": {
+    "description": "Instructions given to the subagent describing what to produce.",
+    "sections": [
+      {
+        "order": 1,
+        "label": "Core idea",
+        "instruction": "What is the key insight that makes this approach work?"
+      },
+      {
+        "order": 2,
+        "label": "Step-by-step walkthrough",
+        "instruction": "Trace through the algorithm on a concrete small example."
+      },
+      {
+        "order": 3,
+        "label": "Complexity analysis",
+        "instruction": "Time and space, with justification (not just labels)."
+      },
+      {
+        "order": 4,
+        "label": "Edge cases",
+        "instruction": "Enumerate at least 3; explain how this approach handles each."
+      },
+      {
+        "order": 5,
+        "label": "Implementation considerations",
+        "instruction": "Non-obvious choices a developer would face."
+      },
+      {
+        "order": 6,
+        "label": "Honest strengths and weaknesses",
+        "instruction": "Where does this shine, where does it struggle?"
+      }
+    ],
+    "outputConstraint": "Return ONLY the structured report. Do not add preamble or conclusion outside it."
+  },
+  "primaryAgentNotes": [
+    "Vary the 'assigned approach' wording across subagents — don't accidentally constrain two of them toward the same direction with similar framing.",
+    "If the problem has stated constraints (e.g., 'memory-limited', 'must handle streaming'), include them verbatim in the problem statement for every subagent — they must all reason against the same constraints.",
+    "You may optionally add a 'What NOT to do' hint if you're worried a subagent will drift toward another path's territory (e.g., 'Do not use a heap in this path')."
+  ]
+}

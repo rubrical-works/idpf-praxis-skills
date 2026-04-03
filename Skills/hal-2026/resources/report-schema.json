@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "report-schema.json",
+  "title": "Subagent Report Template",
+  "description": "Schema for the HAL-2026 subagent report template definition.",
+  "type": "object",
+  "required": ["$schema", "description", "reportFields", "synthesisNotes"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "report-schema.json"
+    },
+    "description": {
+      "type": "string"
+    },
+    "reportFields": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/reportFieldDefinition"
+      }
+    },
+    "synthesisNotes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "definitions": {
+    "reportFieldDefinition": {
+      "type": "object",
+      "required": ["field", "label", "type", "required", "description"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["string", "object", "array", "enum"]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "minItems": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "values": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Allowed values when type is enum."
+        },
+        "subfields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/reportFieldDefinition"
+          },
+          "description": "Nested field definitions for object types."
+        },
+        "items": {
+          "type": "object",
+          "description": "Item shape descriptor for array types.",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "requiredDimensions": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "optionalDimensions": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

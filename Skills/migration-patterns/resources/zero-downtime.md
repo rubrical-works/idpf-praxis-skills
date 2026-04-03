@@ -1,5 +1,5 @@
 # Zero-Downtime Migration Patterns
-**Version:** v0.7.0
+**Version:** v0.7.1
 Patterns for migrating database schemas without service interruption.
 ## Core Principle
 **Never make a change that breaks the current application version.** Each migration must be compatible with both current and new application versions.

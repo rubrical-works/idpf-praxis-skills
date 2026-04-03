@@ -1,5 +1,5 @@
 # Step Definition Patterns
-**Version:** v0.7.0
+**Version:** v0.7.1
 Step definition examples across BDD frameworks.
 ## JavaScript (Cucumber.js)
 ### Basic Steps

@@ -1,0 +1,399 @@
+{
+  "$schema": "cross-references-schema.json",
+  "signals": [
+    {
+      "id": "optimize-independent-choices",
+      "description": "Problem asks for minimum or maximum over a set of independent, irreversible choices where local optimality extends to global optimality.",
+      "keywords": ["minimum number of", "maximum number of", "schedule", "assign", "interval", "non-overlapping", "earliest deadline"],
+      "paradigms": [
+        { "id": "greedy", "weight": 0.95, "rationale": "Independent irreversible choices with exchange-argument provability are the hallmark of greedy." }
+      ],
+      "structures": [
+        { "id": "heap-priority-queue", "weight": 0.8, "rationale": "Priority queue maintains the best available choice at each step (Dijkstra, Prim)." },
+        { "id": "sliding-window-and-two-pointer", "weight": 0.5, "rationale": "Sort-then-scan greedy often reduces to a two-pointer sweep over sorted intervals." }
+      ],
+      "strategies": [
+        { "id": "forward-vs-reverse-processing", "weight": 0.6, "rationale": "Two-pass greedy (left-to-right then right-to-left) handles bidirectional constraints." },
+        { "id": "problem-transformation-reduction", "weight": 0.5, "rationale": "Sorting by a key transforms the problem into a sequential scan." }
+      ]
+    },
+    {
+      "id": "overlapping-subproblems",
+      "description": "Problem involves counting, minimizing, or maximizing over an exponential decision space where subproblems recur.",
+      "keywords": ["how many ways", "minimum cost", "maximum profit", "longest", "shortest", "count paths", "can you partition"],
+      "paradigms": [
+        { "id": "dynamic-programming", "weight": 0.95, "rationale": "Overlapping subproblems with optimal substructure is the defining DP signal." },
+        { "id": "backtracking-and-constraint-search", "weight": 0.4, "rationale": "When state space is small, backtracking with memoization converges to DP." }
+      ],
+      "structures": [
+        { "id": "hash-based-structures", "weight": 0.8, "rationale": "Memo table (hash map) stores computed subproblem results for top-down DP." },
+        { "id": "sliding-window-and-two-pointer", "weight": 0.4, "rationale": "1D rolling array optimizes space when current row depends only on previous." }
+      ],
+      "strategies": [
+        { "id": "push-vs-pull-propagation", "weight": 0.7, "rationale": "Push DP (update successors) vs pull DP (collect from predecessors) yields structurally different solutions." },
+        { "id": "forward-vs-reverse-processing", "weight": 0.6, "rationale": "Suffix DP vs prefix DP can simplify transitions or base cases." }
+      ]
+    },
+    {
+      "id": "shortest-path-between-states",
+      "description": "Problem asks for the shortest, cheapest, or fewest-step path between two states in a state space.",
+      "keywords": ["shortest path", "fewest moves", "minimum steps", "minimum cost to reach", "can we reach", "word ladder", "network delay"],
+      "paradigms": [
+        { "id": "graph-traversal", "weight": 0.95, "rationale": "Shortest path is the canonical graph traversal problem." },
+        { "id": "dynamic-programming", "weight": 0.4, "rationale": "On DAGs, shortest path reduces to DP in topological order." }
+      ],
+      "structures": [
+        { "id": "graph-representations", "weight": 0.9, "rationale": "The state space must be encoded as a graph (explicit or implicit)." },
+        { "id": "heap-priority-queue", "weight": 0.8, "rationale": "Dijkstra requires a priority queue for weighted shortest path." }
+      ],
+      "strategies": [
+        { "id": "divide-the-domain", "weight": 0.7, "rationale": "Bidirectional BFS splits the search from both ends, reducing branching factor." },
+        { "id": "problem-transformation-reduction", "weight": 0.5, "rationale": "Implicit graph construction transforms the problem into explicit BFS/Dijkstra." }
+      ]
+    },
+    {
+      "id": "enumerate-all-valid",
+      "description": "Problem asks to generate, enumerate, or count all valid configurations satisfying constraints.",
+      "keywords": ["all permutations", "all subsets", "all combinations", "generate parentheses", "all valid", "enumerate", "list all"],
+      "paradigms": [
+        { "id": "backtracking-and-constraint-search", "weight": 0.95, "rationale": "Exhaustive enumeration with pruning is the core backtracking use case." },
+        { "id": "dynamic-programming", "weight": 0.5, "rationale": "When only counting (not listing), DP avoids redundant enumeration." }
+      ],
+      "structures": [
+        { "id": "hash-based-structures", "weight": 0.6, "rationale": "HashSet tracks visited states to avoid duplicate exploration." },
+        { "id": "bit-manipulation-and-bitsets", "weight": 0.7, "rationale": "Bitmask represents subset state compactly for small universes (N <= 20)." }
+      ],
+      "strategies": [
+        { "id": "primal-vs-dual-complement-framing", "weight": 0.5, "rationale": "Counting valid = total minus invalid, when invalid is simpler to count." },
+        { "id": "divide-the-domain", "weight": 0.6, "rationale": "Meet-in-the-middle splits enumeration into two halves and combines." }
+      ]
+    },
+    {
+      "id": "stream-processing",
+      "description": "Data arrives as a stream of unknown or very large length and must be processed with bounded memory.",
+      "keywords": ["stream", "online", "reservoir", "data stream", "running median", "sliding", "unbounded input"],
+      "paradigms": [
+        { "id": "randomized-algorithms", "weight": 0.8, "rationale": "Reservoir sampling and sketches handle streams with bounded memory." },
+        { "id": "simulation-and-state-machines", "weight": 0.6, "rationale": "Event-driven processing naturally models stream consumption." }
+      ],
+      "structures": [
+        { "id": "heap-priority-queue", "weight": 0.8, "rationale": "Two-heap partition maintains running median in a stream." },
+        { "id": "hash-based-structures", "weight": 0.7, "rationale": "Count-Min Sketch and frequency maps handle stream frequency queries." }
+      ],
+      "strategies": [
+        { "id": "offline-vs-online", "weight": 0.9, "rationale": "Stream forces online processing; choosing online vs offline is the key strategic decision." },
+        { "id": "eager-vs-lazy-evaluation", "weight": 0.6, "rationale": "Lazy deletion in heaps avoids expensive restructuring during stream processing." }
+      ]
+    },
+    {
+      "id": "modular-arithmetic-and-primes",
+      "description": "Problem involves divisibility, prime factors, GCD/LCM, or modular arithmetic.",
+      "keywords": ["modulo", "prime", "gcd", "lcm", "divisible", "factor", "remainder", "coprime", "sieve"],
+      "paradigms": [
+        { "id": "mathematical-and-number-theoretic", "weight": 0.95, "rationale": "Number theory primitives (sieve, GCD, modular exponentiation) directly apply." }
+      ],
+      "structures": [
+        { "id": "hash-based-structures", "weight": 0.6, "rationale": "Counting arrays store factor frequencies or sieve results." },
+        { "id": "bit-manipulation-and-bitsets", "weight": 0.4, "rationale": "Bitset sieve is a space-efficient prime sieve implementation." }
+      ],
+      "strategies": [
+        { "id": "problem-transformation-reduction", "weight": 0.7, "rationale": "Reducing to modular arithmetic often transforms exponential to logarithmic." },
+        { "id": "primal-vs-dual-complement-framing", "weight": 0.5, "rationale": "Inclusion-exclusion over prime factors counts coprime integers efficiently." }
+      ]
+    },
+    {
+      "id": "dependency-ordering",
+      "description": "Problem involves tasks or items with prerequisite or dependency relationships that constrain ordering.",
+      "keywords": ["prerequisite", "dependency", "topological", "course schedule", "build order", "before", "after", "ordering"],
+      "paradigms": [
+        { "id": "graph-traversal", "weight": 0.95, "rationale": "Topological sort via DFS or Kahn's algorithm resolves dependency ordering." }
+      ],
+      "structures": [
+        { "id": "graph-representations", "weight": 0.9, "rationale": "Dependencies are naturally modeled as directed edges in a DAG." },
+        { "id": "hash-based-structures", "weight": 0.5, "rationale": "In-degree map tracks remaining prerequisites for Kahn's algorithm." }
+      ],
+      "strategies": [
+        { "id": "push-vs-pull-propagation", "weight": 0.8, "rationale": "Push (BFS/Kahn) vs pull (DFS post-order) yields different topological sort implementations." },
+        { "id": "forward-vs-reverse-processing", "weight": 0.5, "rationale": "Reverse post-order DFS produces topological ordering." }
+      ]
+    },
+    {
+      "id": "connectivity-and-components",
+      "description": "Problem asks whether elements are connected, how many components exist, or requires merging groups.",
+      "keywords": ["connected", "component", "union", "merge", "group", "island", "cluster", "reachable"],
+      "paradigms": [
+        { "id": "graph-traversal", "weight": 0.8, "rationale": "BFS/DFS discovers connected components." }
+      ],
+      "structures": [
+        { "id": "union-find", "weight": 0.95, "rationale": "Union-Find is purpose-built for dynamic connectivity queries." },
+        { "id": "graph-representations", "weight": 0.7, "rationale": "Adjacency list or implicit grid represents the connectivity structure." }
+      ],
+      "strategies": [
+        { "id": "offline-vs-online", "weight": 0.6, "rationale": "Offline edge processing allows reverse-time DSU for deletion problems." },
+        { "id": "forward-vs-reverse-processing", "weight": 0.5, "rationale": "Processing edge deletions in reverse converts them to additions, enabling DSU." }
+      ]
+    },
+    {
+      "id": "next-greater-smaller-element",
+      "description": "For each element, find the next or previous element that is greater or smaller.",
+      "keywords": ["next greater", "next smaller", "previous greater", "stock span", "daily temperatures", "largest rectangle"],
+      "paradigms": [
+        { "id": "greedy", "weight": 0.5, "rationale": "Monotonic stack is a greedy eviction of dominated elements." },
+        { "id": "divide-and-conquer", "weight": 0.4, "rationale": "Segment tree can answer range min/max queries for similar problems." }
+      ],
+      "structures": [
+        { "id": "monotonic-stack-and-queue", "weight": 0.95, "rationale": "Monotonic stack computes next greater/smaller in O(n) by evicting dominated elements." }
+      ],
+      "strategies": [
+        { "id": "forward-vs-reverse-processing", "weight": 0.8, "rationale": "Right-to-left scan with monotonic stack computes next greater trivially." },
+        { "id": "amortization-and-potential", "weight": 0.7, "rationale": "Each element pushed and popped at most once gives O(n) amortized total." }
+      ]
+    },
+    {
+      "id": "contiguous-subarray-property",
+      "description": "Problem asks for the longest, shortest, or optimal contiguous subarray satisfying a monotone property.",
+      "keywords": ["longest substring", "shortest subarray", "contiguous", "window", "at most k", "without repeating"],
+      "paradigms": [
+        { "id": "greedy", "weight": 0.5, "rationale": "Variable-size window greedily expands and shrinks." },
+        { "id": "dynamic-programming", "weight": 0.4, "rationale": "Kadane's algorithm is DP on subarrays (maximum subarray sum)." }
+      ],
+      "structures": [
+        { "id": "sliding-window-and-two-pointer", "weight": 0.95, "rationale": "Sliding window is the canonical structure for contiguous subarray optimization." },
+        { "id": "hash-based-structures", "weight": 0.7, "rationale": "Frequency map inside the window tracks character/element counts." }
+      ],
+      "strategies": [
+        { "id": "amortization-and-potential", "weight": 0.7, "rationale": "Left and right pointers each advance at most N times, yielding O(n) amortized." },
+        { "id": "primal-vs-dual-complement-framing", "weight": 0.6, "rationale": "'Exactly K distinct' = 'at most K' minus 'at most K-1' uses complement counting." }
+      ]
+    },
+    {
+      "id": "range-query-with-updates",
+      "description": "Problem requires answering aggregate queries over ranges with intermixed point or range updates.",
+      "keywords": ["range sum", "range minimum", "range maximum", "update and query", "prefix sum", "interval query"],
+      "paradigms": [
+        { "id": "divide-and-conquer", "weight": 0.8, "rationale": "Segment tree is built via divide-and-conquer over the array range." },
+        { "id": "mathematical-and-number-theoretic", "weight": 0.5, "rationale": "Prefix sum handles static range queries in O(1) after O(n) build." }
+      ],
+      "structures": [
+        { "id": "tree-variants", "weight": 0.95, "rationale": "Segment tree or Fenwick tree provides O(log n) range query + update." }
+      ],
+      "strategies": [
+        { "id": "eager-vs-lazy-evaluation", "weight": 0.9, "rationale": "Lazy propagation defers range updates to achieve O(log n) per range update." },
+        { "id": "coordinate-dimension-reduction", "weight": 0.6, "rationale": "Coordinate compression maps sparse value ranges to dense indices for tree structures." }
+      ]
+    },
+    {
+      "id": "binary-search-on-answer",
+      "description": "Problem asks to minimize a maximum or maximize a minimum, where feasibility is monotone in the answer.",
+      "keywords": ["minimize the maximum", "maximize the minimum", "minimum capacity", "is it possible in time T", "binary search", "threshold"],
+      "paradigms": [
+        { "id": "divide-and-conquer", "weight": 0.9, "rationale": "Binary search on the answer space is a divide-and-conquer reduction." },
+        { "id": "greedy", "weight": 0.6, "rationale": "The feasibility check inside binary search is often a greedy scan." }
+      ],
+      "structures": [
+        { "id": "sliding-window-and-two-pointer", "weight": 0.5, "rationale": "Feasibility check may use two-pointer to verify capacity constraints." }
+      ],
+      "strategies": [
+        { "id": "problem-transformation-reduction", "weight": 0.95, "rationale": "Transforms optimization into a decision problem, then binary searches over the answer." }
+      ]
+    },
+    {
+      "id": "explicit-process-simulation",
+      "description": "Problem describes an explicit step-by-step process with defined rules to execute.",
+      "keywords": ["simulate", "step by step", "game of life", "robot", "process", "execute", "state machine", "rules"],
+      "paradigms": [
+        { "id": "simulation-and-state-machines", "weight": 0.95, "rationale": "Direct simulation follows the described process rules." }
+      ],
+      "structures": [
+        { "id": "hash-based-structures", "weight": 0.6, "rationale": "Hash map tracks state for cycle detection or memoization." },
+        { "id": "heap-priority-queue", "weight": 0.5, "rationale": "Event-driven simulation uses a priority queue to process events in time order." }
+      ],
+      "strategies": [
+        { "id": "eager-vs-lazy-evaluation", "weight": 0.6, "rationale": "Event-driven (lazy) simulation advances only at events vs tick-by-tick (eager)." },
+        { "id": "forward-vs-reverse-processing", "weight": 0.4, "rationale": "Reverse simulation can convert deletions into additions." }
+      ]
+    },
+    {
+      "id": "cycle-detection-in-sequence",
+      "description": "Problem involves finding a cycle in a sequence of states or linked structure.",
+      "keywords": ["cycle", "loop", "repeated state", "duplicate", "tortoise and hare", "linked list cycle", "find duplicate"],
+      "paradigms": [
+        { "id": "simulation-and-state-machines", "weight": 0.8, "rationale": "Floyd's cycle detection is a simulation with two pointers at different speeds." },
+        { "id": "mathematical-and-number-theoretic", "weight": 0.4, "rationale": "Pigeonhole principle guarantees a cycle exists when values exceed range." }
+      ],
+      "structures": [
+        { "id": "sliding-window-and-two-pointer", "weight": 0.7, "rationale": "Fast/slow pointer technique detects cycles in O(1) space." },
+        { "id": "hash-based-structures", "weight": 0.6, "rationale": "HashSet of visited states provides simple cycle detection." }
+      ],
+      "strategies": [
+        { "id": "amortization-and-potential", "weight": 0.5, "rationale": "Floyd's algorithm runs in O(n) amortized by pointer advancement bounds." }
+      ]
+    },
+    {
+      "id": "prefix-string-matching",
+      "description": "Problem involves prefix matching, autocomplete, or operations over strings sharing common prefixes.",
+      "keywords": ["prefix", "autocomplete", "starts with", "word search", "dictionary", "common prefix", "trie"],
+      "paradigms": [
+        { "id": "divide-and-conquer", "weight": 0.5, "rationale": "Trie structure decomposes strings by character position (divide by prefix)." }
+      ],
+      "structures": [
+        { "id": "tree-variants", "weight": 0.95, "rationale": "Trie provides O(L) prefix lookup and supports prefix enumeration." },
+        { "id": "hash-based-structures", "weight": 0.5, "rationale": "Rolling hash enables substring matching without a trie." }
+      ],
+      "strategies": [
+        { "id": "coordinate-dimension-reduction", "weight": 0.5, "rationale": "Trie compresses the string dimension into a tree, reducing multi-string operations." },
+        { "id": "problem-transformation-reduction", "weight": 0.4, "rationale": "String matching can be transformed to automaton traversal." }
+      ]
+    },
+    {
+      "id": "small-universe-subset-operations",
+      "description": "Problem involves subsets of a small universe (N <= 20) with set operations like union, intersection, or membership.",
+      "keywords": ["bitmask", "subset", "small N", "all subsets", "set cover", "assignment", "TSP small"],
+      "paradigms": [
+        { "id": "dynamic-programming", "weight": 0.9, "rationale": "Bitmask DP iterates over 2^N states with transitions that flip bits." },
+        { "id": "backtracking-and-constraint-search", "weight": 0.6, "rationale": "Branch and bound on subsets is viable for small N." }
+      ],
+      "structures": [
+        { "id": "bit-manipulation-and-bitsets", "weight": 0.95, "rationale": "Bitmask represents subset state in O(1) per set operation." }
+      ],
+      "strategies": [
+        { "id": "divide-the-domain", "weight": 0.7, "rationale": "Meet-in-the-middle splits bitmask space into two halves for N up to 40." },
+        { "id": "push-vs-pull-propagation", "weight": 0.5, "rationale": "Bitmask DP transitions can push (set bit) or pull (check predecessor masks)." }
+      ]
+    },
+    {
+      "id": "sorted-data-search",
+      "description": "Problem involves searching or querying in sorted or nearly sorted data.",
+      "keywords": ["sorted array", "search", "rotated", "find peak", "binary search", "monotone", "lower bound", "upper bound"],
+      "paradigms": [
+        { "id": "divide-and-conquer", "weight": 0.95, "rationale": "Binary search halves the search space at each step." }
+      ],
+      "structures": [
+        { "id": "sliding-window-and-two-pointer", "weight": 0.6, "rationale": "Two pointers on sorted data solve pair-sum and partition problems." },
+        { "id": "tree-variants", "weight": 0.5, "rationale": "BST provides dynamic sorted data with O(log n) search." }
+      ],
+      "strategies": [
+        { "id": "problem-transformation-reduction", "weight": 0.7, "rationale": "Reducing optimization to a monotone predicate enables binary search." }
+      ]
+    },
+    {
+      "id": "combinatorial-counting",
+      "description": "Problem asks to count combinations, permutations, or arrangements, often with large N requiring modular arithmetic.",
+      "keywords": ["how many ways", "count arrangements", "nCr", "combinations", "modulo 10^9+7", "Pascal", "Catalan"],
+      "paradigms": [
+        { "id": "mathematical-and-number-theoretic", "weight": 0.9, "rationale": "Combinatorial identities and modular arithmetic directly compute counts." },
+        { "id": "dynamic-programming", "weight": 0.7, "rationale": "DP builds counting tables when closed-form identities are unavailable." }
+      ],
+      "structures": [
+        { "id": "hash-based-structures", "weight": 0.5, "rationale": "Memo table caches computed binomial coefficients." }
+      ],
+      "strategies": [
+        { "id": "problem-transformation-reduction", "weight": 0.7, "rationale": "Reducing to known sequences (Catalan, Fibonacci) avoids direct enumeration." },
+        { "id": "primal-vs-dual-complement-framing", "weight": 0.6, "rationale": "Inclusion-exclusion counts valid arrangements via complement subtraction." }
+      ]
+    },
+    {
+      "id": "pair-matching-complement",
+      "description": "Problem asks to find pairs or groups of elements satisfying a relationship (sum, difference, product).",
+      "keywords": ["two sum", "pair", "complement", "target sum", "three sum", "four sum", "difference equals"],
+      "paradigms": [
+        { "id": "mathematical-and-number-theoretic", "weight": 0.5, "rationale": "Complement lookup reduces pair-finding to arithmetic." }
+      ],
+      "structures": [
+        { "id": "hash-based-structures", "weight": 0.9, "rationale": "Two-sum complement map provides O(1) partner lookup." },
+        { "id": "sliding-window-and-two-pointer", "weight": 0.7, "rationale": "Two pointers on sorted data find pairs in O(n)." }
+      ],
+      "strategies": [
+        { "id": "problem-transformation-reduction", "weight": 0.8, "rationale": "Transform 'find pair summing to K' into 'for each x, check if K-x exists'." },
+        { "id": "divide-the-domain", "weight": 0.6, "rationale": "4-sum splits into pairs and uses hash map for cross-half complement." }
+      ]
+    },
+    {
+      "id": "interval-overlap-scheduling",
+      "description": "Problem involves intervals that may overlap and asks about scheduling, merging, or covering.",
+      "keywords": ["interval", "overlap", "merge intervals", "meeting rooms", "sweep line", "start and end times"],
+      "paradigms": [
+        { "id": "greedy", "weight": 0.9, "rationale": "Sort-then-scan greedy handles interval scheduling and merging." }
+      ],
+      "structures": [
+        { "id": "heap-priority-queue", "weight": 0.7, "rationale": "Min-heap tracks end times for meeting room allocation." },
+        { "id": "tree-variants", "weight": 0.5, "rationale": "Segment tree handles interval stabbing queries with updates." }
+      ],
+      "strategies": [
+        { "id": "coordinate-dimension-reduction", "weight": 0.8, "rationale": "Sweep line reduces 2D interval problems to 1D by fixing one axis." },
+        { "id": "problem-transformation-reduction", "weight": 0.6, "rationale": "Converting intervals to events (start/end points) enables sweep processing." }
+      ]
+    },
+    {
+      "id": "recursive-self-similar-structure",
+      "description": "Problem has natural recursive decomposition where subproblems are independent and structurally identical.",
+      "keywords": ["divide", "merge", "recursive", "split in half", "combine", "self-similar", "hierarchical"],
+      "paradigms": [
+        { "id": "divide-and-conquer", "weight": 0.95, "rationale": "Independent, structurally identical subproblems define divide-and-conquer." }
+      ],
+      "structures": [
+        { "id": "tree-variants", "weight": 0.7, "rationale": "Segment tree encodes the recursive decomposition as a balanced tree." }
+      ],
+      "strategies": [
+        { "id": "push-vs-pull-propagation", "weight": 0.6, "rationale": "Bottom-up merge (pull) vs top-down distribution (push) defines the recursive flow." },
+        { "id": "coordinate-dimension-reduction", "weight": 0.5, "rationale": "Recursive geometric decomposition reduces dimensions at each level." }
+      ]
+    },
+    {
+      "id": "xor-cancellation-parity",
+      "description": "Problem involves finding missing, duplicate, or unique elements using XOR cancellation or parity properties.",
+      "keywords": ["XOR", "single number", "missing number", "parity", "duplicate", "appears once", "bit manipulation"],
+      "paradigms": [
+        { "id": "mathematical-and-number-theoretic", "weight": 0.7, "rationale": "XOR cancellation is an algebraic identity that eliminates paired elements." }
+      ],
+      "structures": [
+        { "id": "bit-manipulation-and-bitsets", "weight": 0.95, "rationale": "XOR operations are native bit manipulation." },
+        { "id": "hash-based-structures", "weight": 0.5, "rationale": "HashSet provides an alternative for finding unique elements." }
+      ],
+      "strategies": [
+        { "id": "primal-vs-dual-complement-framing", "weight": 0.8, "rationale": "XOR of all elements cancels pairs, leaving the complement (unique element)." },
+        { "id": "problem-transformation-reduction", "weight": 0.5, "rationale": "Transform 'find missing' into 'XOR all values with all indices'." }
+      ]
+    },
+    {
+      "id": "tree-structure-computation",
+      "description": "Problem operates on a rooted or unrooted tree and asks about subtree properties, paths, or distances.",
+      "keywords": ["tree", "subtree", "root", "parent", "child", "ancestor", "diameter", "LCA", "rerooting"],
+      "paradigms": [
+        { "id": "dynamic-programming", "weight": 0.8, "rationale": "Tree DP computes subtree properties via parent-child transitions." },
+        { "id": "graph-traversal", "weight": 0.7, "rationale": "DFS traversal is the foundation for tree algorithms." }
+      ],
+      "structures": [
+        { "id": "graph-representations", "weight": 0.8, "rationale": "Tree stored as adjacency list for DFS-based processing." },
+        { "id": "tree-variants", "weight": 0.6, "rationale": "Euler tour + segment tree supports path queries and subtree aggregation." },
+        { "id": "union-find", "weight": 0.5, "rationale": "DSU on tree (small-to-large merging) handles subtree queries." }
+      ],
+      "strategies": [
+        { "id": "push-vs-pull-propagation", "weight": 0.9, "rationale": "Pull (bottom-up subtree DP) then push (top-down rerooting) covers full-tree answers." }
+      ]
+    }
+  ],
+  "overlapThreshold": 0.6,
+  "antiOverlapRules": [
+    {
+      "description": "Jaccard similarity on combined key sets must be below threshold.",
+      "check": "For two paths A and B, compute the union of their {paradigm, structure, strategy} ID sets. If |A intersect B| / |A union B| > overlapThreshold, the paths are considered overlapping and one should be replaced."
+    },
+    {
+      "description": "Paradigm diversity: no two paths in a set of three may share the same primary paradigm.",
+      "check": "For each path, identify the paradigm with the highest weight. If two paths in the final selection share the same highest-weight paradigm ID, replace the lower-weighted one with a path using a different primary paradigm."
+    },
+    {
+      "description": "Structure diversity: at least two distinct primary structures must appear across three paths.",
+      "check": "For each path, identify the structure with the highest weight. Count distinct structure IDs across all selected paths. If fewer than two distinct structures appear, substitute a path that introduces a different structure."
+    },
+    {
+      "description": "Strategy diversity: at least two distinct primary strategies must appear across three paths.",
+      "check": "For each path, identify the strategy with the highest weight. Count distinct strategy IDs across all selected paths. If fewer than two distinct strategies appear, substitute a path that introduces a different strategy."
+    },
+    {
+      "description": "No identical path triples: the ordered tuple (paradigm, structure, strategy) of primary keys must be unique per path.",
+      "check": "For each path, form the tuple (highest-weight paradigm ID, highest-weight structure ID, highest-weight strategy ID). If any two paths produce the same tuple, they are duplicates and one must be replaced with a path producing a different tuple."
+    }
+  ]
+}

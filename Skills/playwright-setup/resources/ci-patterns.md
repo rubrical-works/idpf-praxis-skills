@@ -1,5 +1,5 @@
 # CI/CD Patterns for Playwright
-**Version:** v0.7.0
+**Version:** v0.7.1
 ## GitHub Actions
 ### Basic Configuration
 ```yaml

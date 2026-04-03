@@ -1,0 +1,133 @@
+{
+  "$schema": "report-schema.json",
+  "description": "Template defining the structured report each subagent must return. The primary agent parses these reports for synthesis.",
+  "reportFields": [
+    {
+      "field": "approachName",
+      "label": "Approach",
+      "type": "string",
+      "required": true,
+      "description": "The name of the approach being explored."
+    },
+    {
+      "field": "coreIdea",
+      "label": "Core Idea",
+      "type": "string",
+      "required": true,
+      "description": "1-3 sentences. The key algorithmic insight. Why does this work?"
+    },
+    {
+      "field": "walkthrough",
+      "label": "Walkthrough",
+      "type": "object",
+      "required": true,
+      "description": "Step-by-step trace through the algorithm on a concrete small example.",
+      "subfields": [
+        {
+          "field": "exampleInput",
+          "label": "Example input",
+          "type": "string",
+          "required": true,
+          "description": "Concrete small input to trace through."
+        },
+        {
+          "field": "steps",
+          "label": "Steps",
+          "type": "string",
+          "required": true,
+          "description": "Step-by-step trace showing intermediate state at each meaningful step. Be specific: show what data structure looks like, what values change, etc."
+        },
+        {
+          "field": "result",
+          "label": "Result",
+          "type": "string",
+          "required": true,
+          "description": "Expected output and confirmation it's correct."
+        }
+      ]
+    },
+    {
+      "field": "complexity",
+      "label": "Complexity",
+      "type": "array",
+      "required": true,
+      "description": "Time, space, and optionally preprocessing complexity with justifications.",
+      "items": {
+        "fields": ["dimension", "complexity", "justification"],
+        "requiredDimensions": ["Time", "Space"],
+        "optionalDimensions": ["Preprocessing"]
+      }
+    },
+    {
+      "field": "edgeCases",
+      "label": "Edge Cases",
+      "type": "array",
+      "required": true,
+      "minItems": 3,
+      "description": "At least 3 genuinely distinct edge cases with explanations of how the approach handles each.",
+      "items": {
+        "fields": ["name", "description"]
+      }
+    },
+    {
+      "field": "implementationConsiderations",
+      "label": "Implementation Considerations",
+      "type": "array",
+      "required": true,
+      "minItems": 3,
+      "description": "Non-obvious choices a developer would actually trip over. Minimum 3.",
+      "items": {
+        "type": "string"
+      }
+    },
+    {
+      "field": "strengths",
+      "label": "Strengths",
+      "type": "array",
+      "required": true,
+      "minItems": 2,
+      "description": "Where this approach shines.",
+      "items": {
+        "type": "string"
+      }
+    },
+    {
+      "field": "weaknesses",
+      "label": "Weaknesses",
+      "type": "array",
+      "required": true,
+      "minItems": 2,
+      "description": "Where this approach struggles.",
+      "items": {
+        "type": "string"
+      }
+    },
+    {
+      "field": "fitScore",
+      "label": "Fit Score (self-assessed)",
+      "type": "object",
+      "required": true,
+      "description": "The subagent's self-assessment of how well the approach fits the problem's specific constraints.",
+      "subfields": [
+        {
+          "field": "score",
+          "label": "Score",
+          "type": "enum",
+          "values": ["Excellent", "Good", "Marginal", "Poor"],
+          "required": true
+        },
+        {
+          "field": "reason",
+          "label": "Reason",
+          "type": "string",
+          "required": true,
+          "description": "1 sentence — how well does this fit the problem's specific constraints?"
+        }
+      ]
+    }
+  ],
+  "synthesisNotes": [
+    "The Fit Score is the subagent's self-assessment. Treat it as a signal, not ground truth. A subagent assigned to explore an approach will naturally find reasons it works. Weight your own synthesis over the self-assessed score.",
+    "If a subagent returns a malformed or incomplete report, note the gap in your synthesis output rather than silently patching it. Missing sections are meaningful data."
+  ]
+}

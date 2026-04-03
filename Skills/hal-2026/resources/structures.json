@@ -1,0 +1,500 @@
+{
+  "$schema": "structures-schema.json",
+  "description": "Deep reference for core data structures — covers operations, variants, traps, and disqualifiers for each structure family.",
+  "usage": "Use when two candidate paths share the same algorithmic paradigm. The data structure chosen determines the constants, access patterns, mutation cost, and feasibility.",
+  "families": [
+    {
+      "id": "heap-priority-queue",
+      "name": "Heap / Priority Queue",
+      "coreContract": "Insert in O(log n); extract the minimum (or maximum) in O(log n); peek in O(1). Does not support arbitrary access or update without augmentation.",
+      "whenToPrefer": [
+        "You repeatedly need the globally best element (min or max) from a changing set",
+        "Dijkstra-style 'process cheapest frontier node next'",
+        "K-way merging, top-K queries, sliding window maximum without monotonic queue"
+      ],
+      "variants": [
+        {
+          "name": "Binary min/max heap",
+          "characteristic": "Standard; O(log n) push/pop",
+          "bestUsedWhen": "General priority queue needs"
+        },
+        {
+          "name": "Indexed heap (heap + position map)",
+          "characteristic": "O(log n) decrease-key by tracking positions",
+          "bestUsedWhen": "Dijkstra with edge relaxation, Prim's MST"
+        },
+        {
+          "name": "Two-heap partition",
+          "characteristic": "One min-heap + one max-heap sharing a population",
+          "bestUsedWhen": "Median of a data stream, range median"
+        },
+        {
+          "name": "Monotonic deque (deque-as-heap)",
+          "characteristic": "Maintains sorted order by evicting dominated elements",
+          "bestUsedWhen": "Sliding window max/min in O(n) total"
+        },
+        {
+          "name": "Lazy deletion heap",
+          "characteristic": "Stale entries left in heap; validity checked at pop time",
+          "bestUsedWhen": "Interval scheduling, task cooldown, sweep line events"
+        },
+        {
+          "name": "K-way merge heap",
+          "characteristic": "One entry per input stream; pop + re-insert from same stream",
+          "bestUsedWhen": "Merge K sorted lists, external sort"
+        }
+      ],
+      "implementationTraps": [
+        "Python's heapq is min-heap only — negate values for max-heap; don't forget to negate back",
+        "Lazy deletion requires a 'seen' set or a version counter; forgetting this causes incorrect pops",
+        "Two-heap median: rebalancing invariant (size difference <= 1) must be maintained on every insert and remove",
+        "Indexed heap position map must be updated on every swap during sift-up/sift-down, not just at insert"
+      ],
+      "disqualifiers": [
+        "Need to find an arbitrary element (use hash map instead)",
+        "Need sorted iteration over the full set (use BST or sort)",
+        "The set is static — just sort once"
+      ]
+    },
+    {
+      "id": "tree-variants",
+      "name": "Tree Variants",
+      "coreContract": "A family of hierarchical structures offering O(log n) search, insert, and delete on ordered data, plus range queries. The specific variant determines what additional operations are O(log n) vs O(n).",
+      "whenToPrefer": [
+        "Data is ordered and you need both point queries and range queries",
+        "Dynamic set with frequent insertions/deletions (vs. static -> just sort)",
+        "Need rank queries ('how many elements <= X?') or order statistics"
+      ],
+      "variants": [
+        {
+          "name": "BST (unbalanced)",
+          "characteristic": "Simple; degrades to O(n) on sorted input",
+          "bestUsedWhen": "Never in production; useful for teaching"
+        },
+        {
+          "name": "AVL / Red-Black tree",
+          "characteristic": "Self-balancing; O(log n) guaranteed",
+          "bestUsedWhen": "Ordered map/set (most language std libs)"
+        },
+        {
+          "name": "Segment tree",
+          "characteristic": "Each node covers a range; supports range query + point update",
+          "bestUsedWhen": "Range sum/min/max with point updates"
+        },
+        {
+          "name": "Segment tree with lazy propagation",
+          "characteristic": "Deferred range updates; O(log n) range update + range query",
+          "bestUsedWhen": "Range add + range sum, range set + range min"
+        },
+        {
+          "name": "Fenwick tree (BIT)",
+          "characteristic": "Implicit tree via index bit tricks; smaller constant than segment tree",
+          "bestUsedWhen": "Prefix sum with point update; 2D variants for grid"
+        },
+        {
+          "name": "Trie (prefix tree)",
+          "characteristic": "Characters at edges; O(L) ops where L = string length",
+          "bestUsedWhen": "Prefix matching, autocomplete, XOR maximization"
+        },
+        {
+          "name": "Persistent segment tree",
+          "characteristic": "Each update creates a new root; old versions accessible",
+          "bestUsedWhen": "Range kth element, versioned data, offline queries"
+        },
+        {
+          "name": "Merge sort tree",
+          "characteristic": "Segment tree where each node stores a sorted array of its range",
+          "bestUsedWhen": "Count elements in range [L,R] satisfying a predicate"
+        },
+        {
+          "name": "K-d tree",
+          "characteristic": "Partitions k-dimensional space alternating on each axis",
+          "bestUsedWhen": "Nearest neighbor in 2D/3D, range search in space"
+        },
+        {
+          "name": "Cartesian tree / Treap",
+          "characteristic": "Heap-ordered by priority, BST-ordered by key; randomized balance",
+          "bestUsedWhen": "Implicit sequence with split/merge, rope data structure"
+        }
+      ],
+      "implementationTraps": [
+        "Segment tree: 1-indexed vs 0-indexed; size must be next power of 2 or use recursive build",
+        "Lazy propagation: the lazy tag must be pushed down before recursing into children, not after",
+        "Fenwick tree: update(i, delta) and query(i) are both 1-indexed; off-by-one errors are common",
+        "Trie: remember to handle end-of-word markers separately from the existence of a child node",
+        "Persistent structures: copying the path (O(log n) nodes) not the whole tree"
+      ],
+      "disqualifiers": [
+        "Updates are rare and queries are batch -> sort offline instead",
+        "Data is unordered and you only need exact-match lookup -> hash map is faster and simpler",
+        "N is small (< 1000) -> just use a sorted array with binary search"
+      ]
+    },
+    {
+      "id": "hash-based-structures",
+      "name": "Hash-Based Structures",
+      "coreContract": "O(1) average insert, delete, and lookup. No ordering. Worst-case O(n) due to collisions, but rare with good hash functions.",
+      "whenToPrefer": [
+        "Fast exact-match lookup is the bottleneck",
+        "Counting frequencies, detecting duplicates, memoizing seen states",
+        "The key space is large but the active set is sparse"
+      ],
+      "variants": [
+        {
+          "name": "HashMap / dictionary",
+          "characteristic": "Key -> value; O(1) average",
+          "bestUsedWhen": "Any frequency count, index lookup, memo table"
+        },
+        {
+          "name": "HashSet",
+          "characteristic": "Membership only; O(1) average",
+          "bestUsedWhen": "Visited set in BFS, duplicate detection"
+        },
+        {
+          "name": "Counting array",
+          "characteristic": "Fixed-range keys (e.g., chars, small ints); O(1) true worst-case",
+          "bestUsedWhen": "Character frequency, bucket sort"
+        },
+        {
+          "name": "Rolling hash",
+          "characteristic": "Hash of a sliding window updated incrementally",
+          "bestUsedWhen": "Rabin-Karp substring search, longest duplicate substring"
+        },
+        {
+          "name": "Polynomial hash / string hashing",
+          "characteristic": "Map strings to integers for O(1) comparison",
+          "bestUsedWhen": "Anagram grouping, palindrome detection over substrings"
+        },
+        {
+          "name": "Two-sum complement map",
+          "characteristic": "Store seen values; for each new value check if complement exists",
+          "bestUsedWhen": "Two-sum, subarray sum equals K (prefix sum + map)"
+        },
+        {
+          "name": "Coordinate compression + map",
+          "characteristic": "Map large sparse values to dense indices",
+          "bestUsedWhen": "Segment tree on large value range, offline range queries"
+        }
+      ],
+      "implementationTraps": [
+        "Rolling hash collisions: use double hashing (two independent moduli) to reduce false positives",
+        "Python dicts preserve insertion order (3.7+) — don't rely on this in language-agnostic solutions",
+        "Counting array bounds: ensure the array is sized for the full input range, not just what you've seen",
+        "Coordinate compression: compress after reading all input; queries must use the same mapping as updates"
+      ],
+      "disqualifiers": [
+        "Need to iterate in sorted order (use BST or sorted array)",
+        "Need range queries ('all keys between X and Y') -> hash maps can't do this",
+        "Adversarial inputs can cause hash collisions -> use randomized hash or tree map"
+      ]
+    },
+    {
+      "id": "graph-representations",
+      "name": "Graph Representations",
+      "coreContract": "Encodes vertices and edges; the representation chosen governs the cost of the operations most frequently used (adjacency test, neighbor enumeration, edge weight lookup).",
+      "whenToPrefer": [],
+      "variants": [
+        {
+          "name": "Adjacency list",
+          "characteristic": "Space O(V + E); adjacency test O(degree); neighbor list O(degree)",
+          "bestUsedWhen": "Sparse graphs; most real problems"
+        },
+        {
+          "name": "Adjacency matrix",
+          "characteristic": "Space O(V^2); adjacency test O(1); neighbor list O(V)",
+          "bestUsedWhen": "Dense graphs; Floyd-Warshall; small V"
+        },
+        {
+          "name": "Edge list",
+          "characteristic": "Space O(E); adjacency test O(E); neighbor list O(E)",
+          "bestUsedWhen": "Kruskal's MST; sorting edges by weight"
+        },
+        {
+          "name": "Implicit graph",
+          "characteristic": "Space O(1) storage; computed on-the-fly",
+          "bestUsedWhen": "BFS/DFS on grid, state-space search"
+        },
+        {
+          "name": "CSR (Compressed Sparse Row)",
+          "characteristic": "Space O(V + E); adjacency test O(log degree); neighbor list O(degree)",
+          "bestUsedWhen": "Read-only graphs; cache-efficient traversal"
+        },
+        {
+          "name": "Multigraph with edge ids",
+          "characteristic": "Space O(V + E); adjacency test O(degree); neighbor list O(degree)",
+          "bestUsedWhen": "Multiple edges between same nodes; flow networks"
+        }
+      ],
+      "implicitGraphPatterns": [
+        "Grid as graph: cell (r, c) is a node; 4/8 neighbors are edges",
+        "State as node: (position, remaining_fuel, keys_held) is a node in BFS",
+        "Interval as node: edge from interval A to B if A ends before B starts (interval scheduling graph)",
+        "Bitmask as node: each subset is a node; DP on subsets is BFS on hypercube graph"
+      ],
+      "implementationTraps": [
+        "Directed vs. undirected: adding edge u->v in an undirected graph requires also adding v->u",
+        "Self-loops and parallel edges: adjacency matrix handles them naturally; adjacency list needs care",
+        "Implicit graphs: ensure the neighbor-generation function is correct for boundary cells (grid edges)",
+        "Graph of intervals: when converting intervals to a DAG, ensure you sort by start time first"
+      ],
+      "disqualifiers": [
+        "Problem is fundamentally about ordered sequences, not relationships -> don't force a graph",
+        "V is huge but edges are implicit and acyclic -> DP on the implicit DAG is cleaner than building the graph"
+      ]
+    },
+    {
+      "id": "union-find",
+      "name": "Union-Find (Disjoint Set Union)",
+      "coreContract": "Two operations — union(a, b) merges two sets; find(a) returns the canonical representative of a's set. With union-by-rank and path compression: both operations are effectively O(alpha(n)) ~ O(1).",
+      "whenToPrefer": [
+        "Dynamic connectivity: 'are these two nodes in the same component after adding edges?'",
+        "Detecting cycles while building a spanning tree (Kruskal's)",
+        "Offline connectivity queries where edges only appear, never disappear"
+      ],
+      "variants": [
+        {
+          "name": "Standard DSU",
+          "characteristic": "Union by rank + path compression",
+          "bestUsedWhen": "Component membership, Kruskal's MST"
+        },
+        {
+          "name": "Weighted/labeled DSU",
+          "characteristic": "Each node stores a value relative to its parent",
+          "bestUsedWhen": "Accounts with transfers, relative distances"
+        },
+        {
+          "name": "Rollback DSU (link-cut)",
+          "characteristic": "Union by rank without path compression; supports undo",
+          "bestUsedWhen": "Offline dynamic connectivity, divide-and-conquer on edges"
+        },
+        {
+          "name": "DSU on tree (small-to-large)",
+          "characteristic": "Merge smaller child's data into larger child's; O(n log n) total",
+          "bestUsedWhen": "Subtree queries, color counting on trees"
+        },
+        {
+          "name": "Bipartite checking DSU",
+          "characteristic": "Two nodes per vertex (true/false state); union checks consistency",
+          "bestUsedWhen": "2-colorability, odd cycle detection"
+        }
+      ],
+      "implementationTraps": [
+        "Path compression alone (without union by rank) gives O(log n) not O(alpha(n))",
+        "Rollback DSU: path compression breaks rollback — must use union by rank only",
+        "Weighted DSU: when doing path compression, the weights along the path must be composed correctly",
+        "Off-by-one in initialization: parent[i] = i for all nodes, including isolated ones"
+      ],
+      "disqualifiers": [
+        "Edges can be removed as well as added -> DSU doesn't support deletions; use link-cut trees or offline processing",
+        "Need to enumerate all members of a component -> DSU only gives representative, not membership list",
+        "Need shortest path -> DSU knows connectivity but not distance"
+      ]
+    },
+    {
+      "id": "monotonic-stack-and-queue",
+      "name": "Monotonic Stack and Queue",
+      "coreContract": "A stack or deque maintained in sorted order by evicting elements that can never be the answer to a future query. Each element is pushed and popped at most once -> O(n) total across all operations.",
+      "whenToPrefer": [
+        "'Next greater / smaller element' for each position",
+        "Sliding window maximum or minimum in O(n)",
+        "Largest rectangle / container problems",
+        "Problems where earlier elements become irrelevant once a better candidate appears"
+      ],
+      "variants": [
+        {
+          "name": "Monotonic increasing stack",
+          "characteristic": "Bottom to top: increasing",
+          "bestUsedWhen": "Next smaller element, largest rectangle in histogram"
+        },
+        {
+          "name": "Monotonic decreasing stack",
+          "characteristic": "Bottom to top: decreasing",
+          "bestUsedWhen": "Next greater element, stock span problem"
+        },
+        {
+          "name": "Monotonic deque (sliding window)",
+          "characteristic": "Front is current best; rear evicts dominated elements",
+          "bestUsedWhen": "Sliding window max/min, maximum of all subarrays of size K"
+        },
+        {
+          "name": "Two-stack queue",
+          "characteristic": "Two stacks simulate O(1) amortized queue with min/max tracking",
+          "bestUsedWhen": "Min-queue (queue supporting O(1) minimum queries)"
+        },
+        {
+          "name": "Cartesian tree construction",
+          "characteristic": "Monotonic stack builds the Cartesian tree in O(n)",
+          "bestUsedWhen": "Range minimum query structure, treap-like problems"
+        }
+      ],
+      "implementationTraps": [
+        "Deciding what to store: often store indices, not values, so you can compute spans/widths",
+        "Equality handling: 'strictly greater' vs 'greater or equal' changes which duplicates survive",
+        "Sliding window deque: evict from the front when the window slides past an element, from the rear when a new element dominates",
+        "Off-by-one in the span calculation: right - left - 1 not right - left when both pointers are exclusive"
+      ],
+      "disqualifiers": [
+        "Window size changes non-monotonically (deque no longer sufficient; use segment tree)",
+        "Need arbitrary access into the 'stack' by value (use a BST instead)",
+        "Query isn't about a contiguous range or a sliding window"
+      ]
+    },
+    {
+      "id": "sliding-window-and-two-pointer",
+      "name": "Sliding Window and Two Pointer",
+      "coreContract": "Maintain a contiguous subarray (sliding window) or two indices moving toward each other (two pointer) to answer queries in O(n) rather than O(n^2).",
+      "whenToPrefer": [
+        "'Longest/shortest subarray satisfying a property'",
+        "'Pair of elements summing to a target in a sorted array'",
+        "Constraint on a subarray is monotone: expanding the window can only make it harder (or easier) to satisfy"
+      ],
+      "variants": [
+        {
+          "name": "Fixed-size window",
+          "characteristic": "Right advances; left = right - k",
+          "bestUsedWhen": "Average of subarrays of size K, max sum of size K"
+        },
+        {
+          "name": "Variable-size window (shrink when invalid)",
+          "characteristic": "Right advances freely; left advances when constraint violated",
+          "bestUsedWhen": "Longest substring without repeating chars, min window substring"
+        },
+        {
+          "name": "Two pointer on sorted array",
+          "characteristic": "Left from start, right from end; move based on comparison",
+          "bestUsedWhen": "Two-sum in sorted array, container with most water"
+        },
+        {
+          "name": "Two pointer on linked list",
+          "characteristic": "Fast and slow pointers",
+          "bestUsedWhen": "Cycle detection, find middle node, Kth from end"
+        },
+        {
+          "name": "Multi-pointer (three pointers)",
+          "characteristic": "One anchor + two-pointer sweep",
+          "bestUsedWhen": "Three-sum, four-sum"
+        },
+        {
+          "name": "Prefix sum + two pointer",
+          "characteristic": "Precompute prefix sums; binary search or two-pointer on them",
+          "bestUsedWhen": "Subarray sum >= K (positive values), minimum size subarray sum"
+        }
+      ],
+      "implementationTraps": [
+        "Variable window: the shrink condition must restore validity fully before recording an answer",
+        "Two pointer on unsorted data: requires sorting first — the sort cost O(n log n) must be acceptable",
+        "Window with a frequency map: decrement the map when the left pointer moves; don't delete keys, check count == 0",
+        "Sliding window on circular arrays: run two passes or use modular indexing"
+      ],
+      "disqualifiers": [
+        "Constraint is not monotone (e.g., 'subarray with sum exactly K' on mixed-sign input -> prefix sum + hash map instead)",
+        "Array is unsorted and sorting would destroy required ordering",
+        "Queries are offline and non-contiguous (use segment tree or BIT)"
+      ]
+    },
+    {
+      "id": "bit-manipulation-and-bitsets",
+      "name": "Bit Manipulation and Bitsets",
+      "coreContract": "Operate on integers as arrays of bits. Modern CPUs execute bitwise ops in O(1) on 64-bit words; bitsets compress boolean arrays by 64x, enabling O(n/64) set operations.",
+      "whenToPrefer": [
+        "State is a subset of a small universe (N <= 20 for full bitmask DP; N <= 10^6 for bitset)",
+        "Need fast set intersection, union, or complement",
+        "Parity, power-of-two, or lowest-set-bit tricks replace arithmetic"
+      ],
+      "variants": [
+        {
+          "name": "Bitmask DP",
+          "characteristic": "State = bitmask of chosen items; transition flips bits",
+          "bestUsedWhen": "TSP, set cover, assignment with N <= 20"
+        },
+        {
+          "name": "XOR trick",
+          "characteristic": "a ^ b ^ b = a; XOR of a pair cancels",
+          "bestUsedWhen": "Find single non-duplicate, missing number, swap without temp"
+        },
+        {
+          "name": "Lowest set bit (LSB)",
+          "characteristic": "x & (-x) isolates the rightmost 1",
+          "bestUsedWhen": "Fenwick tree indexing, iterating over set bits"
+        },
+        {
+          "name": "Popcount",
+          "characteristic": "bin(x).count('1') or hardware POPCNT",
+          "bestUsedWhen": "Hamming distance, count set bits, parity"
+        },
+        {
+          "name": "Bit shifting for powers",
+          "characteristic": "1 << k = 2^k; x >> k = x // 2^k",
+          "bestUsedWhen": "Fast multiply/divide by powers of 2, flag masks"
+        },
+        {
+          "name": "Bitset DP",
+          "characteristic": "Use Python int or C++ bitset<N> as a dense boolean array",
+          "bestUsedWhen": "Subset sum feasibility for large N, reachability in boolean matrix"
+        },
+        {
+          "name": "Gray code",
+          "characteristic": "Consecutive values differ by exactly one bit",
+          "bestUsedWhen": "Generating permutations/subsets without revisiting, rotary encoders"
+        }
+      ],
+      "implementationTraps": [
+        "Signed integer overflow: 1 << 31 is undefined in C++ with int; use 1LL << 31",
+        "Python integers are arbitrary precision — bitmask DP works for N > 64, but gets slow",
+        "XOR swap: a ^= b; b ^= a; a ^= b fails when a and b are the same variable (same memory)",
+        "Iterating over all subsets of a mask: sub = mask; while sub > 0: process(sub); sub = (sub-1) & mask — don't forget to process sub = 0 separately if needed"
+      ],
+      "disqualifiers": [
+        "N > 20 for bitmask DP (2^20 = 1M states is borderline; 2^25 is too large)",
+        "Operations require ordering or range queries (bits don't have positional meaning beyond index)",
+        "Problem involves arithmetic that doesn't reduce to bit tricks"
+      ]
+    }
+  ],
+  "crossStructureDecisionGuide": [
+    {
+      "bottleneckOperation": "Best available element changes dynamically",
+      "reachFor": "Heap"
+    },
+    {
+      "bottleneckOperation": "Range query + point update on array",
+      "reachFor": "Fenwick tree (simple) or Segment tree (flexible)"
+    },
+    {
+      "bottleneckOperation": "Range update + range query",
+      "reachFor": "Segment tree with lazy propagation"
+    },
+    {
+      "bottleneckOperation": "Exact membership / frequency of arbitrary keys",
+      "reachFor": "HashMap / HashSet"
+    },
+    {
+      "bottleneckOperation": "Dynamic connectivity (edges only added)",
+      "reachFor": "Union-Find"
+    },
+    {
+      "bottleneckOperation": "Next greater/smaller in linear time",
+      "reachFor": "Monotonic stack"
+    },
+    {
+      "bottleneckOperation": "Sliding window aggregate in linear time",
+      "reachFor": "Monotonic deque"
+    },
+    {
+      "bottleneckOperation": "Ordered iteration + fast insert/delete",
+      "reachFor": "BST (std ordered map/set)"
+    },
+    {
+      "bottleneckOperation": "Prefix matching on strings",
+      "reachFor": "Trie"
+    },
+    {
+      "bottleneckOperation": "Subset enumeration over small universe",
+      "reachFor": "Bitmask"
+    },
+    {
+      "bottleneckOperation": "Contiguous subarray satisfying monotone constraint",
+      "reachFor": "Sliding window / two pointer"
+    }
+  ]
+}

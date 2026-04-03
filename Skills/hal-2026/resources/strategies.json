@@ -1,0 +1,402 @@
+{
+  "$schema": "strategies-schema.json",
+  "description": "Deep reference for problem decomposition strategies — the most under-appreciated source of genuine solution diversity.",
+  "usage": "Use when two paths share the same paradigm and data structure. The decomposition strategy chosen determines how the problem is framed, making the algorithms fundamentally different.",
+  "strategies": [
+    {
+      "id": "offline-vs-online",
+      "name": "Offline vs. Online",
+      "coreReframe": "Offline — read all queries before answering any of them, then reorder, batch, or preprocess to answer optimally. Online — answer each query as it arrives, with no future knowledge.",
+      "structuralSignals": [
+        "The problem gives you all queries upfront (offline is available)",
+        "Queries arrive in a stream or order matters for correctness (online required)",
+        "The offline approach would require a data structure that's hard to implement online (e.g., persistent or retroactive)"
+      ],
+      "whatItUnlocks": [
+        "Offline enables sorting queries by a key (endpoint, timestamp, value) to sweep through them in a single pass, answering each as you go",
+        "Offline enables 'reverse time' tricks: process deletions as additions in reverse order",
+        "Offline enables divide-and-conquer on queries (parallel binary search, CDQ divide & conquer)",
+        "Online forces incremental data structures (segment trees, BITs, DSU) but avoids the overhead of sorting and reordering"
+      ],
+      "classicExamples": [
+        {
+          "category": "offline",
+          "examples": "Count inversions (sort + merge), range query on static array (Mo's algorithm), offline LCA (Tarjan's), offline range median"
+        },
+        {
+          "category": "online",
+          "examples": "LRU cache, stock price tracker, median of data stream"
+        },
+        {
+          "category": "offline-advantage",
+          "examples": "For each query (L, R), count elements in range with value in [A, B] -> offline sort by R, sweep with BIT; online version requires persistent segment tree"
+        }
+      ],
+      "failureModes": [
+        "Offline reorder destroys the causal structure the problem requires (e.g., 'process queries where each query modifies state for the next')",
+        "Sorting queries changes which data is 'visible' at query time in a way that's hard to reconstruct"
+      ]
+    },
+    {
+      "id": "forward-vs-reverse-processing",
+      "name": "Forward vs. Reverse Processing",
+      "coreReframe": "Process the input from right-to-left (or end-to-start) instead of the natural left-to-right order. Equivalently: define DP state based on 'suffix' rather than 'prefix.'",
+      "structuralSignals": [
+        "A forward pass requires knowing the future (e.g., 'does any element to the right exceed X?')",
+        "The recurrence is cleaner when the base case is the end rather than the start",
+        "A 'next occurrence' or 'future event' query appears in the problem"
+      ],
+      "whatItUnlocks": [
+        "Forward processing accumulates past information; reverse processing accumulates future information",
+        "Some DP transitions that require O(n) lookahead forward become O(1) backward",
+        "'Next greater element' is trivially computed right-to-left with a stack; left-to-right requires more bookkeeping"
+      ],
+      "classicExamples": [
+        {
+          "category": "reverse",
+          "examples": "Jump game: Forward greedy reaches O(n); backward DP can_reach[i] = any(can_reach[j] for j reachable from i) is also O(n) but reverse"
+        },
+        {
+          "category": "two-pass",
+          "examples": "Candy distribution: Two-pass — left-to-right for 'greater than left neighbor', then right-to-left for 'greater than right neighbor'; neither pass alone suffices"
+        },
+        {
+          "category": "reverse-time",
+          "examples": "Delete edges offline: Process deletions as additions in reverse; DSU handles additions but not deletions"
+        },
+        {
+          "category": "suffix-structures",
+          "examples": "Suffix array / suffix automaton: Fundamentally reverse-oriented structures"
+        }
+      ],
+      "failureModes": [
+        "Reverse processing changes the order of side effects (mutation problems)",
+        "Some monotone properties hold forward but not backward (check the invariant holds in reverse)"
+      ]
+    },
+    {
+      "id": "problem-transformation-reduction",
+      "name": "Problem Transformation / Reduction",
+      "coreReframe": "Map the problem to a different, well-known problem where efficient algorithms already exist. Solve the transformed problem, then map the answer back.",
+      "structuralSignals": [
+        "The problem description is unusual but reminds you structurally of something familiar",
+        "A change of variables simplifies the recurrence or constraint",
+        "The problem can be encoded as a graph, sorted array, or algebraic structure"
+      ],
+      "whatItUnlocks": [
+        "Transforms often reduce time complexity by applying known optimal algorithms",
+        "A hard constraint in one framing may be trivial in another",
+        "Transformation can convert a 2D problem to 1D, or an online problem to an offline one"
+      ],
+      "commonTransformationPatterns": [
+        {
+          "originalFraming": "Longest common subsequence",
+          "transformTo": "Edit distance (different DP on same structure)",
+          "why": "Same table, different transition costs"
+        },
+        {
+          "originalFraming": "2D grid path",
+          "transformTo": "1D DP on diagonals",
+          "why": "Reduces dimension when moves are constrained"
+        },
+        {
+          "originalFraming": "Interval overlap",
+          "transformTo": "Sort by endpoint + greedy or sweep",
+          "why": "Converts geometric problem to sequential"
+        },
+        {
+          "originalFraming": "String pattern matching",
+          "transformTo": "Graph of states (automaton)",
+          "why": "Makes matching iterable"
+        },
+        {
+          "originalFraming": "Subarray sum = K",
+          "transformTo": "Prefix sum difference: prefix[r] - prefix[l] = K",
+          "why": "Converts range query to point lookup"
+        },
+        {
+          "originalFraming": "XOR in range",
+          "transformTo": "Prefix XOR: xor(l, r) = prefix[r] ^ prefix[l-1]",
+          "why": "Same as prefix sum but for XOR"
+        },
+        {
+          "originalFraming": "Count pairs satisfying condition",
+          "transformTo": "Complement counting: total - pairs NOT satisfying",
+          "why": "Easier to count the complement"
+        },
+        {
+          "originalFraming": "Minimum of maximum or maximum of minimum",
+          "transformTo": "Binary search on the answer",
+          "why": "Converts optimization to decision"
+        }
+      ],
+      "classicExamples": [
+        {
+          "category": "binary-search-on-answer",
+          "examples": "Minimum time to complete all tasks -> Is it possible in T time? -> binary search on T"
+        },
+        {
+          "category": "prefix-sum-trick",
+          "examples": "Count subarrays with sum K is hard directly; after prefix sum it becomes count pairs (i,j) where prefix[j] - prefix[i] = K — solvable with a hashmap in O(n)"
+        },
+        {
+          "category": "lis-via-patience-sorting",
+          "examples": "LIS length equals minimum number of piles in patience sort; transforms sequence problem into geometric one"
+        }
+      ],
+      "failureModes": [
+        "The transformation is more complex than a direct solution for the given constraints",
+        "The inverse mapping from transformed answer to original answer is lossy or ambiguous"
+      ]
+    },
+    {
+      "id": "primal-vs-dual-complement-framing",
+      "name": "Primal vs. Dual / Complement Framing",
+      "coreReframe": "Instead of counting or optimizing what you want, count the complement and subtract, or solve the dual formulation and invert.",
+      "structuralSignals": [
+        "Counting directly is hard because valid configurations are irregular",
+        "The invalid or excluded configurations have simpler structure",
+        "Min-max duality applies (maximize one thing <-> minimize its complement)"
+      ],
+      "whatItUnlocks": [
+        "Inclusion-exclusion: count all, subtract overcounts",
+        "'At least one' is hard; 'none' is often a product of independent probabilities",
+        "'Maximum independent set' is hard; 'minimum vertex cover' = n - maximum matching (Konig's theorem on bipartite graphs)",
+        "'Minimum cut' = 'maximum flow' (max-flow min-cut theorem)"
+      ],
+      "classicExamples": [
+        {
+          "category": "complement-counting",
+          "examples": "Count subarrays with at most K distinct -> use 'at most K' - 'at most K-1' = 'exactly K'"
+        },
+        {
+          "category": "probability-complement",
+          "examples": "Probability of at least one collision -> 1 - P(no collision) (birthday paradox)"
+        },
+        {
+          "category": "dual-optimization",
+          "examples": "Minimum cost to make array non-decreasing -> dual is maximum number of elements you can keep (LIS)"
+        },
+        {
+          "category": "xor-cancellation",
+          "examples": "Find duplicate by XOR -> XOR all elements + all indices cancels everything except the duplicate"
+        },
+        {
+          "category": "path-cover-duality",
+          "examples": "Minimum path cover in DAG -> n - maximum bipartite matching"
+        }
+      ],
+      "failureModes": [
+        "Complement set is not simpler than the original (both are irregular)",
+        "Inclusion-exclusion has too many terms (use DP or Mobius inversion instead)"
+      ]
+    },
+    {
+      "id": "eager-vs-lazy-evaluation",
+      "name": "Eager vs. Lazy Evaluation",
+      "coreReframe": "Eager — compute and propagate results immediately when state changes. Lazy — defer work until it's actually needed; batch deferred updates before queries.",
+      "structuralSignals": [
+        "Many updates affect a range of elements (lazy is efficient: one deferred tag covers the range)",
+        "Updates and queries are interleaved and the full result isn't needed until later",
+        "Some updates will be overwritten before they're ever queried (lazy avoids wasted work)"
+      ],
+      "whatItUnlocks": [
+        "Lazy propagation on segment trees: range update in O(log n) instead of O(n) by pushing the update tag down only when a child is accessed",
+        "Lazy deletion in heaps/sorted structures: mark elements as invalid at O(1), pay the cleanup cost only at pop time",
+        "Memoization is lazy DP: compute only the subproblems actually needed vs. bottom-up tabulation (eager, computes all)",
+        "Event-driven simulation is lazy: advance state only when an event occurs vs. simulating every tick"
+      ],
+      "classicExamples": [
+        {
+          "category": "lazy-segment-tree",
+          "examples": "Range add + range sum query; without lazy, range add is O(n); with lazy tag it's O(log n)"
+        },
+        {
+          "category": "lazy-heap",
+          "examples": "Lazy heap in Dijkstra: Instead of decreasing key (complex), push a new entry and skip stale pops"
+        },
+        {
+          "category": "lazy-deletion",
+          "examples": "Lazy deletion in interval scheduling: Mark processed intervals as used; skip them on next access"
+        },
+        {
+          "category": "memoized-vs-eager",
+          "examples": "Memoized DFS vs. BFS: Top-down memoization (lazy) explores only reachable states; BFS (eager) explores all states at each level"
+        }
+      ],
+      "failureModes": [
+        "Lazy tags must be composable: if you apply 'add 5' then 'multiply by 2', the composed lazy tag is 'multiply by 2, add 10' — non-composable updates require careful ordering",
+        "Lazy deletion requires a validity check at every pop; forgetting this produces wrong answers silently"
+      ]
+    },
+    {
+      "id": "push-vs-pull-propagation",
+      "name": "Push vs. Pull Propagation",
+      "coreReframe": "Push — when a node's value changes, it immediately notifies and updates all its dependents. Pull — when a node needs its value, it requests it from its dependencies on demand.",
+      "structuralSignals": [
+        "Clear producer/consumer structure in the problem (push: producer drives; pull: consumer drives)",
+        "In-degree vs. out-degree asymmetry: high out-degree -> pushing is expensive; high in-degree -> pulling is expensive",
+        "DP on DAGs: 'which direction do transitions flow?'"
+      ],
+      "whatItUnlocks": [
+        "Push-based DP: dp[v] = f(dp[u]) — for each node u, update all successors v. Natural for topological-order DP where each node 'contributes to' its children",
+        "Pull-based DP: dp[v] = g(dp[u] for u in predecessors(v)) — each node 'collects from' its parents. Natural when a node needs all parent values before it can be computed",
+        "Push works well for sparse graphs (low out-degree); pull works well when parents are few",
+        "Tree DP rerooting: compute subtree answers (pull), then reroot to compute full-tree answers (push back down)"
+      ],
+      "classicExamples": [
+        {
+          "category": "push-bfs",
+          "examples": "Push in BFS: When popping node u, push u's contribution to all neighbors v"
+        },
+        {
+          "category": "pull-dijkstra",
+          "examples": "Pull in Dijkstra: When processing node v, pull the best distance from all incoming edges"
+        },
+        {
+          "category": "push-dp",
+          "examples": "Push DP in coin change: For each coin value c, for each amount i, update dp[i+c]"
+        },
+        {
+          "category": "pull-dp",
+          "examples": "Pull DP in coin change: For each amount i, check all coins c and pull dp[i-c]"
+        },
+        {
+          "category": "rerooting",
+          "examples": "Rerooting DP: First pass pulls subtree answers bottom-up; second pass pushes 'upward' contribution top-down"
+        }
+      ],
+      "failureModes": [
+        "Push requires knowing all outgoing edges at update time (bad for implicit graphs)",
+        "Pull requires knowing all incoming edges at query time (bad when in-degree is large and irregular)"
+      ]
+    },
+    {
+      "id": "divide-the-domain",
+      "name": "Divide the Domain (Meet in the Middle / Splitting)",
+      "coreReframe": "Instead of searching the full space of size S, split the problem into two halves of size sqrt(S), solve each independently, then combine. Typically reduces exponential to sub-exponential or O(n^2) to O(n*sqrt(n)) or O(n log n).",
+      "structuralSignals": [
+        "Brute force is O(2^n) or O(n^2) and n is ~40 (meet in middle) or the constraint is large but the structure is symmetric",
+        "The problem has a 'balance point' — combining a left-half result with a right-half result is efficient",
+        "Two independent partial solutions can be joined by a single key (sum, XOR, sorted position)"
+      ],
+      "whatItUnlocks": [
+        "4-sum, subset sum with N=40: split into two halves of N=20 (2^20 each); combine via hash or binary search",
+        "Bidirectional BFS: expand from both source and target; total states explored ~ 2 * b^(d/2) instead of b^d",
+        "CDQ divide and conquer: offline 2D/3D problem solved by splitting on one dimension, solving each half, counting cross contributions at the split"
+      ],
+      "classicExamples": [
+        {
+          "category": "subset-sum",
+          "examples": "Subset sum N=40: Brute force O(2^40); meet in middle O(2^20 * 20) — feasible"
+        },
+        {
+          "category": "bidirectional-bfs",
+          "examples": "Bidirectional BFS on word ladder: Bidirectional reduces from 26^n to 2 * 26^(n/2)"
+        },
+        {
+          "category": "4-sum",
+          "examples": "4-sum: Split into all (a+b) pairs and all (c+d) pairs; look up complement in hash map"
+        }
+      ],
+      "failureModes": [
+        "The combination step is expensive (O(n) per pair -> no asymptotic gain)",
+        "The two halves aren't truly independent (shared state must be carefully threaded through)"
+      ]
+    },
+    {
+      "id": "coordinate-dimension-reduction",
+      "name": "Coordinate / Dimension Reduction",
+      "coreReframe": "Project a multi-dimensional problem onto fewer dimensions, or compress a large sparse coordinate space into a dense one, to enable efficient algorithms that only work in 1D or on small ranges.",
+      "structuralSignals": [
+        "The problem involves 2D or 3D geometry but movement is constrained to one axis at a time",
+        "Values are large but the number of distinct values is small",
+        "A 2D DP can be reduced to 1D by fixing one dimension and sweeping"
+      ],
+      "whatItUnlocks": [
+        "Coordinate compression: map N distinct values in [1, 10^9] to [1, N] to use a Fenwick tree",
+        "Sweep line: fix one axis, sweep along the other, answer queries at each position",
+        "1D projection of 2D DP: when the DP table's row depends only on the previous row, use a rolling array",
+        "Row-by-row or column-by-column processing of grids: treat each row as a bitmask to apply bitmask DP in 2D grid"
+      ],
+      "classicExamples": [
+        {
+          "category": "coordinate-compression",
+          "examples": "Count inversions: Map values to [1, N]; use Fenwick tree on compressed coordinates"
+        },
+        {
+          "category": "sweep-line",
+          "examples": "Rectangle intersection: Sweep left-to-right; maintain active set of y-intervals"
+        },
+        {
+          "category": "dimension-reduction",
+          "examples": "Maximal rectangle in histogram: Reduce 2D matrix to 1D histogram row by row"
+        },
+        {
+          "category": "bitmask-profile",
+          "examples": "2D bitmask DP: Broken profile DP for tiling — state is the bitmask of the current column's protrusions"
+        }
+      ],
+      "failureModes": [
+        "Compression destroys ordering structure needed by the algorithm (check that comparisons remain valid after compression)",
+        "The sweep line event structure is complex to implement correctly (missed or double-counted events)"
+      ]
+    },
+    {
+      "id": "amortization-and-potential",
+      "name": "Amortization and Potential",
+      "coreReframe": "Design an operation that is occasionally expensive but amortized cheap — pay for expensive steps by 'banking' credit during cheap steps. The potential method formalizes this: assign a potential phi to each state; amortized cost = actual cost + delta-phi.",
+      "structuralSignals": [
+        "A sequence of operations has variable cost but the total is bounded",
+        "The expensive operations become possible only after many cheap operations (e.g., rebuilding a structure)",
+        "You want to claim O(1) per operation even though some individual operations are O(n)"
+      ],
+      "whatItUnlocks": [
+        "Dynamic arrays (append): O(1) amortized because doubling is rare",
+        "Union-Find with path compression: O(alpha(n)) amortized",
+        "Splay trees / move-to-front: amortized O(log n) per access",
+        "Stack-based algorithms with 'push each element once, pop each element once' invariant: total O(n) even though individual pops look like O(n)"
+      ],
+      "classicExamples": [
+        {
+          "category": "monotonic-stack",
+          "examples": "Monotonic stack (amortized argument): Each element is pushed once and popped once -> O(n) total despite appearances"
+        },
+        {
+          "category": "two-pointer",
+          "examples": "Two-pointer (amortized argument): Left pointer and right pointer each move at most N times -> O(n) total"
+        },
+        {
+          "category": "tarjan-scc",
+          "examples": "Tarjan's SCC: Each node is pushed to and popped from the stack exactly once -> O(V + E)"
+        }
+      ],
+      "failureModes": [
+        "Amortized analysis doesn't apply when individual worst-case latency matters (real-time systems)",
+        "The amortized bound requires the sequence to start from an 'empty' state; if the structure is pre-loaded, the analysis changes"
+      ]
+    }
+  ],
+  "crossStrategyInteractionGuide": [
+    {
+      "combination": "Offline + Divide domain",
+      "whatItProduces": "CDQ divide & conquer: split queries in half, count cross contributions"
+    },
+    {
+      "combination": "Reverse + Lazy",
+      "whatItProduces": "Process deletions as additions in reverse; DSU with rollback"
+    },
+    {
+      "combination": "Transform + Dual",
+      "whatItProduces": "Binary search on the answer for a min-max problem after coordinate compression"
+    },
+    {
+      "combination": "Offline + Transform",
+      "whatItProduces": "Sort queries by right endpoint, sweep with BIT (offline range query pattern)"
+    },
+    {
+      "combination": "Eager/lazy + Amortization",
+      "whatItProduces": "Lazy deletion in a heap is O(log n) amortized because stale entries are bounded by total inserts"
+    }
+  ]
+}

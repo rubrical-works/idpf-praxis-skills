@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cross-References Decision Matrix",
+  "description": "Maps problem signals to paradigm, structure, and strategy keys with weighted associations and anti-overlap rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "signals", "overlapThreshold", "antiOverlapRules"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema file."
+    },
+    "signals": {
+      "type": "array",
+      "description": "Problem signals that map to paradigm/structure/strategy combinations.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "keywords", "paradigms", "structures", "strategies"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "description": "Unique kebab-case identifier for the signal."
+          },
+          "description": {
+            "type": "string",
+            "description": "What the signal looks like in a problem statement."
+          },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "Keywords or phrases that indicate this signal."
+          },
+          "paradigms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "weight", "rationale"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "enum": [
+                    "greedy",
+                    "dynamic-programming",
+                    "divide-and-conquer",
+                    "graph-traversal",
+                    "backtracking-and-constraint-search",
+                    "randomized-algorithms",
+                    "mathematical-and-number-theoretic",
+                    "simulation-and-state-machines"
+                  ],
+                  "description": "Paradigm ID from paradigms.json."
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0,
+                  "description": "Match strength from 0.0 (weak) to 1.0 (strong)."
+                },
+                "rationale": {
+                  "type": "string",
+                  "description": "Why this paradigm fits the signal."
+                }
+              }
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "structures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "weight", "rationale"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "enum": [
+                    "heap-priority-queue",
+                    "tree-variants",
+                    "hash-based-structures",
+                    "graph-representations",
+                    "union-find",
+                    "monotonic-stack-and-queue",
+                    "sliding-window-and-two-pointer",
+                    "bit-manipulation-and-bitsets"
+                  ],
+                  "description": "Structure family ID from structures.json."
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0,
+                  "description": "Match strength from 0.0 (weak) to 1.0 (strong)."
+                },
+                "rationale": {
+                  "type": "string",
+                  "description": "Why this structure fits the signal."
+                }
+              }
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "strategies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "weight", "rationale"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "enum": [
+                    "offline-vs-online",
+                    "forward-vs-reverse-processing",
+                    "problem-transformation-reduction",
+                    "primal-vs-dual-complement-framing",
+                    "eager-vs-lazy-evaluation",
+                    "push-vs-pull-propagation",
+                    "divide-the-domain",
+                    "coordinate-dimension-reduction",
+                    "amortization-and-potential"
+                  ],
+                  "description": "Strategy ID from strategies.json."
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0,
+                  "description": "Match strength from 0.0 (weak) to 1.0 (strong)."
+                },
+                "rationale": {
+                  "type": "string",
+                  "description": "Why this strategy fits the signal."
+                }
+              }
+            },
+            "minItems": 1,
+            "maxItems": 3
+          }
+        }
+      }
+    },
+    "overlapThreshold": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Jaccard similarity threshold above which two paths are considered overlapping."
+    },
+    "antiOverlapRules": {
+      "type": "array",
+      "description": "Rules for ensuring selected paths are sufficiently different.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["description", "check"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the rule."
+          },
+          "check": {
+            "type": "string",
+            "description": "Description of the set intersection or similarity check to perform."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,546 @@
+{
+  "$schema": "paradigms-schema.json",
+  "paradigms": [
+    {
+      "id": "greedy",
+      "name": "Greedy",
+      "coreIdea": "At each step, make the locally optimal choice and never reconsider it. A greedy works when the problem has the greedy choice property -- a local optimum extends to a global optimum -- and optimal substructure.",
+      "whenItApplies": [
+        "Problem asks for a minimum/maximum over a set of choices (scheduling, allocation, covering)",
+        "Each decision is irreversible and independent of future decisions",
+        "An exchange argument can prove that swapping any two adjacent choices can't improve the result",
+        "Interval problems, task scheduling, coin change with canonical denominations"
+      ],
+      "subVariants": [
+        {
+          "name": "Sort-then-scan",
+          "keyMechanism": "Sort by one key, greedily consume in order",
+          "archetypalProblem": "Activity selection, meeting rooms"
+        },
+        {
+          "name": "Heap-maintained frontier",
+          "keyMechanism": "A priority queue tracks the best available choice at each step",
+          "archetypalProblem": "Dijkstra, Prim's MST, K closest points"
+        },
+        {
+          "name": "Exchange argument / inversion",
+          "keyMechanism": "Prove any deviation from greedy can be \"uncrossed\" without loss",
+          "archetypalProblem": "Job sequencing by deadline, Huffman coding"
+        },
+        {
+          "name": "Fractional relaxation",
+          "keyMechanism": "Take as much of the best item as fits, then next-best",
+          "archetypalProblem": "Fractional knapsack"
+        },
+        {
+          "name": "Two-pass greedy",
+          "keyMechanism": "One left-to-right pass + one right-to-left pass, results combined",
+          "archetypalProblem": "Candy distribution, trapping rain water"
+        },
+        {
+          "name": "Lazy deletion greedy",
+          "keyMechanism": "Items are \"removed\" by marking rather than restructuring; heap pops skip stale entries",
+          "archetypalProblem": "Task scheduler with cooldown, sliding window maximum"
+        }
+      ],
+      "redFlags": [
+        "The problem has a \"0/1\" or all-or-nothing choice (greedy usually fails -- DP needed)",
+        "Counter-examples exist where the locally best choice leads to a globally worse outcome",
+        "The problem involves dependencies between choices (use graph/DP instead)"
+      ],
+      "classicProblems": [
+        "Interval scheduling maximization",
+        "Huffman encoding",
+        "Dijkstra's shortest path",
+        "Prim's/Kruskal's MST",
+        "Jump game (reachability variant)",
+        "Assign cookies"
+      ]
+    },
+    {
+      "id": "dynamic-programming",
+      "name": "Dynamic Programming",
+      "coreIdea": "Break the problem into overlapping subproblems, solve each once, and store results. DP works when the problem has optimal substructure and overlapping subproblems -- the hallmark distinction from divide-and-conquer.",
+      "whenItApplies": [
+        "Counting, minimizing, maximizing over an exponential decision space",
+        "\"How many ways\", \"minimum cost\", \"longest/shortest\" phrasing",
+        "State can be compactly represented and transitions are well-defined",
+        "Choices interact (unlike greedy where they're independent)"
+      ],
+      "subVariants": [
+        {
+          "name": "Top-down memoization",
+          "keyMechanism": "Recursive with a cache; natural for irregular state spaces",
+          "archetypalProblem": "Word break, climbing stairs"
+        },
+        {
+          "name": "Bottom-up tabulation",
+          "keyMechanism": "Iterative fill of a table in dependency order; avoids stack overhead",
+          "archetypalProblem": "Longest common subsequence, edit distance"
+        },
+        {
+          "name": "1D rolling array",
+          "keyMechanism": "Current row depends only on previous row; reduce O(n^2) space to O(n)",
+          "archetypalProblem": "0-1 knapsack (space-optimized)"
+        },
+        {
+          "name": "Interval DP",
+          "keyMechanism": "State = (left, right) subarray or subrange; fill diagonally",
+          "archetypalProblem": "Matrix chain multiplication, burst balloons, palindrome partitioning"
+        },
+        {
+          "name": "Bitmask DP",
+          "keyMechanism": "State includes a bitmask of which items have been used; handles small N with combinatorial choice",
+          "archetypalProblem": "Travelling salesman (small N), minimum XOR cover, assignment problems"
+        },
+        {
+          "name": "Digit DP",
+          "keyMechanism": "State tracks position + tight constraint + accumulated property; counts integers in a range satisfying a property",
+          "archetypalProblem": "Count numbers with digit sum = K in [L, R]"
+        },
+        {
+          "name": "Tree DP",
+          "keyMechanism": "DP runs on tree structure; state transitions along parent-child edges",
+          "archetypalProblem": "Max independent set on tree, diameter, rerooting technique"
+        },
+        {
+          "name": "Profile DP",
+          "keyMechanism": "State encodes the \"frontier\" shape between processed and unprocessed; common in grid tiling",
+          "archetypalProblem": "Broken profile DP for domino tiling"
+        },
+        {
+          "name": "DP with monotone queue / divide & conquer optimization",
+          "keyMechanism": "Transition cost satisfies the concave/convex SMAWK condition; reduces O(n^2) to O(n log n)",
+          "archetypalProblem": "Optimal BST, certain knapsack variants"
+        }
+      ],
+      "redFlags": [
+        "State space is too large to store (use heuristics or approximation instead)",
+        "No overlapping subproblems (pure divide-and-conquer is better)",
+        "Problem requires online decisions with no future lookahead (use greedy or sliding window)"
+      ],
+      "classicProblems": [
+        "Longest increasing subsequence",
+        "Edit distance",
+        "0-1 knapsack",
+        "Coin change (exact count)",
+        "Egg drop",
+        "Palindrome partitioning",
+        "Burst balloons",
+        "TSP on small graphs"
+      ]
+    },
+    {
+      "id": "divide-and-conquer",
+      "name": "Divide and Conquer",
+      "coreIdea": "Split the problem into independent subproblems, solve recursively, then combine. Unlike DP, subproblems do not overlap -- solving them twice would give the same result.",
+      "whenItApplies": [
+        "Problem naturally decomposes into halves or k-parts with no shared state",
+        "Combining partial solutions is efficient relative to solving the whole",
+        "The problem has a recursive geometric or structural self-similarity",
+        "\"Find in sorted array\", \"build a balanced structure\", \"aggregate over a range\""
+      ],
+      "subVariants": [
+        {
+          "name": "Binary search",
+          "keyMechanism": "Eliminate half the search space per step; requires monotone predicate",
+          "archetypalProblem": "Search in rotated array, find peak, capacity to ship packages"
+        },
+        {
+          "name": "Merge-based",
+          "keyMechanism": "Divide, recurse, merge with cross-partition contribution counted at merge",
+          "archetypalProblem": "Merge sort, count inversions, sort colors"
+        },
+        {
+          "name": "Randomized partition",
+          "keyMechanism": "Pick random pivot; expected O(n log n) or O(n)",
+          "archetypalProblem": "Quicksort, quickselect (kth largest)"
+        },
+        {
+          "name": "Recursive geometric",
+          "keyMechanism": "Partition space recursively; combine nearest-pair or range queries",
+          "archetypalProblem": "Closest pair of points, k-d tree construction"
+        },
+        {
+          "name": "Matrix exponentiation",
+          "keyMechanism": "Express recurrence as matrix multiply; fast-power gives O(log n)",
+          "archetypalProblem": "Fibonacci in O(log n), linear recurrence of fixed order"
+        },
+        {
+          "name": "Segment tree build",
+          "keyMechanism": "Build balanced tree over array; each node aggregates a range",
+          "archetypalProblem": "Range min/max/sum queries, lazy propagation"
+        },
+        {
+          "name": "Parallel binary search",
+          "keyMechanism": "Binary search simultaneously over multiple independent queries",
+          "archetypalProblem": "Offline range queries, persistent structures"
+        }
+      ],
+      "redFlags": [
+        "Subproblems are not independent (overlapping -- use DP)",
+        "Combining results is as expensive as solving the whole (no asymptotic gain)",
+        "Problem requires processing items in a specific order (use sweep line or DP)"
+      ],
+      "classicProblems": [
+        "Merge sort / count inversions",
+        "Binary search variants",
+        "Closest pair of points",
+        "Matrix chain (D&C optimization)",
+        "Karatsuba multiplication",
+        "Segment tree"
+      ]
+    },
+    {
+      "id": "graph-traversal",
+      "name": "Graph Traversal",
+      "coreIdea": "Model the problem as a graph of states and edges, then traverse it to answer reachability, shortest path, ordering, or connectivity questions.",
+      "whenItApplies": [
+        "Problem involves relationships, dependencies, or transitions between discrete states",
+        "\"Can we reach X from Y?\", \"shortest sequence of moves\", \"ordering with dependencies\"",
+        "The state space is naturally node-shaped (cells, nodes, configurations)",
+        "Implicit graphs where nodes are problem states and edges are valid transitions"
+      ],
+      "subVariants": [
+        {
+          "name": "BFS (unweighted shortest path)",
+          "keyMechanism": "Level-by-level expansion; guarantees fewest edges",
+          "archetypalProblem": "Word ladder, 0-1 BFS on grid, multi-source BFS"
+        },
+        {
+          "name": "Dijkstra (weighted shortest path)",
+          "keyMechanism": "Priority queue, always expand cheapest frontier node",
+          "archetypalProblem": "Network delay time, path with minimum effort"
+        },
+        {
+          "name": "Bellman-Ford",
+          "keyMechanism": "Relax all edges N-1 times; handles negative weights, detects negative cycles",
+          "archetypalProblem": "Cheapest flights within K stops, currency arbitrage"
+        },
+        {
+          "name": "DFS (topological / cycle detection)",
+          "keyMechanism": "Post-order DFS; reverse post-order = topological sort",
+          "archetypalProblem": "Course schedule, alien dictionary"
+        },
+        {
+          "name": "Tarjan's / Kosaraju's SCC",
+          "keyMechanism": "Two-pass DFS or stack-based; finds strongly connected components",
+          "archetypalProblem": "Critical connections, redundant connections"
+        },
+        {
+          "name": "Floyd-Warshall",
+          "keyMechanism": "All-pairs shortest paths; O(V^3) but simple",
+          "archetypalProblem": "All-pairs reachability on small graphs"
+        },
+        {
+          "name": "Bidirectional BFS",
+          "keyMechanism": "Expand from both source and target; meets in the middle",
+          "archetypalProblem": "Word ladder (large graph), shortest path with huge branching factor"
+        },
+        {
+          "name": "0-1 BFS",
+          "keyMechanism": "Deque instead of queue; handles edges of weight 0 or 1 only",
+          "archetypalProblem": "Minimum flips in grid, shortest path with free moves"
+        },
+        {
+          "name": "A*",
+          "keyMechanism": "BFS + admissible heuristic to guide expansion toward goal",
+          "archetypalProblem": "Pathfinding with spatial structure, 8-puzzle"
+        },
+        {
+          "name": "Implicit graph / state-space BFS",
+          "keyMechanism": "Nodes are (partial) problem states, not literal graph nodes",
+          "archetypalProblem": "Sliding puzzle, lock combination, BFS on game states"
+        }
+      ],
+      "redFlags": [
+        "Graph is too large to store explicitly (use implicit traversal or meet-in-the-middle)",
+        "Edge weights are real-valued and large (Dijkstra still works but consider precision)",
+        "Problem is about structure of the graph itself, not traversal (use Union-Find or matrix methods)"
+      ],
+      "classicProblems": [
+        "Number of islands",
+        "Word ladder",
+        "Course schedule",
+        "Network delay time",
+        "Cheapest flights within K stops",
+        "Clone graph",
+        "Critical connections"
+      ]
+    },
+    {
+      "id": "backtracking-and-constraint-search",
+      "name": "Backtracking and Constraint Search",
+      "coreIdea": "Build a solution incrementally; abandon (\"prune\") partial solutions as soon as they violate constraints. Correct but potentially exponential -- pruning is everything.",
+      "whenItApplies": [
+        "Problem asks to enumerate, find, or count all valid configurations",
+        "Constraints eliminate large portions of the search space early",
+        "No polynomial algorithm is known (NP-hard in general, tractable with pruning for small N)",
+        "\"All permutations\", \"all subsets satisfying X\", \"place N queens\", \"solve this puzzle\""
+      ],
+      "subVariants": [
+        {
+          "name": "Subset enumeration",
+          "keyMechanism": "Include/exclude each element; 2^N leaves",
+          "archetypalProblem": "Subsets, combination sum, power set"
+        },
+        {
+          "name": "Permutation generation",
+          "keyMechanism": "Fix element at each position; N! leaves",
+          "archetypalProblem": "Permutations, next permutation"
+        },
+        {
+          "name": "Constraint propagation (CSP-style)",
+          "keyMechanism": "After each assignment, propagate constraints to reduce domains",
+          "archetypalProblem": "Sudoku solver, N-queens with forward checking"
+        },
+        {
+          "name": "Branch and bound",
+          "keyMechanism": "Track best solution so far; prune branches that cannot beat it",
+          "archetypalProblem": "0-1 knapsack (exact), TSP (exact)"
+        },
+        {
+          "name": "Iterative deepening DFS (IDDFS)",
+          "keyMechanism": "DFS with depth limit that increases; O(b^d) time, O(d) space",
+          "archetypalProblem": "Maze with unknown depth, 15-puzzle"
+        },
+        {
+          "name": "Meet in the middle",
+          "keyMechanism": "Split search space in half; solve each half, then join",
+          "archetypalProblem": "4-sum, subset sum with large N, bidirectional backtrack"
+        }
+      ],
+      "redFlags": [
+        "N is large and pruning is weak (exponential blowup; use DP or approximation)",
+        "Problem only asks for one solution, not all (often DP or greedy is faster)",
+        "The constraint structure has a polynomial algorithm you haven't noticed yet"
+      ],
+      "classicProblems": [
+        "N-queens",
+        "Sudoku",
+        "Combination sum",
+        "Word search on grid",
+        "Generate parentheses",
+        "Palindrome partitioning (all partitions)",
+        "Letter combinations of phone number"
+      ]
+    },
+    {
+      "id": "randomized-algorithms",
+      "name": "Randomized Algorithms",
+      "coreIdea": "Use randomness to simplify the algorithm, avoid adversarial worst cases, or approximate hard problems. Correct in expectation or with high probability.",
+      "whenItApplies": [
+        "Deterministic worst case is bad but expected case matters",
+        "Need to sample from a large or streaming population",
+        "Problem involves hashing, fingerprinting, or approximate membership",
+        "The adversary can break deterministic approaches (use randomized to deny worst-case inputs)"
+      ],
+      "subVariants": [
+        {
+          "name": "Randomized quickselect",
+          "keyMechanism": "Random pivot; expected O(n) kth-element",
+          "archetypalProblem": "Kth largest element, median of unsorted array"
+        },
+        {
+          "name": "Reservoir sampling",
+          "keyMechanism": "Single pass over stream; each element has equal probability of being in sample",
+          "archetypalProblem": "Random sample from unknown-length stream"
+        },
+        {
+          "name": "Random hashing / universal hashing",
+          "keyMechanism": "Random hash function; low collision probability",
+          "archetypalProblem": "Distributed caching, frequency estimation"
+        },
+        {
+          "name": "Bloom filter",
+          "keyMechanism": "Hash into multiple bit positions; false positives possible, no false negatives",
+          "archetypalProblem": "Membership test with space constraint"
+        },
+        {
+          "name": "Count-Min Sketch",
+          "keyMechanism": "Array of hash-indexed counters; approximate frequency queries",
+          "archetypalProblem": "Heavy hitters in a stream"
+        },
+        {
+          "name": "Monte Carlo / Las Vegas",
+          "keyMechanism": "MC: fast, possibly wrong answer; LV: always correct, random runtime",
+          "archetypalProblem": "Primality testing (Miller-Rabin), randomized min-cut (Karger's)"
+        },
+        {
+          "name": "Skip list",
+          "keyMechanism": "Probabilistic layered linked list; O(log n) expected ops",
+          "archetypalProblem": "Ordered set with fast insert/delete, LRU cache variants"
+        }
+      ],
+      "redFlags": [
+        "Problem requires a guaranteed correct answer with a deterministic bound (use exact algorithm)",
+        "Randomness isn't available or seeding is adversarial",
+        "The problem size is small enough that deterministic O(n log n) is fine"
+      ],
+      "classicProblems": [
+        "Kth largest in array",
+        "Random shuffle (Fisher-Yates)",
+        "Random pick index (with weights)",
+        "Online reservoir sampling",
+        "Consistent hashing"
+      ]
+    },
+    {
+      "id": "mathematical-and-number-theoretic",
+      "name": "Mathematical and Number-Theoretic",
+      "coreIdea": "Exploit algebraic structure, number theory, or combinatorial identities to reduce an apparently hard problem to arithmetic -- often from O(n) to O(log n) or O(1).",
+      "whenItApplies": [
+        "Problem involves modular arithmetic, divisibility, primes, or GCD structure",
+        "Counting problems with large N where direct enumeration is impossible",
+        "Geometric problems reducible to arithmetic (area, intersections, convex hull)",
+        "The answer involves factorials, Catalan numbers, Fibonacci, or similar sequences"
+      ],
+      "subVariants": [
+        {
+          "name": "Sieve of Eratosthenes",
+          "keyMechanism": "Mark multiples; O(n log log n) prime generation",
+          "archetypalProblem": "Count primes, prime factorization up to N"
+        },
+        {
+          "name": "GCD / LCM structure",
+          "keyMechanism": "Euclidean algorithm; Bezout's identity for linear combinations",
+          "archetypalProblem": "Fraction simplification, water jug, minimum steps to make GCD"
+        },
+        {
+          "name": "Modular exponentiation",
+          "keyMechanism": "Fast power with modular reduction; O(log n)",
+          "archetypalProblem": "Large Fibonacci, matrix power mod, RSA-style operations"
+        },
+        {
+          "name": "Combinatorics (nCr mod p)",
+          "keyMechanism": "Pascal's triangle or Lucas' theorem for modular binomial",
+          "archetypalProblem": "Count valid paths in grid, distributing items"
+        },
+        {
+          "name": "Pigeonhole principle",
+          "keyMechanism": "If n items in k < n bins, some bin has >= 2",
+          "archetypalProblem": "Existence proofs, duplicate detection, calendar problems"
+        },
+        {
+          "name": "Prefix sum / difference array",
+          "keyMechanism": "Precompute cumulative sums; O(1) range query after O(n) build",
+          "archetypalProblem": "Subarray sum equals K, range update + query"
+        },
+        {
+          "name": "Convex hull trick",
+          "keyMechanism": "Envelope of linear functions; O(n) or O(n log n) DP optimization",
+          "archetypalProblem": "DP where cost is linear in a variable, CHT for slope optimization"
+        },
+        {
+          "name": "Geometric primitives",
+          "keyMechanism": "Cross product for orientation, Shoelace for area, sweep for intersections",
+          "archetypalProblem": "Convex hull, polygon area, point in polygon"
+        }
+      ],
+      "redFlags": [
+        "Problem doesn't have algebraic structure to exploit (use DP or graph instead)",
+        "Modular arithmetic introduces precision issues the problem doesn't accommodate",
+        "The number-theoretic reduction is more complex than the direct approach for the given constraints"
+      ],
+      "classicProblems": [
+        "Count primes (Sieve)",
+        "Ugly numbers",
+        "Pow(x, n)",
+        "Number of digit ones",
+        "Pascal's triangle",
+        "Subarray sum equals K",
+        "Largest rectangle in histogram (geometric)"
+      ]
+    },
+    {
+      "id": "simulation-and-state-machines",
+      "name": "Simulation and State Machines",
+      "coreIdea": "Model the problem as a sequence of state transitions and execute them directly. No clever reduction -- the algorithm is the specification.",
+      "whenItApplies": [
+        "Problem describes a process with explicit rules (\"at each step, do X\")",
+        "The state space is small enough to enumerate or the simulation terminates quickly",
+        "Finding cycles or steady states in a deterministic process",
+        "Event-driven systems where future events are triggered by current state"
+      ],
+      "subVariants": [
+        {
+          "name": "Direct simulation",
+          "keyMechanism": "Execute the described process step by step; verify termination",
+          "archetypalProblem": "Game of Life, robot on a grid, simulate a stack/queue"
+        },
+        {
+          "name": "Cycle detection (Floyd / Brent)",
+          "keyMechanism": "Tortoise-and-hare or Brent's algorithm; find loop in O(n) time O(1) space",
+          "archetypalProblem": "Linked list cycle, find duplicate in array, hash function cycle"
+        },
+        {
+          "name": "Event-driven simulation",
+          "keyMechanism": "Priority queue of future events; advance time to next event",
+          "archetypalProblem": "Task scheduler, meeting room simulation, stock price events"
+        },
+        {
+          "name": "Finite automaton",
+          "keyMechanism": "Explicit state machine with transition table; process input character by character",
+          "archetypalProblem": "Regex matching (simple), string parsing, valid number"
+        },
+        {
+          "name": "Cellular automaton",
+          "keyMechanism": "Each cell updates based on neighbors; often run for K steps",
+          "archetypalProblem": "Conway's Game of Life, falling sand, spreading wildfire"
+        },
+        {
+          "name": "Physics / geometric simulation",
+          "keyMechanism": "Apply movement/collision rules repeatedly; check invariants",
+          "archetypalProblem": "Asteroid collision, dominoes falling, bouncing ball"
+        }
+      ],
+      "redFlags": [
+        "Simulation runs for too many steps (need closed-form math or cycle detection)",
+        "Problem asks for the optimal sequence of steps, not just the result of a given sequence (use DP or search)",
+        "State space is too large to track explicitly (use hashing or abstraction)"
+      ],
+      "classicProblems": [
+        "Design hit counter",
+        "LRU cache",
+        "Robot bounded in circle",
+        "Asteroid collision",
+        "Task scheduler (simulation variant)",
+        "Find the duplicate number (Floyd's cycle)"
+      ]
+    }
+  ],
+  "crossParadigmGuide": [
+    {
+      "signal": "\"Minimum/maximum value\" with independent choices",
+      "leanToward": "Greedy"
+    },
+    {
+      "signal": "\"Minimum/maximum value\" with interacting choices",
+      "leanToward": "DP"
+    },
+    {
+      "signal": "\"All valid configurations\" or \"count all ways\"",
+      "leanToward": "Backtracking or DP"
+    },
+    {
+      "signal": "\"Shortest path\" or \"fewest steps\" between states",
+      "leanToward": "Graph traversal (BFS / Dijkstra)"
+    },
+    {
+      "signal": "\"Does X exist?\" with large search space",
+      "leanToward": "Randomized or backtracking with pruning"
+    },
+    {
+      "signal": "Answer is a single number derivable analytically",
+      "leanToward": "Mathematical"
+    },
+    {
+      "signal": "Problem describes an explicit process",
+      "leanToward": "Simulation"
+    },
+    {
+      "signal": "Problem has self-similar recursive structure",
+      "leanToward": "Divide and conquer"
+    }
+  ]
+}
