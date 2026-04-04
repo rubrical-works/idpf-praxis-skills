@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "report-schema.json",
   "title": "Subagent Report Template",
-  "description": "Schema for the HAL-2026 subagent report template definition.",
+  "description": "Schema for the Engage Exocortex subagent report template definition.",
   "type": "object",
   "required": ["$schema", "description", "reportFields", "synthesisNotes"],
   "additionalProperties": false,

@@ -1,14 +1,14 @@
 {
   "$schema": "proposal-template-schema.json",
-  "description": "Document structure template for hal-2026 exploration proposal generation (Step 5)",
-  "filePattern": "Proposal/HAL-{problem-slug}.md",
+  "description": "Document structure template for engage-exocortex exploration proposal generation (Step 5)",
+  "filePattern": "Proposal/EXO-{problem-slug}.md",
   "sections": [
     {
       "id": "metadata",
       "heading": "# Parallel Exploration: {problemTitle}",
       "fields": [
         { "key": "date", "label": "Date", "format": "YYYY-MM-DD" },
-        { "key": "skill", "label": "Skill", "value": "hal-2026" },
+        { "key": "skill", "label": "Skill", "value": "engage-exocortex" },
         { "key": "signalsMatched", "label": "Signals Matched", "format": "comma-separated list" },
         { "key": "pathsExplored", "label": "Paths Explored", "format": "integer" }
       ]

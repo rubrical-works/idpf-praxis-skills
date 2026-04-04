@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Skill Context Map",
-  "description": "Maps problem domain keywords to skills for context gathering in hal-2026 Step 0",
+  "description": "Maps problem domain keywords to skills for context gathering in engage-exocortex Step 0",
   "type": "object",
   "required": ["description", "maxSkillsPerInvocation", "skills", "domainSkipKeywords"],
   "additionalProperties": false,

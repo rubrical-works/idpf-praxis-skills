@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Proposal Template",
-  "description": "Schema for hal-2026 exploration proposal document template",
+  "description": "Schema for engage-exocortex exploration proposal document template",
   "type": "object",
   "required": ["description", "filePattern", "sections"],
   "additionalProperties": false,

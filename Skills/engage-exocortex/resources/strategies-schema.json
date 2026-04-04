@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "strategies-schema.json",
   "title": "Problem Decomposition Strategy Reference",
-  "description": "Schema for the HAL-2026 problem decomposition strategies reference.",
+  "description": "Schema for the Engage Exocortex problem decomposition strategies reference.",
   "type": "object",
   "required": ["$schema", "description", "usage", "strategies", "crossStrategyInteractionGuide"],
   "additionalProperties": false,

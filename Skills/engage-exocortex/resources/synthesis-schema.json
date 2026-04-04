@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "synthesis-schema.json",
   "title": "Synthesis Configuration",
-  "description": "Schema for the HAL-2026 synthesis scoring rubric and rules.",
+  "description": "Schema for the Engage Exocortex synthesis scoring rubric and rules.",
   "type": "object",
   "required": ["$schema", "description", "phases", "commonMistakesToAvoid"],
   "additionalProperties": false,

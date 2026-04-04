@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-04-04
+
+### Added
+- **SKILLS-manifest.json** — centralized manifest for all distributable skills with schema validation (`SKILLS-manifest-schema.json`), rename migration support via `renamed` blocks, and deprecation tracking
+- **engage-exocortex: getting-started guide** — new `docs/getting-started.md` explaining how to use the skill, example questions, expected output, and tips for effective usage
+
+### Changed
+- **hal-2026 renamed to engage-exocortex** — skill directory, SKILL.md frontmatter, all internal references (docs, resources, schemas, registry, keywords, tests, .min-mirror, README-DIST, MAINTENANCE.md, SKILL-DEVELOPMENT-GUIDE), framework-config.json, .gitignore, and packaged zip all updated. Historical artifacts (CHANGELOG, PRD, Proposal) preserved with original names. Skill version bumped to 2.0.0.
+
+### Fixed
+- skill-versioning-e2e test hardcoded `1.0.0` for all non-test skills — now compares against original registry versions to support skills at any version
+
 ## [0.8.0] - 2026-04-03
 
 ### Added

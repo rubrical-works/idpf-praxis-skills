@@ -1,16 +1,16 @@
 ---
-name: hal-2026
+name: engage-exocortex
 description: JSON-driven parallel solution explorer with schema-validated references, deterministic path selection via structured signal matching, and selective loading for minimal token usage.
 type: invokable
-version: "1.0.0"
+version: "2.0.0"
 frameworkCompatibility: ">=0.80.0"
-lastUpdated: "2026-04-03"
+lastUpdated: "2026-04-04"
 license: Complete terms in LICENSE.txt
 category: problem-solving
 relevantTechStack: [algorithms, data-structures, parallel-exploration, json-schema]
 copyright: "Rubrical Works (c) 2026"
 ---
-# HAL-2026 — Parallel Solution Explorer
+# Engage Exocortex — Parallel Solution Explorer
 Fan out into N independent solution paths in parallel, then synthesize the best answer from structured subagent reports. All reference data is schema-validated JSON in `resources/`. Only matched entries are loaded, not the full corpus.
 ## When to Use
 - Multiple plausible data structures, algorithms, or architectural approaches
@@ -33,7 +33,7 @@ PRIMARY AGENT
      │       └── Path N: [approach] ──► JSON report
      │
      ├── 6. SYNTHESIS: validate, score, optionally hybridize ──► recommendation
-     └── 7. [Default] Write exploration proposal to Proposal/HAL-{slug}.md
+     └── 7. [Default] Write exploration proposal to Proposal/EXO-{slug}.md
 ```
 **Opt-out:** Pass `--no-proposal` to skip document generation (Step 7).
 ## Step 0 — Context Gathering (Optional)
@@ -125,7 +125,7 @@ How: [1–2 sentences on combination and gains]
 ```
 ## Step 5 — Generate Exploration Proposal Document
 **Skip if `--no-proposal` was specified.**
-Write to `Proposal/HAL-{problem-slug}.md` (lowercase-hyphenated summary of problem title).
+Write to `Proposal/EXO-{problem-slug}.md` (lowercase-hyphenated summary of problem title).
 ### Document Structure
 Read `resources/proposal-template.json` for structure. Sections:
 1. **Metadata** — Date, skill name, signals matched, paths explored count

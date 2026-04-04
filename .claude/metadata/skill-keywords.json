@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-03T21:02:30.706Z",
+  "generatedAt": "2026-04-04T17:07:46.507Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
@@ -92,6 +92,13 @@
       "electron",
       "development"
     ],
+    "engage-exocortex": [
+      "engage-exocortex",
+      "engage",
+      "exocortex",
+      "parallel",
+      "explorer"
+    ],
     "error-handling-patterns": [
       "error-handling-patterns",
       "error",
@@ -102,11 +109,6 @@
       "flask-setup",
       "flask",
       "setup"
-    ],
-    "hal-2026": [
-      "hal-2026",
-      "hal",
-      "2026"
     ],
     "i18n-setup": [
       "i18n-setup",
@@ -254,9 +256,9 @@
     "drawio-generation": "documentation",
     "electron-cross-build": "platform",
     "electron-development": "platform",
+    "engage-exocortex": "problem-solving",
     "error-handling-patterns": "development",
     "flask-setup": "platform",
-    "hal-2026": "problem-solving",
     "i18n-setup": "web",
     "json-validator": "analysis",
     "migration-patterns": "database",

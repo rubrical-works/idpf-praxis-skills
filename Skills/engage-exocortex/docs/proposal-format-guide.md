@@ -1,6 +1,6 @@
 # Exploration Proposal Document Format
 
-When hal-2026 completes a parallel exploration, it generates a persistent markdown document in `Proposal/` capturing the full lifecycle. This guide describes the document format.
+When engage-exocortex completes a parallel exploration, it generates a persistent markdown document in `Proposal/` capturing the full lifecycle. This guide describes the document format.
 
 ## File Location
 

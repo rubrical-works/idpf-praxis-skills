@@ -1,6 +1,6 @@
 {
   "$schema": "skill-context-map-schema.json",
-  "description": "Maps problem domain keywords to skills that provide useful context for hal-2026 path selection",
+  "description": "Maps problem domain keywords to skills that provide useful context for engage-exocortex path selection",
   "maxSkillsPerInvocation": 3,
   "skills": [
     {

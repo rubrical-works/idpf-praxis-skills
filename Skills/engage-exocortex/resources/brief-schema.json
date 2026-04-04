@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "brief-schema.json",
   "title": "Subagent Brief Template",
-  "description": "Schema for the HAL-2026 subagent brief template definition.",
+  "description": "Schema for the Engage Exocortex subagent brief template definition.",
   "type": "object",
   "required": ["$schema", "description", "preamble", "slots", "taskInstructions", "primaryAgentNotes"],
   "additionalProperties": false,

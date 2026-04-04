@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.8.0
+**Version:** v0.9.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -28,9 +28,9 @@
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
 | electron-cross-build | 1.0.0 | 2026-03-17 | Active |
 | electron-development | 1.0.0 | 2026-03-17 | Active |
+| engage-exocortex | 2.0.0 | 2026-04-04 | Active |
 | error-handling-patterns | 1.0.0 | 2026-03-17 | Active |
 | flask-setup | 1.0.1 | 2026-04-01 | Active |
-| hal-2026 | 1.0.0 | 2026-04-03 | Active |
 | i18n-setup | 1.0.0 | 2026-03-17 | Active |
 | json-validator | 1.0.0 | 2026-04-02 | Active |
 | migration-patterns | 1.0.0 | 2026-03-17 | Active |

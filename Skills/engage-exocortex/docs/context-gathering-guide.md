@@ -1,6 +1,6 @@
 # Context Gathering Guide (Step 0)
 
-HAL-2026's optional Step 0 loads relevant skills before signal matching to provide richer context for architecture and design problems.
+Engage Exocortex's optional Step 0 loads relevant skills before signal matching to provide richer context for architecture and design problems.
 
 ## When Step 0 Runs
 

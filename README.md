@@ -72,7 +72,7 @@ Interactive guided workflows. Install and use as slash commands.
 | [i18n-setup](Skills/i18n-setup/) | Infrastructure | Internationalization setup |
 | [code-path-discovery](Skills/code-path-discovery/) | Analysis | Path analysis patterns |
 | [json-validator](Skills/json-validator/) | Analysis | Validate JSON files against schemas |
-| [hal-2026](Skills/hal-2026/) | Problem Solving | JSON-driven parallel solution explorer |
+| [engage-exocortex](Skills/engage-exocortex/) | Problem Solving | JSON-driven parallel solution explorer |
 
 ### Reference Skills (15)
 
