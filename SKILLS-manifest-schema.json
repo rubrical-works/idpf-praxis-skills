@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SKILLS Manifest",
+  "description": "Schema for the skills distribution manifest consumed by px-manager for installs, updates, and rename migrations.",
+  "type": "object",
+  "required": ["$schema", "version", "skills"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": {
+      "type": "string",
+      "description": "Manifest format version (semver)"
+    },
+    "skills": {
+      "type": "object",
+      "description": "Map of skill name to skill metadata",
+      "additionalProperties": {
+        "$ref": "#/definitions/skillEntry"
+      }
+    },
+    "deprecated": {
+      "type": "array",
+      "description": "Skills that have been removed from distribution",
+      "items": {
+        "$ref": "#/definitions/deprecatedEntry"
+      }
+    }
+  },
+  "definitions": {
+    "skillEntry": {
+      "type": "object",
+      "required": ["version", "type", "category", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Skill version (semver)"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["injector", "invokable", "reference", "educational"],
+          "description": "Skill consumption type"
+        },
+        "category": {
+          "type": "string",
+          "description": "Skill category for grouping"
+        },
+        "path": {
+          "type": "string",
+          "description": "Relative path to skill directory"
+        },
+        "renamed": {
+          "$ref": "#/definitions/renamedEntry"
+        }
+      }
+    },
+    "renamedEntry": {
+      "type": "object",
+      "required": ["from", "since", "autoMigrate"],
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Previous skill name"
+        },
+        "since": {
+          "type": "string",
+          "description": "Skill version when rename took effect"
+        },
+        "autoMigrate": {
+          "type": "boolean",
+          "description": "Whether px-manager should auto-migrate existing installations"
+        }
+      }
+    },
+    "deprecatedEntry": {
+      "type": "object",
+      "required": ["name", "since", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Deprecated skill name"
+        },
+        "since": {
+          "type": "string",
+          "description": "Version when deprecation took effect"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why the skill was deprecated"
+        },
+        "replacedBy": {
+          "type": "string",
+          "description": "Skill that replaces this one, if any"
+        }
+      }
+    }
+  }
+}

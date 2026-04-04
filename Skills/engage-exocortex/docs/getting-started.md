@@ -34,6 +34,7 @@ Or use trigger phrases in conversation:
 |------|--------|
 | `--paths N` | Specify how many paths to explore (2-4, default 3) |
 | `--no-proposal` | Skip writing the proposal document |
+| `--model <model>` | Override subagent model (default: `opus`) |
 
 ## Example Questions
 
@@ -82,6 +83,27 @@ A structured analysis with:
 A persistent markdown file saved to `Proposal/EXO-{problem-slug}.md` capturing the full exploration lifecycle -- signals matched, paths explored, subagent reports, scoring matrix, and final recommendation. This serves as a decision record you can reference later.
 
 Pass `--no-proposal` to skip document generation.
+
+## Model Requirements
+
+Engage Exocortex spawns subagents with `model: "opus"` by default, regardless of what model the parent session is running. This is intentional — the skill's value comes from deep, independent reasoning by each subagent. Running subagents on a lighter model produces shallower analysis and undermines the parallel exploration approach.
+
+| Component | Model | Why |
+|-----------|-------|-----|
+| Signal matching + path selection | Parent session | Needs deep problem understanding |
+| Subagent exploration | **Opus** (default) | The whole point — deep independent reasoning |
+| Synthesis + scoring | Parent session | Needs to catch errors in subagent reasoning |
+| Proposal document generation | Parent session | Mostly templated writing from structured data |
+
+### Overriding the Model
+
+Use `--model sonnet` or `--model haiku` to run subagents on a lighter model. This reduces cost and latency but produces shallower exploration:
+
+```
+/engage-exocortex --model sonnet What's the best caching strategy?
+```
+
+**Trade-off warning:** Lighter models tend to produce surface-level analysis. The synthesis step will have less to work with, and you may get results similar to a single-pass answer split into pieces. Use this override for quick explorations where cost matters more than depth.
 
 ## Tips for Better Results
 

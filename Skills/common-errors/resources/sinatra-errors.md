@@ -1,5 +1,5 @@
 # Sinatra-Specific Errors
-**Version:** v0.9.0
+**Version:** v0.9.1
 
 ## Routing Errors
 

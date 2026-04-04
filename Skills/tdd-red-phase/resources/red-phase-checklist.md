@@ -1,5 +1,5 @@
 # RED Phase Checklist
-**Version:** v0.9.0
+**Version:** v0.9.1
 Quick reference for completing RED phase successfully.
 ## Before Writing Test
 - [ ] Behavior to test is clearly identified

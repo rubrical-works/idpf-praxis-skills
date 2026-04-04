@@ -17,6 +17,13 @@ Fan out into N independent solution paths in parallel, then synthesize the best 
 - Trade-offs aren't immediately obvious (time vs. space, simplicity vs. performance)
 - User says "explore", "compare", "think through", or similar
 - Problem is complex enough that single-pass might miss a better approach
+## Options
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--paths N` | Parallel paths to explore (2-4) | 3 |
+| `--no-proposal` | Skip proposal document | *(writes proposal)* |
+| `--model <model>` | Override subagent model (`opus`, `sonnet`, `haiku`) | `opus` |
+`--model` overrides subagent exploration only. Primary agent (signal matching, synthesis, proposal) uses parent session model.
 ## Core Workflow
 ```
 PRIMARY AGENT
@@ -83,7 +90,7 @@ Read `resources/cross-references.json` → `antiOverlapRules[]`. Verify:
 - No identical (paradigm, structure, strategy) tuples
 If paths too similar, merge and select a different candidate.
 ## Step 3 — Spawn Subagents in Parallel
-Spawn all N subagents **at the same time** using the Agent tool.
+Spawn all N subagents **at the same time** using the Agent tool with `model: "opus"` (or `--model` override if provided).
 ### Brief Generation (Slot-Filling)
 Read `resources/brief-template.json`. For each path, fill slots:
 - `problemStatement` — user's problem

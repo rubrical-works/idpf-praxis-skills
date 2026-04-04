@@ -1,0 +1,258 @@
+{
+  "$schema": "SKILLS-manifest-schema.json",
+  "version": "1.0.0",
+  "skills": {
+    "anti-pattern-analysis": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "code-quality",
+      "path": "Skills/anti-pattern-analysis"
+    },
+    "api-versioning": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "api",
+      "path": "Skills/api-versioning"
+    },
+    "astro-development": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "platform",
+      "path": "Skills/astro-development"
+    },
+    "bdd-writing": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/bdd-writing"
+    },
+    "beginner-testing": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/beginner-testing"
+    },
+    "ci-cd-pipeline-design": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "devops",
+      "path": "Skills/ci-cd-pipeline-design"
+    },
+    "code-path-discovery": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "analysis",
+      "path": "Skills/code-path-discovery"
+    },
+    "codebase-analysis": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "code-quality",
+      "path": "Skills/codebase-analysis"
+    },
+    "command-spec-audit": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "code-quality",
+      "path": "Skills/command-spec-audit"
+    },
+    "common-errors": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "code-quality",
+      "path": "Skills/common-errors"
+    },
+    "digitalocean-app-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "platform",
+      "path": "Skills/digitalocean-app-setup"
+    },
+    "drawio-generation": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "documentation",
+      "path": "Skills/drawio-generation"
+    },
+    "electron-cross-build": {
+      "version": "1.0.0",
+      "type": "injector",
+      "category": "platform",
+      "path": "Skills/electron-cross-build"
+    },
+    "electron-development": {
+      "version": "1.0.0",
+      "type": "injector",
+      "category": "platform",
+      "path": "Skills/electron-development"
+    },
+    "engage-exocortex": {
+      "version": "2.0.0",
+      "type": "invokable",
+      "category": "problem-solving",
+      "path": "Skills/engage-exocortex",
+      "renamed": {
+        "from": "hal-2026",
+        "since": "2.0.0",
+        "autoMigrate": true
+      }
+    },
+    "error-handling-patterns": {
+      "version": "1.0.0",
+      "type": "injector",
+      "category": "development",
+      "path": "Skills/error-handling-patterns"
+    },
+    "flask-setup": {
+      "version": "1.0.1",
+      "type": "invokable",
+      "category": "platform",
+      "path": "Skills/flask-setup"
+    },
+    "i18n-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "web",
+      "path": "Skills/i18n-setup"
+    },
+    "json-validator": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "analysis",
+      "path": "Skills/json-validator"
+    },
+    "migration-patterns": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "database",
+      "path": "Skills/migration-patterns"
+    },
+    "mutation-testing": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/mutation-testing"
+    },
+    "observability-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "devops",
+      "path": "Skills/observability-setup"
+    },
+    "playwright-explorer": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "testing",
+      "path": "Skills/playwright-explorer"
+    },
+    "playwright-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "testing",
+      "path": "Skills/playwright-setup"
+    },
+    "postgresql-integration": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "database",
+      "path": "Skills/postgresql-integration"
+    },
+    "privacy-compliance": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "compliance",
+      "path": "Skills/privacy-compliance"
+    },
+    "property-based-testing": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/property-based-testing"
+    },
+    "railway-project-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "platform",
+      "path": "Skills/railway-project-setup"
+    },
+    "render-project-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "platform",
+      "path": "Skills/render-project-setup"
+    },
+    "resilience-patterns": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "development",
+      "path": "Skills/resilience-patterns"
+    },
+    "seo-optimization": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "web",
+      "path": "Skills/seo-optimization"
+    },
+    "sinatra-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "platform",
+      "path": "Skills/sinatra-setup"
+    },
+    "sqlite-integration": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "database",
+      "path": "Skills/sqlite-integration"
+    },
+    "tdd-failure-recovery": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/tdd-failure-recovery"
+    },
+    "tdd-green-phase": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/tdd-green-phase"
+    },
+    "tdd-process": {
+      "version": "1.0.0",
+      "type": "injector",
+      "category": "testing",
+      "path": "Skills/tdd-process"
+    },
+    "tdd-red-phase": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/tdd-red-phase"
+    },
+    "tdd-refactor-phase": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/tdd-refactor-phase"
+    },
+    "test-scaffold": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/test-scaffold"
+    },
+    "test-writing-patterns": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/test-writing-patterns"
+    },
+    "vercel-project-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "platform",
+      "path": "Skills/vercel-project-setup"
+    }
+  },
+  "deprecated": []
+}

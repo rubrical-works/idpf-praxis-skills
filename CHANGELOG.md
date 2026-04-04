@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.1] - 2026-04-04
+
+### Added
+- **engage-exocortex: Opus model default** — subagents now spawn with `model: "opus"` by default regardless of parent session model; `--model` flag allows override for cost-conscious usage
+- **engage-exocortex: model requirements docs** — getting-started guide updated with Model Requirements section, component-model table, and trade-off warning
+
+### Fixed
+- **SKILLS-manifest not deployed** — `SKILLS-manifest.json` and `SKILLS-manifest-schema.json` added to deploy-dist.yml "Copy root files" step so they reach the distribution repo
+
 ## [0.9.0] - 2026-04-04
 
 ### Added
