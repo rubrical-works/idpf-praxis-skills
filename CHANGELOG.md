@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-04-05
+
+### Added
+- **engage-exocortex: helper scripts** — `match-signals.js` for keyword-to-signal matching with weighted score aggregation and top-N path selection; `load-entries.js` for selective entry loading from paradigms/structures/strategies with token budget estimation (#158)
+- **engage-exocortex: keyword confirmation gate** — mandatory `AskUserQuestion` gate between problem parsing and signal matching; handles zero/single/multi-keyword flows, adjust/rephrase loops, and text-based fallback (#159)
+- **engage-exocortex: adaptive fallback methodology** — three-tier match quality classification (strong/weak/none) with graceful degradation; weak-match anchoring with closest-neighbor supplementation; no-match tension-driven path definition preserving parallel exploration structure (#162)
+- **engage-exocortex: input schema validation** — colocated JSON schemas for both helper scripts with ajv validation (graceful degradation if unavailable)
+- Unit tests for `match-signals.js` (14 tests) and `load-entries.js` (12 tests)
+
 ## [0.9.1] - 2026-04-04
 
 ### Added

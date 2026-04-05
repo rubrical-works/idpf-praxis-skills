@@ -1,0 +1,19 @@
+{
+  "$id": "load-entries-input",
+  "description": "Input validation schema for load-entries.js",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["paradigm", "structure", "strategy"],
+      "description": "Entry type to load from"
+    },
+    "ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "description": "Entry IDs to load"
+    }
+  },
+  "required": ["type", "ids"]
+}

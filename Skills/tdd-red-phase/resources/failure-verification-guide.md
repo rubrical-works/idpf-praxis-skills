@@ -1,5 +1,5 @@
 # Failure Verification Guide
-**Version:** v0.9.1
+**Version:** v0.10.0
 Techniques for verifying tests fail correctly in the RED phase of TDD.
 ## Why Verify Failures?
 - Confirms test actually tests what you intend

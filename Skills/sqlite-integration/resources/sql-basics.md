@@ -1,5 +1,5 @@
 # SQL Basics for Beginners
-**Version:** v0.9.1
+**Version:** v0.10.0
 ## What is SQL?
 SQL (Structured Query Language) is the language used to talk to databases.
 ## The Four Main Operations (CRUD)

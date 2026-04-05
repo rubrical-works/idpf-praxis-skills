@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.9.1
+**Version:** v0.10.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 

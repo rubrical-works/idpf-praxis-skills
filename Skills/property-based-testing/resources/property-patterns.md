@@ -1,5 +1,5 @@
 # Property Patterns
-**Version:** v0.9.1
+**Version:** v0.10.0
 
 Additional property patterns for common testing scenarios.
 

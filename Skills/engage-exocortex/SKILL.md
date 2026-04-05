@@ -11,72 +11,118 @@ relevantTechStack: [algorithms, data-structures, parallel-exploration, json-sche
 copyright: "Rubrical Works (c) 2026"
 ---
 # Engage Exocortex — Parallel Solution Explorer
-Fan out into N independent solution paths in parallel, then synthesize the best answer from structured subagent reports. All reference data is schema-validated JSON in `resources/`. Only matched entries are loaded, not the full corpus.
+Fan out into N independent solution paths in parallel, then synthesize the best answer from structured subagent reports. All reference data is schema-validated JSON in `resources/`. Only matched entries are loaded.
 ## When to Use
-- Multiple plausible data structures, algorithms, or architectural approaches
-- Trade-offs aren't immediately obvious (time vs. space, simplicity vs. performance)
-- User says "explore", "compare", "think through", or similar
-- Problem is complex enough that single-pass might miss a better approach
+- Multiple plausible approaches with non-obvious trade-offs
+- User says "explore", "compare", "think through"
+- Problem complex enough that single-pass might miss better approach
 ## Options
 | Flag | Description | Default |
 |------|-------------|---------|
-| `--paths N` | Parallel paths to explore (2-4) | 3 |
+| `--paths N` | Parallel paths (2-4) | 3 |
 | `--no-proposal` | Skip proposal document | *(writes proposal)* |
-| `--model <model>` | Override subagent model (`opus`, `sonnet`, `haiku`) | `opus` |
-`--model` overrides subagent exploration only. Primary agent (signal matching, synthesis, proposal) uses parent session model.
+| `--model <model>` | Subagent model override | `opus` |
+`--model` overrides subagent model only. Primary agent uses parent session model.
 ## Core Workflow
 ```
 PRIMARY AGENT
-     │
-     ├── 0. [Optional] Detect domain → load relevant skills for context
-     ├── 1. Parse problem → extract signal keywords
-     ├── 2. Match signals → load matched JSON entries selectively
-     ├── 3. Score matches → select N paths (deterministic)
-     ├── 4. Anti-overlap check → ensure path diversity
-     │
-     ├── 5. Spawn N subagents in PARALLEL (slot-filled briefs)
-     │       ├── Path 1: [approach] ──► JSON report
-     │       ├── Path 2: [approach] ──► JSON report
-     │       └── Path N: [approach] ──► JSON report
-     │
-     ├── 6. SYNTHESIS: validate, score, optionally hybridize ──► recommendation
-     └── 7. [Default] Write exploration proposal to Proposal/EXO-{slug}.md
+  ├── 0. [Optional] Detect domain → load relevant skills for context
+  ├── 1. Parse problem + confirm keywords → match signals → classify quality
+  ├── 2. Score matches → select N paths (deterministic)
+  ├── 3. Anti-overlap check → ensure path diversity
+  ├── 4. Spawn N subagents in PARALLEL (slot-filled briefs)
+  │     ├── Path 1: [approach] ──► JSON report
+  │     ├── Path 2: [approach] ──► JSON report
+  │     └── Path N: [approach] ──► JSON report
+  ├── 5. SYNTHESIS: validate, score, optionally hybridize ──► recommendation
+  └── 6. [Default] Write exploration proposal to Proposal/EXO-{slug}.md
 ```
-**Opt-out:** Pass `--no-proposal` to skip document generation (Step 7).
+Opt-out: `--no-proposal` skips Step 6.
 ## Step 0 — Context Gathering (Optional)
-**Skip for algorithmic-only problems** (competitive programming, data structure selection, pure algorithm design).
-**Run for architecture/design problems** — existing codebases, infrastructure decisions, testing strategies, system design.
+**Skip for algorithmic-only problems.** Run for architecture/design problems involving codebases, infrastructure, testing, or system design.
 ### Domain Detection
-Scan problem for keywords: architecture, design, infrastructure, testing, deployment, database, API, auth, cache, scale, microservice, pipeline, CI/CD, sandbox, migration, security. If any match, proceed with context gathering.
+Scan for keywords: architecture, design, infrastructure, testing, deployment, database, API, auth, cache, scale, microservice, pipeline, CI/CD, sandbox, migration, security.
 ### Skill Loading
-Read `resources/skill-context-map.json` for domain-to-skill mapping.
+Read `resources/skill-context-map.json`. Rules:
 - **Maximum 3 skills** per invocation
-- Select by relevance to detected keywords (highest match count first)
-- Loading is **read-only** — context for path selection, not implementation
-- If `codebase-analysis` is relevant AND existing codebase present, prioritize it
-### What Context Provides
-Loaded skills enrich Step 1's signal extraction — e.g., knowing PostgreSQL boosts database signals, Playwright boosts test infrastructure signals. Context is passed as additional keywords and constraints; it does not change the signal matching algorithm.
-## Step 1 — Parse Problem and Match Signals
-1. Parse the problem — identify core challenge, constraints, success criteria
-2. Extract signal keywords from problem statement and Step 0 context (if run)
-3. Read `resources/cross-references.json` — match keywords against `signals[].keywords` arrays
-4. For each matched signal, collect paradigm, structure, and strategy references with weights
-5. Aggregate scores — highest cumulative weights are best candidates
+- Select by relevance (highest keyword match count)
+- Read-only — context for path selection, not implementation
+- Prioritize `codebase-analysis` if relevant and codebase present
+Context enriches Step 1 signal extraction (e.g., PostgreSQL boosts DB signals). Passed as additional keywords/constraints — does not change matching algorithm.
+## Step 1 — Parse Problem and Confirm Keywords
+1. **Parse the problem** — identify core challenge, constraints, success criteria.
+2. **Extract signal keywords** from problem + Step 0 context (if run).
+### Keyword Confirmation Gate (Mandatory)
+Confirm interpreted problem and keywords with user before signal matching.
+**3. Confirm keywords** using `AskUserQuestion`:
+**Zero keywords:** Skip to rephrase prompt — do not present empty list:
+> "I couldn't extract signal keywords from this problem. Could you rephrase it with more specific terms?"
+**Single keyword:** Present gate normally, append warning:
+> "⚠️ Only one keyword extracted — exploration quality may be limited with sparse input. Consider adding related terms."
+**Normal flow (1+ keywords):**
+- Restate problem in 1-2 sentences
+- List extracted keywords
+- `AskUserQuestion` options: `"Confirmed — proceed"`, `"Let me adjust keywords"`, `"Rephrase the problem"`
+**On response:**
+- **Confirmed**: Validate ≥1 keyword exists. Proceed to signal matching.
+- **Adjust keywords**: Accept corrections, re-display via `AskUserQuestion`, loop until confirmed.
+- **Rephrase**: Re-parse from scratch, extract fresh keywords, present again. Repeat sparse warning if single keyword persists.
+**Fallback:** If `AskUserQuestion` unavailable, fall back to text-based confirmation. Never silently skip the gate.
+**No signal matching or subagent dispatch without user confirmation.**
+### Step 1b — Match Signals
+4. **Run signal matcher:**
+   ```bash
+   node scripts/match-signals.js "keyword1" "keyword2" [...] [--paths N]
+   ```
+   Reads `resources/cross-references.json`, matches keywords, aggregates weighted scores, returns top N path candidates as JSON.
+5. **Parse output** — `ok: true` means matches found. Use `scores.paradigms`, `scores.structures`, `scores.strategies` for Step 2.
 ### Selective Loading
-For each top-scoring paradigm ID, read only that entry from `resources/paradigms.json` (matching `id`). Do NOT load the entire file. Repeat for `resources/structures.json` and `resources/strategies.json`.
-### No Signal Matches
-If no signals match: report "No matching paradigms found for the given problem characteristics" with unmatched keywords. Suggest user broaden or rephrase. **Do not proceed to subagent dispatch.**
+Load only matched entries:
+```bash
+node scripts/load-entries.js paradigm <id1> [id2] [...]
+node scripts/load-entries.js structure <id1> [id2] [...]
+node scripts/load-entries.js strategy <id1> [id2] [...]
+```
+Do NOT read full resource files. Monitor `tokenEstimate` — combined output should stay under 10K tokens.
+### Step 1c — Classify Match Quality
+| Tier | Condition | Mode |
+|------|-----------|------|
+| **Strong** | 3+ signals, 2+ distinct primary paradigms | Structured (standard) |
+| **Weak** | 1-2 signals, or all share same primary paradigm | Structured with adaptation |
+| **None** | Zero matched signals (`ok: false`) | Adaptive mode |
+**Report tier to user:**
+- Strong: `"Match quality: strong (N signals across M paradigms) — proceeding with structured exploration"`
+- Weak: `"⚠️ Match quality: weak (N signals) — using partial matches as anchors with reduced path count"`
+- None: `"Match quality: none — switching to adaptive mode with tension-driven path definition"`
+#### Strong Match Path
+Proceed with Step 2 — no change to current behavior.
+#### Weak Match Path
+1. **Anchors + closest-neighbor supplementation.** Check `cross-references.json` for signals with keyword substring overlap — adjacent signals that didn't match directly.
+2. **Reduce path count.** N=2 instead of default N=3.
+3. **Widen subagent briefs.** Set `explorationScope` to `"broad"`, include full problem statement, instruct subagents to consider approaches outside matched paradigm.
+4. **Selective loading still applies.** Load matched + neighbor entries. Monitor token budget.
+#### No Match Path — Adaptive Mode
+Preserves core methodology (parallel paths, anti-overlap, subagent dispatch) while replacing signal-driven path selection with tension-driven definition.
+**Step A — Hybrid signal construction.** Re-examine keywords at lower threshold (2+ shared words vs. substring containment). If 2+ weak anchors found, promote to Weak Match Path.
+**Step B — Tension-driven path definition.** If hybrid construction insufficient:
+1. **Identify key tensions.** Analyze for 2-4 fundamental design tensions/trade-offs.
+2. **Define paths from tensions.** Each path specifies: `tensionResolution`, `keyIdea`, `tradeoffs`.
+3. **Verify anti-overlap.** Same check as signal-driven: no two paths share same resolution on all tensions.
+4. **Brief subagents with tension framing.** Full problem context + tension resolution + key idea + trade-offs. Populate paradigm/structure/strategy fields with tension descriptions (not empty).
+5. **Report adaptive mode:** "Running in adaptive mode. Identified {N} key design tensions, defined {N} distinct paths. Anti-overlap verified."
 ## Step 2 — Determine N and Name Paths
+**Strong and Weak tiers only.** Adaptive mode paths defined in Step 1c — skip to Step 3.
 ### Adaptive N Selection
 | Problem Characteristics | Recommended N |
 |---|---|
-| One clearly dominant paradigm, minor variations | 2 |
-| Multiple competing paradigms with real trade-offs | 3 (default) |
-| Underspecified or unusual constraint combinations | 4 |
-| User explicitly specifies (e.g., `--paths 3`) | User's N |
+| One dominant paradigm, minor variations | 2 |
+| Multiple competing paradigms with trade-offs | 3 (default) |
+| Underspecified or unusual constraints | 4 |
+| User specifies (e.g., `--paths 3`) | User's N |
+| **Weak match tier** | **2** |
 **Never below 2.** Above 4 rarely useful — prefer depth over breadth.
 ### Path Naming
-Encode **both** paradigm and key structure/strategy. Non-overlapping names from loaded JSON entries.
+Encode **both** paradigm and key structure/strategy:
 ```
 ✅ "Min-heap greedy with lazy deletion"
 ✅ "Bottom-up interval DP on sorted endpoints"
@@ -84,101 +130,87 @@ Encode **both** paradigm and key structure/strategy. Non-overlapping names from 
 ❌ "DP solution"
 ```
 ### Anti-Overlap Check
-Read `resources/cross-references.json` → `antiOverlapRules[]`. Verify:
-- No two paths share same paradigm **and** structure (Jaccard similarity < `overlapThreshold`)
-- Each path uses distinct primary paradigm where possible
+`match-signals.js` output `paths[]` applies paradigm diversity. Verify against `resources/cross-references.json` → `antiOverlapRules[]`:
+- No two paths share same paradigm **and** structure (Jaccard < `overlapThreshold`)
+- Distinct primary paradigms where possible
 - No identical (paradigm, structure, strategy) tuples
-If paths too similar, merge and select a different candidate.
+If too similar, merge and select different candidate.
 ## Step 3 — Spawn Subagents in Parallel
-Spawn all N subagents **at the same time** using the Agent tool with `model: "opus"` (or `--model` override if provided).
+Spawn all N subagents **simultaneously** via Agent tool with `model: "opus"` (or `--model` override).
 ### Brief Generation (Slot-Filling)
-Read `resources/brief-template.json`. For each path, fill slots:
+Read `resources/brief-template.json`. Fill per path:
 - `problemStatement` — user's problem
-- `assignedApproach` — path name and loaded paradigm/structure/strategy details
-- `constraints` — problem constraints from Step 1
+- `assignedApproach` — path name + loaded paradigm/structure/strategy details
+- `constraints` — from Step 1
 - `maxSteps` — exploration depth limit
 - `maxOutputLines` — output size cap
 ### Subagent Task
-Each subagent performs **reasoning and planning only** — no code execution:
-- Explain core idea of approach
-- Work through algorithm step-by-step with concrete example
-- Analyze time and space complexity
-- Identify edge cases and handling
-- Note key implementation considerations
-- Honest assessment of strengths and weaknesses
+**Reasoning and planning only** — no code execution:
+- Core idea, step-by-step walkthrough with example
+- Time/space complexity, edge cases
+- Implementation considerations, honest strengths/weaknesses
 ### Report Format
-Subagents return JSON conforming to `resources/report-template.json`. Read `resources/report-schema.json` to validate. If malformed: identify failed fields, exclude from synthesis, warn user.
+JSON per `resources/report-template.json`. Validate against `resources/report-schema.json`. Malformed: identify failed fields, exclude, warn user.
 ## Step 4 — Synthesis
-Read `resources/synthesis-config.json` for scoring rubric. Follow defined phases:
-1. **Validate** — check complexity claims and edge case reasoning independently
-2. **Score** — rate on rubric dimensions (always-relevant + conditionally-relevant)
+Read `resources/synthesis-config.json`. Phases:
+1. **Validate** — check complexity claims and edge case reasoning
+2. **Score** — rate on rubric dimensions (always-relevant + conditional)
 3. **Hybridize** — check if best parts of two approaches combine
 4. **Output** — final recommendation
 ### Final Output Format
 ```
 ## Parallel Exploration: [Problem Title]
 ### Paths Explored (N=[n])
-- Path 1: [Name] — [one-sentence summary]
-- Path 2: [Name] — [one-sentence summary]
+- Path 1: [Name] — [summary]
+- Path 2: [Name] — [summary]
 ### Analysis
-[2–4 sentences per path: correctness, complexity, trade-offs. Call out subagent reasoning errors.]
+[2–4 sentences per path: correctness, complexity, trade-offs. Call out reasoning errors.]
 ### Recommendation
 **Best approach: [Name]**
-Reason: [2–3 sentences — why this wins given constraints]
+Reason: [2–3 sentences]
 [Optional] **Hybrid possibility:** [Name] + [Name]
-How: [1–2 sentences on combination and gains]
+How: [1–2 sentences]
 ### Implementation Sketch
-[Pseudocode or high-level outline — enough to communicate the algorithm unambiguously.]
+[Pseudocode/high-level outline of recommended approach]
 ```
 ## Step 5 — Generate Exploration Proposal Document
-**Skip if `--no-proposal` was specified.**
-Write to `Proposal/EXO-{problem-slug}.md` (lowercase-hyphenated summary of problem title).
-### Document Structure
-Read `resources/proposal-template.json` for structure. Sections:
-1. **Metadata** — Date, skill name, signals matched, paths explored count
-2. **Problem Statement** — Original user query
-3. **Context Sources** (optional) — Present only when Step 0 ran. Lists loaded skills, codebase analysis findings, tech stack. Omitted for algorithmic-only problems.
-4. **Signal Analysis** — Matched signals with weights, loaded paradigms/structures/strategies
-5. **Path sections** (one per path) — Brief given, full structured report (core idea, walkthrough, complexity, edge cases, strengths/weaknesses, fit score)
-6. **Synthesis** — Scoring matrix, validation notes, hybridization analysis
-7. **Recommendation** — Final recommendation with implementation sketch
-8. **Rejected Paths** — Considered but not selected, with reasons
-### Capture Points
-| Step | What to Capture |
-|------|----------------|
-| Step 0 | Loaded skills, domain detection results (if run) |
-| Step 1 | Matched signals, keyword extractions, loaded JSON entry IDs |
-| Step 2 | Selected paths, rejected paths with reasons, N value |
-| Step 3 | Each subagent's filled brief |
-| Step 3 (return) | Each subagent's JSON report |
-| Step 4 | Scoring matrix, validation notes, hybrid analysis, recommendation |
-Document generation failure is **non-blocking** — conversation output remains valid.
+**Skip if `--no-proposal` specified.**
+Write to `Proposal/EXO-{problem-slug}.md` (lowercase-hyphenated problem title).
+Read `resources/proposal-template.json`. Sections: Metadata, Problem Statement, Context Sources (optional, Step 0 only), Signal Analysis, Path sections (brief + report), Synthesis, Recommendation, Rejected Paths.
+| Step | Capture |
+|------|---------|
+| 0 | Loaded skills, domain detection (if run) |
+| 1 | Matched signals, keywords, loaded entry IDs |
+| 2 | Selected/rejected paths, N |
+| 3 | Filled briefs, JSON reports |
+| 4 | Scoring, validation, hybrid analysis, recommendation |
+Document generation failure is **non-blocking**.
 ## Error Handling
-| Failure Mode | Expected Behavior |
+| Failure Mode | Behavior |
 |---|---|
-| JSON data file fails schema validation | Report validation error with file path and violation details; halt |
-| Reference file missing from disk | Fail with clear file-not-found message naming the missing file |
-| No signals match in cross-references.json | Report "no matching paradigms found" with unmatched characteristics |
-| Subagent returns non-conforming JSON | Detect report-schema.json violation; report failed fields; exclude from synthesis |
-| Malformed JSON (syntax error) in reference file | Fail at parse time with file path and parse error location |
-| Cross-reference key drift | Warn when key exists in cross-references.json but has no corresponding data entry |
+| JSON schema validation failure | Report with file path and violation; halt |
+| Reference file missing | Fail with file-not-found naming missing file |
+| No signals match | Report "no matching paradigms" with unmatched characteristics |
+| Non-conforming subagent JSON | Report failed fields; exclude from synthesis |
+| Malformed JSON syntax | Fail with file path and parse error location |
+| Cross-reference key drift | Warn when key exists but no corresponding data entry |
 ## Important Constraints
-- **Subagents plan; primary agent validates.** Do not blindly accept complexity claims — check independently.
-- **Be honest about ties.** If two approaches are genuinely equivalent, say so.
-- **Flag disagreements.** Call out subagent reasoning errors in Analysis section.
-- **Synthesis over selection.** Always check if hybrid is better before defaulting to one winner.
-- **Selective loading only.** Never load entire reference files. Always filter to matched entries.
-- **No docs/ references.** The `docs/` directory is human-readable only. This skill must NEVER read from `docs/`.
+- **Subagents plan; primary agent validates.** Check complexity claims independently.
+- **Be honest about ties.** Let user choose if genuinely equivalent.
+- **Flag disagreements.** Call out reasoning errors in Analysis.
+- **Synthesis over selection.** Always check hybrid before one winner.
+- **Selective loading only.** Never load entire reference files.
+- **No docs/ references.** Never read from `docs/` — use `resources/` JSON only.
 ## Reference Files
-All in `resources/`. Each JSON data file has a colocated schema for validation.
+All in `resources/` with colocated schemas.
 | File | Purpose |
 |---|---|
-| `cross-references.json` | Decision matrix: maps problem signals → paradigm/structure/strategy keys |
-| `paradigms.json` | Dimension 1: paradigms (31 families — 8 algorithmic + 23 software engineering) |
-| `structures.json` | Dimension 2: structures (22 families — 8 algorithmic + 14 software engineering) |
-| `strategies.json` | Dimension 3: strategies (22 families — 9 algorithmic + 13 software engineering) |
-| `brief-template.json` | Subagent brief slot template with constraint fields |
+| `cross-references.json` | Maps problem signals → paradigm/structure/strategy keys |
+| `paradigms.json` | 31 paradigm families (8 algorithmic + 23 SE) |
+| `structures.json` | 22 structure families (8 algorithmic + 14 SE) |
+| `strategies.json` | 22 strategy families (9 algorithmic + 13 SE) |
+| `brief-template.json` | Subagent brief slot template |
 | `report-template.json` | Expected subagent report structure |
 | `synthesis-config.json` | Scoring rubric and synthesis rules |
-| `skill-context-map.json` | Domain-to-skill mapping for Step 0 context gathering |
-| `proposal-template.json` | Document structure template for Step 5 proposal generation |
+| `skill-context-map.json` | Domain-to-skill mapping for Step 0 |
+| `proposal-template.json` | Document structure for Step 5 |

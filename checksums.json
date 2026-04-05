@@ -1,9 +1,19 @@
 {
   "manifestVersion": "1.0.0",
-  "frameworkVersion": "0.9.1",
-  "generatedAt": "2026-04-04T18:17:56.035Z",
-  "fileCount": 9,
+  "frameworkVersion": "0.10.0",
+  "generatedAt": "2026-04-05T15:47:38.694Z",
+  "fileCount": 11,
   "files": [
+    {
+      "relativePath": "Skills/engage-exocortex/scripts/load-entries.js",
+      "sha256": "20396bcb74eafa80135b714527e577ce2e9365a78b06f734115d8a80b2444d35",
+      "sizeBytes": 3564
+    },
+    {
+      "relativePath": "Skills/engage-exocortex/scripts/match-signals.js",
+      "sha256": "05cc1e7bf7ba9b74f0f98072c66f0f7221966fb9ba9771fe41a1cf64315f441f",
+      "sizeBytes": 6686
+    },
     {
       "relativePath": "Skills/json-validator/scripts/validate.js",
       "sha256": "eacb6ea492688704e0d5e1b1a2cebe713eb1843c377a9e96c8217c24d2090e20",
