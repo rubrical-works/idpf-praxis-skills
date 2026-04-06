@@ -8,7 +8,31 @@
  * aggregates weighted scores for paradigms/structures/strategies, and outputs
  * top N path candidates as JSON.
  *
- * Refs #158
+ * Output schema:
+ *   {
+ *     ok: boolean,
+ *     confidence: number,                  // [0, 1] mean of per-match relevance (#165)
+ *     matchedSignals: [
+ *       {
+ *         id: string,
+ *         matchedKeywords: string[],
+ *         relevance: number                // [0, 1] semantic fit for this signal (#165)
+ *       }
+ *     ],
+ *     unmatchedKeywords: string[],
+ *     scores: { paradigms, structures, strategies },
+ *     paths: [ { paradigm, structure, strategy, ...scores } ]
+ *   }
+ *
+ * Relevance scoring (#165):
+ *   - 1.0  exact keyword match
+ *   - 0.7  word-boundary match (whole word/phrase inside compound keyword)
+ *   - 0.3  substring-only overlap (e.g. "aggregation" inside "log-aggregation")
+ *   The script's existing match behavior is unchanged — relevance is additive
+ *   metadata that lets callers tier match quality without re-deriving it from
+ *   model judgment.
+ *
+ * Refs #158, #165
  */
 'use strict';
 
@@ -62,9 +86,16 @@ function main() {
   // Select top N paths
   const paths = selectPaths(scores, numPaths);
 
+  const confidence = computeConfidence(matched);
+
   const result = {
     ok: true,
-    matchedSignals: matched.map(m => ({ id: m.signal.id, matchedKeywords: m.matchedKeywords })),
+    confidence,
+    matchedSignals: matched.map(m => ({
+      id: m.signal.id,
+      matchedKeywords: m.matchedKeywords,
+      relevance: m.relevance
+    })),
     unmatchedKeywords: unmatched,
     scores: {
       paradigms: scores.paradigms,
@@ -93,6 +124,33 @@ function parseArgs(argv) {
   return { keywords, numPaths };
 }
 
+/**
+ * Score the semantic relevance of a single keyword-vs-signal-keyword match.
+ *
+ * Returns a value in [0, 1]:
+ *   1.0  — exact match (userKw === sigKw)
+ *   0.7  — word-boundary match (userKw is a whole word/phrase inside sigKw, or vice versa)
+ *   0.3  — substring-only overlap (e.g. "aggregation" inside "log-aggregation")
+ *   0    — no match
+ *
+ * Word-boundary uses non-letter/digit characters (-, _, space, /) as delimiters,
+ * which matches how signal keywords are typically written in cross-references.json.
+ */
+function scoreHitRelevance(userKw, sigKw) {
+  if (userKw === sigKw) return 1.0;
+  if (!sigKw.includes(userKw) && !userKw.includes(sigKw)) return 0;
+
+  const longer = userKw.length >= sigKw.length ? userKw : sigKw;
+  const shorter = userKw.length >= sigKw.length ? sigKw : userKw;
+
+  // Word-boundary check: shorter must be flanked by non-word chars (or string ends) inside longer
+  const escaped = shorter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const boundary = new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i');
+  if (boundary.test(longer)) return 0.7;
+
+  return 0.3;
+}
+
 function matchKeywords(keywords, signals) {
   const normalizedKeywords = keywords.map(k => k.toLowerCase().trim());
   const matched = [];
@@ -101,24 +159,47 @@ function matchKeywords(keywords, signals) {
   for (const signal of signals) {
     const signalKeywords = signal.keywords.map(k => k.toLowerCase());
     const hits = [];
+    const hitDetails = [];
 
     for (const userKw of normalizedKeywords) {
+      let bestRelevance = 0;
       for (const sigKw of signalKeywords) {
-        if (sigKw.includes(userKw) || userKw.includes(sigKw)) {
-          hits.push(userKw);
-          matchedKeywordSet.add(userKw);
-          break;
-        }
+        const r = scoreHitRelevance(userKw, sigKw);
+        if (r > bestRelevance) bestRelevance = r;
+        if (r === 1.0) break;
+      }
+      if (bestRelevance > 0) {
+        hits.push(userKw);
+        hitDetails.push({ keyword: userKw, relevance: bestRelevance });
+        matchedKeywordSet.add(userKw);
       }
     }
 
     if (hits.length > 0) {
-      matched.push({ signal, matchedKeywords: [...new Set(hits)] });
+      // Per-match relevance = maximum hit relevance for this signal.
+      // Rationale: one strong concept hit is more meaningful than many weak substring hits.
+      const relevance = hitDetails.reduce((m, h) => Math.max(m, h.relevance), 0);
+      matched.push({
+        signal,
+        matchedKeywords: [...new Set(hits)],
+        hitDetails,
+        relevance: Math.round(relevance * 1000) / 1000
+      });
     }
   }
 
   const unmatched = normalizedKeywords.filter(k => !matchedKeywordSet.has(k));
   return { matched, unmatched };
+}
+
+/**
+ * Aggregate confidence across all matched signals.
+ * Mean of per-match relevances. Returns 0 when there are no matches.
+ */
+function computeConfidence(matchedSignals) {
+  if (matchedSignals.length === 0) return 0;
+  const sum = matchedSignals.reduce((acc, m) => acc + (m.relevance || 0), 0);
+  return Math.round((sum / matchedSignals.length) * 1000) / 1000;
 }
 
 function aggregateScores(matchedSignals) {

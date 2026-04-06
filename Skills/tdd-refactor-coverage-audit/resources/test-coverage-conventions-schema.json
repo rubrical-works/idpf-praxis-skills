@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rubrical.works/schemas/test-coverage-conventions.json",
+  "title": "Test Coverage Conventions",
+  "description": "Schema for test-coverage-conventions.json (bundled with the tdd-refactor-coverage-audit skill) and the optional testCoverageAudit override block in framework-config.json.",
+  "type": "object",
+  "required": ["languages"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_meta": {
+      "type": "object",
+      "properties": {
+        "description": { "type": "string" },
+        "version": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": true
+    },
+    "languages": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/language" }
+    },
+    "ignoredSourcePatterns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "minTestCoverageRatio": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "additionalLanguages": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/language" }
+    }
+  },
+  "$defs": {
+    "language": {
+      "type": "object",
+      "required": ["sourceExtensions", "testPatterns"],
+      "additionalProperties": true,
+      "properties": {
+        "sourceExtensions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^\\."
+          },
+          "description": "File extensions for source files in this language. Each must start with a dot, e.g. '.ts'."
+        },
+        "testPatterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Glob-like patterns for paired test files. Supports {stem} (filename without extension) and {dir} (relative directory of the source file)."
+        },
+        "excludePatterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Glob patterns for source files to skip entirely."
+        },
+        "inlineTests": {
+          "type": "boolean",
+          "description": "If true, the audit checks the source file itself for an inline test block (e.g. Rust 'mod tests') before reporting missing tests."
+        },
+        "_note": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 # Python Anti-Patterns
-**Version:** v0.10.0
+**Version:** v0.11.0
 
 Common anti-patterns specific to Python development.
 

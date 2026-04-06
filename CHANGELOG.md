@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-04-06
+
+### Added
+- **tdd-refactor-coverage-audit skill** — new self-contained companion to `tdd-process` that mechanically audits whether source files added during a TDD cycle have paired tests. JSON-driven language conventions for 10 languages (TypeScript, JavaScript, Svelte, Python, Go, Rust, Ruby, Elixir, Java, C#) with optional project overrides via `framework-config.json` → `testCoverageAudit`. Pure Node, zero external deps, schema-validated, advisory-only (never blocks the TDD gate). 22 unit tests (#168)
+- **tdd-process: refactor phase audit integration** — refactor phase gains a `required[]` checklist item invoking `tdd-refactor-coverage-audit` and a new `deepReferences[]` array containing both `tdd-refactor-phase` and the audit skill. `tdd-checklist-schema.json` accepts both legacy `deepReference` and new `deepReferences[]` (backwards-compatible). Soft-skip when audit script is absent. 10 unit tests covering schema fixtures and probe behavior (#169)
+- **engage-exocortex: semantic relevance scoring** — `match-signals.js` output gains per-match `relevance` (0-1) and top-level `confidence` field. Scoring tiers: 1.0 exact, 0.7 word-boundary, 0.3 substring-only. Lets callers tier match quality without re-deriving from model judgment. 6 new unit tests (#165)
+- **engage-exocortex: tension-to-path collapse guidance** — new step 1a in adaptive mode methodology. Rank tensions by solution divergence, combine interdependent tensions, map top N as primary differentiators with remainders as secondary variables, then verify anti-overlap on primaries. Includes a 4→3 worked example for parallel code review architecture (#166)
+- **engage-exocortex: operational scoring dimensions** — synthesis-config.json gains `operationalDimensions` block (extensibility, operational simplicity, user transparency, cost predictability) and a new `operational-graft` hybridization question. SKILL.md gains a worked example where the graft changes the recommendation (#167)
+
+### Changed
+- **minimize-config: excludedSkillSubdirectories** — new config field lets `minimize-config.json` exclude per-skill subdirectories by name from `.min-mirror/` and distributed packages. Initial value `["tests"]` keeps test infrastructure out of user-facing zips while preserving it in source for CI
+
 ## [0.10.0] - 2026-04-05
 
 ### Added

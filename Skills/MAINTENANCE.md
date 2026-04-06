@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.10.0
+**Version:** v0.11.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -51,6 +51,7 @@
 | tdd-green-phase | 1.0.0 | 2026-04-01 | Active |
 | tdd-process | 1.0.0 | 2026-04-01 | Active |
 | tdd-red-phase | 1.0.0 | 2026-04-01 | Active |
+| tdd-refactor-coverage-audit | 1.0.0 | 2026-04-06 | Active |
 | tdd-refactor-phase | 1.0.0 | 2026-04-01 | Active |
 | test-scaffold | 1.0.0 | 2026-04-01 | Active |
 | test-writing-patterns | 1.0.0 | 2026-04-01 | Active |

@@ -3,7 +3,7 @@
 [![Skill CI](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml)
 [![CodeQL](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml)
 [![Latest Release](https://img.shields.io/github/v/release/rubrical-works/idpf-praxis-skills)](https://github.com/rubrical-works/idpf-praxis-skills/releases/latest)
-[![Skills](https://img.shields.io/badge/skills-41-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
+[![Skills](https://img.shields.io/badge/skills-42-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 Ready-to-use skills for [Claude Code](https://claude.ai/code). Browse skill documentation below, then install what you need.
@@ -91,6 +91,7 @@ Domain knowledge loaded on demand during relevant work.
 | [tdd-red-phase](Skills/tdd-red-phase/) | Testing | Deep TDD RED phase guidance |
 | [tdd-green-phase](Skills/tdd-green-phase/) | Testing | Deep TDD GREEN phase guidance |
 | [tdd-refactor-phase](Skills/tdd-refactor-phase/) | Testing | Deep TDD REFACTOR phase guidance |
+| [tdd-refactor-coverage-audit](Skills/tdd-refactor-coverage-audit/) | Testing | JSON-driven test coverage audit for new source files (advisory) |
 | [tdd-failure-recovery](Skills/tdd-failure-recovery/) | Testing | TDD failure diagnosis and recovery |
 | [bdd-writing](Skills/bdd-writing/) | Testing | Gherkin syntax and step definitions |
 | [codebase-analysis](Skills/codebase-analysis/) | Analysis | Codebase detection mappings |

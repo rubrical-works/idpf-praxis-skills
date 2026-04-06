@@ -12,116 +12,198 @@ relevantTechStack: [tdd, testing]
 defaultSkill: true
 copyright: "Rubrical Works (c) 2026"
 ---
+
 # TDD REFACTOR Phase
-Guide experienced developers through the REFACTOR phase of TDD: improving code quality, structure, and clarity while ensuring all tests remain green.
+
+Guides REFACTOR phase: improve code quality, structure, clarity while keeping tests green.
+
 ## When to Use
 - GREEN phase complete with passing test
-- Proceeding autonomously from GREEN phase
+- Proceeding autonomously from GREEN
 - Code works but could be improved
 - Evaluating refactoring opportunities
+
 ## Prerequisites
-- Completed GREEN phase with all tests passing
-- Working implementation that satisfies test requirements
-- Full test suite available to verify refactoring safety
-## REFACTOR Phase Objectives
-1. **Improve code quality** - Make code cleaner, more maintainable, better structured
-2. **Keep tests green** - Ensure all improvements maintain existing functionality
-**Refactoring IS:**
-- Improving code structure without changing behavior
-- Making code more readable and maintainable
-- Eliminating duplication, simplifying complex logic, improving naming
-**Refactoring IS NOT:**
-- Adding new features or changing tested behavior
-- Fixing bugs (that's a new test + implementation)
-- Performance optimization without measurement
+- GREEN phase complete, all tests passing
+- Working implementation satisfying tests
+- Full test suite available
+- Claude Code available
+
+## Objectives
+1. **Improve code quality** - cleaner, more maintainable, better structured
+2. **Keep tests green** - improvements maintain existing functionality
+
+### Refactoring IS
+- Improving structure without changing behavior
+- Making code readable/maintainable
+- Eliminating duplication
+- Simplifying complex logic
+- Improving naming/organization
+
+### Refactoring IS NOT
+- Adding new features
+- Changing tested behavior
+- Fixing bugs (new test + impl)
+- Performance opt without measurement
 - Breaking tests to "improve" code
-## REFACTOR Phase Workflow
-### Step 1: Analyze Refactoring Opportunities
-Identify: code duplication, long/complex functions, unclear names, missing abstractions, SOLID/DRY violations, complex conditionals, magic numbers/strings.
-### Step 2: Evaluate Refactoring Suggestions
-**Refactor Now:** Clear improvement, low risk/high value, directly improves code, won't over-engineer
-**Skip Refactoring:** Premature abstraction, risk > reward, better addressed later, code already clear
-### Step 3: Apply Refactoring (if approved)
-1. Apply the refactored code
+
+## Workflow
+
+### Step 1: Analyze Opportunities
+Identify: duplication, long/complex functions, unclear names, missing abstractions, SOLID/DRY violations, complex conditionals, magic numbers/strings.
+
+### Step 2: Evaluate Suggestions
+**Refactor Now:** clear improvement, low risk/high value, improves this iteration, won't over-engineer.
+**Skip:** premature abstraction, risk > reward, better in future iteration, already clear enough.
+Either: **A** apply, or **B** skip with reason.
+
+### Step 3: Apply (if approved)
+1. Apply refactored code
 2. Run full test suite
-3. Verify ALL tests still pass
-### Step 4: Verify Tests Remain Green
+3. Verify ALL tests pass
+
+### Step 4: Verify Green
 - Run FULL test suite (not just recent test)
-- ALL tests must pass, no failures or errors
-**If any test fails:** Rollback immediately, keep tests green, try smaller refactoring
-### Step 5: Complete REFACTOR Phase
-- **If refactoring applied and tests green:** Proceed to next behavior or complete story
-- **If refactoring skipped:** Proceed to next behavior or complete story
-- TDD cycle continues autonomously until story implementation is complete
+- ALL tests must pass; no failures or errors
+
+**If any test fails:** rollback immediately → keep tests green → optionally try smaller refactoring.
+
+### Step 5: Complete
+**Applied + green:** REFACTOR complete, proceed to next behavior or complete story.
+**Skipped:** REFACTOR complete (no changes), proceed.
+
+TDD cycle continues autonomously until story complete. Only checkpoint is story completion (In Review → Done).
+
 ## Best Practices
-### Refactor in Small Steps
+
+### 1: Small Steps
 ```
-1. Extract one variable -> Run tests
-2. Rename one function -> Run tests
-3. Extract one function -> Run tests
-Each step verified independently
+1. Extract one variable → Run tests
+2. Rename one function → Run tests
+3. Extract one function → Run tests
 ```
-### One Refactoring at a Time
-Focus on one improvement, run tests, then next refactoring.
-### Keep Tests Green
+Each step verified independently. Not: extract+rename+restructure all at once.
+
+### 2: One Refactoring at a Time
+Eliminate one duplication, improve one name, extract one function, simplify one conditional. Then test. Then next.
+
+### 3: Keep Tests Green
 ```
 Tests must ALWAYS be green after refactoring.
-If refactoring breaks tests -> Rollback immediately -> Try smaller refactoring
+If broken: rollback immediately, try smaller refactoring.
 ```
-### Refactor for Clarity, Not Cleverness
-- Makes code easier to understand, reduces cognitive load
-- Avoid clever one-liners, over-abstraction, premature design patterns
+
+### 4: Clarity Not Cleverness
+Good: easier to understand, clearer intent, less cognitive load, more maintainable.
+Poor: clever one-liners, over-abstraction, premature patterns, language showoffs.
+
 ## Common Refactorings
-1. **Extract Variable** - Name embedded calculations for clarity
-2. **Extract Function** - Split long functions into focused, reusable parts
-3. **Rename for Clarity** - Replace unclear/abbreviated names with intent-expressing names
-4. **Eliminate Duplication** - Extract duplicated code to single source of truth
-5. **Simplify Conditionals** - Guard clauses, early returns, extracted boolean expressions
-## When to Skip Refactoring
-1. **Premature Abstraction** - Only one use; wait for Rule of Three
-2. **Code Already Clear** - Minor naming changes that don't add clarity
-3. **High Risk, Low Value** - Touches many files, complex change for minor improvement
-4. **Over-Engineering** - Adds patterns prematurely, "might need this later"
+
+### Extract Variable
+Before: expression embedded, unclear meaning. After: well-named variable, clear intent.
+
+### Extract Function
+Before: long function doing multiple things. After: extracted, one clear thing, reusable/testable.
+
+### Rename for Clarity
+Before: unclear/abbreviated names. After: self-documenting, clear intent.
+
+### Eliminate Duplication
+Before: same code in multiple places. After: extracted to function, single source of truth.
+
+### Simplify Conditional Logic
+Before: nested conditions, complex booleans. After: guard clauses, early returns, extracted named booleans.
+
+## When to Skip
+
+### Premature Abstraction
+Only one use, future unclear, abstraction more complex than original → wait for Rule of Three.
+
+### Already Clear
+Minor naming changes, current names descriptive, no added clarity → don't refactor for its own sake.
+
+### High Risk, Low Value
+Touches many files, complex change for minor improvement → defer to dedicated session.
+
+### Over-Engineering
+Premature patterns, abstraction for single use, "might need later" → keep simple, wait for need.
+
 ## Anti-Patterns
-- **Refactoring without tests** - Always run tests and verify green after changes
-- **Accepting broken tests** - Rollback immediately if tests fail
-- **Big bang refactoring** - Small incremental changes, test after each
-- **Refactoring + features** - Never combine; refactor OR add feature, not both
+
+### 1: Refactoring Without Tests
+```
+✗ Make changes → Hope nothing broke
+✓ Make changes → Run tests → Verify green → Proceed
+```
+
+### 2: Accepting Broken Tests
+```
+✗ Refactor → Tests fail → "fix later"
+✓ Refactor → Tests fail → ROLLBACK → Green again
+```
+
+### 3: Big Bang Refactoring
+```
+✗ Change everything; tests fail; unclear cause
+✓ Small incremental; test each; identify breakage
+```
+
+### 4: Refactoring + Features
+```
+✗ Refactor + add feature simultaneously
+✓ Refactor (green) OR add feature (new test) — never both
+```
+
 ## Integration with IDPF-Agile
-REFACTOR phase follows GREEN in story implementation. When `/work` triggers TDD:
-1. GREEN phase verified -- tests passing
-2. Analyze code for refactoring opportunities
-3. Either apply refactoring or skip with reason
+REFACTOR follows GREEN. When `/work` triggers TDD:
+1. GREEN verified — tests passing
+2. Analyze for opportunities
+3. Apply or skip with reason
 4. Run tests, verify green
 5. Proceed to next behavior or complete story
-The TDD cycle runs autonomously. The only user checkpoint is at story completion (In Review -> Done).
+
+Autonomous cycle. Only user checkpoint: story completion (In Review → Done).
+
 ## Rollback Procedures
-**If refactoring breaks tests:**
-1. Rollback changes (git checkout or undo)
+If refactoring breaks tests:
+1. Rollback (git checkout or undo)
 2. Verify tests return to green
-3. Options: try smaller refactoring, skip, or investigate
-**Rollback is immediate** -- maintain green tests throughout the TDD cycle.
-## REFACTOR Phase Checklist
-- [ ] Code analyzed for refactoring opportunities
+3. Options: smaller refactoring, skip for now, investigate cause
+
+Rollback is immediate — maintain green throughout TDD cycle.
+
+## Checklist
+- [ ] Code analyzed for opportunities
 - [ ] Suggestions evaluated
-- [ ] If refactoring applied:
-  - [ ] Refactored code is clear and improved
-  - [ ] All tests run and PASS (green)
-  - [ ] No test failures or errors
+- [ ] If applied:
+  - [ ] Refactored code clear/improved
+  - [ ] All tests run and PASS
+  - [ ] No failures/errors
   - [ ] Behavior unchanged
-- [ ] If refactoring skipped:
-  - [ ] Valid reason for skipping
+- [ ] If skipped:
+  - [ ] Valid reason
   - [ ] Tests still green
+
 ## Resources
-- `resources/refactor-checklist.md` - Quick reference checklist
-- `resources/common-refactorings.md` - Catalog of common refactoring patterns
-- `resources/when-to-skip-refactoring.md` - Decision guide for skipping refactoring
+See `resources/`:
+- `refactor-checklist.md`
+- `common-refactorings.md`
+- `when-to-skip-refactoring.md`
+
 ## Relationship to Other Skills
 **Flows from:** `tdd-green-phase`
-**Flows to:** `tdd-red-phase` - Next feature starts new RED phase
-**Related:** `tdd-failure-recovery`
+**Flows to:** `tdd-red-phase`
+**Related:**
+- `tdd-failure-recovery` - handle broken tests during refactoring
+- `tdd-refactor-coverage-audit` - Optional companion. Mechanically audits newly added source files for paired tests using JSON-driven language conventions. Advisory only — never blocks the refactor gate. If installed, invoke as:
+  ```bash
+  node .claude/skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js --since-commit <last-cycle-sha>
+  ```
+  No code coupling — referenced by name only. See that skill's `SKILL.md` for output format, language conventions, and project overrides.
+
 ## Expected Outcome
-- Code quality improved (if refactored) OR intentionally left as-is (if skipped)
-- All tests remain green, no behavioral changes
-- Ready to start next feature with RED phase
+- Code quality improved (or intentionally left as-is)
+- All tests remain green
+- No behavioral changes
+- Ready for next RED phase
 - Autonomous progression to next behavior or story completion

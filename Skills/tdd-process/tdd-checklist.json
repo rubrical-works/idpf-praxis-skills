@@ -32,13 +32,20 @@
       "Analyzed: duplication, naming, complexity",
       "Decision reported: refactor or skip with reason",
       "If refactoring: changes improve clarity without altering behavior",
-      "Test run executed and still PASSES after refactoring"
+      "Test run executed and still PASSES after refactoring",
+      "Coverage audit run (advisory): node .claude/skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js --since-commit <last-cycle-sha>. Warnings reviewed; never blocks the gate. Skip with notice if the audit skill is not installed."
     ],
     "gate": "Do not proceed to next AC until commit made for this TDD cycle",
-    "deepReference": {
-      "skill": "tdd-refactor-phase",
-      "when": "Load this skill if stuck at gate or guidance needed"
-    }
+    "deepReferences": [
+      {
+        "skill": "tdd-refactor-phase",
+        "when": "Load this skill if stuck at gate or guidance needed"
+      },
+      {
+        "skill": "tdd-refactor-coverage-audit",
+        "when": "Load this skill to interpret coverage audit warnings, add a language to the bundled conventions, or configure a project override"
+      }
+    ]
   },
   "failure-recovery": {
     "triggers": [

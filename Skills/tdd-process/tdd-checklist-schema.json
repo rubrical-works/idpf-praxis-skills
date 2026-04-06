@@ -50,6 +50,12 @@
         "deepReference": {
           "$ref": "#/definitions/deepReference",
           "description": "Optional pointer to a reference skill for deeper guidance when stuck"
+        },
+        "deepReferences": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/deepReference" },
+          "minItems": 1,
+          "description": "Optional list of reference skills. Use instead of (or alongside) deepReference when a phase has multiple companion skills."
         }
       }
     },
@@ -73,6 +79,12 @@
         "deepReference": {
           "$ref": "#/definitions/deepReference",
           "description": "Optional pointer to a reference skill for deeper guidance when stuck"
+        },
+        "deepReferences": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/deepReference" },
+          "minItems": 1,
+          "description": "Optional list of reference skills. Use instead of (or alongside) deepReference when a phase has multiple companion skills."
         }
       }
     }

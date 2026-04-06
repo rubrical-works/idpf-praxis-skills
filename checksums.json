@@ -1,8 +1,8 @@
 {
   "manifestVersion": "1.0.0",
-  "frameworkVersion": "0.10.0",
-  "generatedAt": "2026-04-05T15:47:38.694Z",
-  "fileCount": 11,
+  "frameworkVersion": "0.11.0",
+  "generatedAt": "2026-04-06T20:32:10.906Z",
+  "fileCount": 12,
   "files": [
     {
       "relativePath": "Skills/engage-exocortex/scripts/load-entries.js",
@@ -11,8 +11,8 @@
     },
     {
       "relativePath": "Skills/engage-exocortex/scripts/match-signals.js",
-      "sha256": "05cc1e7bf7ba9b74f0f98072c66f0f7221966fb9ba9771fe41a1cf64315f441f",
-      "sizeBytes": 6686
+      "sha256": "5f15f7ef6907ebddfe74da6893632bf92d4102065c6bda3b0a76d77828d21b10",
+      "sizeBytes": 9739
     },
     {
       "relativePath": "Skills/json-validator/scripts/validate.js",
@@ -58,6 +58,11 @@
       "relativePath": "Skills/playwright-explorer/lib/session-lifecycle.js",
       "sha256": "6a079301c70fd0e11f9a3ab1f70c9e820299dc29c6e993ccd5a158c2de457906",
       "sizeBytes": 5311
+    },
+    {
+      "relativePath": "Skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js",
+      "sha256": "c6cdf3e239191f25f341c2cd98ae7d555fd2dc8c51bdaad32a26856c0feff518",
+      "sizeBytes": 13995
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-04-05T15:47:38.510Z",
+  "generatedAt": "2026-04-06T20:32:10.758Z",
   "version": "0.1.0",
-  "skillCount": 41,
+  "skillCount": 42,
   "skills": [
     {
       "name": "anti-pattern-analysis",
@@ -268,7 +268,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-04",
-      "checksum": "76d9fa370b6114b160c8e9022bac96bf337f7ee192c2e66c1069d87c6f11ec6f",
+      "checksum": "775a4da14e63411ca9e507f248111fa604f96868951659356b1fc1060b331db2",
       "category": "problem-solving",
       "relevantTechStack": [
         "algorithms",
@@ -307,7 +307,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "32e498344e35434ea56f244726cdba17bd4a775323f6a2ac1e6dac88157a339f",
+      "checksum": "ed4a41691dce2fda57b6bc957898c25083a038282f2b14dd38913bf4080427e6",
       "category": "platform",
       "relevantTechStack": [
         "flask",
@@ -652,7 +652,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "d2e0bca949672d99237cc99a66d4010ee0f49a674c01663ea2b50a7871ab9517",
+      "checksum": "e82349ae2d5822e2cb195a20b1a6ce2528632b352b3adf96a927a226bc4ac67c",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -678,13 +678,29 @@
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
+      "name": "tdd-refactor-coverage-audit",
+      "description": "Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Python, Go, Rust, Ruby, Elixir, Java, C#) with optional project overrides. Advisory only — never blocks the TDD gate.",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.60.0",
+      "lastUpdated": "2026-04-06",
+      "checksum": "0afb085221e02b06aaba0da22be8cbd52e42f1f3720cc27c97c4b04ad3f4f53c",
+      "category": "testing",
+      "relevantTechStack": [
+        "tdd",
+        "testing"
+      ],
+      "defaultSkill": false,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
       "name": "tdd-refactor-phase",
       "description": "Guide experienced developers through REFACTOR phase of TDD cycle - improving code quality while maintaining green tests",
       "triggers": [],
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "3d841adc8f6de04468cade67fe1cd5305c4e060c5f83d45748fa644ae640ee83",
+      "checksum": "d5f9a14e13f5a254d2ac2406408d50655d34dbd840efc31683c134bf4660ba98",
       "category": "testing",
       "relevantTechStack": [
         "tdd",

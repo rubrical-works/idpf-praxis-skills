@@ -1,0 +1,112 @@
+{
+  "$schema": "./test-coverage-conventions-schema.json",
+  "_meta": {
+    "description": "Language conventions for pairing source files with their tests. Consumed by ../scripts/test-coverage-audit.js. Project-specific overrides go in framework-config.json under testCoverageAudit.",
+    "version": 1
+  },
+  "languages": {
+    "typescript": {
+      "sourceExtensions": [".ts", ".tsx"],
+      "testPatterns": [
+        "{dir}/{stem}.test.ts",
+        "{dir}/{stem}.test.tsx",
+        "{dir}/{stem}.spec.ts",
+        "{dir}/{stem}.spec.tsx",
+        "{dir}/__tests__/{stem}.ts",
+        "{dir}/__tests__/{stem}.tsx",
+        "{dir}/__tests__/{stem}.test.ts"
+      ],
+      "excludePatterns": ["**/*.d.ts", "**/node_modules/**"]
+    },
+    "javascript": {
+      "sourceExtensions": [".js", ".jsx", ".mjs", ".cjs"],
+      "testPatterns": [
+        "{dir}/{stem}.test.js",
+        "{dir}/{stem}.test.jsx",
+        "{dir}/{stem}.spec.js",
+        "{dir}/{stem}.spec.jsx",
+        "{dir}/__tests__/{stem}.js",
+        "{dir}/__tests__/{stem}.test.js"
+      ],
+      "excludePatterns": ["**/node_modules/**"]
+    },
+    "svelte": {
+      "sourceExtensions": [".svelte"],
+      "testPatterns": [
+        "{dir}/{stem}.test.ts",
+        "{dir}/{stem}.test.js",
+        "{dir}/{stem}.spec.ts",
+        "{dir}/{stem}.spec.js"
+      ]
+    },
+    "python": {
+      "sourceExtensions": [".py"],
+      "testPatterns": [
+        "{dir}/test_{stem}.py",
+        "{dir}/{stem}_test.py",
+        "tests/test_{stem}.py",
+        "tests/{stem}_test.py",
+        "test/test_{stem}.py"
+      ],
+      "excludePatterns": ["**/__init__.py", "**/conftest.py", "**/setup.py"]
+    },
+    "go": {
+      "sourceExtensions": [".go"],
+      "testPatterns": ["{dir}/{stem}_test.go"],
+      "excludePatterns": ["**/*_test.go", "**/vendor/**"]
+    },
+    "rust": {
+      "sourceExtensions": [".rs"],
+      "testPatterns": ["tests/{stem}.rs", "{dir}/tests/{stem}.rs"],
+      "inlineTests": true,
+      "_note": "Rust commonly uses #[cfg(test)] inline modules; inlineTests:true means audit checks for a 'mod tests' block in the same file before reporting missing tests."
+    },
+    "ruby": {
+      "sourceExtensions": [".rb"],
+      "testPatterns": [
+        "{dir}/{stem}_spec.rb",
+        "spec/{stem}_spec.rb",
+        "spec/**/{stem}_spec.rb",
+        "test/{stem}_test.rb",
+        "test/**/{stem}_test.rb"
+      ]
+    },
+    "elixir": {
+      "sourceExtensions": [".ex"],
+      "testPatterns": ["test/{stem}_test.exs", "test/**/{stem}_test.exs"]
+    },
+    "java": {
+      "sourceExtensions": [".java"],
+      "testPatterns": [
+        "{dir}/{stem}Test.java",
+        "src/test/java/**/{stem}Test.java",
+        "src/test/java/**/{stem}Tests.java"
+      ]
+    },
+    "csharp": {
+      "sourceExtensions": [".cs"],
+      "testPatterns": [
+        "{dir}/{stem}Tests.cs",
+        "{dir}/{stem}.Tests.cs",
+        "**/{stem}Tests.cs",
+        "**/{stem}.Tests.cs"
+      ]
+    }
+  },
+  "ignoredSourcePatterns": [
+    "**/index.ts",
+    "**/index.js",
+    "**/index.tsx",
+    "**/index.jsx",
+    "**/types.ts",
+    "**/types.d.ts",
+    "**/*.config.ts",
+    "**/*.config.js",
+    "**/*.config.mjs",
+    "**/migrations/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/build/**"
+  ]
+}

@@ -96,7 +96,34 @@
           "name": "Code readability",
           "useWhen": "User's codebase or team context suggests this matters"
         }
-      ]
+      ],
+      "operationalDimensions": [
+        {
+          "id": "extensibility",
+          "name": "Extensibility",
+          "whatToAssess": "How easily can the solution accommodate new inputs, axes, or domains? File-drop (add one config file = add one capability) scores Strong. Edit-existing-file scores Adequate. Code change required scores Weak. Schema/runtime change scores Disqualifying for high-extensibility contexts.",
+          "useWhen": "Solution will be extended over time by users other than the original author, OR the problem is open-ended (new dimensions expected)"
+        },
+        {
+          "id": "operational-simplicity",
+          "name": "Operational simplicity",
+          "whatToAssess": "Count moving parts: coordination points, validation steps, configuration files, indirection layers. Fewer parts = fewer failure modes. Strong: single straight-line flow. Adequate: a few independent components. Weak: multiple coordination points with implicit ordering. Disqualifying: emergent behavior across components.",
+          "useWhen": "Solution will run in production unattended OR will be debugged by humans without the original author present"
+        },
+        {
+          "id": "user-transparency",
+          "name": "User transparency",
+          "whatToAssess": "Can a user inspect the solution's behavior by reading configuration files? 1:1 mappings between config and behavior are Strong. Indirect signal-driven activation is Adequate. Behavior emerging from multi-file interactions is Weak. Behavior requiring code reading to predict is Disqualifying.",
+          "useWhen": "Users will need to predict, debug, or audit the solution's behavior"
+        },
+        {
+          "id": "cost-predictability",
+          "name": "Cost predictability",
+          "whatToAssess": "Does the user have explicit control over resource consumption? Strong: explicit budget/limit flags with deterministic ceilings. Adequate: configurable thresholds with documented scaling. Weak: implicit threshold-based scaling. Disqualifying: unbounded resource use under adversarial inputs.",
+          "useWhen": "Solution consumes paid resources (API calls, compute, storage) OR has user-visible latency"
+        }
+      ],
+      "operationalDimensionsNote": "Operational dimensions complement architectural dimensions — they don't replace them. Apply them when their `useWhen` condition matches the problem context. They participate in scoring and the hybridization check identically to other dimensions."
     },
     {
       "id": "hybridize",
@@ -118,6 +145,11 @@
           "id": "complementary-decomposition",
           "question": "Do two paths decompose the problem differently in complementary ways?",
           "action": "Describe a hybrid decomposition."
+        },
+        {
+          "id": "operational-graft",
+          "question": "Does Path A win on architectural dimensions but Path B win on an operational dimension (extensibility, simplicity, transparency, cost) that the problem genuinely needs?",
+          "action": "Recommend Path A with Path B's operational feature explicitly grafted on. Name the grafted feature in the recommendation. This is the path most often missed when synthesis only weighs architectural fit."
         }
       ],
       "constraint": "State hybrids explicitly and explain what you gain. Don't suggest a hybrid just to seem thorough — only if the combination is genuinely better than either alone."
