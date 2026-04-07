@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.1] - 2026-04-06
+
+### Fixed
+- **build-skill-packages: tests/ subdir leaked into distributed zips** — `build-skill-packages.js` now reads `excludedSkillSubdirectories` from `minimize-config.json` (same source as `minimize-helper.js`) and skips matching directory names when walking each skill for companion files. Resolves a config-script desync that landed in `d023e2f` and shipped silently in v0.11.0. Adds a regression test that asserts no excluded subdir entries appear in distributed zips. (#171)
+- **SKILLS-manifest.json silent drift** — added `build-skills-manifest.js` that scans `Skills/*/SKILL.md` frontmatter and writes a deterministic manifest (alphabetized, preserves `$schema`/`version`/`renamed`/`deprecated`). Supports `--check` mode for CI gates. New `tests/skills/skills-manifest.test.js` (9 tests) asserts the manifest stays in sync with `Skills/` on disk. `/prepare-release` extension now runs the builder alongside the other metadata builders. One-time correction: `tdd-refactor-coverage-audit` is now present in the manifest (was missing in v0.11.0). (#174)
+
 ## [0.11.0] - 2026-04-06
 
 ### Added

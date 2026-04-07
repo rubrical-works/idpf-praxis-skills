@@ -1,5 +1,5 @@
 # Architecture Anti-Patterns
-**Version:** v0.11.0
+**Version:** v0.11.1
 
 System design and structural issues that affect the overall codebase.
 

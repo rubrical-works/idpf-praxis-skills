@@ -4,7 +4,7 @@
   "skills": {
     "anti-pattern-analysis": {
       "version": "1.0.0",
-      "type": "reference",
+      "type": "injector",
       "category": "code-quality",
       "path": "Skills/anti-pattern-analysis"
     },
@@ -28,7 +28,7 @@
     },
     "beginner-testing": {
       "version": "1.0.0",
-      "type": "reference",
+      "type": "educational",
       "category": "testing",
       "path": "Skills/beginner-testing"
     },
@@ -58,7 +58,7 @@
     },
     "common-errors": {
       "version": "1.0.0",
-      "type": "reference",
+      "type": "educational",
       "category": "code-quality",
       "path": "Skills/common-errors"
     },
@@ -90,12 +90,7 @@
       "version": "2.0.0",
       "type": "invokable",
       "category": "problem-solving",
-      "path": "Skills/engage-exocortex",
-      "renamed": {
-        "from": "hal-2026",
-        "since": "2.0.0",
-        "autoMigrate": true
-      }
+      "path": "Skills/engage-exocortex"
     },
     "error-handling-patterns": {
       "version": "1.0.0",
@@ -135,7 +130,7 @@
     },
     "observability-setup": {
       "version": "1.0.0",
-      "type": "invokable",
+      "type": "educational",
       "category": "devops",
       "path": "Skills/observability-setup"
     },
@@ -159,13 +154,13 @@
     },
     "privacy-compliance": {
       "version": "1.0.0",
-      "type": "reference",
+      "type": "educational",
       "category": "compliance",
       "path": "Skills/privacy-compliance"
     },
     "property-based-testing": {
       "version": "1.0.0",
-      "type": "reference",
+      "type": "educational",
       "category": "testing",
       "path": "Skills/property-based-testing"
     },
@@ -189,7 +184,7 @@
     },
     "seo-optimization": {
       "version": "1.0.0",
-      "type": "reference",
+      "type": "educational",
       "category": "web",
       "path": "Skills/seo-optimization"
     },
@@ -229,6 +224,12 @@
       "category": "testing",
       "path": "Skills/tdd-red-phase"
     },
+    "tdd-refactor-coverage-audit": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "testing",
+      "path": "Skills/tdd-refactor-coverage-audit"
+    },
     "tdd-refactor-phase": {
       "version": "1.0.0",
       "type": "reference",
@@ -243,7 +244,7 @@
     },
     "test-writing-patterns": {
       "version": "1.0.0",
-      "type": "reference",
+      "type": "educational",
       "category": "testing",
       "path": "Skills/test-writing-patterns"
     },
