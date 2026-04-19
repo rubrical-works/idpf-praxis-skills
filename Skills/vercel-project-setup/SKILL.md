@@ -11,39 +11,58 @@ relevantTechStack: [vercel, next, react, node, deployment]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Skill: vercel-project-setup
-**Purpose:** Guide developers through setting up Vercel deployments with GitHub Actions integration
-**Audience:** Developers deploying web applications to Vercel
-**Related Skills:** `ci-cd-pipeline-design` -- for broader CI/CD pipeline architecture
+**Purpose:** Guide setting up Vercel deployments with GitHub Actions integration.
+**Audience:** Developers deploying web apps to Vercel.
+**Related:** `ci-cd-pipeline-design` — broader CI/CD architecture.
+## Overview
+Structured guidance for Vercel deployments across preview/staging/production: initial setup via Vercel CLI, GitHub Actions workflows, env var management, monitoring.
 ## Initial Setup
+## Responsibility Acknowledgement Gate
+Implements the pattern in the **`responsibility-gate`** skill. See `Skills/responsibility-gate/SKILL.md`.
+- **When:** before `npm install -g vercel`, `vercel login`, `vercel link`/`vercel`.
+- **What is asked:** responsibility for changes to global npm env, local `.vercel/` directory, Vercel account/project binding.
+- **On decline:** exit cleanly; "Declined — no changes made."; no system changes.
+- **Persistence:** per-invocation.
+Use `AskUserQuestion` with (`"I accept responsibility — proceed"` / `"Decline — exit without changes"`).
 ### Prerequisites
 - Vercel account (free tier available)
-- Vercel CLI installed: `npm install -g vercel`
-- GitHub repository with push access
+- Vercel CLI: `npm install -g vercel`
+- GitHub repo with push access
 ### Linking Your Project
 ```bash
+# Login to Vercel
 vercel login
-vercel link    # From project root, creates .vercel/project.json
+
+# Link existing project (run from project root)
+vercel link
+
+# Or create a new project
+vercel
 ```
+Creates `.vercel/` with `project.json` (org/project IDs).
 ## Environment Configuration
 ### Required Secrets
-Configure in GitHub repository settings (Settings > Secrets and variables > Actions):
+Configure in GitHub repo (Settings > Secrets and variables > Actions):
 | Secret | Source | Description |
 |--------|--------|-------------|
-| `VERCEL_TOKEN` | Vercel Dashboard > Settings > Tokens | API authentication token |
-| `VERCEL_ORG_ID` | `.vercel/project.json` -> `orgId` | Your Vercel organization ID |
-| `VERCEL_PROJECT_ID` | `.vercel/project.json` -> `projectId` | Your Vercel project ID |
+| `VERCEL_TOKEN` | Vercel Dashboard > Settings > Tokens | API auth token |
+| `VERCEL_ORG_ID` | `.vercel/project.json` → `orgId` | Org ID |
+| `VERCEL_PROJECT_ID` | `.vercel/project.json` → `projectId` | Project ID |
 ### Environment Variables
 Set in Vercel Dashboard (Project > Settings > Environment Variables):
-- **Production**: Variables available only in production deployments
-- **Preview**: Variables available in preview/PR deployments
-- **Development**: Variables available during `vercel dev`
-See `resources/env-setup.md` for complete environment variable setup guide.
+- **Production**: production deployments only
+- **Preview**: preview/PR deployments
+- **Development**: during `vercel dev`
+See `resources/env-setup.md`.
 ## GitHub Integration
-### Automated Preview Deployments
+### Preview Deployments
+Unique URL per PR for team review before merge.
 ```yaml
+# See resources/deploy.yml for complete workflow
 on:
   pull_request:
     types: [opened, synchronize]
+
 steps:
   - uses: amondnet/vercel-action@v25
     with:
@@ -51,12 +70,16 @@ steps:
       vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
       vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
 ```
-Preview URL is automatically commented on the PR.
+URL auto-commented on the PR.
 ### Production Deployments
+On push to main or release tag:
 ```yaml
 on:
   push:
     branches: [main]
+    # Or use tags for explicit releases:
+    # tags: ['v*']
+
 steps:
   - uses: amondnet/vercel-action@v25
     with:
@@ -65,6 +88,7 @@ steps:
 ```
 ## Custom Configuration
 ### vercel.json
+Configures build, routes, headers, redirects. See `resources/vercel.json`. Key areas: build settings (framework, command, output dir), routes (rewrites/redirects/headers), functions (runtime/memory/timeout), crons.
 ```json
 {
   "buildCommand": "npm run build",
@@ -75,17 +99,18 @@ steps:
   ]
 }
 ```
-Key areas: build settings, routes/rewrites/redirects, serverless function config, cron jobs.
 ## Deployment Strategies
 ### Preview per PR
-Every PR gets its own deployment: `https://{project}-{hash}-{scope}.vercel.app`
-### Staging Environment
+URL: `https://{project}-{hash}-{scope}.vercel.app`.
+### Staging
+Vercel environments or dedicated branch:
 ```yaml
 on:
   push:
     branches: [develop]
 ```
 ### Production with Approval
+GitHub environment protection rules:
 ```yaml
 jobs:
   deploy:
@@ -93,16 +118,24 @@ jobs:
 ```
 ### Instant Rollback
 ```bash
-vercel ls                          # List recent deployments
-vercel rollback [deployment-url]   # Promote previous deployment
+# List recent deployments
+vercel ls
+
+# Promote a previous deployment to production
+vercel rollback [deployment-url]
 ```
 ## Monitoring and Debugging
+### Deployment Logs
 ```bash
-vercel logs [deployment-url]            # View build logs
-vercel inspect [deployment-url]         # Inspect deployment details
-vercel logs [deployment-url] --follow   # Runtime logs
+vercel logs [deployment-url]
+vercel inspect [deployment-url]
 ```
-### Health Check (in workflow)
+### Runtime Logs
+Vercel Dashboard (Project > Deployments > Functions) or:
+```bash
+vercel logs [deployment-url] --follow
+```
+### Health Checks
 ```yaml
 - name: Health Check
   run: |
@@ -113,23 +146,25 @@ vercel logs [deployment-url] --follow   # Runtime logs
       exit 1
     fi
 ```
-## Common Pitfalls and Troubleshooting
+## Troubleshooting
 ### Build Failures
-- **Missing environment variables**: Ensure env vars set in Vercel Dashboard for correct scope
-- **Node.js version mismatch**: Set `engines.node` in `package.json` or configure in Vercel settings
-- **Build command not found**: Verify `buildCommand` in `vercel.json` matches `package.json` scripts
+- Missing env vars → set in Vercel Dashboard for correct scope.
+- Node version mismatch → `engines.node` in `package.json` or Vercel settings.
+- Build command not found → verify `buildCommand` matches `package.json` scripts.
 ### Deployment Issues
-- **404 on client-side routes**: Add SPA rewrite:
+- 404 on client-side routes → SPA rewrite:
   ```json
   { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
   ```
-- **API routes not working**: Ensure functions in `/api` directory
-- **Large deployment size**: Check `.vercelignore`
-### CI/CD Issues
-- **Token expired**: Regenerate in Dashboard > Settings > Tokens
-- **Rate limiting**: Use `paths-ignore` to skip documentation changes
-- **Concurrent deployments**: Use GitHub concurrency groups to cancel superseded runs
+- API routes not working → functions in `/api` by default.
+- Large size → check `.vercelignore`.
+### CI/CD
+- Token expired → regenerate in Dashboard > Settings > Tokens.
+- Rate limiting → `paths-ignore` to skip docs.
+- Concurrent deploys → GitHub concurrency groups cancel superseded runs.
+## Related Skills
+- `ci-cd-pipeline-design` — CI/CD architecture, stage design, security.
 ## Resources
-- `resources/vercel.json` -- Reference Vercel project configuration
-- `resources/deploy.yml` -- GitHub Actions workflow for preview and production deployments
-- `resources/env-setup.md` -- Environment variable setup guide
+- `resources/vercel.json` — reference config
+- `resources/deploy.yml` — GitHub Actions workflow
+- `resources/env-setup.md` — env var guide

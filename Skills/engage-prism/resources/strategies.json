@@ -1,0 +1,333 @@
+{
+  "$schema": "strategies-schema.json",
+  "description": "Analytical strategies for business, marketing, and financial questions. Strategies are reframings — ways of looking at a problem that change what evidence counts and what the answer must do.",
+  "usage": "Apply strategies in combination with paradigms and structures. A strategy does not produce a number on its own; it disciplines how the number is produced and defended.",
+  "strategies": [
+    {
+      "id": "top-down-vs-bottom-up",
+      "name": "Top-Down vs. Bottom-Up",
+      "coreReframe": "Compute the same quantity by starting from an industry total and filtering down, and independently by building up from units, prices, and customers; reconcile the gap.",
+      "structuralSignals": [
+        "Question involves a market size, addressable revenue, or capacity estimate",
+        "Authoritative industry data is available but granular assumptions also exist",
+        "Stakeholders distrust a single-source estimate"
+      ],
+      "whatItUnlocks": [
+        "A reality check: large divergence between the two methods signals a hidden assumption",
+        "A defensible range rather than a false-precision point estimate",
+        "Clear identification of which filter or driver the answer is most sensitive to"
+      ],
+      "classicExamples": [
+        {
+          "category": "market-sizing",
+          "examples": "Size U.S. tele-health market top-down from total healthcare spend vs. bottom-up from visits × price × adoption."
+        },
+        {
+          "category": "capacity-planning",
+          "examples": "Estimate warehouse throughput top-down from industry benchmark vs. bottom-up from pick rate × shifts × headcount."
+        }
+      ],
+      "failureModes": [
+        "Building the 'independent' bottom-up estimate from the same data source as the top-down",
+        "Reconciling the gap by arbitrary averaging instead of investigating the discrepancy",
+        "Reporting only the estimate that matches the preferred narrative"
+      ]
+    },
+    {
+      "id": "triangulation",
+      "name": "Triangulation",
+      "coreReframe": "Estimate the same quantity using three or more methodologically distinct approaches and treat agreement (or disagreement) as evidence about the answer's reliability.",
+      "structuralSignals": [
+        "Single-method estimates are viewed as unreliable",
+        "Multiple independent data sources or methods are available",
+        "Stakes justify redundant analysis"
+      ],
+      "whatItUnlocks": [
+        "Robustness: an answer that survives three lenses is more defensible than one produced by a single model",
+        "Diagnostic power when methods disagree — the disagreement is itself information",
+        "Reduced sensitivity to any single data source's bias"
+      ],
+      "classicExamples": [
+        {
+          "category": "valuation",
+          "examples": "Value a company via DCF, trading comps, and precedent transactions; report the overlap range."
+        },
+        {
+          "category": "campaign-measurement",
+          "examples": "Measure campaign incrementality via holdout test, media-mix model, and pre/post geo-lift."
+        }
+      ],
+      "failureModes": [
+        "Methods that share the same underlying bias (all three start from the same forecast)",
+        "Averaging across methods instead of investigating why they differ",
+        "Cherry-picking the two that agree and discarding the third"
+      ]
+    },
+    {
+      "id": "sensitivity-analysis",
+      "name": "Sensitivity Analysis",
+      "coreReframe": "Instead of defending a point estimate, identify which inputs actually drive the output and by how much, then concentrate evidence and debate on those.",
+      "structuralSignals": [
+        "A quantitative model with many uncertain inputs",
+        "Stakeholders challenging the model's credibility",
+        "Research budget is limited and must be prioritized"
+      ],
+      "whatItUnlocks": [
+        "Prioritization of which assumptions actually merit deeper research",
+        "Protection against spurious precision — shows where the answer is fragile",
+        "A communication tool that separates big levers from irrelevant dials"
+      ],
+      "classicExamples": [
+        {
+          "category": "valuation",
+          "examples": "DCF tornado showing that terminal-growth and WACC dominate valuation, not year-2 revenue."
+        },
+        {
+          "category": "capital-budgeting",
+          "examples": "NPV sensitivity on a factory project showing that utilization swamps labor cost."
+        }
+      ],
+      "failureModes": [
+        "Flexing inputs over arbitrary symmetric ranges unrelated to real uncertainty",
+        "Ignoring correlations between inputs so joint effects are missed",
+        "Treating the tornado as a forecast rather than a diagnostic of the forecast"
+      ]
+    },
+    {
+      "id": "benchmark-comparison",
+      "name": "Benchmark Comparison",
+      "coreReframe": "Interpret a number by comparing it to analogous entities or prior periods rather than evaluating it in isolation; the question becomes 'relative to what' not 'is this good'.",
+      "structuralSignals": [
+        "Stakeholders ask 'is this number good' with no natural yardstick",
+        "Metric is industry-specific and intuition is miscalibrated",
+        "Decision depends on relative, not absolute, performance"
+      ],
+      "whatItUnlocks": [
+        "Calibration — transforms a raw number into a percentile or gap",
+        "Identification of outperformance or underperformance that demands explanation",
+        "A credible narrative for boards and investors"
+      ],
+      "classicExamples": [
+        {
+          "category": "saas-metrics",
+          "examples": "Evaluate a 6% monthly churn rate against public SaaS peer medians for the same ARR band."
+        },
+        {
+          "category": "equity-research",
+          "examples": "Compare a company's operating margin against listed peers to frame a rerating thesis."
+        }
+      ],
+      "failureModes": [
+        "Benchmark set is not actually comparable (different business model, geography, scale)",
+        "Averaging across a benchmark set that contains extreme outliers",
+        "Treating the benchmark as a target rather than a reference point"
+      ]
+    },
+    {
+      "id": "stakeholder-weighting",
+      "name": "Stakeholder Weighting",
+      "coreReframe": "Make explicit whose preferences and costs count, and by how much, before scoring options — so the analysis is transparent about whom it is optimizing for.",
+      "structuralSignals": [
+        "Multiple stakeholder groups with conflicting interests",
+        "A decision matrix that appears objective but hides political trade-offs",
+        "Post-decision pushback from groups that feel unrepresented"
+      ],
+      "whatItUnlocks": [
+        "Transparency about whose objectives drive the recommendation",
+        "Ability to run the analysis under alternative weight sets and report the sensitivity",
+        "Principled handling of customer-vs-shareholder, short-vs-long-term tensions"
+      ],
+      "classicExamples": [
+        {
+          "category": "pricing-decision",
+          "examples": "Weigh customer value, shareholder returns, and channel-partner margin explicitly before recommending a price change."
+        },
+        {
+          "category": "esg-investing",
+          "examples": "Explicit weights on financial return, environmental impact, and governance in a portfolio screen."
+        }
+      ],
+      "failureModes": [
+        "Weights set by whoever runs the meeting rather than by governance",
+        "Hiding weights inside scoring rubrics so stakeholders cannot audit them",
+        "Changing weights mid-analysis to preserve a preferred conclusion"
+      ]
+    },
+    {
+      "id": "ev-vs-risk-framing",
+      "name": "Expected Value vs. Risk-Adjusted Framing",
+      "coreReframe": "Separate the expected outcome of a decision from its distribution; two options with the same EV can differ sharply on downside, volatility, or bankruptcy risk.",
+      "structuralSignals": [
+        "Outcomes are uncertain and potentially asymmetric",
+        "Downside is survival-threatening even if expected value is positive",
+        "A decision hides a lottery under a single-number summary"
+      ],
+      "whatItUnlocks": [
+        "Explicit treatment of downside, not just average outcome",
+        "Better alignment with investor or corporate risk tolerance",
+        "Rejection of positive-EV bets that are unsurvivable on the left tail"
+      ],
+      "classicExamples": [
+        {
+          "category": "capital-allocation",
+          "examples": "Compare two projects with identical NPV but different cash-flow volatility and worst-case drawdown."
+        },
+        {
+          "category": "options-strategy",
+          "examples": "Reject a positive-EV trade because its 5% tail would breach a leverage covenant."
+        }
+      ],
+      "failureModes": [
+        "Using expected value alone on decisions where the downside is catastrophic",
+        "Over-correcting for risk so that all positive-EV bets become unpalatable",
+        "Ignoring path dependency — average outcome hides a sequence that causes ruin"
+      ]
+    },
+    {
+      "id": "leading-vs-lagging-indicators",
+      "name": "Leading vs. Lagging Indicators",
+      "coreReframe": "Separate metrics that describe outcomes already realized (lagging) from metrics that predict future outcomes (leading), and manage against leading ones while reporting both.",
+      "structuralSignals": [
+        "Performance discussions use results metrics that cannot be changed by next quarter",
+        "Teams are surprised by downturns their KPIs did not foreshadow",
+        "Operational actions don't clearly map to reported outcomes"
+      ],
+      "whatItUnlocks": [
+        "Earlier detection of problems while they can still be fixed",
+        "Clearer connection between daily operational actions and eventual P&L",
+        "A reporting cadence that matches the decision cadence"
+      ],
+      "classicExamples": [
+        {
+          "category": "sales-management",
+          "examples": "Track pipeline velocity and qualified-opportunity creation as leading indicators of revenue."
+        },
+        {
+          "category": "customer-success",
+          "examples": "Monitor NPS and product-usage depth as leading indicators of renewal."
+        }
+      ],
+      "failureModes": [
+        "Assuming a leading indicator is causal when it is merely correlated",
+        "Swapping indicators whenever the current one sends bad news",
+        "Reporting leading indicators with such a long lag that they become lagging in practice"
+      ]
+    },
+    {
+      "id": "in-sample-vs-out-of-sample",
+      "name": "In-Sample vs. Out-of-Sample Validation",
+      "coreReframe": "A model or strategy that fits historical data is not yet validated; its credibility depends on performance on data it was not built on.",
+      "structuralSignals": [
+        "Backtest results look surprisingly strong",
+        "Model has many parameters relative to observations",
+        "Decision will be applied prospectively, not only retrospectively"
+      ],
+      "whatItUnlocks": [
+        "Detection of overfitting before capital or budget is deployed",
+        "Honest performance estimates that survive contact with new data",
+        "Discipline around hyperparameter tuning and model selection"
+      ],
+      "classicExamples": [
+        {
+          "category": "quant-strategy",
+          "examples": "Split 10 years of market data into in-sample fit and out-of-sample validation; report both Sharpe ratios."
+        },
+        {
+          "category": "marketing-attribution",
+          "examples": "Train an MMM on 2 years, validate on a holdout quarter before applying to the coming planning cycle."
+        }
+      ],
+      "failureModes": [
+        "Repeatedly 'validating' on the same holdout until it effectively becomes in-sample",
+        "Ignoring regime change that makes historical out-of-sample irrelevant to future conditions",
+        "Using walk-forward validation but still peeking at future data during feature selection"
+      ]
+    },
+    {
+      "id": "counterfactual-framing",
+      "name": "Counterfactual Framing",
+      "coreReframe": "Ask 'what would have happened without this action' rather than 'what happened after this action'; the incremental effect is the difference.",
+      "structuralSignals": [
+        "A campaign, feature, or policy is being credited with a post-launch change",
+        "Trends, seasonality, or concurrent changes could explain the result",
+        "ROI, lift, or incrementality claim needs to survive scrutiny"
+      ],
+      "whatItUnlocks": [
+        "True incrementality rather than coincidental overlap",
+        "Protection against confirmation bias in post-launch reviews",
+        "Shared language for distinguishing 'happened after' from 'caused by'"
+      ],
+      "classicExamples": [
+        {
+          "category": "marketing-roi",
+          "examples": "Evaluate a TV campaign against a geo holdout or matched-market control to isolate lift."
+        },
+        {
+          "category": "pricing-experiment",
+          "examples": "Estimate the effect of a 5% price increase by comparing treated stores to similar untreated stores."
+        }
+      ],
+      "failureModes": [
+        "Assuming 'no intervention' equals the pre-period — ignoring the counterfactual trend",
+        "Selecting a control group that is systematically different from the treated group",
+        "Declaring victory on correlational evidence when a clean counterfactual was feasible"
+      ]
+    },
+    {
+      "id": "primary-vs-secondary-sources",
+      "name": "Primary vs. Secondary Sources",
+      "coreReframe": "Distinguish evidence collected or computed directly (filings, transactions, surveys you ran) from evidence reported by others; weight and document them differently.",
+      "structuralSignals": [
+        "Conclusion rests on market-research summaries or press coverage",
+        "Stakeholders will scrutinize the evidence provenance",
+        "Downstream claims will be quoted or regulated"
+      ],
+      "whatItUnlocks": [
+        "Higher-confidence claims that can be defended under audit or due diligence",
+        "Identification of facts that are actually just repeated assertions",
+        "Clearer scoping of what further research is required before deciding"
+      ],
+      "classicExamples": [
+        {
+          "category": "equity-research",
+          "examples": "Ground an investment thesis in 10-K filings and management transcripts rather than sell-side summaries."
+        },
+        {
+          "category": "market-research",
+          "examples": "Commission a buyer survey rather than relying on a consultancy's published trend report."
+        }
+      ],
+      "failureModes": [
+        "Treating a widely-cited secondary figure as primary because it is ubiquitous",
+        "Under-weighting a well-designed secondary source just to appear rigorous",
+        "Failing to document provenance so later readers cannot assess evidence quality"
+      ]
+    }
+  ],
+  "crossStrategyInteractionGuide": [
+    {
+      "combination": "top-down-vs-bottom-up + triangulation",
+      "whatItProduces": "A multi-method market estimate where both directions and an adjacent-analog lens must agree to treat the range as credible."
+    },
+    {
+      "combination": "sensitivity-analysis + ev-vs-risk-framing",
+      "whatItProduces": "A risk-aware recommendation that reports both which inputs matter most and how the downside distribution behaves under plausible stress."
+    },
+    {
+      "combination": "counterfactual-framing + in-sample-vs-out-of-sample",
+      "whatItProduces": "A defensible incrementality claim validated on data not used to build the attribution model."
+    },
+    {
+      "combination": "benchmark-comparison + stakeholder-weighting",
+      "whatItProduces": "A positioning story that is calibrated against peers and transparent about whose objectives drive the action."
+    },
+    {
+      "combination": "leading-vs-lagging-indicators + counterfactual-framing",
+      "whatItProduces": "An operating cadence that spots problems early and distinguishes self-caused changes from market drift."
+    },
+    {
+      "combination": "triangulation + primary-vs-secondary-sources",
+      "whatItProduces": "A claim that survives scrutiny because independent methods each rest on documented primary evidence."
+    }
+  ]
+}

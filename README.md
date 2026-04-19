@@ -53,7 +53,7 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, Windows considerations |
 | [electron-cross-build](Skills/electron-cross-build/) | Platform | Cross-compile Electron apps from Linux to Windows |
 
-### Invokable Skills (14)
+### Invokable Skills (16)
 
 Interactive guided workflows. Install and use as slash commands.
 
@@ -73,8 +73,10 @@ Interactive guided workflows. Install and use as slash commands.
 | [code-path-discovery](Skills/code-path-discovery/) | Analysis | Path analysis patterns |
 | [json-validator](Skills/json-validator/) | Analysis | Validate JSON files against schemas |
 | [engage-exocortex](Skills/engage-exocortex/) | Problem Solving | JSON-driven parallel solution explorer |
+| [engage-prism](Skills/engage-prism/) | Analytical Reasoning | JSON-driven parallel analytical explorer with citation-first contract |
+| [install-node](Skills/install-node/) | Setup | Safe, guided Node.js installer with dry-run default and responsibility gate |
 
-### Reference Skills (15)
+### Reference Skills (17)
 
 Domain knowledge loaded on demand during relevant work.
 
@@ -96,6 +98,7 @@ Domain knowledge loaded on demand during relevant work.
 | [bdd-writing](Skills/bdd-writing/) | Testing | Gherkin syntax and step definitions |
 | [codebase-analysis](Skills/codebase-analysis/) | Analysis | Codebase detection mappings |
 | [command-spec-audit](Skills/command-spec-audit/) | Framework | Command spec audit criteria |
+| [responsibility-gate](Skills/responsibility-gate/) | Shared Pattern | Reusable responsibility-acknowledgement gate contract for install-capable skills |
 
 ### Educational Skills (7)
 

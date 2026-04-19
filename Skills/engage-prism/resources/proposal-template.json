@@ -1,0 +1,81 @@
+{
+  "$schema": "proposal-template-schema.json",
+  "description": "Document structure template for engage-prism analysis proposal generation (Step 5)",
+  "filePattern": "Proposal/PRISM-{question-slug}.md",
+  "sections": [
+    {
+      "id": "metadata",
+      "heading": "# Parallel Analysis: {questionTitle}",
+      "fields": [
+        { "key": "date", "label": "Date", "format": "YYYY-MM-DD" },
+        { "key": "skill", "label": "Skill", "value": "engage-prism" },
+        { "key": "signalsMatched", "label": "Signals Matched", "format": "comma-separated list" },
+        { "key": "pathsExplored", "label": "Paths Explored", "format": "integer" },
+        { "key": "webResearchPerformed", "label": "Web Research Performed", "format": "boolean" }
+      ]
+    },
+    {
+      "id": "question",
+      "heading": "## Question",
+      "content": "{originalUserQuery}"
+    },
+    {
+      "id": "research-plan",
+      "heading": "## Research Plan",
+      "content": "Entity anchors, source classes, recency window, authority preferences, and fetch budget from Step 0. If webResearchPerformed=false, this section includes the degradation reason and the implication for the recommendation."
+    },
+    {
+      "id": "signal-analysis",
+      "heading": "## Signal Analysis",
+      "content": "Matched signals with weights; loaded paradigms/structures/strategies with IDs and scores."
+    },
+    {
+      "id": "path",
+      "heading": "## Path {N}: {pathName}",
+      "repeating": true,
+      "subsections": [
+        {
+          "heading": "### Brief",
+          "content": "The filled brief sent to the subagent — assigned angle, research plan, citation requirement, exclusions (if any)."
+        },
+        {
+          "heading": "### Report",
+          "content": "Full structured report: core claim, webResearch status, citations[], evidenceBase, analysis steps with citation references, key numbers, counter-evidence, recommendation-in-angle, fit score."
+        }
+      ]
+    },
+    {
+      "id": "synthesis",
+      "heading": "## Synthesis",
+      "subsections": [
+        {
+          "heading": "### Citation Validation",
+          "content": "Per-path findings from the citation-conformance and claim-support checks: which claims are fully supported, which are partially supported, which are unsupported."
+        },
+        {
+          "heading": "### Scoring Matrix",
+          "content": "Table of dimension scores per path (always-relevant + conditionally-relevant + operational dimensions)."
+        },
+        {
+          "heading": "### Hybridization Analysis",
+          "content": "Cross-path combination opportunities — framing+evidence, base-case+tail-risk, aggregate+segment, quant+qual."
+        }
+      ]
+    },
+    {
+      "id": "recommendation",
+      "heading": "## Recommendation",
+      "content": "Final recommendation with rationale that references specific citations. If any path was degraded (webResearch.performed=false), the recommendation names the degradation explicitly."
+    },
+    {
+      "id": "what-would-change-this",
+      "heading": "## What Would Change This Answer",
+      "content": "2-3 specific observations — new evidence, updated input, or counterfactual — that would flip the recommendation."
+    },
+    {
+      "id": "rejected-angles",
+      "heading": "## Rejected Angles",
+      "content": "Angles considered during signal matching but not selected. Each entry: angle name, paradigm/structure/strategy, reason for rejection (too similar to selected path, low signal match score, out-of-domain for this question)."
+    }
+  ]
+}

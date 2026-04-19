@@ -1,0 +1,365 @@
+{
+  "$schema": "cross-references-schema.json",
+  "signals": [
+    {
+      "id": "market-entry-attractiveness",
+      "description": "User is evaluating whether to enter or expand into a market and wants a read on structural attractiveness.",
+      "keywords": [
+        "should we enter",
+        "is this market attractive",
+        "enter the market",
+        "market entry",
+        "expand into",
+        "greenfield opportunity"
+      ],
+      "paradigms": [
+        { "id": "competitive-analysis", "weight": 0.9, "rationale": "Attractiveness is a structural-profitability question, which is the core of competitive analysis." },
+        { "id": "market-sizing", "weight": 0.6, "rationale": "Entry also requires a credible read on opportunity size." }
+      ],
+      "structures": [
+        { "id": "porter-five-forces", "weight": 0.9, "rationale": "Canonical structure for scoring industry forces and rivalry dynamics." },
+        { "id": "swot-matrix", "weight": 0.5, "rationale": "Frames internal fit against external opportunity and threat." }
+      ],
+      "strategies": [
+        { "id": "benchmark-comparison", "weight": 0.7, "rationale": "Attractiveness is meaningful relative to analogous markets and peer industries." },
+        { "id": "triangulation", "weight": 0.6, "rationale": "Use multiple lenses — forces, peers, customer — before committing." }
+      ]
+    },
+    {
+      "id": "competitor-teardown",
+      "description": "User wants to compare the company against specific named rivals on features, pricing, or positioning.",
+      "keywords": [
+        "competitors",
+        "competitor analysis",
+        "versus",
+        "head to head",
+        "how do we compare",
+        "positioning",
+        "differentiation"
+      ],
+      "paradigms": [
+        { "id": "competitive-analysis", "weight": 0.95, "rationale": "Direct rival comparison is the narrow sub-question of competitive analysis." },
+        { "id": "segmentation-analysis", "weight": 0.4, "rationale": "Rivals often serve different segments; segmentation sharpens the comparison." }
+      ],
+      "structures": [
+        { "id": "decision-matrix", "weight": 0.8, "rationale": "Weighted scorecard across criteria is the natural teardown structure." },
+        { "id": "comparables-table", "weight": 0.6, "rationale": "Side-by-side metric and feature comparison." }
+      ],
+      "strategies": [
+        { "id": "benchmark-comparison", "weight": 0.85, "rationale": "The whole point of a teardown is relative, not absolute, evaluation." },
+        { "id": "stakeholder-weighting", "weight": 0.5, "rationale": "Comparison depends on which criteria the target customer actually weights." }
+      ]
+    },
+    {
+      "id": "market-size-estimate",
+      "description": "User is asking how large a market, category, or segment is — TAM/SAM/SOM style question.",
+      "keywords": [
+        "TAM",
+        "SAM",
+        "SOM",
+        "market size",
+        "how big is the market",
+        "addressable market",
+        "total market"
+      ],
+      "paradigms": [
+        { "id": "market-sizing", "weight": 0.95, "rationale": "Core paradigm for quantifying opportunity." },
+        { "id": "macro-trend-reading", "weight": 0.4, "rationale": "Long-horizon sizing depends on reading structural trends in demand." }
+      ],
+      "structures": [
+        { "id": "driver-tree", "weight": 0.8, "rationale": "Decomposes the size into population × penetration × price or analogous drivers." },
+        { "id": "scenario-grid", "weight": 0.5, "rationale": "Base/bull/bear ranges are often more useful than a point estimate." }
+      ],
+      "strategies": [
+        { "id": "top-down-vs-bottom-up", "weight": 0.9, "rationale": "Classic reconciliation strategy for any sizing exercise." },
+        { "id": "triangulation", "weight": 0.6, "rationale": "Multiple methodologies raise confidence in the estimate." }
+      ]
+    },
+    {
+      "id": "segment-sizing-and-targeting",
+      "description": "User is deciding which sub-segment of a market to prioritize for product or go-to-market.",
+      "keywords": [
+        "which segment",
+        "target segment",
+        "segment sizing",
+        "ICP",
+        "ideal customer profile",
+        "prioritize segments"
+      ],
+      "paradigms": [
+        { "id": "segmentation-analysis", "weight": 0.95, "rationale": "Segment selection is the defining question of this paradigm." },
+        { "id": "market-sizing", "weight": 0.6, "rationale": "Each candidate segment needs its own sizing." }
+      ],
+      "structures": [
+        { "id": "decision-matrix", "weight": 0.75, "rationale": "Rank segments by criteria such as size, fit, margin, and winnability." },
+        { "id": "cohort-table", "weight": 0.5, "rationale": "Compare segment behavior on retention and monetization." }
+      ],
+      "strategies": [
+        { "id": "stakeholder-weighting", "weight": 0.6, "rationale": "Prioritization requires explicit weights across criteria." },
+        { "id": "benchmark-comparison", "weight": 0.55, "rationale": "Segment quality is best read relative to the current base." }
+      ]
+    },
+    {
+      "id": "campaign-roi-attribution",
+      "description": "User wants to know whether a marketing campaign actually drove incremental results.",
+      "keywords": [
+        "campaign ROI",
+        "attribution",
+        "incrementality",
+        "did the campaign work",
+        "media mix",
+        "marketing effectiveness",
+        "lift"
+      ],
+      "paradigms": [
+        { "id": "causal-inference", "weight": 0.95, "rationale": "Incrementality is fundamentally a causal question." },
+        { "id": "portfolio-optimization", "weight": 0.5, "rationale": "Attribution feeds reallocation across channels." }
+      ],
+      "structures": [
+        { "id": "cohort-table", "weight": 0.7, "rationale": "Cohorts by acquisition source reveal channel quality over time." },
+        { "id": "cost-benefit-ledger", "weight": 0.55, "rationale": "Captures spend against incremental revenue." }
+      ],
+      "strategies": [
+        { "id": "counterfactual-framing", "weight": 0.95, "rationale": "Lift only exists relative to a credible counterfactual." },
+        { "id": "triangulation", "weight": 0.6, "rationale": "Holdouts, MMM, and geo-lift should agree before acting." }
+      ]
+    },
+    {
+      "id": "cac-ltv-and-payback",
+      "description": "User is evaluating unit economics — customer acquisition cost, lifetime value, and payback period.",
+      "keywords": [
+        "CAC",
+        "LTV",
+        "payback period",
+        "unit economics",
+        "churn",
+        "retention",
+        "CAC payback"
+      ],
+      "paradigms": [
+        { "id": "funnel-analysis", "weight": 0.7, "rationale": "CAC depends on funnel efficiency from impression to customer." },
+        { "id": "forecasting", "weight": 0.6, "rationale": "LTV is a forward projection of cohort cash flows." }
+      ],
+      "structures": [
+        { "id": "cohort-table", "weight": 0.9, "rationale": "Retention and revenue cohorts are the canonical view for LTV." },
+        { "id": "driver-tree", "weight": 0.6, "rationale": "Decomposes LTV into ARPU × gross margin × lifetime." }
+      ],
+      "strategies": [
+        { "id": "benchmark-comparison", "weight": 0.7, "rationale": "CAC and LTV only have meaning against category peers." },
+        { "id": "leading-vs-lagging-indicators", "weight": 0.6, "rationale": "Activation and early retention lead eventual LTV." }
+      ]
+    },
+    {
+      "id": "conversion-funnel-diagnosis",
+      "description": "User is diagnosing where in an acquisition or sales journey volume is being lost.",
+      "keywords": [
+        "conversion rate",
+        "funnel",
+        "drop off",
+        "bottleneck",
+        "pipeline stages",
+        "activation"
+      ],
+      "paradigms": [
+        { "id": "funnel-analysis", "weight": 0.95, "rationale": "Direct fit for stage-by-stage drop-off diagnosis." },
+        { "id": "causal-inference", "weight": 0.4, "rationale": "Fixing a stage requires experimental validation that changes helped." }
+      ],
+      "structures": [
+        { "id": "driver-tree", "weight": 0.7, "rationale": "Conversion = product of stage conversion rates, naturally a tree." },
+        { "id": "cohort-table", "weight": 0.6, "rationale": "Cohort-by-stage shows whether drop-off is worsening over time." }
+      ],
+      "strategies": [
+        { "id": "leading-vs-lagging-indicators", "weight": 0.65, "rationale": "Upstream stages lead downstream revenue." },
+        { "id": "counterfactual-framing", "weight": 0.5, "rationale": "Isolates whether a fix caused the improvement." }
+      ]
+    },
+    {
+      "id": "equity-fair-value",
+      "description": "User is building a fair-value or target-price view on a public or private company.",
+      "keywords": [
+        "valuation",
+        "target price",
+        "fair value",
+        "DCF",
+        "intrinsic value",
+        "ticker",
+        "is the stock cheap"
+      ],
+      "paradigms": [
+        { "id": "valuation", "weight": 0.95, "rationale": "The defining paradigm for fair value." },
+        { "id": "forecasting", "weight": 0.6, "rationale": "Valuation rests on a forward free-cash-flow projection." }
+      ],
+      "structures": [
+        { "id": "dcf-model", "weight": 0.9, "rationale": "Canonical intrinsic-valuation structure." },
+        { "id": "comparables-table", "weight": 0.8, "rationale": "Relative-valuation anchor alongside the DCF." }
+      ],
+      "strategies": [
+        { "id": "triangulation", "weight": 0.8, "rationale": "DCF, trading comps, and precedents together bound the answer." },
+        { "id": "sensitivity-analysis", "weight": 0.7, "rationale": "Identifies which assumptions dominate the target price." }
+      ]
+    },
+    {
+      "id": "earnings-thesis-update",
+      "description": "User is updating an equity view heading into or out of earnings, revisiting drivers and guidance.",
+      "keywords": [
+        "earnings",
+        "guidance",
+        "quarterly results",
+        "revise estimates",
+        "beat miss",
+        "thesis update"
+      ],
+      "paradigms": [
+        { "id": "valuation", "weight": 0.7, "rationale": "Estimate changes feed directly into fair-value revision." },
+        { "id": "forecasting", "weight": 0.85, "rationale": "Earnings update is primarily a revenue and margin re-forecast." }
+      ],
+      "structures": [
+        { "id": "driver-tree", "weight": 0.75, "rationale": "Revise the revenue and margin tree branch by branch." },
+        { "id": "sensitivity-tornado", "weight": 0.6, "rationale": "Tests which revised assumptions move the target price." }
+      ],
+      "strategies": [
+        { "id": "primary-vs-secondary-sources", "weight": 0.7, "rationale": "Ground the update in the filing and transcript, not just sell-side notes." },
+        { "id": "benchmark-comparison", "weight": 0.55, "rationale": "Compare results and guidance against peers and prior period." }
+      ]
+    },
+    {
+      "id": "portfolio-allocation-decision",
+      "description": "User is allocating capital across investments, projects, or marketing channels under a fixed budget.",
+      "keywords": [
+        "allocate budget",
+        "capital allocation",
+        "portfolio mix",
+        "rebalance",
+        "where to invest",
+        "spending mix"
+      ],
+      "paradigms": [
+        { "id": "portfolio-optimization", "weight": 0.95, "rationale": "The paradigm is defined by constrained allocation across bets." },
+        { "id": "valuation", "weight": 0.5, "rationale": "Each candidate needs a risk-adjusted return estimate." }
+      ],
+      "structures": [
+        { "id": "decision-matrix", "weight": 0.7, "rationale": "Weighted comparison across candidates under constraints." },
+        { "id": "sensitivity-tornado", "weight": 0.6, "rationale": "Flags inputs whose uncertainty dominates the recommended mix." }
+      ],
+      "strategies": [
+        { "id": "ev-vs-risk-framing", "weight": 0.85, "rationale": "Allocation must trade expected return against distribution of outcomes." },
+        { "id": "stakeholder-weighting", "weight": 0.55, "rationale": "Explicit weights on return, risk, and strategic fit." }
+      ]
+    },
+    {
+      "id": "scenario-stress-test",
+      "description": "User is stress-testing a plan, valuation, or portfolio against macro or exogenous uncertainty.",
+      "keywords": [
+        "scenario",
+        "stress test",
+        "what if",
+        "downside",
+        "tail risk",
+        "recession",
+        "base bull bear"
+      ],
+      "paradigms": [
+        { "id": "scenario-analysis", "weight": 0.95, "rationale": "Direct fit: the paradigm is defined by disciplined scenario construction." },
+        { "id": "forecasting", "weight": 0.5, "rationale": "Each scenario is a forecast under coordinated driver moves." }
+      ],
+      "structures": [
+        { "id": "scenario-grid", "weight": 0.9, "rationale": "Canonical structure for laying out the scenarios." },
+        { "id": "sensitivity-tornado", "weight": 0.55, "rationale": "Identifies which drivers most warrant scenario-level variation." }
+      ],
+      "strategies": [
+        { "id": "ev-vs-risk-framing", "weight": 0.75, "rationale": "Scenarios are the main vehicle for surfacing downside risk." },
+        { "id": "sensitivity-analysis", "weight": 0.65, "rationale": "Complements scenarios by isolating the biggest levers." }
+      ]
+    },
+    {
+      "id": "macro-trend-assessment",
+      "description": "User is assessing a long-horizon structural trend in technology, demographics, regulation, or consumer behavior.",
+      "keywords": [
+        "trend",
+        "secular trend",
+        "long term",
+        "structural shift",
+        "regulatory",
+        "demographics",
+        "disruption",
+        "AI impact"
+      ],
+      "paradigms": [
+        { "id": "macro-trend-reading", "weight": 0.95, "rationale": "The paradigm is defined by reading durable exogenous shifts." },
+        { "id": "scenario-analysis", "weight": 0.6, "rationale": "Trends are usually assessed across multiple consistent futures." }
+      ],
+      "structures": [
+        { "id": "scenario-grid", "weight": 0.75, "rationale": "2x2 of structural uncertainties is the standard framing." },
+        { "id": "driver-tree", "weight": 0.5, "rationale": "Decomposes the trend into measurable sub-drivers." }
+      ],
+      "strategies": [
+        { "id": "leading-vs-lagging-indicators", "weight": 0.75, "rationale": "Hiring, patents, filings, and search interest lead realized spend." },
+        { "id": "primary-vs-secondary-sources", "weight": 0.6, "rationale": "Trend narratives must be grounded in measurable primary data, not press." }
+      ]
+    },
+    {
+      "id": "pricing-change-evaluation",
+      "description": "User is evaluating a proposed price change and its likely impact on volume, revenue, and churn.",
+      "keywords": [
+        "price change",
+        "raise prices",
+        "price elasticity",
+        "discounting",
+        "list price",
+        "pricing strategy"
+      ],
+      "paradigms": [
+        { "id": "causal-inference", "weight": 0.8, "rationale": "Price sensitivity is best measured via experiments or matched-market lift." },
+        { "id": "forecasting", "weight": 0.5, "rationale": "Revenue impact requires forward projection under new prices." }
+      ],
+      "structures": [
+        { "id": "cost-benefit-ledger", "weight": 0.7, "rationale": "Nets incremental margin against churn and volume loss." },
+        { "id": "sensitivity-tornado", "weight": 0.6, "rationale": "Shows which elasticity assumptions drive the recommendation." }
+      ],
+      "strategies": [
+        { "id": "counterfactual-framing", "weight": 0.8, "rationale": "Measuring the price effect requires a credible no-change counterfactual." },
+        { "id": "stakeholder-weighting", "weight": 0.5, "rationale": "Pricing balances customer, shareholder, and channel-partner interests." }
+      ]
+    },
+    {
+      "id": "forecast-revision",
+      "description": "User is updating a revenue, demand, or cost forecast in light of new data or changed conditions.",
+      "keywords": [
+        "forecast",
+        "revise forecast",
+        "update projection",
+        "revenue plan",
+        "demand forecast",
+        "tracker",
+        "run rate"
+      ],
+      "paradigms": [
+        { "id": "forecasting", "weight": 0.95, "rationale": "Direct fit — this is the core paradigm." },
+        { "id": "segmentation-analysis", "weight": 0.4, "rationale": "Segment-level forecasts are more robust than a pooled projection." }
+      ],
+      "structures": [
+        { "id": "driver-tree", "weight": 0.85, "rationale": "Decomposes the forecast into drivers that can be updated independently." },
+        { "id": "scenario-grid", "weight": 0.55, "rationale": "Base/bull/bear communicates uncertainty around the point estimate." }
+      ],
+      "strategies": [
+        { "id": "in-sample-vs-out-of-sample", "weight": 0.75, "rationale": "Revised model should be validated on a holdout before use." },
+        { "id": "triangulation", "weight": 0.6, "rationale": "Top-down, bottom-up, and analog forecasts should be reconciled." }
+      ]
+    }
+  ],
+  "overlapThreshold": 0.7,
+  "antiOverlapRules": [
+    {
+      "description": "No two selected paths should share both paradigm and structure — diversity across paradigm or structure is required.",
+      "check": "Jaccard({paradigm1, structure1}, {paradigm2, structure2}) < overlapThreshold"
+    },
+    {
+      "description": "If two paths share the same paradigm, they must differ in at least two of {structure, primary strategy, secondary strategy}.",
+      "check": "For any pair sharing paradigmId, |symmetric_difference(components(path1), components(path2))| >= 2"
+    },
+    {
+      "description": "At least one selected path must use a strategy that forces external comparison (benchmark-comparison, triangulation, or primary-vs-secondary-sources) when the signal concerns valuation, market sizing, or competitive analysis.",
+      "check": "If signal ∈ {market-entry-attractiveness, market-size-estimate, equity-fair-value, earnings-thesis-update}, at least one chosen strategyId ∈ {benchmark-comparison, triangulation, primary-vs-secondary-sources}"
+    }
+  ]
+}

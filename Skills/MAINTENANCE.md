@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.11.1
+**Version:** v0.12.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -29,9 +29,11 @@
 | electron-cross-build | 1.0.0 | 2026-03-17 | Active |
 | electron-development | 1.0.0 | 2026-03-17 | Active |
 | engage-exocortex | 2.0.0 | 2026-04-04 | Active |
+| engage-prism | 1.0.0 | 2026-04-19 | Active |
 | error-handling-patterns | 1.0.0 | 2026-03-17 | Active |
 | flask-setup | 1.0.1 | 2026-04-01 | Active |
 | i18n-setup | 1.0.0 | 2026-03-17 | Active |
+| install-node | 1.0.0 | 2026-04-19 | Active |
 | json-validator | 1.0.0 | 2026-04-02 | Active |
 | migration-patterns | 1.0.0 | 2026-03-17 | Active |
 | mutation-testing | 1.0.0 | 2026-03-17 | Active |
@@ -44,6 +46,7 @@
 | railway-project-setup | 1.0.0 | 2026-03-17 | Active |
 | render-project-setup | 1.0.0 | 2026-03-17 | Active |
 | resilience-patterns | 1.0.0 | 2026-04-01 | Active |
+| responsibility-gate | 1.0.0 | 2026-04-19 | Active |
 | seo-optimization | 1.0.0 | 2026-04-01 | Active |
 | sinatra-setup | 1.0.0 | 2026-04-01 | Active |
 | sqlite-integration | 1.0.0 | 2026-04-01 | Active |

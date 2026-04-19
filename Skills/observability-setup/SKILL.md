@@ -26,6 +26,17 @@ Invoke this skill when:
 - Defining alert rules for SLO-based alerting
 - Establishing a metrics naming convention
 
+## Responsibility Acknowledgement Gate
+
+This step implements the pattern defined in the **`responsibility-gate`** skill. See `Skills/responsibility-gate/SKILL.md` for the full contract.
+
+- **When this fires:** before installing OpenTelemetry SDKs, logging libraries, or Grafana/Prometheus tooling and scaffolding tracer/meter providers, structured logging, dashboards, and alert rules into the project.
+- **What is asked:** acceptance of responsibility for the change this skill will make to the project's package manifest/lockfile, source files (SDK initialization, logging middleware), and configuration artifacts (Grafana dashboards, alert rule YAML).
+- **On decline:** exit cleanly; report "Declined — no changes made."; make no system changes.
+- **Persistence:** per-invocation. The gate re-fires on every subsequent invocation that proposes an execution path; acceptance is never persisted across runs.
+
+Use `AskUserQuestion` with the two required options (`"I accept responsibility — proceed"` and `"Decline — exit without changes"`). See the `responsibility-gate` skill for allowed additional options.
+
 ## Scaffolding Capabilities
 
 ### OpenTelemetry SDK Configuration

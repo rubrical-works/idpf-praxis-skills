@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Proposal Template",
+  "description": "Schema for engage-exocortex exploration proposal document template",
+  "type": "object",
+  "required": ["description", "filePattern", "sections"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "description": { "type": "string" },
+    "filePattern": { "type": "string" },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "heading"],
+        "properties": {
+          "id": { "type": "string" },
+          "heading": { "type": "string" },
+          "content": { "type": "string" },
+          "optional": { "type": "boolean" },
+          "condition": { "type": "string" },
+          "repeating": { "type": "boolean" },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["key", "label"],
+              "properties": {
+                "key": { "type": "string" },
+                "label": { "type": "string" },
+                "value": { "type": "string" },
+                "format": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "subsections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["heading", "content"],
+              "properties": {
+                "heading": { "type": "string" },
+                "content": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "citation-schema.json",
+  "title": "Citation (engage-prism)",
+  "description": "Required shape of every citation entry produced by an engage-prism subagent report. Every non-derived claim in a report must point at one of these.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "url", "fetchedAt", "excerpt"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable title of the source (article headline, report name, company page title)."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "Absolute URL of the source. Must be http(s)."
+    },
+    "fetchedAt": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:?[0-9]{2})$",
+      "description": "ISO-8601 timestamp when the source was retrieved via WebFetch/WebSearch. Must include timezone (Z or offset)."
+    },
+    "excerpt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "Short quoted or paraphrased extract from the source that supports the claim. Paraphrases must stay true to the source; do not fabricate text."
+    },
+    "author": {
+      "type": "string",
+      "description": "Optional. Byline or publishing entity."
+    },
+    "publishedAt": {
+      "type": "string",
+      "description": "Optional. Publication date reported by the source (not the fetch time)."
+    },
+    "sourceClass": {
+      "type": "string",
+      "enum": [
+        "news",
+        "analyst-report",
+        "regulatory-filing",
+        "earnings-transcript",
+        "company-page",
+        "trade-press",
+        "official-statistics",
+        "industry-body",
+        "academic",
+        "review-site",
+        "opinion",
+        "other"
+      ],
+      "description": "Optional. Category of source, used for authority weighting during synthesis."
+    },
+    "urlUnreachable": {
+      "type": "boolean",
+      "description": "Optional. Set true when the URL was valid at citation time but is no longer reachable. Do not invent an alternative."
+    }
+  }
+}

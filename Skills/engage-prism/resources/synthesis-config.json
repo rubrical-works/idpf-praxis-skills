@@ -1,0 +1,108 @@
+{
+  "$schema": "synthesis-schema.json",
+  "description": "Scoring rubric and synthesis rules for evaluating and combining engage-prism subagent reports into a final recommendation. Citation validation is the first phase.",
+  "phases": [
+    {
+      "id": "validate",
+      "order": 1,
+      "name": "Validate Each Report Against Its Citations",
+      "description": "Before scoring, check that each report's claims are actually supported by the excerpts cited. Do not just trust the subagent.",
+      "checks": [
+        {
+          "id": "citation-conformance",
+          "name": "Citation schema conformance",
+          "instructions": [
+            "Every entry in citations[] must conform to citation-schema.json (title, url, fetchedAt, excerpt — all required and non-empty).",
+            "Flag any malformed citation; exclude its claim from synthesis unless another citation supports it."
+          ]
+        },
+        {
+          "id": "claim-support-check",
+          "name": "Claim-support check",
+          "instructions": [
+            "For each step in analysis[], verify the cited excerpts actually support the claim. A citation to a generic source that doesn't mention the specific claim fails this check.",
+            "If a claim is marked 'derived from step N', walk the derivation and check it too.",
+            "Write a one-line note per unsupported claim: 'Path 2 step 3: claim that market is growing 15% YoY is not supported by citation 1 (excerpt only mentions the 5-year CAGR).'"
+          ]
+        },
+        {
+          "id": "web-research-status-check",
+          "name": "Web research status check",
+          "instructions": [
+            "If webResearch.performed=false, the entire report is degraded. Do not let it win on architectural dimensions if another report was research-grounded.",
+            "If webResearch.performed=true but citations[] is empty, flag as malformed."
+          ]
+        },
+        {
+          "id": "recency-check",
+          "name": "Recency check",
+          "instructions": [
+            "Check citation fetchedAt and (when available) publishedAt against the Step 0 research plan's recencyWindow.",
+            "Claims resting on sources outside the recency window are flagged and their weight reduced in scoring."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "score",
+      "order": 2,
+      "name": "Score Each Angle",
+      "description": "Score on dimensions most relevant to the question. Evidence-focused dimensions are always relevant; analytical and operational dimensions apply conditionally.",
+      "scoringScale": {
+        "values": ["Strong", "Adequate", "Weak", "Disqualifying"],
+        "disqualificationRule": "A single Disqualifying score eliminates the angle from being the primary recommendation (may still contribute to a hybrid)."
+      },
+      "alwaysRelevantDimensions": [
+        { "id": "evidence-strength", "name": "Evidence strength", "whatToAssess": "Density and authority of citations supporting the core claim. Primary sources and multiple independent citations score higher." },
+        { "id": "analytical-rigor", "name": "Analytical rigor", "whatToAssess": "Are derivations explicit and checkable? Are assumptions separated from observations? Are uncertainties named?" },
+        { "id": "decision-usefulness", "name": "Decision usefulness", "whatToAssess": "Does the angle actually help the user decide? A beautifully-cited analysis that fails to land a recommendation is Weak." },
+        { "id": "counter-evidence-handling", "name": "Counter-evidence handling", "whatToAssess": "Does the angle engage with contrary sources or dismiss them? Honest disagreement is Strong; cherry-picking is Weak." },
+        { "id": "source-authority", "name": "Source authority", "whatToAssess": "Regulators, company filings, official statistics > aggregators > trade press > opinion. Check citation sourceClass where present." }
+      ],
+      "conditionallyRelevantDimensions": [
+        { "id": "quantitative-calibration", "name": "Quantitative calibration", "useWhen": "Question asks for a number (TAM, CAC, valuation, growth rate)" },
+        { "id": "sensitivity-awareness", "name": "Sensitivity awareness", "useWhen": "Recommendation depends on uncertain inputs — good angles name which input matters most" },
+        { "id": "regulatory-completeness", "name": "Regulatory completeness", "useWhen": "Decision involves regulated activity (financial services, healthcare, data, energy)" },
+        { "id": "competitive-reality", "name": "Competitive reality", "useWhen": "Question involves existing rivals — Porter-style angles with thin rival coverage score lower" },
+        { "id": "segment-specificity", "name": "Segment specificity", "useWhen": "Aggregate answers would hide material segment-level variance" }
+      ],
+      "operationalDimensions": [
+        { "id": "action-specificity", "name": "Action specificity", "whatToAssess": "Does the recommendation name a concrete next action, owner, or decision rule? Strong: 'enter Japan, starting with enterprise SaaS, 2H 2026'. Weak: 'consider opportunity in Japan'.", "useWhen": "User needs to make or recommend a decision soon" },
+        { "id": "cost-awareness", "name": "Cost awareness", "whatToAssess": "Does the angle name the cost, investment, or resource draw of following it? Strong: explicit cost range. Weak: costs unexamined.", "useWhen": "Decision commits capital or headcount" }
+      ],
+      "operationalDimensionsNote": "Operational dimensions complement analytical ones — apply them when the question's decision context calls for them."
+    },
+    {
+      "id": "hybridize",
+      "order": 3,
+      "name": "Check for Hybridization",
+      "description": "Before picking a winner, check whether combining angles yields a better answer than any single angle.",
+      "questions": [
+        { "id": "framing-plus-evidence", "question": "Does Path A have the right analytical framing but Path B has the stronger evidence base?", "action": "Recommend Path A's framing with Path B's evidence grafted on. Name the grafted citations." },
+        { "id": "base-case-plus-tail-risk", "question": "Does Path A capture the base case but Path B captures a tail risk the decision must account for?", "action": "Recommend Path A with Path B's tail-risk scenario named as a watch-item." },
+        { "id": "aggregate-plus-segment", "question": "Does Path A answer at the aggregate level and Path B answer at the segment level?", "action": "Recommend a layered answer: aggregate framing with segment-level decomposition." },
+        { "id": "quant-plus-qual", "question": "Does Path A produce a number and Path B surface a qualitative factor that could invalidate the number?", "action": "Recommend Path A's number with Path B's qualitative factor as a gating condition." }
+      ],
+      "constraint": "State hybrids explicitly and name what each contributes. 'Use both' is not a synthesis."
+    },
+    {
+      "id": "output",
+      "order": 4,
+      "name": "Write the Final Output",
+      "description": "Follow the output format in SKILL.md exactly, including the 'What would change this answer' section.",
+      "principles": [
+        { "id": "be-direct", "name": "Be direct", "rule": "Name a winner. Hedging is acceptable only with a concrete decision rule (e.g., 'enter if projected unit economics reach gross margin 60%+, otherwise wait')." },
+        { "id": "show-citations-in-reasoning", "name": "Show citations in reasoning", "rule": "The Analysis section must reference specific citations, not just restate the angle's claim." },
+        { "id": "surface-degradation", "name": "Surface degradation", "rule": "If any path was produced with webResearch.performed=false, say so in the recommendation. Never present degraded answers as if they were research-grounded." },
+        { "id": "what-would-change-this", "name": "'What would change this answer' is mandatory", "rule": "End with 2-3 specific observations — new evidence, updated input, counterfactual — that would flip the recommendation." }
+      ]
+    }
+  ],
+  "commonMistakesToAvoid": [
+    { "id": "authority-laundering", "name": "Authority laundering", "description": "Don't treat an aggregator's summary as equivalent to the primary source it quotes. Check the chain when it matters." },
+    { "id": "recency-illusion", "name": "Recency illusion", "description": "A fresh fetchedAt doesn't guarantee fresh information. Prefer publishedAt where available, especially for macro/regulatory claims." },
+    { "id": "false-precision", "name": "False precision", "description": "A cited number is not a reliable number unless its methodology is understood. Round estimates to the precision the evidence actually supports." },
+    { "id": "advocacy-drift", "name": "Advocacy drift", "description": "Subagents are briefed to explore one angle. Their enthusiasm for their own angle isn't evidence of its quality." },
+    { "id": "false-hybrids", "name": "False hybrids", "description": "'Use both' is not a synthesis. A real hybrid has a specific integration point and a specific reason." }
+  ]
+}

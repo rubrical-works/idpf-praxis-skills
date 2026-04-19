@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "paradigms-schema.json",
+  "title": "Algorithmic Paradigm Reference",
+  "description": "Structured reference for algorithmic paradigm families, their sub-variants, red flags, and classic problems.",
+  "type": "object",
+  "required": ["$schema", "paradigms", "crossParadigmGuide"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema file."
+    },
+    "paradigms": {
+      "type": "array",
+      "description": "All algorithmic paradigm families.",
+      "items": {
+        "$ref": "#/definitions/paradigm"
+      },
+      "minItems": 1
+    },
+    "crossParadigmGuide": {
+      "type": "array",
+      "description": "Decision guide for choosing between paradigms when a problem is ambiguous.",
+      "items": {
+        "$ref": "#/definitions/crossParadigmEntry"
+      },
+      "minItems": 1
+    }
+  },
+  "definitions": {
+    "paradigm": {
+      "type": "object",
+      "required": ["id", "name", "coreIdea", "whenItApplies", "subVariants", "redFlags", "classicProblems"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Lowercase-hyphenated identifier for the paradigm.",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable paradigm name."
+        },
+        "coreIdea": {
+          "type": "string",
+          "description": "One-sentence definition of the paradigm."
+        },
+        "whenItApplies": {
+          "type": "array",
+          "description": "Structural signals in a problem that suggest this paradigm.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "subVariants": {
+          "type": "array",
+          "description": "Canonical sub-variants within this paradigm family.",
+          "items": {
+            "$ref": "#/definitions/subVariant"
+          },
+          "minItems": 1
+        },
+        "redFlags": {
+          "type": "array",
+          "description": "Signs this paradigm is a poor fit.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "classicProblems": {
+          "type": "array",
+          "description": "Concrete problems that anchor recognition of this paradigm family.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "subVariant": {
+      "type": "object",
+      "required": ["name", "keyMechanism", "archetypalProblem"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the sub-variant."
+        },
+        "keyMechanism": {
+          "type": "string",
+          "description": "The mechanism that defines this sub-variant."
+        },
+        "archetypalProblem": {
+          "type": "string",
+          "description": "One or more classic problems exemplifying this sub-variant."
+        }
+      }
+    },
+    "crossParadigmEntry": {
+      "type": "object",
+      "required": ["signal", "leanToward"],
+      "additionalProperties": false,
+      "properties": {
+        "signal": {
+          "type": "string",
+          "description": "A signal or pattern observed in the problem statement."
+        },
+        "leanToward": {
+          "type": "string",
+          "description": "The paradigm to lean toward when this signal is present."
+        }
+      }
+    }
+  }
+}

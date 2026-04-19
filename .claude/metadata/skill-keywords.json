@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-07T02:26:26.192Z",
+  "generatedAt": "2026-04-19T23:14:51.257Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
@@ -99,6 +99,11 @@
       "parallel",
       "explorer"
     ],
+    "engage-prism": [
+      "engage-prism",
+      "engage",
+      "prism"
+    ],
     "error-handling-patterns": [
       "error-handling-patterns",
       "error",
@@ -114,6 +119,11 @@
       "i18n-setup",
       "i18n",
       "setup"
+    ],
+    "install-node": [
+      "install-node",
+      "install",
+      "node"
     ],
     "json-validator": [
       "json-validator",
@@ -177,6 +187,11 @@
       "resilience-patterns",
       "resilience",
       "patterns"
+    ],
+    "responsibility-gate": [
+      "responsibility-gate",
+      "responsibility",
+      "gate"
     ],
     "seo-optimization": [
       "seo-optimization",
@@ -264,9 +279,11 @@
     "electron-cross-build": "platform",
     "electron-development": "platform",
     "engage-exocortex": "problem-solving",
+    "engage-prism": "analysis",
     "error-handling-patterns": "development",
     "flask-setup": "platform",
     "i18n-setup": "web",
+    "install-node": "setup",
     "json-validator": "analysis",
     "migration-patterns": "database",
     "mutation-testing": "testing",
@@ -279,6 +296,7 @@
     "railway-project-setup": "platform",
     "render-project-setup": "platform",
     "resilience-patterns": "development",
+    "responsibility-gate": "setup",
     "seo-optimization": "web",
     "sinatra-setup": "platform",
     "sqlite-integration": "database",

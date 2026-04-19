@@ -11,34 +11,42 @@ relevantTechStack: [i18n, i18next, react-intl, formatjs, localization]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Internationalization (i18n) Setup
-**Companion Domain:** Domains/i18n -- provides evaluative review criteria
+Scaffolds i18n infrastructure for web/mobile apps: config templates and implementation patterns for string externalization, locale-aware formatting, and translation workflows.
+**Companion Domain:** Domains/i18n — evaluative review criteria
 ## When to Use
-- Setting up i18n for a new web or mobile project
+- Setting up i18n for new web/mobile project
 - Configuring i18next, react-intl, or FormatJS
 - Creating locale file structure and naming conventions
-- Setting up string extraction tooling
-- Establishing a translation management workflow
+- String extraction tooling setup
+- Translation management workflow
+## Responsibility Acknowledgement Gate
+Implements `responsibility-gate` pattern. See `Skills/responsibility-gate/SKILL.md`.
+- **Fires:** before installing i18n libraries (i18next, react-intl, FormatJS) and scaffolding locale dirs, translation files, extraction tooling.
+- **Asks:** accept responsibility for changes to `package.json`/`node_modules`, source files (i18n init code), new locale structure (`locales/**`).
+- **On decline:** exit cleanly; "Declined — no changes made."
+- **Persistence:** per-invocation.
+Use `AskUserQuestion` with `"I accept responsibility — proceed"` and `"Decline — exit without changes"`.
 ## Scaffolding Capabilities
 ### i18n Library Configuration
 - i18next or react-intl/FormatJS setup with plugins
 - Language detection (browser, URL, cookie, user preference)
-- Fallback locale chain configuration
-- Namespace organization for large applications
+- Fallback locale chain
+- Namespace organization
 ### String Extraction Tooling
-- Extract message IDs from source code
+- Extract message IDs from source
 - Generate translation file templates
-- Detect hardcoded strings in source files
+- Detect hardcoded strings
 - Key naming convention enforcement
 ### Locale File Scaffolding
-- Directory structure per locale (`locales/en/`, `locales/fr/`)
-- JSON or YAML translation file templates
+- Per-locale directory (`locales/en/`, `locales/fr/`)
+- JSON/YAML translation templates
 - Namespace-based file organization
-- Default locale with placeholder content
+- Default locale with placeholders
 ### Translation Workflow Setup
-- Crowdin or Lokalise project configuration
-- CI integration for translation file sync
-- Pull request workflow for translation updates
-- Context and screenshot attachment for translators
+- Crowdin or Lokalise project config
+- CI integration for translation sync
+- PR workflow for translation updates
+- Context/screenshot attachments for translators
 ## Related Skills
-- `seo-optimization` -- for hreflang tags and locale-specific URLs
-- `error-handling-patterns` -- for localized error messages
+- `seo-optimization` — hreflang tags, locale URLs
+- `error-handling-patterns` — localized error messages

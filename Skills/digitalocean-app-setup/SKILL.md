@@ -11,16 +11,22 @@ relevantTechStack: [digitalocean, docker, node, python]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Skill: digitalocean-app-setup
-**Purpose:** Guide developers through setting up DigitalOcean App Platform deployments with GitHub integration
-**Audience:** Developers deploying web applications, APIs, and static sites to DigitalOcean
-**Related Skills:** `ci-cd-pipeline-design` — for broader CI/CD pipeline architecture
+**Purpose:** Guide DigitalOcean App Platform deployments with GitHub integration
+**Audience:** Developers deploying web apps, APIs, static sites to DigitalOcean
+**Related:** `ci-cd-pipeline-design`
 ## Overview
-The `digitalocean-app-setup` skill provides structured guidance for configuring DigitalOcean App Platform deployments. App Platform uses an app spec (`app-spec.yaml`) for Infrastructure as Code, supports review apps for PRs, and offers native GitHub integration with automatic deployments.
-## Initial Setup
+App Platform uses an app spec (`app-spec.yaml`) for IaC, supports review apps for PRs, and offers native GitHub auto-deploy.
+## Responsibility Acknowledgement Gate
+Implements `responsibility-gate` pattern. See `Skills/responsibility-gate/SKILL.md`.
+- **Fires:** before `brew/snap install doctl`, `doctl auth init`, or `doctl apps create`.
+- **Asks:** accept responsibility for changes to package managers (brew/snap), doctl auth state, and DigitalOcean account resources.
+- **On decline:** exit cleanly; "Declined — no changes made."
+- **Persistence:** per-invocation.
+Use `AskUserQuestion` with `"I accept responsibility — proceed"` and `"Decline — exit without changes"`.
 ### Prerequisites
 - DigitalOcean account
-- `doctl` CLI installed: `brew install doctl` or `snap install doctl`
-- GitHub repository connected to DigitalOcean
+- `doctl` CLI: `brew install doctl` or `snap install doctl`
+- GitHub repo connected to DigitalOcean
 ### Installing doctl
 ```bash
 # macOS
@@ -34,31 +40,33 @@ doctl auth init
 ```bash
 # From app spec file
 doctl apps create --spec resources/app-spec.yaml
-# Or via Dashboard: https://cloud.digitalocean.com/apps → Create App → Select GitHub repo
+# Or via Dashboard
+# https://cloud.digitalocean.com/apps → Create App → Select GitHub repo
 ```
 ## Environment Configuration
 ### Required Secrets
-Configure in GitHub repository settings (Settings > Secrets and variables > Actions):
+Configure in GitHub (Settings > Secrets and variables > Actions):
 | Secret | Source | Description |
 |--------|--------|-------------|
 | `DIGITALOCEAN_ACCESS_TOKEN` | DO Dashboard > API > Tokens | Personal access token |
 ### App-Level Environment Variables
-Set in the app spec or Dashboard (App > Settings > App-Level Environment Variables):
+Set in app spec or Dashboard:
 - **App-level**: Shared across all components
-- **Component-level**: Scoped to a single service/worker
-See `resources/env-setup.md` for a complete guide.
+- **Component-level**: Scoped to single service/worker
+See `resources/env-setup.md`.
 ## GitHub Integration
 ### Auto-Deploy on Push
 1. Dashboard > Apps > Create App
 2. Select GitHub as source
 3. Choose repository and branch
-4. App Platform detects framework and configures build automatically
+4. App Platform detects framework and configures build
 ### Review Apps (Preview Deployments)
 1. App > Settings > Review Apps > Enable
-2. Each PR gets a unique URL for testing
-3. Review apps are destroyed when the PR is closed
+2. Each PR gets unique URL
+3. Destroyed when PR closes
 ### GitHub Actions Deployment
 ```yaml
+# See resources/deploy.yml for complete workflow
 - uses: digitalocean/action-doctl@v2
   with:
     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
@@ -66,7 +74,6 @@ See `resources/env-setup.md` for a complete guide.
 ```
 ## Deployment Strategies
 ### Production via Branch Deploy
-App Platform auto-deploys from the configured branch:
 ```
 main branch → Production app (automatic)
 ```
@@ -91,10 +98,9 @@ doctl apps logs <app-id> --follow
 doctl apps logs <app-id> --type build
 ```
 ### Dashboard Metrics
-- CPU and memory usage per component
-- HTTP request rate, latency, and error rate
-- Bandwidth consumption
-- Container restart count
+- CPU/memory per component
+- HTTP request rate, latency, error rate
+- Bandwidth, container restarts
 ### Health Checks
 ```yaml
 services:
@@ -104,28 +110,24 @@ services:
       initial_delay_seconds: 10
       period_seconds: 30
 ```
-## Common Pitfalls and Troubleshooting
+## Common Pitfalls
 ### Build Issues
-- **Buildpack detection failure**: Ensure standard project files exist (`package.json`, `requirements.txt`, etc.) or use a Dockerfile
-- **Build timeout**: Optimize with `.doignore` to exclude unnecessary files
-- **Node.js version**: Set `engines.node` in `package.json` or use `NODEJS_VERSION` env var
+- **Buildpack detection failure**: ensure `package.json`/`requirements.txt` exist or use Dockerfile
+- **Build timeout**: use `.doignore` to exclude files
+- **Node.js version**: set `engines.node` or `NODEJS_VERSION` env
 ### Deployment Issues
-- **Port binding**: App Platform expects HTTP on port 8080 by default. Set `HTTP_PORT` in app spec or use `$PORT` env var
-- **Static site routing**: For SPAs, configure catch-all routes in the app spec
-- **Database connections**: Use connection pools and DigitalOcean Managed Databases for production
+- **Port binding**: expects HTTP on 8080; use `HTTP_PORT` or `$PORT`
+- **Static site routing**: configure catch-all routes for SPAs
+- **Database connections**: use pools and Managed Databases in production
 ### Review App Issues
-- **Cost awareness**: Review apps count as separate app instances
-- **Database isolation**: Review apps share the production database by default. Use separate dev databases
-- **Environment variable conflicts**: Review app env vars inherit from the main app. Override per-component in the spec
+- **Cost**: review apps count as separate instances
+- **Database isolation**: shares production DB by default; use separate dev DBs
+- **Env var conflicts**: inherit from main app; override per-component
 ## App Spec Reference
-The `app-spec.yaml` file defines your app's infrastructure. See `resources/app-spec.yaml` for a reference configuration covering:
-- Service definitions (web, worker, job)
-- Database provisioning
-- Environment variables
-- Build and run commands
-- Domain configuration
-- Health checks
+See `resources/app-spec.yaml` covering: service definitions (web, worker, job), database provisioning, env vars, build/run commands, domain config, health checks.
+## Related Skills
+- **`ci-cd-pipeline-design`** — CI/CD architecture patterns
 ## Resources
-- `resources/app-spec.yaml` — Reference DigitalOcean App Platform spec
-- `resources/deploy.yml` — GitHub Actions workflow for DigitalOcean deployment
-- `resources/env-setup.md` — Environment variable setup guide
+- `resources/app-spec.yaml` — Reference spec
+- `resources/deploy.yml` — GitHub Actions workflow
+- `resources/env-setup.md` — Env variable setup

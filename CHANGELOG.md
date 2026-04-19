@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2026-04-19
+
+### Added
+- **engage-prism skill** — analytical-reasoning sibling to `engage-exocortex`. JSON-driven parallel analytical explorer with citation-first contract (mandatory `citation-schema.json`), domain-specific paradigms/strategies/structures, and 5 per-domain end-to-end examples with schema-conformant citations (competitor teardown, equity ticker, paid-search ROI, remote-work trend, EV-charging TAM). Includes `docs/` reference material and Node.js prerequisite documentation. (#176, #182)
+- **install-node skill** — safe, guided Node.js installer. Detects existing Node and version managers (nvm/fnm/volta), recommends a single vetted package-manager command per platform (winget/brew/nvm), runs dry-run by default, and requires explicit responsibility acknowledgement before any execution path. Bootstrap does not itself require Node. (#179)
+- **responsibility-gate shared-pattern skill** — reusable responsibility-acknowledgement gate contract referenced by `install-node` and rolled out to 12 install-capable skills (digitalocean-app-setup, electron-cross-build, flask-setup, i18n-setup, observability-setup, playwright-setup, postgresql-integration, railway-project-setup, render-project-setup, sinatra-setup, sqlite-integration, vercel-project-setup). (#180)
+- **engage-exocortex: Node.js prerequisite documentation** — SKILL.md now declares the Node.js runtime prerequisite explicitly and routes to `install-node` when missing. (#178)
+
+### Changed
+- Regenerated all skill metadata (registry, keywords, schemas, public manifest) to include the 3 new skills. `Skills/MAINTENANCE.md` registry table updated to 45 skills.
+- Re-minimized and repackaged affected skills in `.min-mirror/` / `Skills/Packaged/`.
+
 ## [0.11.1] - 2026-04-06
 
 ### Fixed

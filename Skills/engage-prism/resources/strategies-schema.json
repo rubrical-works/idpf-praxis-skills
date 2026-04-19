@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "strategies-schema.json",
+  "title": "Problem Decomposition Strategy Reference",
+  "description": "Schema for the Engage Exocortex problem decomposition strategies reference.",
+  "type": "object",
+  "required": ["$schema", "description", "usage", "strategies", "crossStrategyInteractionGuide"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "strategies-schema.json"
+    },
+    "description": {
+      "type": "string"
+    },
+    "usage": {
+      "type": "string"
+    },
+    "strategies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/strategy"
+      }
+    },
+    "crossStrategyInteractionGuide": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/interactionEntry"
+      }
+    }
+  },
+  "definitions": {
+    "strategy": {
+      "type": "object",
+      "required": ["id", "name", "coreReframe", "structuralSignals", "whatItUnlocks", "classicExamples", "failureModes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "coreReframe": {
+          "type": "string"
+        },
+        "structuralSignals": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "whatItUnlocks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "commonTransformationPatterns": {
+          "type": "array",
+          "description": "Optional. Used by problem-transformation-reduction strategy.",
+          "items": {
+            "$ref": "#/definitions/transformationPattern"
+          }
+        },
+        "classicExamples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/classicExample"
+          }
+        },
+        "failureModes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "transformationPattern": {
+      "type": "object",
+      "required": ["originalFraming", "transformTo", "why"],
+      "additionalProperties": false,
+      "properties": {
+        "originalFraming": { "type": "string" },
+        "transformTo": { "type": "string" },
+        "why": { "type": "string" }
+      }
+    },
+    "classicExample": {
+      "type": "object",
+      "required": ["category", "examples"],
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "examples": {
+          "type": "string"
+        }
+      }
+    },
+    "interactionEntry": {
+      "type": "object",
+      "required": ["combination", "whatItProduces"],
+      "additionalProperties": false,
+      "properties": {
+        "combination": { "type": "string" },
+        "whatItProduces": { "type": "string" }
+      }
+    }
+  }
+}

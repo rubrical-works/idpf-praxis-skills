@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "brief-schema.json",
+  "title": "Subagent Brief Template",
+  "description": "Schema for the Engage Exocortex subagent brief template definition.",
+  "type": "object",
+  "required": ["$schema", "description", "preamble", "slots", "taskInstructions", "primaryAgentNotes"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "brief-schema.json"
+    },
+    "description": {
+      "type": "string"
+    },
+    "preamble": {
+      "type": "string",
+      "description": "Opening instruction text given to the subagent."
+    },
+    "slots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/slotDefinition"
+      }
+    },
+    "taskInstructions": {
+      "$ref": "#/definitions/taskInstructions"
+    },
+    "primaryAgentNotes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "definitions": {
+    "slotDefinition": {
+      "type": "object",
+      "required": ["field", "label", "type", "required", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["string", "object", "integer", "array", "boolean"]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "default": {
+          "type": ["string", "integer", "null"]
+        },
+        "subfields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/slotDefinition"
+          }
+        }
+      }
+    },
+    "taskInstructions": {
+      "type": "object",
+      "required": ["description", "sections", "outputConstraint"],
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/taskSection"
+          }
+        },
+        "outputConstraint": {
+          "type": "string"
+        }
+      }
+    },
+    "taskSection": {
+      "type": "object",
+      "required": ["order", "label", "instruction"],
+      "additionalProperties": false,
+      "properties": {
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-04-07T02:26:26.150Z",
+  "generatedAt": "2026-04-19T23:14:51.208Z",
   "version": "0.1.0",
-  "skillCount": 42,
+  "skillCount": 45,
   "skills": [
     {
       "name": "anti-pattern-analysis",
@@ -194,7 +194,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "114b0a61f8d92f1eda0420b9e7d6de833e87cdab0bca6d0a37390ca5383baf40",
+      "checksum": "85cdebf88d73d0866b0955b97e3e23ab7725765fbeaa8e7e8505ce87f735c30f",
       "category": "platform",
       "relevantTechStack": [
         "digitalocean",
@@ -230,7 +230,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "9bb45c27925d3fba93f3ccda52fb3e7abbf92420e222e177c2ca9a8d929156aa",
+      "checksum": "1081089b6febebaa754d5f5ec872e9cfec5846cee146807362d50da1af00264c",
       "category": "platform",
       "relevantTechStack": [
         "electron",
@@ -268,11 +268,30 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-04",
-      "checksum": "e559aa5fb5a30e5bd4c39e14c6fcef157b6c597c0bc4beb057c4bc71ec9e5157",
+      "checksum": "2705bb95e6d4fccb5056b2346a5a188792df883d15b566d7bcd7b8604adec98c",
       "category": "problem-solving",
       "relevantTechStack": [
         "algorithms",
         "data-structures",
+        "parallel-exploration",
+        "json-schema"
+      ],
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "engage-prism",
+      "description": "JSON-driven parallel analyst for business, marketing, and financial questions. Refracts one question into multiple analytical spectra, mandates live web research with schema-conformant citations, and synthesizes structured subagent reports into a single recommendation.",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.80.0",
+      "lastUpdated": "2026-04-19",
+      "checksum": "dc5da889106ae314e3d24356dea7aa32538005a80fe38474803ce3a32eeb0b30",
+      "category": "analysis",
+      "relevantTechStack": [
+        "business-analysis",
+        "market-research",
+        "financial-analysis",
+        "web-research",
         "parallel-exploration",
         "json-schema"
       ],
@@ -307,7 +326,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "efdb31189108a0ad99a515920c4330e53af5aacb5474136e784c2c849f1b7b70",
+      "checksum": "36e6924ab29c49362163df761f88e5a42e5d45c371e2d9803c7c8cec15329bda",
       "category": "platform",
       "relevantTechStack": [
         "flask",
@@ -324,7 +343,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "7ad1e52727cdc93adac238780549650fc6f454479c45af279274cce82992195e",
+      "checksum": "40e3cda31af7b3210fa10907d4a6529a9826044d57d706ff012892fa54a2f375",
       "category": "web",
       "relevantTechStack": [
         "i18n",
@@ -332,6 +351,28 @@
         "react-intl",
         "formatjs",
         "localization"
+      ],
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "install-node",
+      "description": "Safe, guided installer for Node.js. Detects existing Node and version managers, recommends a single vetted package-manager command per platform, runs dry-run by default, and requires explicit responsibility acknowledgement before any execution path. Bootstrap does not itself require Node.",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.80.0",
+      "lastUpdated": "2026-04-19",
+      "checksum": "c0e554ec2da873c1b505edc51fbc84e12e79e2a41a6aa734bdc190624795c305",
+      "category": "setup",
+      "relevantTechStack": [
+        "node",
+        "nodejs",
+        "nvm",
+        "fnm",
+        "volta",
+        "winget",
+        "brew",
+        "apt",
+        "installer"
       ],
       "copyright": "\"Rubrical Works (c) 2026\""
     },
@@ -395,7 +436,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "13286e6cef6844c01aeff45294f472fa68d222e754b098f33514a24430cff06f",
+      "checksum": "ce23436b219036345db1576347af8f428bcac79a834163be3ab1999a2778655d",
       "category": "devops",
       "relevantTechStack": [
         "opentelemetry",
@@ -432,7 +473,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "7ce39b9b536ea88e3d44801ad1cd42c1acc2f3ea0ec29bda3c15507c98231415",
+      "checksum": "61095752b7a14db9426fb574b39404eab9de7c69a8ff157a0594778c70b570d0",
       "category": "testing",
       "relevantTechStack": [
         "playwright",
@@ -449,7 +490,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "a6b41fef09832fb454cca3ed85e09d4687db7d461bda7c747223d7fc23487c96",
+      "checksum": "790c8f2bb304226f375fdfeba10f6e8255d1cec8683534254a5521b627624b48",
       "category": "database",
       "relevantTechStack": [
         "postgresql",
@@ -503,7 +544,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "d4f341a856a3e690c5695f55adbe263fef00b42645244cdec2f4e0e5ecf7c2fd",
+      "checksum": "4b7dc915bb8c729ebb315b6b7d02e245f67cf3e899efbe577e648c92386187c2",
       "category": "platform",
       "relevantTechStack": [
         "railway",
@@ -521,7 +562,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "16ec8a28dc0bae915151879beabf75168dee315fe3b299d3f0672b97f6478ca5",
+      "checksum": "a2a013867f9a36bfe8c1cc647bec660c57ba1902725321218be8c887046fef00",
       "category": "platform",
       "relevantTechStack": [
         "render",
@@ -554,6 +595,23 @@
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
+      "name": "responsibility-gate",
+      "description": "Shared specification for the per-invocation responsibility-acknowledgement gate that every install-capable or modify-capable skill must present before executing any install, modify, or uninstall path. Defines when the gate fires, what it asks, decline behavior, and the per-invocation (never persisted) requirement.",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.80.0",
+      "lastUpdated": "2026-04-19",
+      "checksum": "8078d9f9d4b50cda9b776eab734d3e04fae4750599cdfea5a8ef9405c7424b62",
+      "category": "setup",
+      "relevantTechStack": [
+        "skill-authoring",
+        "safety",
+        "installation",
+        "user-consent"
+      ],
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
       "name": "seo-optimization",
       "description": "Provide structured SEO guidance for web projects covering technical foundations and content optimization",
       "triggers": [],
@@ -578,7 +636,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "f151a5b4777293b63cfb57bf18eaa04c6e7dff891410a445bda43186c0120974",
+      "checksum": "4ca462b9bff7e7e4ac437ffb7613c13b54921d04e4b778f44b55064b0ac8d063",
       "category": "platform",
       "relevantTechStack": [
         "sinatra",
@@ -595,7 +653,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "7ed3de1fe9d71453db086bcce70ef317071fd4fd7053f3370d5129f19ac995e4",
+      "checksum": "6996adee8290a8ff4877301b3fd6c0d41e1ef2bcff54ee8f807b86f305826713",
       "category": "database",
       "relevantTechStack": [
         "sqlite",
@@ -764,7 +822,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "c41644102a08e5487de636ef57a4af57f4abfcd8252531176cebcfdc78d35bca",
+      "checksum": "426dcd571873629bd933eafab2954f0f28474582feb0e808f85b46a5390b4ded",
       "category": "platform",
       "relevantTechStack": [
         "vercel",

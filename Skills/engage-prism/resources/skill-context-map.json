@@ -1,0 +1,16 @@
+{
+  "$schema": "skill-context-map-schema.json",
+  "description": "Maps business/analytical question domain keywords to skills that provide useful context for engage-prism path selection. engage-prism is domain-native for business/market/finance questions — the context-gathering step is optional and narrower than engage-exocortex's codebase-aware version.",
+  "maxSkillsPerInvocation": 3,
+  "skills": [
+    {
+      "id": "codebase-analysis",
+      "type": "reference",
+      "keywords": ["product analytics", "instrumentation", "feature flag", "a/b test data"],
+      "provides": "When the question involves the company's own product instrumentation, this skill surfaces what telemetry exists.",
+      "priority": "low",
+      "requiresCodebase": true
+    }
+  ],
+  "domainSkipKeywords": ["algorithm", "leetcode", "data structure selection", "time complexity", "space complexity", "Big O", "refactor", "codebase"]
+}

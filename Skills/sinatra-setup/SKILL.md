@@ -11,110 +11,164 @@ relevantTechStack: [sinatra, ruby, bundler, gem]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Sinatra Setup for Beginners
-## When to Use This Skill
-Invoke this Skill when:
+Guides complete beginners through Sinatra environment setup with verification.
+## When to Use
 - User wants to build a Sinatra web application
-- User is a beginner and needs Sinatra environment setup
-- User asks "How do I set up Sinatra?" or "How do I start a Sinatra project?"
-- Project type is determined to be web application using Sinatra/Ruby
-- Building a Ruby web API or Ruby web server
-- Sinatra tutorial or learning resources needed
+- Beginner needs Sinatra environment setup
+- Asks "How do I set up Sinatra?" / "start a Sinatra project?"
+- Project type is Sinatra/Ruby web app
+- Building Ruby web API or web server
 ## Instructions for ASSISTANT
-**CRITICAL OUTPUT FORMAT:**
-When using this Skill's content, the ASSISTANT must format ALL technical instructions as **Claude Code copy/paste blocks**.
-**ALWAYS format as:**
+**CRITICAL OUTPUT FORMAT:** Format ALL technical instructions as **Claude Code copy/paste blocks**. Do NOT provide manual instructions ("Open File Explorer", "Navigate", "Right-click"). Always format as:
 ```
 TASK: Set up Sinatra project
+
 STEP 1: Copy this entire code block (including this line)
 STEP 2: Open Claude Code
 STEP 3: Paste into Claude Code
 STEP 4: Claude Code will execute and report results
 STEP 5: Report back: What did Claude Code say?
+
 ---
+
 [Instructions for Claude Code to execute:]
+
 Navigate to project directory:
 cd [project-location]
+
 Create project folder:
 mkdir [project-name]
 cd [project-name]
+
 Verify Ruby installed:
 ruby --version
+
 [continue with commands...]
+
 Report:
 - What results did you see?
 ```
 ## Setup Knowledge
-The following content provides setup knowledge. ASSISTANT must convert this into Claude Code commands:
+ASSISTANT must convert this into Claude Code commands.
 ### STEP 1: Create Project and Verify Ruby
 ```bash
 ruby --version
 ```
-**Expected output:** `ruby 3.0.0` or higher (e.g., `ruby 3.2.2`)
-**If Ruby is NOT installed:**
-- **Windows:** Download RubyInstaller from https://rubyinstaller.org/ - Choose "Ruby+Devkit 3.2.X", check "Add Ruby to PATH"
-- **Mac:** `brew install ruby` or use rbenv
-- **Linux:** `sudo apt-get update && sudo apt-get install ruby-full`
-**Verify:** `ruby --version`
+Expected: `ruby 3.0.0` or higher. Checks Ruby installed, on PATH, and version.
+**If Ruby NOT installed:**
+- **Windows:** Download RubyInstaller (https://rubyinstaller.org/), choose "Ruby+Devkit 3.2.X", default settings, check "Add Ruby to PATH", restart terminal.
+- **Mac:** Pre-installed (may be old). Latest: `brew install ruby` or use rbenv.
+- **Linux (Ubuntu/Debian):**
+```bash
+sudo apt-get update
+sudo apt-get install ruby-full
+```
+After install, re-verify: `ruby --version`.
+### Responsibility Acknowledgement Gate
+Implements the pattern in the **`responsibility-gate`** skill. See `Skills/responsibility-gate/SKILL.md` for the full contract.
+- **When:** before `gem install bundler` and `bundle install`.
+- **What is asked:** responsibility for changes to the Ruby gem environment, project directory, and installed gems (Bundler, Sinatra, dependencies).
+- **On decline:** exit cleanly; "Declined — no changes made."; no system changes.
+- **Persistence:** per-invocation; re-fires on every run.
+Use `AskUserQuestion` with the two required options (`"I accept responsibility — proceed"` / `"Decline — exit without changes"`).
 ### STEP 4: Install Bundler
 ```bash
 gem install bundler
 ```
-- Installs Bundler, Ruby's package manager (like pip for Python or npm for JavaScript)
-- Manages gem versions consistently and ensures reproducible dependencies
-**Verify:** `bundler --version` (Expected: `Bundler version 2.X.X`)
+Installs Bundler (Ruby's package manager — like pip or npm). Manages gem versions for reproducible projects.
+Wait: 10-30s. Success: "Successfully installed bundler-X.X.X".
+Verify:
+```bash
+bundler --version
+```
+Expected: `Bundler version 2.X.X`.
 **Common issues:**
-- "Permission denied" -> Use `sudo gem install bundler` (Mac/Linux)
-- "gem: command not found" -> Ruby not installed properly
+- "Permission denied" → `sudo gem install bundler` (Mac/Linux)
+- "gem: command not found" → Ruby not installed properly
 ### STEP 5: Create Gemfile
-Create file named exactly `Gemfile` (capital G, no extension) in project root:
+A Gemfile lists gems the project needs (like requirements.txt or package.json).
+Create file exactly named `Gemfile` (capital G, no extension) in project root:
 ```ruby
 source 'https://rubygems.org'
 
 gem 'sinatra'
 ```
+- `source` — where to download gems.
+- `gem 'sinatra'` — the gem to install.
+Use straight quotes, not curly quotes.
 ### STEP 6: Install Sinatra and Dependencies
 ```bash
 bundle install
 ```
-- Reads Gemfile, downloads Sinatra and dependencies, creates `Gemfile.lock`
-- Installs: Sinatra, Rack, Rack Protection, Tilt
+Reads Gemfile, downloads+installs Sinatra and deps, creates `Gemfile.lock` (don't edit).
+Wait: 30-90s. Output:
+```
+Fetching gem metadata from https://rubygems.org/
+Resolving dependencies...
+Installing rack X.X.X
+Installing tilt X.X.X
+Installing rack-protection X.X.X
+Installing sinatra X.X.X
+Bundle complete!
+```
+Installs: Sinatra (framework), Rack (server interface), Rack Protection (security), Tilt (templates). After: project has `Gemfile` + `Gemfile.lock`.
 **Common issues:**
-- "Could not locate Gemfile" -> Make sure you're in project directory
-- "Permission denied" -> Use `bundle install --path vendor/bundle`
-- Network errors -> Check internet connection
+- "Could not locate Gemfile" → Not in project directory.
+- "Permission denied" → `bundle install --path vendor/bundle`.
+- Network errors → check connection.
 ### STEP 7: Create app.rb File
-Create `app.rb` in your project folder.
+Create `app.rb` in project folder. Editors: VS Code, RubyMine, Sublime Text, Atom.
+Layout:
+```
+my-project/
+├── Gemfile
+├── Gemfile.lock
+└── app.rb
+```
 ### STEP 8: Verify Installation
 ```bash
-ruby --version          # Expected: ruby 3.0.0 or higher
-bundle --version        # Expected: Bundler version 2.X.X
-bundle list             # Expected: sinatra, rack, rack-protection, tilt
-ruby -e "require 'sinatra'; puts 'Sinatra works!'"  # Expected: Sinatra works!
+ruby --version
+bundle --version
+bundle list
+ruby -e "require 'sinatra'; puts 'Sinatra works!'"
 ```
-## Project Structure Summary
+Expected: Ruby 3.0+, Bundler 2.X.X, `bundle list` shows sinatra/rack/rack-protection/tilt, final command prints `Sinatra works!`.
+### STEP 9: Report Completion
+"Setup complete! Bundle installed and Sinatra in gem list" or "Stuck at step X with error: [exact error]".
+## What Happens Next
+1. Create first Sinatra route
+2. Write "Hello World"
+3. Start Sinatra server
+4. View first page in browser
+## Troubleshooting
+See `resources/verification-checklist.md`.
+1. Ruby not installed → Follow Step 3.
+2. Gemfile in wrong location → project root.
+3. Permission errors → `bundle install --path vendor/bundle`.
+4. Network/firewall → check connection.
+5. Old Ruby → update to 3.0+.
+## Project Structure
 After setup:
 ```
 my-project/
-├── Gemfile           <- Gem dependencies (you created)
-├── Gemfile.lock      <- Version lock (bundle created)
-└── app.rb            <- Your code (you created)
+├── Gemfile
+├── Gemfile.lock
+└── app.rb
 ```
-Later additions:
+Later:
 ```
 my-project/
 ├── Gemfile
 ├── Gemfile.lock
 ├── app.rb
-├── views/            <- Templates (.erb files)
+├── views/
 │   └── index.erb
-└── public/           <- Static files (CSS, images, JS)
+└── public/
     └── style.css
 ```
-## Troubleshooting Quick Reference
-See `resources/verification-checklist.md` for detailed troubleshooting steps.
-1. **Ruby not installed** -> Follow Step 1 installation instructions
-2. **Gemfile in wrong location** -> Must be in project root
-3. **Permission errors** -> Use `bundle install --path vendor/bundle`
-4. **Network/firewall issues** -> Check internet connection
-5. **Old Ruby version** -> Update Ruby to 3.0+
-**Remember:** Run `bundle exec ruby app.rb` to start your Sinatra app (bundle exec ensures correct gem versions)
+## Next Steps
+- Create first Sinatra route
+- Learn Sinatra's DSL
+- Understand request/response cycle
+- Build first web page
+**Remember:** `bundle exec ruby app.rb` to start (ensures correct gem versions).

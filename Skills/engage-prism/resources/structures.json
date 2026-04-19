@@ -1,0 +1,409 @@
+{
+  "$schema": "structures-schema.json",
+  "description": "Analytical structure families for business, marketing, and financial analysis. Each family defines a canonical way to lay out evidence so that a specific class of question becomes answerable.",
+  "usage": "Select a structure after identifying the paradigm. The structure makes the paradigm concrete: it fixes what columns, rows, nodes, or cells must be filled in and what the answer actually looks like.",
+  "families": [
+    {
+      "id": "driver-tree",
+      "name": "Driver Tree",
+      "coreContract": "A hierarchical decomposition of a top-level metric into multiplicative or additive drivers, each of which can be estimated or measured separately.",
+      "whenToPrefer": [
+        "The question is 'why is X the value it is' or 'what moves X the most'",
+        "A single metric (revenue, margin, LTV) needs to be explained or forecast",
+        "Root-cause analysis across an aggregate KPI"
+      ],
+      "variants": [
+        {
+          "name": "Revenue Tree",
+          "characteristic": "Revenue = customers × ARPU, further split into acquisition, retention, pricing, and mix.",
+          "bestUsedWhen": "Diagnosing or projecting a top-line number."
+        },
+        {
+          "name": "DuPont Decomposition",
+          "characteristic": "ROE = margin × turnover × leverage; exposes which lever drives profitability.",
+          "bestUsedWhen": "Explaining a change in return on equity between periods or peers."
+        },
+        {
+          "name": "Unit Economics Tree",
+          "characteristic": "Contribution = price − variable cost, rolled up through volume and fixed cost.",
+          "bestUsedWhen": "Deciding whether a product or segment is structurally profitable."
+        }
+      ],
+      "implementationTraps": [
+        "Mixing additive and multiplicative levels without marking them",
+        "Letting branches overlap so a change double-counts",
+        "Expanding the tree deeper on the convenient side, not the uncertain side"
+      ],
+      "disqualifiers": [
+        "The question is comparative across discrete alternatives, not decompositional",
+        "The metric has no stable causal decomposition (pure market sentiment, for example)"
+      ]
+    },
+    {
+      "id": "decision-matrix",
+      "name": "Decision Matrix (Weighted Scoring)",
+      "coreContract": "Options as rows, weighted criteria as columns; each cell is a score, and the weighted sum produces a ranking.",
+      "whenToPrefer": [
+        "A discrete choice among three or more comparable options",
+        "Multiple criteria must be traded off transparently",
+        "Stakeholders need to see how weights drive the conclusion"
+      ],
+      "variants": [
+        {
+          "name": "Unweighted Pugh Matrix",
+          "characteristic": "Score each option vs. a baseline with +/0/−, no weights.",
+          "bestUsedWhen": "Early-stage option screening where precision is false comfort."
+        },
+        {
+          "name": "Weighted Scorecard",
+          "characteristic": "Numeric weights on each criterion sum to 1; scores are 1–5 or 1–10.",
+          "bestUsedWhen": "Vendor selection, hire/no-hire panels, make-vs-buy comparisons."
+        },
+        {
+          "name": "AHP (Analytic Hierarchy Process)",
+          "characteristic": "Pairwise comparisons derive weights with consistency checks.",
+          "bestUsedWhen": "High-stakes decisions where weight-elicitation bias must be disciplined."
+        }
+      ],
+      "implementationTraps": [
+        "Back-fitting weights until the preferred option wins",
+        "Including correlated criteria that double-count the same underlying factor",
+        "Scoring on scales that are not anchored to observable behavior"
+      ],
+      "disqualifiers": [
+        "A single dominant criterion swamps all others (then it is not a matrix question)",
+        "Option set is continuous rather than discrete"
+      ]
+    },
+    {
+      "id": "porter-five-forces",
+      "name": "Porter Five Forces Grid",
+      "coreContract": "Five canonical force categories — rivalry, new entrants, substitutes, buyer power, supplier power — each scored with evidence and a direction of pressure.",
+      "whenToPrefer": [
+        "Assessing structural attractiveness of an industry or segment",
+        "Explaining persistent margin pressure",
+        "Framing entry, exit, or reposition decisions"
+      ],
+      "variants": [
+        {
+          "name": "Classic Five Forces",
+          "characteristic": "Qualitative evidence under each of the five force headings.",
+          "bestUsedWhen": "A narrative industry assessment aimed at senior stakeholders."
+        },
+        {
+          "name": "Scored Five Forces",
+          "characteristic": "Each force rated Low/Medium/High with explicit drivers.",
+          "bestUsedWhen": "Comparing attractiveness across multiple industries in a portfolio screen."
+        },
+        {
+          "name": "Six Forces (with Complementors)",
+          "characteristic": "Adds complementors as a sixth force for platform and ecosystem dynamics.",
+          "bestUsedWhen": "Platform, marketplace, or ecosystem industries where complements drive value."
+        }
+      ],
+      "implementationTraps": [
+        "Treating the grid as a checklist rather than a causal explanation of profits",
+        "Ignoring substitutes outside the traditional industry definition",
+        "Confusing a current snapshot with the direction of change"
+      ],
+      "disqualifiers": [
+        "Question is about a single company's execution, not industry structure",
+        "Market is too nascent to have stable force dynamics"
+      ]
+    },
+    {
+      "id": "swot-matrix",
+      "name": "SWOT Matrix",
+      "coreContract": "A 2x2 of Strengths/Weaknesses (internal) vs Opportunities/Threats (external), used to identify strategic moves that leverage or mitigate each quadrant.",
+      "whenToPrefer": [
+        "Positioning review for a business unit or product",
+        "Workshop setting where shared context must be built quickly",
+        "Bridge between internal capability audit and external environment scan"
+      ],
+      "variants": [
+        {
+          "name": "Classic SWOT",
+          "characteristic": "Bullet lists inside each of the four quadrants.",
+          "bestUsedWhen": "Initial framing with leadership teams."
+        },
+        {
+          "name": "TOWS Matrix",
+          "characteristic": "Cross-quadrant combinations (e.g., Strength × Opportunity) yield specific strategic actions.",
+          "bestUsedWhen": "Turning a SWOT inventory into an action plan."
+        },
+        {
+          "name": "Weighted SWOT",
+          "characteristic": "Each item is rated on impact and probability to prioritize focus.",
+          "bestUsedWhen": "Follow-up prioritization after a classic SWOT has generated a long list."
+        }
+      ],
+      "implementationTraps": [
+        "Generating ungrounded bullet lists that feel comprehensive but drive no action",
+        "Confusing strengths with things the team is merely proud of",
+        "Miscategorizing an internal weakness as an external threat"
+      ],
+      "disqualifiers": [
+        "Quantitative precision is required — SWOT is framing, not measurement",
+        "Decision is between two specific options (use decision-matrix instead)"
+      ]
+    },
+    {
+      "id": "cohort-table",
+      "name": "Cohort Table",
+      "coreContract": "Rows are cohorts defined by an acquisition event (month, campaign, channel); columns are time-since-acquisition; cells are retention, revenue, or another behavior metric.",
+      "whenToPrefer": [
+        "Retention, LTV, or payback analysis for subscription or repeat-purchase businesses",
+        "Evaluating the durability of recent product or marketing changes",
+        "Separating signal from mix shift when the customer base is growing"
+      ],
+      "variants": [
+        {
+          "name": "Retention Cohort",
+          "characteristic": "Cells = % of cohort still active at month N.",
+          "bestUsedWhen": "Diagnosing churn dynamics and steady-state retention."
+        },
+        {
+          "name": "Revenue Cohort",
+          "characteristic": "Cells = revenue per cohort member at month N.",
+          "bestUsedWhen": "LTV estimation and payback-period analysis."
+        },
+        {
+          "name": "Channel / Campaign Cohort",
+          "characteristic": "Cohorts defined by acquisition source to compare quality, not just quantity.",
+          "bestUsedWhen": "Deciding which acquisition channels to scale or defund."
+        }
+      ],
+      "implementationTraps": [
+        "Comparing young cohorts to mature ones without adjusting for incomplete data",
+        "Pooling across channels so a mix shift masquerades as a retention change",
+        "Reading a single anomalous row as a trend"
+      ],
+      "disqualifiers": [
+        "Customers are one-time, non-repeat purchasers with no ongoing relationship",
+        "Acquisition event is not well-defined (B2B with long diffuse sales cycles)"
+      ]
+    },
+    {
+      "id": "comparables-table",
+      "name": "Comparables Table",
+      "coreContract": "Rows are peer entities (companies, assets, deals); columns are standardized financial and operating metrics and multiples; output is a benchmark range for the subject.",
+      "whenToPrefer": [
+        "Relative valuation of a public or private company",
+        "Sanity-check on a DCF output",
+        "Benchmarking operating metrics across peers"
+      ],
+      "variants": [
+        {
+          "name": "Trading Comparables",
+          "characteristic": "Listed peers, current multiples (EV/EBITDA, P/E, EV/Sales).",
+          "bestUsedWhen": "Market-based valuation for a public or IPO-bound company."
+        },
+        {
+          "name": "Transaction Comparables",
+          "characteristic": "Historical M&A deals for similar assets, with deal multiples.",
+          "bestUsedWhen": "Pricing a strategic acquisition or sell-side process."
+        },
+        {
+          "name": "Operating Benchmarks",
+          "characteristic": "Non-valuation metrics: gross margin, ARR growth, CAC payback, churn.",
+          "bestUsedWhen": "Board benchmarking and performance diagnostics."
+        }
+      ],
+      "implementationTraps": [
+        "Peer set selected to support a conclusion rather than for true comparability",
+        "Using headline multiples without adjusting for capital structure or accounting differences",
+        "Outliers dominating the mean — use medians and trimmed ranges"
+      ],
+      "disqualifiers": [
+        "No true peer set exists (novel business model)",
+        "Question requires an intrinsic answer independent of market sentiment"
+      ]
+    },
+    {
+      "id": "cost-benefit-ledger",
+      "name": "Cost-Benefit Ledger",
+      "coreContract": "A two-column accounting of quantified costs and benefits (one-time and ongoing), netted to a return, payback period, or NPV.",
+      "whenToPrefer": [
+        "Go/no-go on a discrete investment or initiative",
+        "Justifying internal projects to a finance or steering committee",
+        "Pricing-change or process-change evaluation"
+      ],
+      "variants": [
+        {
+          "name": "Simple Payback",
+          "characteristic": "Undiscounted cash flows; payback = investment ÷ annual benefit.",
+          "bestUsedWhen": "Small projects, short horizons, fast screening."
+        },
+        {
+          "name": "NPV / IRR Ledger",
+          "characteristic": "Cash flows discounted at cost of capital; NPV and IRR computed.",
+          "bestUsedWhen": "Capital projects with multi-year horizons and non-trivial scale."
+        },
+        {
+          "name": "Total Cost of Ownership (TCO)",
+          "characteristic": "Full lifecycle cost accounting including hidden and downstream costs.",
+          "bestUsedWhen": "Vendor, platform, or infrastructure decisions."
+        }
+      ],
+      "implementationTraps": [
+        "Omitting cannibalization or opportunity cost on the benefit side",
+        "Ignoring ongoing support and retirement costs",
+        "Double-counting benefits that also appear as revenue in another business case"
+      ],
+      "disqualifiers": [
+        "Benefits are strategic and genuinely unquantifiable — ledger will mislead",
+        "Decision is about choosing among options (use decision-matrix instead)"
+      ]
+    },
+    {
+      "id": "scenario-grid",
+      "name": "Scenario Grid",
+      "coreContract": "A small set of internally consistent scenarios (often 3 or a 2x2) against which a strategy, forecast, or portfolio is evaluated.",
+      "whenToPrefer": [
+        "Plan needs to be stress-tested across high-uncertainty futures",
+        "Capital or strategy commitments are irreversible",
+        "Robustness, not optimality, is the objective"
+      ],
+      "variants": [
+        {
+          "name": "Base / Bull / Bear",
+          "characteristic": "Three scenarios on a coordinated set of drivers.",
+          "bestUsedWhen": "Annual plans, earnings guidance, investment memos."
+        },
+        {
+          "name": "2x2 Scenario Matrix",
+          "characteristic": "Two axes of uncertainty crossed into four named futures.",
+          "bestUsedWhen": "Long-horizon strategy with two dominant exogenous uncertainties."
+        },
+        {
+          "name": "Stress / Tail Scenario",
+          "characteristic": "Deliberate low-probability, high-severity case.",
+          "bestUsedWhen": "Risk management, regulatory capital, and business-continuity planning."
+        }
+      ],
+      "implementationTraps": [
+        "Scenarios that are just point estimates ±10% with no narrative difference",
+        "Internally inconsistent drivers (e.g., booming demand and falling prices together) with no rationale",
+        "Failing to define decision actions that differ across scenarios"
+      ],
+      "disqualifiers": [
+        "Decision timeframe is short and uncertainty is bounded",
+        "A single-point forecast is sufficient for the decision"
+      ]
+    },
+    {
+      "id": "sensitivity-tornado",
+      "name": "Sensitivity Tornado",
+      "coreContract": "Horizontal bars showing the change in an output metric when each input is flexed through a defined range, sorted by impact magnitude.",
+      "whenToPrefer": [
+        "Identifying which inputs actually drive a model's output",
+        "Communicating model risk to non-technical stakeholders",
+        "Prioritizing which assumptions deserve deeper research"
+      ],
+      "variants": [
+        {
+          "name": "One-Way Tornado",
+          "characteristic": "Flex one input at a time between low and high; bar shows output range.",
+          "bestUsedWhen": "First-pass sensitivity on any quantitative model."
+        },
+        {
+          "name": "Two-Way Sensitivity Table",
+          "characteristic": "Two inputs varied simultaneously in a grid.",
+          "bestUsedWhen": "When two drivers are suspected to interact (growth × margin)."
+        },
+        {
+          "name": "Monte Carlo Sensitivity",
+          "characteristic": "Inputs sampled jointly from distributions; contribution to variance reported.",
+          "bestUsedWhen": "Models with many uncertain inputs and non-linear interactions."
+        }
+      ],
+      "implementationTraps": [
+        "Flex ranges that are arbitrarily symmetric rather than reflecting actual uncertainty",
+        "Treating the tornado as a forecast instead of a diagnostic",
+        "Ignoring correlations between inputs"
+      ],
+      "disqualifiers": [
+        "Output is qualitative — no numeric metric to flex",
+        "Model is so simple that sensitivity is obvious by inspection"
+      ]
+    },
+    {
+      "id": "dcf-model",
+      "name": "DCF Model",
+      "coreContract": "An explicit projection of free cash flows over a finite horizon plus a terminal value, each discounted to present value at a risk-adjusted rate.",
+      "whenToPrefer": [
+        "Intrinsic valuation of a company, project, or asset",
+        "Decisions requiring a fair-value anchor independent of current market prices",
+        "Long-duration cash-flow assets (infrastructure, real estate, subscription businesses)"
+      ],
+      "variants": [
+        {
+          "name": "Unlevered FCF DCF",
+          "characteristic": "Value the enterprise using free cash flow to the firm, discount at WACC.",
+          "bestUsedWhen": "Standard corporate valuation with a mixed capital structure."
+        },
+        {
+          "name": "Levered / Equity DCF",
+          "characteristic": "Value equity directly using free cash flow to equity and cost of equity.",
+          "bestUsedWhen": "Financial institutions or highly levered companies."
+        },
+        {
+          "name": "Adjusted Present Value (APV)",
+          "characteristic": "Value as all-equity, then add present value of tax shield and other financing effects.",
+          "bestUsedWhen": "Transactions with changing capital structure (LBOs, project finance)."
+        }
+      ],
+      "implementationTraps": [
+        "Terminal value dominating the answer with no sensitivity reporting",
+        "Discount rate chosen by convention rather than derived from the asset's risk",
+        "Projecting growth above GDP into perpetuity"
+      ],
+      "disqualifiers": [
+        "Cash flows are too speculative to project meaningfully (very early-stage startups)",
+        "A market-based relative valuation is clearly more defensible"
+      ]
+    }
+  ],
+  "crossStructureDecisionGuide": [
+    {
+      "bottleneckOperation": "Explain or decompose a single aggregate metric",
+      "reachFor": "driver-tree"
+    },
+    {
+      "bottleneckOperation": "Choose one from a small set of discrete options with multiple criteria",
+      "reachFor": "decision-matrix"
+    },
+    {
+      "bottleneckOperation": "Assess industry or segment structural profitability",
+      "reachFor": "porter-five-forces"
+    },
+    {
+      "bottleneckOperation": "Build shared framing of internal vs external position",
+      "reachFor": "swot-matrix"
+    },
+    {
+      "bottleneckOperation": "Analyze retention, LTV, or time-based customer behavior",
+      "reachFor": "cohort-table"
+    },
+    {
+      "bottleneckOperation": "Benchmark valuation or operating metrics against peers",
+      "reachFor": "comparables-table"
+    },
+    {
+      "bottleneckOperation": "Justify a discrete investment with quantified return",
+      "reachFor": "cost-benefit-ledger"
+    },
+    {
+      "bottleneckOperation": "Stress-test a plan against deep uncertainty",
+      "reachFor": "scenario-grid"
+    },
+    {
+      "bottleneckOperation": "Identify which assumptions dominate a quantitative model",
+      "reachFor": "sensitivity-tornado"
+    },
+    {
+      "bottleneckOperation": "Produce an intrinsic fair value independent of market prices",
+      "reachFor": "dcf-model"
+    }
+  ]
+}

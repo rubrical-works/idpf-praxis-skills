@@ -11,91 +11,79 @@ relevantTechStack: [postgresql, sql, node, python, pg]
 copyright: "Rubrical Works (c) 2026"
 ---
 # PostgreSQL Integration
-Guides developers through PostgreSQL database integration including connection setup, query patterns, transaction handling, and connection pooling.
-## When to Use This Skill
-- Setting up PostgreSQL connection in a new project
-- Implementing database queries and operations
-- Configuring connection pooling (pgbouncer, etc.)
+Guide for PostgreSQL integration: connection setup, query patterns, transactions, and pooling.
+## When to Use
+- Setting up PostgreSQL in a new project
+- Implementing DB queries/operations
+- Configuring connection pooling (pgbouncer)
 - Handling transactions
-- Troubleshooting common PostgreSQL issues
+- Troubleshooting PostgreSQL issues
 - Using PostgreSQL with ORMs (Sequelize, Prisma)
 ## Prerequisites
-- PostgreSQL server installed and running
-- Database credentials available
-- Appropriate client library for your language
+- PostgreSQL server running
+- Credentials available
+- Client library for your language
+## Responsibility Acknowledgement Gate
+Implements `responsibility-gate` skill (`Skills/responsibility-gate/SKILL.md`).
+- **Fires before:** installing clients (`pg`, `psycopg2`) and adding connection/pooling/query code.
+- **Asks:** acceptance of changes to manifest/lockfile, source files, env (e.g., `DATABASE_URL`).
+- **Decline:** exit cleanly; "Declined — no changes made."
+- **Persistence:** per-invocation, never persisted.
+Use `AskUserQuestion` with `"I accept responsibility — proceed"` and `"Decline — exit without changes"`.
 ## Connection Setup
-### Connection String Format
+### Connection String
 ```
 postgresql://[user[:password]@][host][:port][/dbname][?param1=value1&...]
 ```
-- `user` - Database username
-- `password` - Database password (consider environment variables)
-- `host` - Server hostname (default: localhost)
-- `port` - Server port (default: 5432)
-- `dbname` - Database name
-### Security Best Practices
-**NEVER hardcode credentials in source code.**
-Recommended approaches:
-1. Environment variables
-2. Configuration files (not committed to version control)
-3. Secret management services
+Defaults: host=localhost, port=5432.
+### Security
+**NEVER hardcode credentials.** Use: env vars, config files (not committed), secret services.
 ```
 DATABASE_URL=postgresql://user:password@localhost:5432/mydb
 ```
-### SSL/TLS Configuration
-| Mode | Description |
-|------|-------------|
-| `disable` | No SSL |
-| `allow` | Try SSL, fall back to non-SSL |
-| `prefer` | Try SSL first (default) |
-| `require` | Require SSL, no verification |
-| `verify-ca` | Require SSL with CA verification |
-| `verify-full` | Require SSL with full verification |
-## Query Patterns
-**ALWAYS use parameterized queries to prevent SQL injection.**
+### SSL/TLS
 ```
-# CORRECT - Parameterized
+?sslmode=require
+?sslmode=verify-ca
+?sslmode=verify-full
+```
+**Modes:** `disable`, `allow`, `prefer` (default), `require`, `verify-ca`, `verify-full`.
+## Query Patterns
+### Parameterized Queries
+**ALWAYS use parameterized queries.**
+```
+# CORRECT
 SELECT * FROM users WHERE id = $1
-# WRONG - String interpolation (vulnerable)
+# WRONG (SQL injection)
 SELECT * FROM users WHERE id = {user_id}
 ```
 ### Common Operations
 ```sql
--- SELECT with filtering
-SELECT column1, column2 FROM table_name
-WHERE condition ORDER BY column1 LIMIT 100;
--- INSERT with returning
-INSERT INTO table_name (column1, column2)
-VALUES ($1, $2) RETURNING id;
--- UPDATE with conditions
-UPDATE table_name
-SET column1 = $1, updated_at = NOW()
-WHERE id = $2 RETURNING *;
--- DELETE with confirmation
+SELECT column1, column2 FROM table_name WHERE condition ORDER BY column1 LIMIT 100;
+INSERT INTO table_name (column1, column2) VALUES ($1, $2) RETURNING id;
+UPDATE table_name SET column1 = $1, updated_at = NOW() WHERE id = $2 RETURNING *;
 DELETE FROM table_name WHERE id = $1 RETURNING id;
 ```
-### Batch Operations
+### Batch
 ```sql
-INSERT INTO table_name (column1, column2)
-VALUES ($1, $2), ($3, $4), ($5, $6);
--- Large datasets
-COPY table_name FROM STDIN WITH (FORMAT csv);
+INSERT INTO table_name (column1, column2) VALUES ($1, $2), ($3, $4), ($5, $6);
 ```
+Large datasets: `COPY table_name FROM STDIN WITH (FORMAT csv);`
 ## Transaction Handling
 ```sql
 BEGIN;
 -- operations
 COMMIT;
--- or ROLLBACK; if error
+-- or ROLLBACK;
 ```
-### Transaction Isolation Levels
+### Isolation Levels
 | Level | Dirty Read | Non-repeatable Read | Phantom Read |
 |-------|------------|---------------------|--------------|
 | READ UNCOMMITTED | Possible | Possible | Possible |
 | READ COMMITTED | Not possible | Possible | Possible |
 | REPEATABLE READ | Not possible | Not possible | Possible |
 | SERIALIZABLE | Not possible | Not possible | Not possible |
-**PostgreSQL default:** READ COMMITTED
+**Default:** READ COMMITTED.
 ```sql
 BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 ```
@@ -104,76 +92,65 @@ BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 BEGIN;
 INSERT INTO table1 ...;
 SAVEPOINT my_savepoint;
-INSERT INTO table2 ...;  -- might fail
+INSERT INTO table2 ...;
 ROLLBACK TO SAVEPOINT my_savepoint;
-INSERT INTO table2 ...;  -- retry
+INSERT INTO table2 ...;
 COMMIT;
 ```
 ### Best Practices
-1. **Keep transactions short** - Long transactions block other operations
-2. **Handle errors explicitly** - Always have rollback logic
-3. **Use appropriate isolation** - Higher isolation = more overhead
-4. **Avoid user interaction** - Never wait for user input mid-transaction
+1. Keep transactions short
+2. Handle errors with rollback
+3. Use appropriate isolation (higher = more overhead)
+4. Never wait for user input mid-transaction
 ## Connection Pooling
-Opening connections is expensive (TCP handshake, authentication, memory allocation). Pools maintain open connections for reuse.
-**Key parameters:**
-- `min_connections` - Minimum connections to maintain
-- `max_connections` - Maximum connections allowed
-- `connection_timeout` - Time to wait for available connection
-- `idle_timeout` - Time before closing idle connection
-- `max_lifetime` - Maximum connection lifetime
-### Sizing Guidelines
+Opening connections is expensive (TCP handshake, auth, memory). Pools reuse connections.
+### Pool Parameters
+- `min_connections`, `max_connections`
+- `connection_timeout`, `idle_timeout`, `max_lifetime`
+### Sizing
 ```
 max_connections = (core_count * 2) + effective_spindle_count
-# SSD: max_connections = core_count * 2
+# SSD:
+max_connections = core_count * 2
 ```
-**Monitor:** Active connections, idle connections, wait time, connection errors, pool exhaustion events.
+Monitor usage, adjust for load, account for all app instances.
+### Monitoring
+Active/idle connections, wait time, errors, exhaustion events.
 ## Error Handling
-### Common Error Categories
-**Connection errors:**
-- `ECONNREFUSED` - Server not running or wrong host/port
-- `ETIMEDOUT` - Network issue or firewall blocking
-- `authentication failed` - Wrong credentials
-**Query errors:**
-- `syntax error` - Invalid SQL
-- `relation does not exist` - Table/view not found
-- `column does not exist` - Invalid column reference
-- `duplicate key` - Unique constraint violation
-- `foreign key violation` - Referential integrity error
-### Error Handling Pattern
+### Common Errors
+- **Connection:** `ECONNREFUSED` (server/host), `ETIMEDOUT` (network/firewall), `authentication failed`
+- **Query:** `syntax error`, `relation does not exist`, `column does not exist`, `duplicate key`, `foreign key violation`
+### Pattern
 ```
 try:
     execute query
-catch connection_error:
-    retry with backoff
-catch constraint_violation:
-    handle business logic
-catch syntax_error:
-    log and fix query
-finally:
-    return connection to pool
+catch connection_error: retry with backoff
+catch constraint_violation: handle business logic
+catch syntax_error: log and fix
+finally: return connection to pool
 ```
-### Retry Strategy
-1. Wait with exponential backoff
-2. Maximum retry count (e.g., 3 attempts)
-3. Log each retry attempt
-4. Fail after max retries
-## Performance Tips
+### Retry
+Exponential backoff, max 3 attempts, log retries, fail after max.
+## Performance
 ### Indexing
+Index columns in WHERE, JOIN, ORDER BY.
 ```sql
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_orders_user_date ON orders(user_id, created_at);
 ```
-Create indexes for: WHERE clauses, JOIN conditions, ORDER BY columns.
 ### Query Analysis
 ```sql
 EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@example.com';
 ```
-Look for: sequential scans on large tables, high cost estimates, actual vs estimated row counts.
+Watch for: sequential scans on large tables, high cost, actual vs estimated rows.
+### Connection Tips
+- Close or return to pool promptly
+- Use pooling in production
+- Set timeouts, monitor count
 ## Resources
-- `resources/setup-guide.md` - Detailed setup instructions
-- `resources/query-patterns.md` - Additional query examples
-- `resources/common-errors.md` - Error troubleshooting guide
-## Related Skills
-- `sqlite-integration` - Lighter-weight alternative for simpler needs
-- `migration-patterns` - Schema versioning and changes
+- `resources/setup-guide.md`
+- `resources/query-patterns.md`
+- `resources/common-errors.md`
+## Relationship to Other Skills
+**Complements:** `sqlite-integration`, `migration-patterns`.
+**Independent from:** TDD skills.

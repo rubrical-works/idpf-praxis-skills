@@ -1,0 +1,418 @@
+{
+  "$schema": "paradigms-schema.json",
+  "paradigms": [
+    {
+      "id": "market-sizing",
+      "name": "Market Sizing",
+      "coreIdea": "Estimate the total economic opportunity for a product, category, or segment by decomposing population, penetration, and price into multiplicative drivers.",
+      "whenItApplies": [
+        "Question asks 'how big is the market for X'",
+        "Investment or entry decision depends on absolute revenue potential",
+        "Need to bound a forecast before committing to a plan",
+        "Comparing opportunity size across geographies or segments"
+      ],
+      "subVariants": [
+        {
+          "name": "Top-Down Sizing",
+          "keyMechanism": "Start from published industry totals and apply successive share filters.",
+          "archetypalProblem": "Size the U.S. pet-insurance market by taking total pet spend and multiplying by insured penetration."
+        },
+        {
+          "name": "Bottom-Up Sizing",
+          "keyMechanism": "Build from units-per-customer times customers times price, then aggregate.",
+          "archetypalProblem": "Size a B2B SaaS opportunity as addressable firms times seats per firm times ACV."
+        },
+        {
+          "name": "TAM / SAM / SOM Decomposition",
+          "keyMechanism": "Nest total, serviceable, and obtainable markets to distinguish theoretical from realistic revenue.",
+          "archetypalProblem": "An investor deck that separates global TAM from the slice a startup can realistically serve in three years."
+        }
+      ],
+      "redFlags": [
+        "Single authoritative report is the entire basis of the estimate",
+        "Percentages multiply to an answer without any unit or price anchor",
+        "No sanity check against analogous markets or historical revenue"
+      ],
+      "classicProblems": [
+        "Size the addressable market for an EV charging network in a given state",
+        "Estimate annual revenue opportunity for a new B2B analytics product",
+        "Compare TAM for two candidate go-to-market regions"
+      ]
+    },
+    {
+      "id": "competitive-analysis",
+      "name": "Competitive Analysis",
+      "coreIdea": "Characterize the structure of rivalry, substitution, and bargaining power to explain why profits accrue where they do in a market.",
+      "whenItApplies": [
+        "Question asks whether a market is attractive to enter or remain in",
+        "Margin compression or share loss needs a structural explanation",
+        "Strategy must position against identifiable rivals or substitutes"
+      ],
+      "subVariants": [
+        {
+          "name": "Porter-Style Industry Analysis",
+          "keyMechanism": "Evaluate five forces — rivalry, entrants, substitutes, buyer power, supplier power — to estimate structural profitability.",
+          "archetypalProblem": "Explain why airlines persistently under-earn their cost of capital."
+        },
+        {
+          "name": "Head-to-Head Competitor Teardown",
+          "keyMechanism": "Feature, pricing, and positioning comparison across a small set of direct rivals.",
+          "archetypalProblem": "Compare three CRM vendors to identify defensible differentiation."
+        },
+        {
+          "name": "Strategic Group Mapping",
+          "keyMechanism": "Cluster competitors on two strategic dimensions to find under-served positions.",
+          "archetypalProblem": "Map airlines by route density and service class to locate a premium-regional gap."
+        }
+      ],
+      "redFlags": [
+        "Competitor list is narrower than the set of real substitutes customers consider",
+        "Analysis treats current market shares as destiny",
+        "No attention to supplier or buyer concentration"
+      ],
+      "classicProblems": [
+        "Evaluate attractiveness of entering the meal-kit category",
+        "Explain margin erosion in low-cost airlines",
+        "Identify white space in the project-management software market"
+      ]
+    },
+    {
+      "id": "valuation",
+      "name": "Valuation",
+      "coreIdea": "Translate a stream of expected cash flows, adjusted for risk and time, into a present value or defensible price.",
+      "whenItApplies": [
+        "A buy, sell, or hold recommendation is required",
+        "An investment thesis must produce a target price or fair-value range",
+        "Capital allocation decisions hinge on NPV or IRR"
+      ],
+      "subVariants": [
+        {
+          "name": "Discounted Cash Flow (DCF)",
+          "keyMechanism": "Project free cash flows, apply a discount rate reflecting risk, add terminal value.",
+          "archetypalProblem": "Value a mature public company from explicit 5-year projections and a perpetuity-growth terminal."
+        },
+        {
+          "name": "Relative / Comparables Valuation",
+          "keyMechanism": "Apply multiples (EV/EBITDA, P/E, EV/Sales) from a peer set to the subject's metrics.",
+          "archetypalProblem": "Price an IPO against listed peers trading at observable EV/Revenue multiples."
+        },
+        {
+          "name": "Precedent Transactions",
+          "keyMechanism": "Use multiples paid in historical M&A deals for similar assets.",
+          "archetypalProblem": "Benchmark a pending SaaS acquisition against the last 10 strategic deals in the category."
+        }
+      ],
+      "redFlags": [
+        "Terminal value dominates the DCF — most of the answer is one assumption",
+        "Peer set is chosen to support a conclusion rather than for true comparability",
+        "Discount rate is asserted, not derived from capital structure and beta"
+      ],
+      "classicProblems": [
+        "Build a target price for a listed equity ahead of earnings",
+        "Value a private company for a minority investment",
+        "Decide whether a share buyback is accretive at today's price"
+      ]
+    },
+    {
+      "id": "forecasting",
+      "name": "Forecasting",
+      "coreIdea": "Project a time-indexed metric forward using historical structure, drivers, and uncertainty bounds.",
+      "whenItApplies": [
+        "A numeric prediction of revenue, demand, or cost is needed",
+        "Budget or capacity planning depends on a forward estimate",
+        "Comparing scenarios requires a base-case trajectory"
+      ],
+      "subVariants": [
+        {
+          "name": "Driver-Based Forecast",
+          "keyMechanism": "Decompose the metric into causal drivers and project each separately.",
+          "archetypalProblem": "Forecast revenue as pricing × volume × mix, each driven by a specific assumption."
+        },
+        {
+          "name": "Time-Series Extrapolation",
+          "keyMechanism": "Fit trend, seasonality, and autocorrelation to historical values (ARIMA, Holt-Winters, Prophet).",
+          "archetypalProblem": "Forecast next quarter's daily active users from three years of history."
+        },
+        {
+          "name": "Analog / Reference-Class Forecasting",
+          "keyMechanism": "Anchor on the observed trajectory of similar past cases, then adjust.",
+          "archetypalProblem": "Forecast adoption of a new streaming service using the first-three-year curves of predecessors."
+        }
+      ],
+      "redFlags": [
+        "Point forecast with no confidence interval or scenario band",
+        "Trend extrapolation across a structural break (pandemic, policy change)",
+        "Driver decomposition that double-counts the same effect in two lines"
+      ],
+      "classicProblems": [
+        "Project next-year revenue for the annual operating plan",
+        "Forecast quarterly active users for capacity planning",
+        "Estimate demand for a new product class in its first 24 months"
+      ]
+    },
+    {
+      "id": "causal-inference",
+      "name": "Causal Inference",
+      "coreIdea": "Distinguish the effect of an intervention from correlated confounders so that a claim of 'X caused Y' survives scrutiny.",
+      "whenItApplies": [
+        "A campaign, policy, or feature change needs a measured effect",
+        "Observed correlations could be driven by selection, seasonality, or a common cause",
+        "A go/no-go decision depends on whether the lift is real"
+      ],
+      "subVariants": [
+        {
+          "name": "Randomized Controlled Trial (A/B Test)",
+          "keyMechanism": "Random assignment removes confounding between treatment and outcome.",
+          "archetypalProblem": "A/B test a new checkout flow and measure the true conversion lift."
+        },
+        {
+          "name": "Difference-in-Differences",
+          "keyMechanism": "Compare pre/post change in a treated group against a control group's parallel trend.",
+          "archetypalProblem": "Measure the effect of a regional price change using untreated regions as control."
+        },
+        {
+          "name": "Regression Discontinuity / Instrumental Variables",
+          "keyMechanism": "Exploit an external rule or shock that assigns treatment as-if randomly around a cutoff.",
+          "archetypalProblem": "Estimate the impact of a loyalty-program threshold on repeat purchase rate."
+        }
+      ],
+      "redFlags": [
+        "Conclusion rests on a post-hoc comparison with no control",
+        "Treatment and control groups differ systematically before the intervention",
+        "Outcome metric was chosen after seeing the data"
+      ],
+      "classicProblems": [
+        "Estimate incremental revenue from a paid-media campaign",
+        "Measure the impact of a pricing change on churn",
+        "Attribute a sales lift to a product launch versus seasonality"
+      ]
+    },
+    {
+      "id": "portfolio-optimization",
+      "name": "Portfolio Optimization",
+      "coreIdea": "Allocate a constrained resource across competing opportunities to maximize a risk-adjusted objective.",
+      "whenItApplies": [
+        "A fixed budget, headcount, or capital pool must be split among projects",
+        "Return and risk of each option can be estimated independently",
+        "The right mix — not the single best bet — is the decision"
+      ],
+      "subVariants": [
+        {
+          "name": "Mean-Variance / Markowitz",
+          "keyMechanism": "Pick weights that maximize expected return for a given variance (or vice versa).",
+          "archetypalProblem": "Construct an equity portfolio on the efficient frontier."
+        },
+        {
+          "name": "Capital Allocation / Project Portfolio",
+          "keyMechanism": "Rank projects by risk-adjusted NPV or IRR subject to budget and strategic constraints.",
+          "archetypalProblem": "Allocate next year's R&D budget across 20 candidate initiatives."
+        },
+        {
+          "name": "Marketing Mix Modeling",
+          "keyMechanism": "Allocate spend across channels to maximize incremental revenue given diminishing returns.",
+          "archetypalProblem": "Split a $50M media budget across search, social, TV, and affiliate."
+        }
+      ],
+      "redFlags": [
+        "Inputs (expected return, covariance) are measured with far more precision than warranted",
+        "Constraint set omits a real-world limit that the recommended allocation violates",
+        "Optimizer produces corner solutions that the business would never actually execute"
+      ],
+      "classicProblems": [
+        "Allocate marketing spend across channels for next fiscal year",
+        "Construct a risk-parity portfolio across asset classes",
+        "Prioritize a product roadmap under a fixed engineering budget"
+      ]
+    },
+    {
+      "id": "scenario-analysis",
+      "name": "Scenario Analysis",
+      "coreIdea": "Structure uncertainty as a small number of internally consistent futures so decisions can be stress-tested against each.",
+      "whenItApplies": [
+        "Key drivers are deeply uncertain and interact",
+        "Stakeholders need more than a single point estimate",
+        "Decisions must be robust across a range of plausible worlds"
+      ],
+      "subVariants": [
+        {
+          "name": "Base / Bull / Bear",
+          "keyMechanism": "Three scenarios defined by coordinated moves in the critical drivers.",
+          "archetypalProblem": "Quarterly plan showing revenue under conservative, expected, and optimistic macro."
+        },
+        {
+          "name": "2x2 Scenario Matrix",
+          "keyMechanism": "Cross two orthogonal high-uncertainty axes into four narrative futures.",
+          "archetypalProblem": "Futures for automotive industry across electrification rate and regulation intensity."
+        },
+        {
+          "name": "Monte Carlo Simulation",
+          "keyMechanism": "Sample joint distributions over drivers to generate thousands of outcome paths.",
+          "archetypalProblem": "Distribution of project NPV given uncertain volumes, prices, and costs."
+        }
+      ],
+      "redFlags": [
+        "Scenarios are just 'plan ± 10%' with no narrative divergence",
+        "Drivers across scenarios are not internally consistent",
+        "Analysis ignores the scenario most damaging to current strategy"
+      ],
+      "classicProblems": [
+        "Stress-test a strategic plan across macro scenarios",
+        "Evaluate a capital project under commodity-price uncertainty",
+        "Prepare an investment committee memo with upside and downside cases"
+      ]
+    },
+    {
+      "id": "segmentation-analysis",
+      "name": "Segmentation Analysis",
+      "coreIdea": "Partition a customer, product, or market population into groups whose behavior, needs, or economics differ meaningfully enough to warrant different actions.",
+      "whenItApplies": [
+        "Averages across a population are misleading or unstable",
+        "Marketing, pricing, or product decisions should vary by group",
+        "Retention or profitability is highly heterogeneous across users"
+      ],
+      "subVariants": [
+        {
+          "name": "Demographic / Firmographic Segmentation",
+          "keyMechanism": "Partition by observable traits (age, income, industry, size).",
+          "archetypalProblem": "Segment SMB customers by headcount band for sales-team coverage."
+        },
+        {
+          "name": "Behavioral / RFM Segmentation",
+          "keyMechanism": "Group by observed actions — recency, frequency, monetary value, feature usage.",
+          "archetypalProblem": "Identify 'at-risk high-value' e-commerce customers for a winback program."
+        },
+        {
+          "name": "Needs / Jobs-to-be-Done Segmentation",
+          "keyMechanism": "Cluster by the outcome the customer is trying to achieve, not by who they are.",
+          "archetypalProblem": "Segment productivity-software buyers by the underlying job they are hiring the tool for."
+        }
+      ],
+      "redFlags": [
+        "Segments are not actionable — no distinct decision flows from them",
+        "Segments overlap heavily or are unstable across time",
+        "Segmentation is built on easy-to-measure traits rather than decision-relevant ones"
+      ],
+      "classicProblems": [
+        "Design a tiered pricing structure for a SaaS product",
+        "Identify the highest-value customer segment for a loyalty program",
+        "Choose which segments to target with a new product launch"
+      ]
+    },
+    {
+      "id": "funnel-analysis",
+      "name": "Funnel Analysis",
+      "coreIdea": "Model a sequential conversion process as stages with drop-off rates so bottlenecks and leverage points become visible.",
+      "whenItApplies": [
+        "Outcome depends on a multi-step user or buyer journey",
+        "Need to diagnose where volume is lost between awareness and revenue",
+        "Campaign or product performance must be decomposed into stages"
+      ],
+      "subVariants": [
+        {
+          "name": "Marketing Funnel (AARRR / TOFU-MOFU-BOFU)",
+          "keyMechanism": "Acquisition → activation → retention → revenue → referral, each with a rate.",
+          "archetypalProblem": "Diagnose why paid traffic is not translating into paying customers."
+        },
+        {
+          "name": "Sales Pipeline Funnel",
+          "keyMechanism": "MQL → SQL → Opportunity → Closed-Won with stage-specific conversion.",
+          "archetypalProblem": "Identify the sales stage responsible for a missed quarterly number."
+        },
+        {
+          "name": "Product Activation Funnel",
+          "keyMechanism": "Signup → first-value event → habit, measured step by step.",
+          "archetypalProblem": "Locate the feature step where new users drop off before reaching 'aha'."
+        }
+      ],
+      "redFlags": [
+        "Stages are defined by what is easy to instrument rather than by real decision moments",
+        "Drop-off is blamed on the last stage without checking upstream quality",
+        "Conversion rates are compared across cohorts of very different composition"
+      ],
+      "classicProblems": [
+        "Diagnose why a paid-ads campaign has poor end-to-end ROI",
+        "Find the biggest leverage point in a B2B sales pipeline",
+        "Evaluate onboarding changes for activation lift"
+      ]
+    },
+    {
+      "id": "macro-trend-reading",
+      "name": "Macro / Trend Reading",
+      "coreIdea": "Interpret long-horizon shifts in technology, regulation, demographics, and behavior to anticipate durable changes in demand or competition.",
+      "whenItApplies": [
+        "Decision horizon is longer than normal planning cycles",
+        "Structural, not cyclical, change is suspected",
+        "Strategy must withstand regime shifts, not just quarterly noise"
+      ],
+      "subVariants": [
+        {
+          "name": "PESTEL Scan",
+          "keyMechanism": "Scan political, economic, social, technological, environmental, legal forces.",
+          "archetypalProblem": "Assess long-term impact of carbon regulation on a heavy-industry portfolio."
+        },
+        {
+          "name": "S-Curve / Diffusion Analysis",
+          "keyMechanism": "Locate a technology or behavior on its adoption curve to project its trajectory.",
+          "archetypalProblem": "Estimate where EV adoption sits on its S-curve and when the inflection has passed."
+        },
+        {
+          "name": "Leading-Indicator Synthesis",
+          "keyMechanism": "Combine early signals (patents, hiring, search interest, regulatory filings) into a directional read.",
+          "archetypalProblem": "Call the direction of enterprise AI spending from hiring, funding, and procurement data."
+        }
+      ],
+      "redFlags": [
+        "Trend narrative is built entirely from press coverage, not measurable indicators",
+        "Short-term volatility is mistaken for a structural trend",
+        "Analysis confuses what is interesting with what is material to the business"
+      ],
+      "classicProblems": [
+        "Assess whether AI will disrupt a professional-services category",
+        "Evaluate demographic risk to a consumer-goods portfolio",
+        "Call the durability of remote-work spend categories"
+      ]
+    }
+  ],
+  "crossParadigmGuide": [
+    {
+      "signal": "Question is 'how big is this opportunity' with no pricing decision",
+      "leanToward": "market-sizing"
+    },
+    {
+      "signal": "Question is 'should we enter this market' and profitability is the concern",
+      "leanToward": "competitive-analysis"
+    },
+    {
+      "signal": "Decision requires a price, target, or NPV",
+      "leanToward": "valuation"
+    },
+    {
+      "signal": "Need a forward numeric trajectory for planning",
+      "leanToward": "forecasting"
+    },
+    {
+      "signal": "Observed lift must be defended as causal, not correlational",
+      "leanToward": "causal-inference"
+    },
+    {
+      "signal": "Fixed budget must be split across multiple bets",
+      "leanToward": "portfolio-optimization"
+    },
+    {
+      "signal": "Deep uncertainty in macro or exogenous drivers",
+      "leanToward": "scenario-analysis"
+    },
+    {
+      "signal": "Population averages are hiding heterogeneous behavior",
+      "leanToward": "segmentation-analysis"
+    },
+    {
+      "signal": "Conversion problem with an obvious multi-step journey",
+      "leanToward": "funnel-analysis"
+    },
+    {
+      "signal": "Decision horizon is 5+ years with structural change suspected",
+      "leanToward": "macro-trend-reading"
+    }
+  ]
+}

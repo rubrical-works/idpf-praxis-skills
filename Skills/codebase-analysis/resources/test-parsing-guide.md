@@ -1,5 +1,5 @@
 # Test Parsing Guide
-**Version:** v0.11.1
+**Version:** v0.12.0
 **Purpose:** Detailed rules for extracting requirements from test files
 ## Python (pytest)
 ### File Patterns

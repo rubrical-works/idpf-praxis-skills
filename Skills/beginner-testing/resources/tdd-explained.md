@@ -1,5 +1,5 @@
 # TDD Explained for Beginners
-**Version:** v0.11.1
+**Version:** v0.12.0
 
 ## The TDD Cycle in Detail
 

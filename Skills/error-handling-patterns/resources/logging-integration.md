@@ -1,5 +1,5 @@
 # Logging Integration
-**Version:** v0.11.1
+**Version:** v0.12.0
 
 Integrating error handling with logging and monitoring systems.
 

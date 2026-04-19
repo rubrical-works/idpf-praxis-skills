@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cross-References Decision Matrix (engage-prism)",
+  "description": "Maps question signals to paradigm, structure, and strategy keys with weighted associations and anti-overlap rules. IDs are kebab-case and must match entries in paradigms.json / structures.json / strategies.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "signals", "overlapThreshold", "antiOverlapRules"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema file."
+    },
+    "signals": {
+      "type": "array",
+      "description": "Question signals that map to paradigm/structure/strategy combinations.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "keywords", "paradigms", "structures", "strategies"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "description": "Unique kebab-case identifier for the signal."
+          },
+          "description": {
+            "type": "string",
+            "description": "What the signal looks like in a question statement."
+          },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "Keywords or phrases that indicate this signal."
+          },
+          "paradigms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "weight", "rationale"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*$",
+                  "description": "Paradigm ID — must match an entry in paradigms.json."
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "structures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "weight", "rationale"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*$",
+                  "description": "Structure family ID — must match an entry in structures.json."
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            },
+            "minItems": 1,
+            "maxItems": 3
+          },
+          "strategies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "weight", "rationale"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*$",
+                  "description": "Strategy ID — must match an entry in strategies.json."
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            },
+            "minItems": 1,
+            "maxItems": 3
+          }
+        }
+      }
+    },
+    "overlapThreshold": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Jaccard similarity threshold above which two paths are considered overlapping."
+    },
+    "antiOverlapRules": {
+      "type": "array",
+      "description": "Rules for ensuring selected paths are sufficiently different.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["description", "check"],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "check": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

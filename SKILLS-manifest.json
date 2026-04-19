@@ -92,6 +92,12 @@
       "category": "problem-solving",
       "path": "Skills/engage-exocortex"
     },
+    "engage-prism": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "analysis",
+      "path": "Skills/engage-prism"
+    },
     "error-handling-patterns": {
       "version": "1.0.0",
       "type": "injector",
@@ -109,6 +115,12 @@
       "type": "invokable",
       "category": "web",
       "path": "Skills/i18n-setup"
+    },
+    "install-node": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "setup",
+      "path": "Skills/install-node"
     },
     "json-validator": {
       "version": "1.0.0",
@@ -181,6 +193,12 @@
       "type": "reference",
       "category": "development",
       "path": "Skills/resilience-patterns"
+    },
+    "responsibility-gate": {
+      "version": "1.0.0",
+      "type": "reference",
+      "category": "setup",
+      "path": "Skills/responsibility-gate"
     },
     "seo-optimization": {
       "version": "1.0.0",

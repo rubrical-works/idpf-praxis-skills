@@ -1,0 +1,154 @@
+{
+  "$schema": "brief-schema.json",
+  "description": "Template for engage-prism subagent briefs. The primary agent fills the slot fields when spawning each subagent. Every brief carries a research plan and a citation requirement.",
+  "preamble": "You are analyzing a single angle of a business, marketing, or financial question. Your job is to reason deeply about ONE specific angle, perform live web research within the given budget, and report back in structured form with schema-conformant citations for every non-derived claim.",
+  "slots": [
+    {
+      "field": "questionStatement",
+      "label": "The Question",
+      "type": "string",
+      "required": true,
+      "description": "Full question as the user posed it. Include any explicit constraints (time horizon, geography, decision owner). All subagents must reason against the same question."
+    },
+    {
+      "field": "assignedAngle",
+      "label": "Your Assigned Angle",
+      "type": "object",
+      "required": true,
+      "description": "The specific angle this subagent should explore.",
+      "subfields": [
+        {
+          "field": "name",
+          "label": "Angle name",
+          "type": "string",
+          "required": true,
+          "description": "E.g., 'Bottom-up TAM via channel-level unit economics'. Vary wording across subagents so no two are nudged toward the same framing."
+        },
+        {
+          "field": "description",
+          "label": "Angle description",
+          "type": "string",
+          "required": true,
+          "description": "1-2 sentences describing the angle at a high level — paradigm + structure + strategy or tension resolution if adaptive mode."
+        }
+      ]
+    },
+    {
+      "field": "researchPlan",
+      "label": "Research Plan",
+      "type": "object",
+      "required": true,
+      "description": "What to fetch and how current it must be. Inherits from the primary agent's Step 0 plan.",
+      "subfields": [
+        {
+          "field": "entityAnchors",
+          "label": "Entity anchors",
+          "type": "array",
+          "required": true,
+          "description": "Names, tickers, geographies, industries, products, events."
+        },
+        {
+          "field": "sourceClasses",
+          "label": "Source classes",
+          "type": "array",
+          "required": true,
+          "description": "Which source types apply (news, filings, analyst reports, official statistics, trade press, etc.)."
+        },
+        {
+          "field": "recencyWindow",
+          "label": "Recency window",
+          "type": "string",
+          "required": true,
+          "description": "How current information must be (e.g., 'last 30 days', 'last earnings cycle', 'last 12 months')."
+        },
+        {
+          "field": "authorityPreference",
+          "label": "Authority preference",
+          "type": "string",
+          "required": true,
+          "description": "Preferred authority ordering, e.g., 'primary > aggregator > opinion'."
+        },
+        {
+          "field": "fetchBudget",
+          "label": "Fetch budget",
+          "type": "integer",
+          "required": true,
+          "description": "Max number of WebFetch/WebSearch calls this path may make.",
+          "default": 4
+        }
+      ]
+    },
+    {
+      "field": "citationRequirement",
+      "label": "Citation Requirement",
+      "type": "string",
+      "required": true,
+      "description": "Reference to resources/citation-schema.json. Every non-derived claim in the report must cite a source that conforms to this schema. Derived claims must reference the citation they derive from."
+    },
+    {
+      "field": "exclusions",
+      "label": "What NOT to do",
+      "type": "string",
+      "required": false,
+      "description": "Optional hint if worried a subagent will drift toward another path's angle (e.g., 'Do not use comparable-company multiples in this path')."
+    },
+    {
+      "field": "maxSteps",
+      "label": "Maximum steps",
+      "type": "integer",
+      "required": true,
+      "description": "Maximum number of reasoning steps the subagent may take.",
+      "default": 50
+    },
+    {
+      "field": "maxOutputLines",
+      "label": "Maximum output lines",
+      "type": "integer",
+      "required": true,
+      "description": "Maximum number of lines in the subagent's report output.",
+      "default": 250
+    }
+  ],
+  "taskInstructions": {
+    "description": "Instructions given to the subagent describing what to produce.",
+    "sections": [
+      {
+        "order": 1,
+        "label": "Angle summary",
+        "instruction": "State the angle and why it fits the question in 1-3 sentences."
+      },
+      {
+        "order": 2,
+        "label": "Web research",
+        "instruction": "Perform WebFetch/WebSearch within the fetch budget. Record every source via the citation schema."
+      },
+      {
+        "order": 3,
+        "label": "Evidence-grounded analysis",
+        "instruction": "Work through the analysis with explicit reference to fetched evidence. Every non-derived claim must cite."
+      },
+      {
+        "order": 4,
+        "label": "Key drivers and numbers",
+        "instruction": "Name the key drivers or metrics and the values anchoring them. State which are observed vs. estimated."
+      },
+      {
+        "order": 5,
+        "label": "Counter-evidence and risks",
+        "instruction": "What would make this angle wrong? Cite contrary sources if any. Name residual uncertainty explicitly."
+      },
+      {
+        "order": 6,
+        "label": "Recommendation (within this angle)",
+        "instruction": "Given only this angle, what is the best-supported answer? Be direct and honest about the limits of the data."
+      }
+    ],
+    "outputConstraint": "Return ONLY the structured report conforming to report-template.json. Do not add preamble or conclusion outside it."
+  },
+  "primaryAgentNotes": [
+    "Vary angle wording across subagents — don't accidentally push two of them toward the same framing.",
+    "Pass the full researchPlan to every subagent so they share entity anchors, source classes, and recency window.",
+    "If WebFetch/WebSearch is unavailable, brief the subagent to set webResearch.performed=false with a specific reason in its report rather than silently producing training-recall output.",
+    "You may optionally add an exclusions hint if you're worried a subagent will drift toward another path's angle (e.g., 'Do not use comparable-company multiples in this path')."
+  ]
+}

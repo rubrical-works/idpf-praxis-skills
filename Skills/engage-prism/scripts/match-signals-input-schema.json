@@ -1,0 +1,21 @@
+{
+  "$id": "match-signals-input",
+  "description": "Input validation schema for match-signals.js",
+  "type": "object",
+  "properties": {
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "description": "Keywords extracted from the problem statement"
+    },
+    "paths": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 6,
+      "default": 3,
+      "description": "Number of candidate paths to return"
+    }
+  },
+  "required": ["keywords"]
+}

@@ -47,6 +47,19 @@ Invoke this Skill when:
 
 ---
 
+## Responsibility Acknowledgement Gate
+
+This step implements the pattern defined in the **`responsibility-gate`** skill. See `Skills/responsibility-gate/SKILL.md` for the full contract.
+
+- **When this fires:** before installing Wine, NSIS, Docker images (e.g., `electronuserland/builder:wine`), or electron-builder/electron-forge toolchain components required to cross-compile Windows targets from Linux.
+- **What is asked:** acceptance of responsibility for the change this skill will make to system-level packages (Wine, NSIS, mono via apt/sudo), Docker image cache, the project's `package.json`/`node_modules`, and build output directories.
+- **On decline:** exit cleanly; report "Declined — no changes made."; make no system changes.
+- **Persistence:** per-invocation. The gate re-fires on every subsequent invocation that proposes an execution path; acceptance is never persisted across runs.
+
+Use `AskUserQuestion` with the two required options (`"I accept responsibility — proceed"` and `"Decline — exit without changes"`). See the `responsibility-gate` skill for allowed additional options.
+
+---
+
 ## Toolchain Overview
 
 ### Wine-Based Approach

@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "synthesis-schema.json",
+  "title": "Synthesis Configuration",
+  "description": "Schema for the Engage Exocortex synthesis scoring rubric and rules.",
+  "type": "object",
+  "required": ["$schema", "description", "phases", "commonMistakesToAvoid"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "synthesis-schema.json"
+    },
+    "description": {
+      "type": "string"
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/definitions/phase"
+      }
+    },
+    "commonMistakesToAvoid": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/mistake"
+      }
+    }
+  },
+  "definitions": {
+    "phase": {
+      "type": "object",
+      "required": ["id", "order", "name", "description"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/validationCheck"
+          }
+        },
+        "scoringScale": {
+          "$ref": "#/definitions/scoringScale"
+        },
+        "alwaysRelevantDimensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/scoringDimension"
+          }
+        },
+        "conditionallyRelevantDimensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/conditionalDimension"
+          }
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/hybridQuestion"
+          }
+        },
+        "constraint": {
+          "type": "string"
+        },
+        "principles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/outputPrinciple"
+          }
+        }
+      }
+    },
+    "validationCheck": {
+      "type": "object",
+      "required": ["id", "name", "instructions"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "scoringScale": {
+      "type": "object",
+      "required": ["values", "disqualificationRule"],
+      "additionalProperties": false,
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["Strong", "Adequate", "Weak", "Disqualifying"]
+          }
+        },
+        "disqualificationRule": {
+          "type": "string"
+        }
+      }
+    },
+    "scoringDimension": {
+      "type": "object",
+      "required": ["id", "name", "whatToAssess"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "whatToAssess": {
+          "type": "string"
+        }
+      }
+    },
+    "conditionalDimension": {
+      "type": "object",
+      "required": ["id", "name", "useWhen"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "useWhen": {
+          "type": "string"
+        }
+      }
+    },
+    "hybridQuestion": {
+      "type": "object",
+      "required": ["id", "question", "action"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "question": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        }
+      }
+    },
+    "outputPrinciple": {
+      "type": "object",
+      "required": ["id", "name", "rule"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rule": {
+          "type": "string"
+        }
+      }
+    },
+    "mistake": {
+      "type": "object",
+      "required": ["id", "name", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
