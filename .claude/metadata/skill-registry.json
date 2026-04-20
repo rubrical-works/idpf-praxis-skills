@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-20T03:15:32.995Z",
+  "generatedAt": "2026-04-20T17:57:07.462Z",
   "version": "0.1.0",
   "skillCount": 45,
   "skills": [
@@ -268,7 +268,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-04",
-      "checksum": "dafcddcf39cd5003c5a57cffbb6d2a395945714b5a103b3d9040bfc70e84d75b",
+      "checksum": "b4fe8b62f46d5b89084c721a1403c109fed19764157c1acffe4427ad17b32389",
       "category": "problem-solving",
       "relevantTechStack": [
         "algorithms",
@@ -285,7 +285,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "12c223f0ee2bd765c6365dabade73da611c52854d0e54b3cdfe390ccaa018bad",
+      "checksum": "dcac17ceda282418a6ef682163a2af4d7c6e2390fd51e05e537242b45c4ffd04",
       "category": "analysis",
       "relevantTechStack": [
         "business-analysis",

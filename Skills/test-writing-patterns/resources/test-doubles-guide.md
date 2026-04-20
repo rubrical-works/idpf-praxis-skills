@@ -1,5 +1,5 @@
 # Test Doubles Guide
-**Version:** v0.12.2
+**Version:** v0.12.3
 
 When to use each type of test double, with selection criteria and usage examples.
 

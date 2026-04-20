@@ -1,8 +1,8 @@
 # engage-prism — Example Proposals
 
-This directory contains five example proposal documents produced by the
-`engage-prism` skill. Each demonstrates an end-to-end parallel analysis run for
-one of the five required analytical domains:
+This directory contains six example proposal documents produced by the
+`engage-prism` skill. Each demonstrates an end-to-end parallel analysis run
+across the skill's analytical domains:
 
 | File | Domain |
 |------|--------|
@@ -11,6 +11,7 @@ one of the five required analytical domains:
 | `PRISM-paid-search-campaign-roi.md` | Marketing campaign evaluation |
 | `PRISM-equity-ticker-abcd-earnings.md` | Equity / ticker / financial |
 | `PRISM-remote-work-retail-trend.md` | Business / market trend |
+| `PRISM-oss-monetization-sample.md` | OSS / dev-tool go-to-market (monetization mix, revenue projection, growth funnel) |
 
 ## What these examples show
 

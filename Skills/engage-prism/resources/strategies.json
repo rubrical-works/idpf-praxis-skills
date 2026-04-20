@@ -302,6 +302,36 @@
         "Under-weighting a well-designed secondary source just to appear rigorous",
         "Failing to document provenance so later readers cannot assess evidence quality"
       ]
+    },
+    {
+      "id": "driver-tree-with-sparse-priors",
+      "name": "Driver Tree with Sparse Priors",
+      "coreReframe": "When the target has no historical data, build a multiplicative driver tree where each leaf is filled with an explicit prior — an analogue range, expert judgment, or triangulated comparable — and propagate the uncertainty upward.",
+      "structuralSignals": [
+        "Pre-revenue, pre-launch, or greenfield estimation",
+        "Target has no direct historicals but the driver structure is decomposable",
+        "Stakeholders need a range, not a single number, with each leaf traceable to its evidence source"
+      ],
+      "whatItUnlocks": [
+        "A defensible projection built from small, argued assumptions rather than a single headline guess",
+        "Sensitivity visibility: which prior, if wrong, most changes the answer",
+        "A natural next-action list — the leaves with the widest priors are the highest-value data to gather next"
+      ],
+      "classicExamples": [
+        {
+          "category": "oss-monetization",
+          "examples": "Estimate year-one GitHub Sponsor revenue as repo-followers × sponsor-conversion-rate (from peer priors) × average-monthly-pledge (from Sponsors data) × 12."
+        },
+        {
+          "category": "solo-maintainer-unit-economics",
+          "examples": "Project per-seat license revenue as monthly-active-users × trial-to-paid-rate (peer prior) × list-price, with a conservative/base/optimistic triple per leaf."
+        }
+      ],
+      "failureModes": [
+        "Priors are stated as point estimates and the uncertainty is lost as the tree aggregates",
+        "Leaves are filled from the same comparable across multiple nodes, creating hidden correlation",
+        "No next-action loop — the tree ships as a projection without naming which prior to replace with data first"
+      ]
     }
   ],
   "crossStrategyInteractionGuide": [
@@ -328,6 +358,10 @@
     {
       "combination": "triangulation + primary-vs-secondary-sources",
       "whatItProduces": "A claim that survives scrutiny because independent methods each rest on documented primary evidence."
+    },
+    {
+      "combination": "driver-tree-with-sparse-priors + benchmark-comparison",
+      "whatItProduces": "A pre-revenue projection where every leaf is anchored to a named peer comparable and the range reflects the spread across that reference class."
     }
   ]
 }

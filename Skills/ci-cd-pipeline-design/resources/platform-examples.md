@@ -1,5 +1,5 @@
 # Platform-Specific Examples
-**Version:** v0.12.2
+**Version:** v0.12.3
 Complete CI/CD pipeline configurations for major platforms.
 ## GitHub Actions
 ### Complete Pipeline

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.3] - 2026-04-20
+
+### Added
+- **engage-prism: OSS / dev-tool GTM signal coverage** — 5 new signals in `cross-references.json` (`oss-monetization-design`, `developer-tool-community-growth`, `solo-maintainer-unit-economics`, `devtool-content-seo-ia`, `product-led-licensing-enforcement`) with keyword, paradigm, structure, and strategy triples. Match-signals confidence on a representative OSS/dev-tool GTM query rises from 0.15 (fallback) to 1.0. Added paradigms `comparable-benchmark` and `policy-design` and strategy `driver-tree-with-sparse-priors`. New worked example `examples/PRISM-oss-monetization-sample.md`. `docs/research-plan-guide.md` gains a "Sparse-data unit economics" section. Closes the second-audience gap for builders/founders alongside the existing finance/marketing-analytics coverage. (#200)
+
+### Changed
+- **deploy-dist workflow: populate GitHub Release body from CHANGELOG** — `.github/workflows/deploy-dist.yml` now invokes `update-release-notes.js` from `cwd=dist` after `gh release create`, replacing the `"Skills distribution release $VERSION"` stub with the full per-version CHANGELOG section (promoted heading levels, Summary block, Full Changelog compare link). Missing CHANGELOG section logs a warning and leaves the stub in place; does not fail the deploy. Resets `origin` URL to the clean `https://github.com/rubrical-works/idpf-praxis-skills.git` before the script runs so `getRepoUrl()` does not embed `DIST_REPO_TOKEN` in the public compare link. Mirrors the praxis pipeline's dist-repo release-body step. (#201)
+
 ## [0.12.2] - 2026-04-20
 
 ### Changed

@@ -127,6 +127,85 @@ answer, the angle is too broad and should be narrowed.
 
 ---
 
+## Sparse-data unit economics
+
+Some questions require a forward numeric projection for a target that has
+**no historicals** — pre-revenue OSS monetization, greenfield product
+forecasts, first-year outcome estimates for a new launch. The default
+research-plan shape assumes you can ground in primary data about the
+target; sparse-data questions cannot.
+
+Handle them with the
+[driver-tree-with-sparse-priors](analytical-strategies.md) strategy,
+which pairs naturally with the
+[comparable-benchmark](analytical-paradigms.md) paradigm. The research
+plan changes shape in three specific ways.
+
+### 1. Entity anchors: peer reference class, not the target
+
+Instead of anchoring on the target entity, anchor on the **reference
+class of comparable projects or cases** whose data will fill the leaves
+of the driver tree.
+
+```yaml
+entityAnchors:
+  - "Aider, Continue.dev, Cline (peer AI-dev-tool launches)"
+  - "n8n, Plausible, Sentry (OSS monetization precedents)"
+  - "GitHub Sponsors maintainer case studies"
+```
+
+A weak plan lists the target alone; a strong plan names 3–7 peers with
+**explicit structural similarity** (same audience, same category, same
+business model inflection) so the reader can audit the reference class
+itself.
+
+### 2. Source classes: founder retrospectives and peer disclosures first
+
+Authoritative data about the target does not exist. Promote:
+
+- `company-page` (live pricing / license / tier pages of peers)
+- `trade-press` and founder retrospectives (HN / Lobsters / blog posts)
+- `industry-body` surveys aggregating peer outcomes (GitHub Sponsors
+  case studies, Indie Hackers surveys, OpenView benchmarks)
+
+Demote `official-statistics` and `regulatory-filing` — they rarely cover
+the target category at sufficient granularity.
+
+### 3. Recency window: tighter for pricing, longer for retrospectives
+
+Pricing and license pages change; retrospectives age well.
+
+```yaml
+recencyWindow:
+  pricing: "last 60 days"       # live pricing pages
+  licenseText: "current"        # must match what peers ship now
+  retrospectives: "last 24 months"
+```
+
+### 4. Propagating uncertainty in the plan itself
+
+Every driver-tree leaf gets a **conservative / base / optimistic** triple
+sourced to a peer prior, and the plan names **which leaf, if replaced
+with real data, would most move the answer** — that leaf becomes the
+highest-value follow-up research after the first ship.
+
+```yaml
+priorsAndSensitivity:
+  highestLeverageLeaf: "per-seat conversion rate"
+  priorSource: "OpenView 2025 dev-tool segment (1.5–3%)"
+  nextDataToGather: "first 30 days of real conversion post-launch"
+```
+
+### Worked example
+
+See [`PRISM-oss-monetization-sample.md`](../examples/PRISM-oss-monetization-sample.md)
+for an end-to-end sparse-data research plan feeding a three-path
+analysis (policy-design comparables,
+driver-tree-with-sparse-priors revenue projection, funnel-analysis
+growth cohort).
+
+---
+
 ## Recording the plan
 
 The primary agent records the plan in the proposal's Research Plan

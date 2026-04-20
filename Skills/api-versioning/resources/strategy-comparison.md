@@ -1,5 +1,5 @@
 # API Versioning Strategy Comparison
-**Version:** v0.12.2
+**Version:** v0.12.3
 ## Strategy Deep Dives
 ### URL Path Versioning
 ```

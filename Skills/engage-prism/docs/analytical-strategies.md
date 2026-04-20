@@ -121,6 +121,26 @@ primary through repetition. Prism's citation schema encourages this
 discipline via the optional `sourceClass` enum — see
 [citation-guide.md](citation-guide.md).
 
+## driver-tree-with-sparse-priors — Driver Tree with Sparse Priors
+
+When the target has no historicals, build a multiplicative **driver tree**
+where each leaf is filled with an explicit prior — an analogue range,
+expert judgment, or triangulated comparable — and propagate the
+uncertainty upward. Reach for it on pre-revenue or greenfield
+estimation, on projections where the driver structure decomposes cleanly
+but the leaves have no measured values, and whenever stakeholders need a
+range rather than a false-precision point. Typical wins are OSS revenue
+projections (reach × conversion × ARPU, each leaf an argued peer prior)
+and solo-maintainer per-seat forecasts. Failure modes: priors collapsed
+to point estimates (uncertainty lost as the tree aggregates), leaves
+filled from the same comparable across multiple nodes (hidden
+correlation), and shipping the tree as a projection without naming which
+prior to replace with data first. Pair with
+[benchmark-comparison](#benchmark-comparison---benchmark-comparison) to
+anchor each leaf to a named peer, and with
+[sensitivity-analysis](#sensitivity-analysis---sensitivity-analysis) to
+surface which prior most moves the answer.
+
 ---
 
 ## Combining strategies

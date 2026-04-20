@@ -371,6 +371,82 @@
         "Evaluate demographic risk to a consumer-goods portfolio",
         "Call the durability of remote-work spend categories"
       ]
+    },
+    {
+      "id": "comparable-benchmark",
+      "name": "Comparable Benchmark",
+      "coreIdea": "Reason about an unknown quantity or outcome by anchoring on a reference class of analogous cases and adjusting for the ways the target differs.",
+      "whenItApplies": [
+        "No historical data exists for the target but similar cases do",
+        "Estimate must hedge against single-source bias",
+        "Pre-revenue or greenfield decisions requiring a credible prior",
+        "Calibrating intuitions against peer outcomes before committing"
+      ],
+      "subVariants": [
+        {
+          "name": "Reference-Class Forecasting",
+          "keyMechanism": "Identify a statistically relevant class of prior cases, take the distribution of outcomes, and locate the target within it before adjusting for idiosyncratic factors.",
+          "archetypalProblem": "Forecast duration of a large IT project by comparing to a reference class of similar projects rather than building a bottom-up schedule."
+        },
+        {
+          "name": "Peer-Adjustment Triangulation",
+          "keyMechanism": "Take multiple comparables, compute a central tendency and spread, then adjust toward the target using small, defensible multipliers.",
+          "archetypalProblem": "Estimate conversion rate for a new open-source dev-tool landing page by averaging measured rates of comparable tools and adjusting for niche size."
+        },
+        {
+          "name": "Before/After Analogue",
+          "keyMechanism": "Use a pre/post outcome from an analogous case to size the likely delta for the target.",
+          "archetypalProblem": "Estimate revenue lift from adding a paid tier by looking at how peers' revenue shifted when they introduced similar tiers."
+        }
+      ],
+      "redFlags": [
+        "Reference class is chosen to support a desired conclusion rather than for structural similarity",
+        "Single comparable is taken as the answer without a range or spread",
+        "No adjustment for the ways the target differs materially from the class"
+      ],
+      "classicProblems": [
+        "Estimate first-year GitHub Sponsor revenue for a niche dev tool before it launches",
+        "Size plausible conversion rate for a new OSS pricing page",
+        "Calibrate a pre-revenue startup's headcount plan against peer-stage companies"
+      ]
+    },
+    {
+      "id": "policy-design",
+      "name": "Policy Design",
+      "coreIdea": "Design a set of rules, tiers, or mechanisms that shape behavior toward a chosen objective, and evaluate each option against the incentives and edge cases it creates.",
+      "whenItApplies": [
+        "Decision produces a rulebook, pricing tier, license, or eligibility mechanism rather than a single number",
+        "Multiple stakeholders are affected and their responses differ",
+        "Enforcement, bypass, and compliance cost must be evaluated alongside the intended outcome",
+        "Trade-offs between simplicity, fairness, and incentive-compatibility must be made explicit"
+      ],
+      "subVariants": [
+        {
+          "name": "Mechanism / Tier Design",
+          "keyMechanism": "Enumerate candidate tier splits, map who each tier rewards or discourages, and pick the split that best aligns user incentives with the objective.",
+          "archetypalProblem": "Design a free-vs-paid feature split for an OSS desktop app that preserves community goodwill while making seats defensible."
+        },
+        {
+          "name": "License / Rule Drafting",
+          "keyMechanism": "Select a legal or contractual instrument, enumerate what it permits and prohibits, and evaluate downstream effects on adoption and bypass risk.",
+          "archetypalProblem": "Choose between AGPL, BSL, Elastic 2.0, and source-available custom for a database product."
+        },
+        {
+          "name": "Enforcement / Compliance Design",
+          "keyMechanism": "Decide how a rule is observed or enforced (honor system, technical gating, audit) and trade enforcement cost against leakage.",
+          "archetypalProblem": "Decide whether a per-seat desktop license is enforced by license server, hardware ID, or honor-system activation code."
+        }
+      ],
+      "redFlags": [
+        "Design optimizes the intended case without considering how sophisticated users will route around it",
+        "No stakeholder-by-stakeholder impact trace (buyer, free user, contributor, enterprise)",
+        "Enforcement cost is not weighed against the revenue or behavior it protects"
+      ],
+      "classicProblems": [
+        "Split free and paid features for a desktop companion to an OSS framework",
+        "Choose a dual-licensing model for an OSS database",
+        "Design a sponsorware gate that releases features after a funding milestone"
+      ]
     }
   ],
   "crossParadigmGuide": [
@@ -413,6 +489,14 @@
     {
       "signal": "Decision horizon is 5+ years with structural change suspected",
       "leanToward": "macro-trend-reading"
+    },
+    {
+      "signal": "No historicals exist for the target but analogous cases do",
+      "leanToward": "comparable-benchmark"
+    },
+    {
+      "signal": "Decision produces a rule, tier, or mechanism rather than a single number",
+      "leanToward": "policy-design"
     }
   ]
 }

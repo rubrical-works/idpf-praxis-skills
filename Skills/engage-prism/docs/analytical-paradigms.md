@@ -126,6 +126,34 @@ coverage alone; measurable indicators (patents, hiring, search interest,
 regulatory filings) are what separate a durable call from a fashionable
 one.
 
+## comparable-benchmark — Comparable Benchmark
+
+Comparable Benchmark reasons about an unknown quantity by anchoring on a
+**reference class of analogous cases** and adjusting for how the target
+differs. Reach for it when the target has no historicals but peers do —
+greenfield estimates, pre-revenue projections, first-year outcome
+forecasts. Variants include reference-class forecasting (take the
+distribution of prior outcomes and locate the target within it),
+peer-adjustment triangulation (multiple comparables → central tendency +
+spread → small defensible adjustments), and before/after analogue (size
+a delta from a peer's pre/post). The canonical failure is choosing the
+reference class to support a conclusion rather than for structural
+similarity; document why each peer belongs and how the target differs.
+
+## policy-design — Policy Design
+
+Policy Design produces **rules, tiers, or mechanisms** — not a single
+number — that shape behavior toward a chosen objective, and evaluates each
+option by the incentives and edge cases it creates. Reach for it when the
+output is a rulebook (pricing tiers, license terms, eligibility
+mechanisms, enforcement rules), when multiple stakeholder groups respond
+differently, and when enforcement cost and bypass risk must be weighed
+alongside intended outcomes. Variants include mechanism / tier design,
+license / rule drafting, and enforcement / compliance design. The failure
+mode is optimizing the intended case without tracing how sophisticated
+users will route around it — always include a stakeholder-by-stakeholder
+impact trace (buyer, free user, contributor, enterprise).
+
 ---
 
 ## Picking the right paradigm
@@ -143,6 +171,8 @@ gives quick routing:
 - *Averages hide heterogeneity* → **segmentation-analysis**
 - *Multi-step conversion problem* → **funnel-analysis**
 - *5+ year horizon with structural change* → **macro-trend-reading**
+- *No historicals but analogues exist* → **comparable-benchmark**
+- *Output is a rulebook, tier, or mechanism* → **policy-design**
 
 Signal matching (`scripts/match-signals.js`) does this routing
 mechanically — but knowing the map helps you spot when the match is weak

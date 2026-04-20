@@ -1,5 +1,5 @@
 # Mutation Operator Guide
-**Version:** v0.12.2
+**Version:** v0.12.3
 Comprehensive reference for mutation operators across languages.
 ## Operator Categories
 ### 1. Arithmetic Operator Replacement (AOR)

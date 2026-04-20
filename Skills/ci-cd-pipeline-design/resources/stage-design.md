@@ -1,5 +1,5 @@
 # Stage Design Guide
-**Version:** v0.12.2
+**Version:** v0.12.3
 ## Build Stage
 ### Purpose
 Transform source code into deployable artifacts.

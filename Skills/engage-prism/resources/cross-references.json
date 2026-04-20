@@ -501,6 +501,206 @@
         { "id": "primary-vs-secondary-sources", "weight": 0.9, "rationale": "Tool discovery is primarily about reaching primary data — regulators, exchanges, official statistics — over aggregators." },
         { "id": "triangulation", "weight": 0.55, "rationale": "Useful tool stacks let the user cross-check data across independent providers." }
       ]
+    },
+    {
+      "id": "oss-monetization-design",
+      "description": "User is designing a sustainable monetization mix for an open-source project and must trade off sponsorships, dual-licensing, paid tiers, and community norms.",
+      "keywords": [
+        "oss monetization",
+        "open source monetization",
+        "monetization",
+        "monetize open source",
+        "dual-licensing",
+        "dual licensing",
+        "open-core",
+        "open core",
+        "sponsorware",
+        "BSL",
+        "business source license",
+        "AGPL",
+        "SSPL",
+        "elastic license",
+        "github sponsors",
+        "patreon",
+        "polar.sh",
+        "per-seat licensing",
+        "paid tier",
+        "free vs paid split",
+        "sustainable use license",
+        "license model"
+      ],
+      "paradigms": [
+        { "id": "policy-design", "weight": 0.9, "rationale": "Monetization design produces a rulebook — tier splits, license terms, enforcement — not a single number." },
+        { "id": "comparable-benchmark", "weight": 0.75, "rationale": "Peer OSS projects (Sentry BSL, n8n sustainable-use, Plausible AGPL+hosted) are the most reliable evidence base for what works." },
+        { "id": "scenario-analysis", "weight": 0.5, "rationale": "License and tier choices have branching downstream effects that must be traced before committing." }
+      ],
+      "structures": [
+        { "id": "comparables-table", "weight": 0.85, "rationale": "Natural structure for scoring peer projects by license, tier split, revenue outcome, and community reception." },
+        { "id": "cost-benefit-ledger", "weight": 0.7, "rationale": "Each monetization option has distinct adoption-cost and revenue-upside rows that must be weighed." },
+        { "id": "decision-matrix", "weight": 0.55, "rationale": "Weighted matrix over tiers × objectives (revenue, community goodwill, defensibility) frames the final choice." }
+      ],
+      "strategies": [
+        { "id": "benchmark-comparison", "weight": 0.9, "rationale": "Comparable-project precedents are the strongest evidence available for a pre-revenue OSS monetization plan." },
+        { "id": "stakeholder-weighting", "weight": 0.7, "rationale": "Free users, paying users, contributors, and employers of contributors all respond differently — their weights must be made explicit." },
+        { "id": "primary-vs-secondary-sources", "weight": 0.55, "rationale": "Ground claims in maintainers' own retrospectives and license texts rather than aggregator summaries." }
+      ]
+    },
+    {
+      "id": "developer-tool-community-growth",
+      "description": "User wants to grow GitHub stars and contributors on a developer tool and must pick launch venues, content cadence, and contributor-onboarding tactics.",
+      "keywords": [
+        "github stars",
+        "star growth",
+        "grow stars",
+        "contributors",
+        "contributor growth",
+        "first contributors",
+        "good first issue",
+        "launch venue",
+        "hacker news",
+        "product hunt",
+        "reddit launch",
+        "lobsters",
+        "dev.to",
+        "show hn",
+        "community growth",
+        "developer community",
+        "oss community",
+        "content cadence",
+        "showcase integrations",
+        "top of funnel",
+        "awareness funnel",
+        "dev-tool launch",
+        "dev tool launch"
+      ],
+      "paradigms": [
+        { "id": "funnel-analysis", "weight": 0.85, "rationale": "Awareness → visit → star → contributor → customer is a conversion funnel with identifiable stage drop-offs." },
+        { "id": "segmentation-analysis", "weight": 0.7, "rationale": "Different audience segments (Claude Code users vs. Cursor users vs. traditional dev teams) respond to different content and venues." },
+        { "id": "comparable-benchmark", "weight": 0.6, "rationale": "Aider, Continue.dev, Cline, and TaskMaster star trajectories are the best available priors for what a similar project can expect." }
+      ],
+      "structures": [
+        { "id": "cohort-table", "weight": 0.8, "rationale": "Cohorts by launch event / content batch / referral source make the growth story legible and diagnosable." },
+        { "id": "driver-tree", "weight": 0.7, "rationale": "Stars per week decomposes cleanly into reach × engagement × conversion per channel." },
+        { "id": "comparables-table", "weight": 0.55, "rationale": "Peer-project star curves and contributor ratios anchor realistic targets." }
+      ],
+      "strategies": [
+        { "id": "leading-vs-lagging-indicators", "weight": 0.85, "rationale": "Stars are a lagging indicator; leading indicators (issues filed, discussions opened, showcase PRs) drive operating cadence." },
+        { "id": "benchmark-comparison", "weight": 0.75, "rationale": "Peer launches set realistic expectations and surface tactics (HN framing, PH asset packs, showcase integrations) worth replicating." },
+        { "id": "triangulation", "weight": 0.5, "rationale": "Star, contributor, and engagement metrics should agree before claiming a channel works." }
+      ]
+    },
+    {
+      "id": "solo-maintainer-unit-economics",
+      "description": "User needs a bottom-up revenue projection for a pre-revenue or early-stage OSS ecosystem across sponsorships, per-seat licensing, and consulting, with no historical conversion data.",
+      "keywords": [
+        "solo maintainer",
+        "indie maintainer",
+        "revenue projection",
+        "12-month projection",
+        "time-to-first-dollar",
+        "time to first dollar",
+        "bottom-up projection",
+        "unit economics",
+        "pre-revenue",
+        "arpu",
+        "conversion rate",
+        "trial to paid",
+        "per-seat pricing",
+        "seats",
+        "annual contract value",
+        "acv",
+        "sponsor revenue",
+        "conservative base optimistic",
+        "revenue range"
+      ],
+      "paradigms": [
+        { "id": "forecasting", "weight": 0.85, "rationale": "The output is a forward numeric projection across multiple revenue streams over 12 months." },
+        { "id": "comparable-benchmark", "weight": 0.85, "rationale": "With no historicals, peer-project conversion and ARPU ranges are the load-bearing priors for every leaf of the tree." },
+        { "id": "scenario-analysis", "weight": 0.6, "rationale": "Conservative / base / optimistic triples are explicit scenarios over the key driver assumptions." }
+      ],
+      "structures": [
+        { "id": "driver-tree", "weight": 0.9, "rationale": "Revenue = reach × conversion × ARPU decomposes cleanly by channel and supports leaf-level argued assumptions." },
+        { "id": "scenario-grid", "weight": 0.7, "rationale": "Conservative / base / optimistic × channel makes the projection range auditable at a glance." },
+        { "id": "sensitivity-tornado", "weight": 0.55, "rationale": "Which leaf (conversion rate, ARPU, reach) most moves the answer — the first data to gather next." }
+      ],
+      "strategies": [
+        { "id": "driver-tree-with-sparse-priors", "weight": 0.95, "rationale": "This is the canonical application: pre-revenue projection where every leaf is filled from a peer prior or explicit judgment." },
+        { "id": "top-down-vs-bottom-up", "weight": 0.7, "rationale": "Reconciling a bottom-up seat projection against a top-down TAM filter surfaces hidden optimism." },
+        { "id": "sensitivity-analysis", "weight": 0.6, "rationale": "Report which priors, if replaced with real data, would most change the recommendation." }
+      ]
+    },
+    {
+      "id": "devtool-content-seo-ia",
+      "description": "User is planning information architecture, docs/blog split, pricing page, and launch-week content calendar for a developer-tool marketing site.",
+      "keywords": [
+        "sitemap",
+        "site architecture",
+        "information architecture",
+        "landing page",
+        "pricing page",
+        "docs site",
+        "docs vs blog",
+        "content calendar",
+        "launch week",
+        "marketing site",
+        "dev-tool site",
+        "github pages",
+        "seo",
+        "keyword coverage",
+        "page-by-page purpose",
+        "ia"
+      ],
+      "paradigms": [
+        { "id": "segmentation-analysis", "weight": 0.8, "rationale": "Different visitor intents (evaluator, contributor, buyer) require different landing surfaces and different content types." },
+        { "id": "funnel-analysis", "weight": 0.75, "rationale": "Site IA is a funnel: landing → product → docs/pricing → star/install/buy, with stage-specific conversion to design for." },
+        { "id": "policy-design", "weight": 0.5, "rationale": "Docs-vs-blog boundaries, canonicalization, and contribution rules are small rulebooks that must be set deliberately." }
+      ],
+      "structures": [
+        { "id": "decision-matrix", "weight": 0.75, "rationale": "Pages × visitor-segment × intent is the weighted matrix that drives sitemap decisions." },
+        { "id": "cohort-table", "weight": 0.6, "rationale": "Launch-week content cadence organizes naturally as cohorts of posts by theme and day." },
+        { "id": "comparables-table", "weight": 0.55, "rationale": "Peer dev-tool sites (Linear, Plausible, Raycast) yield concrete IA patterns worth lifting or avoiding." }
+      ],
+      "strategies": [
+        { "id": "benchmark-comparison", "weight": 0.8, "rationale": "Peer dev-tool sites are the strongest evidence for which IA patterns work with this audience." },
+        { "id": "leading-vs-lagging-indicators", "weight": 0.6, "rationale": "Organic impressions and docs-page dwell time lead traffic; pure traffic is the lagging headline." },
+        { "id": "stakeholder-weighting", "weight": 0.5, "rationale": "Evaluator, buyer, and contributor segments each want different things from the same homepage — weight them before compressing." }
+      ]
+    },
+    {
+      "id": "product-led-licensing-enforcement",
+      "description": "User is deciding how to enforce a per-seat or per-device license for a desktop or self-hosted product across trade-offs between enforcement cost, bypass risk, and user experience.",
+      "keywords": [
+        "license enforcement",
+        "license server",
+        "license key",
+        "activation code",
+        "hardware id",
+        "machine id",
+        "honor system",
+        "per-seat license",
+        "per-device license",
+        "license bypass",
+        "piracy",
+        "offline activation",
+        "desktop license",
+        "self-hosted license",
+        "entitlements"
+      ],
+      "paradigms": [
+        { "id": "policy-design", "weight": 0.9, "rationale": "Enforcement design is a rulebook — what is gated, how it is checked, what happens on bypass or failure." },
+        { "id": "scenario-analysis", "weight": 0.6, "rationale": "Bypass, offline-use, and reinstall scenarios each have different likelihoods and blast radii that must be traced." },
+        { "id": "comparable-benchmark", "weight": 0.55, "rationale": "Peer desktop tools (JetBrains, Sublime, Tableau) show the live range of enforcement postures and their observed leakage." }
+      ],
+      "structures": [
+        { "id": "decision-matrix", "weight": 0.8, "rationale": "Enforcement options × criteria (cost, UX friction, bypass risk, offline support) is the natural matrix." },
+        { "id": "cost-benefit-ledger", "weight": 0.75, "rationale": "Each mechanism carries ongoing cost (license server uptime, support) and a benefit (revenue protected) that must be set against each other." },
+        { "id": "scenario-grid", "weight": 0.55, "rationale": "Enforcement posture × adversary sophistication surfaces which mechanism matters at which threat tier." }
+      ],
+      "strategies": [
+        { "id": "ev-vs-risk-framing", "weight": 0.85, "rationale": "Expected revenue protected vs. downside of friction, outage, or offline-user lockout is the core trade-off." },
+        { "id": "stakeholder-weighting", "weight": 0.7, "rationale": "Paying users, offline users, and would-be pirates all experience enforcement differently — weights must be made explicit." },
+        { "id": "sensitivity-analysis", "weight": 0.5, "rationale": "Which enforcement parameter (grace period, offline days, phone-home frequency) most changes user experience vs. leakage — surface it before picking a point." }
+      ]
     }
   ],
   "overlapThreshold": 0.7,
