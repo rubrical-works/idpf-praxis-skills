@@ -42,6 +42,22 @@ const path = require('path');
 const RESOURCES_DIR = path.join(__dirname, '..', 'resources');
 const CROSS_REF_PATH = path.join(RESOURCES_DIR, 'cross-references.json');
 
+const FALLBACK_ALLOWLIST = [
+  'finance', 'financial', 'stock', 'stocks', 'etf', 'options', 'bonds',
+  'sector', 'market', 'portfolio', 'invest', 'trade', 'trading', 'hedge',
+  'macro', 'economic', 'recession', 'inflation', 'rates', 'fed',
+  'commodity', 'equity', 'equities'
+];
+
+function hasAllowlistHit(normalizedKeywords) {
+  for (const kw of normalizedKeywords) {
+    for (const term of FALLBACK_ALLOWLIST) {
+      if (kw.includes(term) || term.includes(kw)) return true;
+    }
+  }
+  return false;
+}
+
 function main() {
   const { keywords, numPaths } = parseArgs(process.argv.slice(2));
 
@@ -70,6 +86,29 @@ function main() {
   const { matched, unmatched } = matchKeywords(keywords, signals);
 
   if (matched.length === 0) {
+    const normalizedKeywords = keywords.map(k => k.toLowerCase().trim());
+    if (hasAllowlistHit(normalizedKeywords)) {
+      const fallbackResult = {
+        ok: true,
+        confidence: 0.15,
+        fallback: true,
+        matchedSignals: [],
+        unmatchedKeywords: unmatched,
+        scores: { paradigms: [], structures: [], strategies: [] },
+        paths: [{
+          paradigm: 'scenario-analysis',
+          paradigmScore: 0,
+          structure: 'scenario-grid',
+          structureScore: 0,
+          strategy: 'ev-vs-risk-framing',
+          strategyScore: 0
+        }],
+        message: 'Low-confidence fallback: no signal matched but keywords include finance/macro vocabulary. Subagent must surface this degradation and prompt for keyword refinement before proceeding.'
+      };
+      process.stdout.write(JSON.stringify(fallbackResult, null, 2));
+      process.exit(0);
+    }
+
     const result = {
       ok: false,
       matchedSignals: [],

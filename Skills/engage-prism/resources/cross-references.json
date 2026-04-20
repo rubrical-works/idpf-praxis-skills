@@ -231,7 +231,13 @@
         "portfolio mix",
         "rebalance",
         "where to invest",
-        "spending mix"
+        "spending mix",
+        "go long",
+        "go short",
+        "hedge",
+        "positioning",
+        "overweight",
+        "underweight"
       ],
       "paradigms": [
         { "id": "portfolio-optimization", "weight": 0.95, "rationale": "The paradigm is defined by constrained allocation across bets." },
@@ -256,7 +262,12 @@
         "downside",
         "tail risk",
         "recession",
-        "base bull bear"
+        "base bull bear",
+        "geopolitical",
+        "conflict",
+        "war",
+        "supply shock",
+        "exogenous shock"
       ],
       "paradigms": [
         { "id": "scenario-analysis", "weight": 0.95, "rationale": "Direct fit: the paradigm is defined by disciplined scenario construction." },
@@ -282,7 +293,10 @@
         "regulatory",
         "demographics",
         "disruption",
-        "AI impact"
+        "AI impact",
+        "macro regime",
+        "risk regime",
+        "cycle turn"
       ],
       "paradigms": [
         { "id": "macro-trend-reading", "weight": 0.95, "rationale": "The paradigm is defined by reading durable exogenous shifts." },
@@ -345,6 +359,148 @@
         { "id": "in-sample-vs-out-of-sample", "weight": 0.75, "rationale": "Revised model should be validated on a holdout before use." },
         { "id": "triangulation", "weight": 0.6, "rationale": "Top-down, bottom-up, and analog forecasts should be reconciled." }
       ]
+    },
+    {
+      "id": "geopolitical-risk-positioning",
+      "description": "User is positioning a portfolio, business, or decision against geopolitical shocks — war, sanctions, trade tensions, or supply-route disruption.",
+      "keywords": [
+        "geopolitical risk",
+        "war",
+        "conflict",
+        "sanctions",
+        "Iran",
+        "Russia",
+        "China tensions",
+        "tariffs",
+        "Strait of Hormuz",
+        "supply disruption",
+        "exogenous shock"
+      ],
+      "paradigms": [
+        { "id": "scenario-analysis", "weight": 0.95, "rationale": "Geopolitical shocks are best analyzed through disciplined scenario construction with coordinated driver moves." },
+        { "id": "macro-trend-reading", "weight": 0.55, "rationale": "Shocks sit atop longer-horizon structural shifts in alignment, trade, and energy flows." }
+      ],
+      "structures": [
+        { "id": "scenario-grid", "weight": 0.9, "rationale": "Canonical structure for laying out escalation/stalemate/de-escalation or similar branch points." },
+        { "id": "driver-tree", "weight": 0.55, "rationale": "Decomposes shock pathways into sector-specific drivers." }
+      ],
+      "strategies": [
+        { "id": "ev-vs-risk-framing", "weight": 0.85, "rationale": "Shock positioning must weigh expected outcomes against distribution of tail risk." },
+        { "id": "triangulation", "weight": 0.6, "rationale": "News, market prices, and official data should corroborate any scenario probability estimate." },
+        { "id": "primary-vs-secondary-sources", "weight": 0.6, "rationale": "Ground analysis in filings, regulator statements, and official data rather than narrative aggregators." }
+      ]
+    },
+    {
+      "id": "commodity-shock-exposure",
+      "description": "User is assessing exposure to a commodity price spike or supply disruption — oil, gas, agricultural inputs — and how it flows through portfolios or margins.",
+      "keywords": [
+        "oil shock",
+        "oil prices",
+        "commodity shock",
+        "Brent",
+        "WTI",
+        "gas prices",
+        "agricultural commodities",
+        "grain",
+        "energy prices",
+        "inflation passthrough"
+      ],
+      "paradigms": [
+        { "id": "scenario-analysis", "weight": 0.85, "rationale": "Commodity shocks are inherently scenario-driven: supply, demand, and policy branches." },
+        { "id": "forecasting", "weight": 0.55, "rationale": "Pass-through modeling requires explicit forward projection of price and pass-through coefficients." }
+      ],
+      "structures": [
+        { "id": "scenario-grid", "weight": 0.8, "rationale": "Base/bull/bear on commodity price with paired demand outcomes." },
+        { "id": "driver-tree", "weight": 0.75, "rationale": "Decomposes impact into input cost, volume, and substitution channels." }
+      ],
+      "strategies": [
+        { "id": "sensitivity-analysis", "weight": 0.85, "rationale": "Margin and revenue sensitivity to input cost is the load-bearing calculation." },
+        { "id": "ev-vs-risk-framing", "weight": 0.7, "rationale": "Asymmetric payoff shapes call for risk-aware framing over point estimates." }
+      ]
+    },
+    {
+      "id": "sector-rotation-thesis",
+      "description": "User is deciding which sectors to favor or avoid based on a macro or cycle thesis — risk-on vs risk-off, cyclicals vs defensives, or event-driven rotation.",
+      "keywords": [
+        "sector rotation",
+        "sector allocation",
+        "defense sector",
+        "energy sector",
+        "which sector",
+        "favored sectors",
+        "rotate into",
+        "risk-on risk-off",
+        "cyclicals vs defensives"
+      ],
+      "paradigms": [
+        { "id": "portfolio-optimization", "weight": 0.8, "rationale": "Rotation is a reallocation problem under a macro prior." },
+        { "id": "macro-trend-reading", "weight": 0.65, "rationale": "Sector theses rest on reading cycle, regime, or policy shifts." },
+        { "id": "valuation", "weight": 0.5, "rationale": "Sector dispersion is anchored by relative valuation at entry." }
+      ],
+      "structures": [
+        { "id": "decision-matrix", "weight": 0.75, "rationale": "Ranks sectors by criteria such as earnings sensitivity, valuation, and positioning." },
+        { "id": "comparables-table", "weight": 0.65, "rationale": "Side-by-side sector metrics — multiples, growth, beta — support ranking." }
+      ],
+      "strategies": [
+        { "id": "benchmark-comparison", "weight": 0.75, "rationale": "Rotation is meaningful relative to index weights or prior cycles, not in isolation." },
+        { "id": "ev-vs-risk-framing", "weight": 0.7, "rationale": "Each sector tilt has an asymmetric payoff depending on which regime prevails." }
+      ]
+    },
+    {
+      "id": "tactical-positioning-short-horizon",
+      "description": "User wants a near-term trade idea or tactical tilt over the next quarter — buy/short/hedge calls with explicit entry and exit logic.",
+      "keywords": [
+        "next quarter",
+        "near term",
+        "short term trade",
+        "tactical positioning",
+        "buy or short",
+        "go long",
+        "go short",
+        "hedging",
+        "trade idea"
+      ],
+      "paradigms": [
+        { "id": "scenario-analysis", "weight": 0.75, "rationale": "Short-horizon calls live or die by correctly mapping the probable path and its catalysts." },
+        { "id": "portfolio-optimization", "weight": 0.6, "rationale": "Tactical positions must be sized against the rest of the book." }
+      ],
+      "structures": [
+        { "id": "scenario-grid", "weight": 0.7, "rationale": "Compact branch map of catalyst outcomes anchors entry and exit triggers." },
+        { "id": "sensitivity-tornado", "weight": 0.55, "rationale": "Shows which catalyst or price level most moves the trade's expected value." }
+      ],
+      "strategies": [
+        { "id": "ev-vs-risk-framing", "weight": 0.85, "rationale": "Tactical trades must have explicit asymmetry: bounded loss, quantified upside." },
+        { "id": "in-sample-vs-out-of-sample", "weight": 0.6, "rationale": "Historical analog fit should be validated out of sample before sizing." }
+      ]
+    },
+    {
+      "id": "investment-tooling-discovery",
+      "description": "User is asking for tools, data sources, or screeners that can inform a decision — not an analysis itself, but the plumbing for one.",
+      "keywords": [
+        "free tools",
+        "data sources",
+        "analytical tools",
+        "screener",
+        "FRED",
+        "EIA",
+        "SEC EDGAR",
+        "TradingView",
+        "Finviz",
+        "research tools",
+        "retail investor tools"
+      ],
+      "paradigms": [
+        { "id": "macro-trend-reading", "weight": 0.55, "rationale": "Tool discovery is often in service of reading a macro signal from primary data." },
+        { "id": "segmentation-analysis", "weight": 0.4, "rationale": "Tools often exist to segment a universe (tickers, sectors, geographies) before analysis." }
+      ],
+      "structures": [
+        { "id": "comparables-table", "weight": 0.8, "rationale": "Tool catalogs are naturally rendered as capability-vs-limit comparison tables." },
+        { "id": "decision-matrix", "weight": 0.55, "rationale": "When selecting among tools, a weighted matrix over coverage, cost, and access is the default structure." }
+      ],
+      "strategies": [
+        { "id": "primary-vs-secondary-sources", "weight": 0.9, "rationale": "Tool discovery is primarily about reaching primary data — regulators, exchanges, official statistics — over aggregators." },
+        { "id": "triangulation", "weight": 0.55, "rationale": "Useful tool stacks let the user cross-check data across independent providers." }
+      ]
     }
   ],
   "overlapThreshold": 0.7,
@@ -360,6 +516,10 @@
     {
       "description": "At least one selected path must use a strategy that forces external comparison (benchmark-comparison, triangulation, or primary-vs-secondary-sources) when the signal concerns valuation, market sizing, or competitive analysis.",
       "check": "If signal ∈ {market-entry-attractiveness, market-size-estimate, equity-fair-value, earnings-thesis-update}, at least one chosen strategyId ∈ {benchmark-comparison, triangulation, primary-vs-secondary-sources}"
+    },
+    {
+      "description": "Scenario/shock-family signals must carry a risk-aware lens. When the matched signal is in {geopolitical-risk-positioning, commodity-shock-exposure, tactical-positioning-short-horizon, scenario-stress-test}, at least one chosen strategyId MUST be ev-vs-risk-framing OR sensitivity-analysis.",
+      "check": "If signal ∈ {geopolitical-risk-positioning, commodity-shock-exposure, tactical-positioning-short-horizon, scenario-stress-test}, at least one chosen strategyId ∈ {ev-vs-risk-framing, sensitivity-analysis}"
     }
   ]
 }

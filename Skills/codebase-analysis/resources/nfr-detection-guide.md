@@ -1,5 +1,5 @@
 # NFR Detection Guide
-**Version:** v0.12.0
+**Version:** v0.12.1
 **Purpose:** Patterns for inferring Non-Functional Requirements from code
 ## Security (SEC)
 ### SEC-001: Password Hashing

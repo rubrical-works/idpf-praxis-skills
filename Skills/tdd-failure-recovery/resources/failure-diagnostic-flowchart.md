@@ -1,5 +1,5 @@
 # TDD Failure Diagnostic Flowchart
-**Version:** v0.12.0
+**Version:** v0.12.1
 ## Primary Decision: Which Phase?
 ```
 Test behaved unexpectedly

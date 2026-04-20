@@ -1,5 +1,5 @@
 # PostgreSQL Query Patterns
-**Version:** v0.12.0
+**Version:** v0.12.1
 ## CRUD Operations
 ### Create (INSERT)
 ```sql

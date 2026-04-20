@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-19T23:14:51.208Z",
+  "generatedAt": "2026-04-20T00:58:47.281Z",
   "version": "0.1.0",
   "skillCount": 45,
   "skills": [
@@ -194,7 +194,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "85cdebf88d73d0866b0955b97e3e23ab7725765fbeaa8e7e8505ce87f735c30f",
+      "checksum": "ab553d0770032580330c69870305269dadfd4c920dc0a38e21a8d0a46c41f87b",
       "category": "platform",
       "relevantTechStack": [
         "digitalocean",
@@ -230,7 +230,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "1081089b6febebaa754d5f5ec872e9cfec5846cee146807362d50da1af00264c",
+      "checksum": "6f4b3a5e36c43e4e5df1dd6f32b3f5f4b060e220f28224c2ba27d6312981e666",
       "category": "platform",
       "relevantTechStack": [
         "electron",
@@ -268,7 +268,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-04",
-      "checksum": "2705bb95e6d4fccb5056b2346a5a188792df883d15b566d7bcd7b8604adec98c",
+      "checksum": "805749ae74aece8041e75adb08bd6b25dd32ab664d7d842dfa698f42d154d7d0",
       "category": "problem-solving",
       "relevantTechStack": [
         "algorithms",
@@ -285,7 +285,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "dc5da889106ae314e3d24356dea7aa32538005a80fe38474803ce3a32eeb0b30",
+      "checksum": "79515212e8b18f72a7da282aeb69c7a98b413d5b11bf9dec3ba1a92cbf7d6773",
       "category": "analysis",
       "relevantTechStack": [
         "business-analysis",
@@ -326,7 +326,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "36e6924ab29c49362163df761f88e5a42e5d45c371e2d9803c7c8cec15329bda",
+      "checksum": "ba02b4416a558def2a00a7e786f73f1b2e177ca3017211524d0372615a9c51f0",
       "category": "platform",
       "relevantTechStack": [
         "flask",
@@ -343,7 +343,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "40e3cda31af7b3210fa10907d4a6529a9826044d57d706ff012892fa54a2f375",
+      "checksum": "01d82d02effcd16d43b8bd553dd246b90905b3345b7c5023b443c89f4c3f1896",
       "category": "web",
       "relevantTechStack": [
         "i18n",
@@ -361,7 +361,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "c0e554ec2da873c1b505edc51fbc84e12e79e2a41a6aa734bdc190624795c305",
+      "checksum": "e76dbd9a37da425247940fe384ece80254979667dc9ac7fa75d5179e267ade7f",
       "category": "setup",
       "relevantTechStack": [
         "node",
@@ -436,7 +436,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "ce23436b219036345db1576347af8f428bcac79a834163be3ab1999a2778655d",
+      "checksum": "b5c932f773e1e517d519479dd0059e4ca28f26f50c647e4cb9cc57bad6b51194",
       "category": "devops",
       "relevantTechStack": [
         "opentelemetry",
@@ -473,7 +473,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "61095752b7a14db9426fb574b39404eab9de7c69a8ff157a0594778c70b570d0",
+      "checksum": "671a7f49be42606457d8d60baa3baee115960e8b991c618870768a3cd57884fb",
       "category": "testing",
       "relevantTechStack": [
         "playwright",
@@ -490,7 +490,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "790c8f2bb304226f375fdfeba10f6e8255d1cec8683534254a5521b627624b48",
+      "checksum": "c11e580abd2668f301342bb42994ab7e0b4890661cfdd954909a3f3fc747074a",
       "category": "database",
       "relevantTechStack": [
         "postgresql",
@@ -544,7 +544,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "4b7dc915bb8c729ebb315b6b7d02e245f67cf3e899efbe577e648c92386187c2",
+      "checksum": "73284fc8f03750f7bf73974e4d2d232bf1202383840e872581804de52d146326",
       "category": "platform",
       "relevantTechStack": [
         "railway",
@@ -562,7 +562,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "a2a013867f9a36bfe8c1cc647bec660c57ba1902725321218be8c887046fef00",
+      "checksum": "c3776f25116236df71e552b9ba9752ce534d215cd59af03088c26df226fea932",
       "category": "platform",
       "relevantTechStack": [
         "render",
@@ -601,7 +601,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "8078d9f9d4b50cda9b776eab734d3e04fae4750599cdfea5a8ef9405c7424b62",
+      "checksum": "009bb6a6431d7d9a4f91af650c556af27067414db4915c768ba7d87a02402ca5",
       "category": "setup",
       "relevantTechStack": [
         "skill-authoring",
@@ -636,7 +636,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "4ca462b9bff7e7e4ac437ffb7613c13b54921d04e4b778f44b55064b0ac8d063",
+      "checksum": "0f9be9a6db5c9c6ce8c29e22a4f55b68f3b3ddbe75026a4bf5217a9c96d08d99",
       "category": "platform",
       "relevantTechStack": [
         "sinatra",
@@ -653,7 +653,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "6996adee8290a8ff4877301b3fd6c0d41e1ef2bcff54ee8f807b86f305826713",
+      "checksum": "0da294f82c85bb802bc8b7729b74e2ed2b1023d83a9ac6929723255fcce151c2",
       "category": "database",
       "relevantTechStack": [
         "sqlite",
@@ -822,7 +822,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "426dcd571873629bd933eafab2954f0f28474582feb0e808f85b46a5390b4ded",
+      "checksum": "6a460888bc336e510695bd11791568379bd33baf4d3d201cd8ca109d2c25e377",
       "category": "platform",
       "relevantTechStack": [
         "vercel",

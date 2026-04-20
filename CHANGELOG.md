@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.1] - 2026-04-19
+
+### Changed
+- **engage-prism: licensed-advice constraint softened** — `SKILL.md` now permits the synthesis agent to name specific securities, options, or positions when the user asks, provided outputs stamp the new Disclaimer template. Trade execution / order placement guard retained. Refusing to name securities when the user has acknowledged informational framing is now itself a contract violation. (#184)
+- **engage-prism: signal catalog expanded** — added 5 new signals in `cross-references.json` (`geopolitical-risk-positioning`, `commodity-shock-exposure`, `sector-rotation-thesis`, `tactical-positioning-short-horizon`, `investment-tooling-discovery`) and broadened keywords on 3 existing signals (`scenario-stress-test`, `portfolio-allocation-decision`, `macro-trend-assessment`). Closes the geopolitical / commodity-shock / tactical-trade vocabulary gap that previously produced zero matches. (#185)
+- **engage-prism: risk-aware anti-overlap rule** — new `antiOverlapRule` requires at least one chosen strategy to be `ev-vs-risk-framing` or `sensitivity-analysis` when the matched signal is in the scenario/shock family. New `scripts/anti-overlap-validator.js` encodes both conditional rules as a pure function. (#186)
+- **engage-prism: graceful fallback on zero signal matches** — `match-signals.js` now emits `ok: true, fallback: true, confidence: 0.15` with a default `scenario-analysis / scenario-grid / ev-vs-risk-framing` path when no signal matches but a finance/macro allowlist term is present. Hard error preserved when no allowlist hit. `SKILL.md` instructs the subagent to acknowledge the low-confidence routing and ask one refinement question before proceeding. (#187)
+- **engage-prism: markdown output contract** — `SKILL.md` now declares a user-facing output contract: synthesis agent MUST render each path as markdown (heading, narrative, bulleted findings, numbered citation footnotes, markdown tables) and MUST preserve raw JSON inside a `<details>` block for audit. Raw-JSON-in-primary-narrative is an explicit contract violation. New example `PRISM-output-contract-reference.md` demonstrates the shape. (#188)
+
+### Added
+- `tests/skills/engage-prism-disclaimer-contract.test.js`, `engage-prism-anti-overlap.test.js`, `engage-prism-fallback.test.js`, `engage-prism-output-contract.test.js` — 18 new structural/unit tests pinning the four contract changes above.
+
 ## [0.12.0] - 2026-04-19
 
 ### Added

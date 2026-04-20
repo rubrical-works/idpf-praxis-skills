@@ -30,7 +30,8 @@ Use for non-code analytical questions:
 **Do NOT use for:**
 - Code/algorithm/IT-architecture — use `engage-exocortex`
 - Questions fully resolvable from repo or single doc — direct answer cheaper
-- Real-time trading, clinical/legal advice — surface, don't substitute
+- Trade execution/order placement (never executes trades regardless of request)
+- Substitute for licensed clinical/legal/regulatory judgment — specific-security analysis permitted; outputs MUST carry the disclaimer template
 ## Options
 | Flag | Description | Default |
 |------|-------------|---------|
@@ -106,6 +107,7 @@ node scripts/match-signals.js "keyword1" "keyword2" [...] [--paths N]
 ```
 Reads `resources/cross-references.json`, matches keywords, aggregates weighted scores across paradigms/structures/strategies, returns top N candidates JSON.
 Parse output — `ok: true` means matched. Use `scores.paradigms`, `scores.structures`, `scores.strategies`.
+**Fallback path (`result.fallback === true`):** matcher found zero signal matches but allowlist term (finance/macro vocabulary) present. Envelope carries `confidence: 0.15`, `matchedSignals: []`, default path (`scenario-analysis` / `scenario-grid` / `ev-vs-risk-framing`). Subagent MUST open with low-confidence acknowledgement and ask one keyword-refinement question before proceeding.
 ### Selective Loading
 ```bash
 node scripts/load-entries.js paradigm <id1> [id2] [...]
@@ -148,7 +150,7 @@ Verify against `resources/cross-references.json` → `antiOverlapRules[]`:
 - Each path distinct primary paradigm where possible
 - No identical (paradigm, structure, strategy) tuples
 ## Step 3 — Spawn Subagents in Parallel
-Spawn all N simultaneously via Agent tool. Subagents research, reason, write — **no code execution, no trading/ordering actions**.
+Spawn all N simultaneously via Agent tool. Subagents research/reason/write — analysis of specific tickers, ETFs, options, shorts/hedges permitted. **Never execute trades or interact with brokerage APIs** regardless of request. Finance/legal/medical outputs MUST stamp the disclaimer template.
 ### Brief generation (slot-filling)
 Read `resources/brief-template.json`. Fill per path:
 - `questionStatement` — user's question
@@ -167,6 +169,12 @@ Each subagent:
 ### Report format
 JSON per `resources/report-template.json`, including `citations: []` (each per `citation-schema.json`) and `webResearch: { performed, reason?, fetchCount }`.
 Validate via `resources/report-schema.json`. Malformed, or empty `citations` while `webResearch.performed = true` → flag and deprioritize.
+### User-facing output contract
+JSON envelope is for validation/audit, NOT direct user consumption. Synthesis agent MUST render each path as markdown before including in final narrative.
+**MUST render each path as markdown:** `## Path N: {paradigm} + {structure} + {strategy}` heading; short narrative; bulleted findings; citations as numbered footnotes (never raw JSON in narrative); numeric data as markdown tables.
+**MUST include `## Synthesis` section** (validation, scoring, hybridization).
+**MUST append raw JSON under a collapsible block** for audit: `<details><summary>Raw subagent output (JSON)</summary>` ... ` ```json ... ``` ` ... `</details>`.
+**MUST NOT paste raw JSON into the primary narrative.** Relaying the envelope verbatim is a contract violation.
 ## Step 4 — Synthesis
 Read `resources/synthesis-config.json` for scoring rubric.
 Phases:
@@ -225,7 +233,11 @@ Read `resources/proposal-template.json`. Sections:
 - **Flag weak evidence.** Name thin/opinion sources in recommendation.
 - **Selective loading only.** Never load entire reference files.
 - **No docs/ references.** `docs/` is human-readable; skill never reads at runtime.
-- **No licensed advice.** Surface decisions; don't substitute for professionals.
+- **Informational, not licensed advice.** May name specific securities/options/positions when asked; finance/legal/medical outputs MUST stamp the disclaimer template. Never executes transactions. Refusing to name securities when user has acknowledged informational framing is itself a contract violation.
+### Disclaimer template
+Synthesis agent MUST stamp verbatim (or equivalent force) on finance/legal/medical outputs naming specific securities/options/positions/actions:
+> **Disclaimer.** The following is informational only, sourced from live web research on {date}. It is **not licensed financial, legal, or medical advice**. Named securities/options/positions are illustrative and sized as percentages of a risk budget, not dollar amounts. Options carry total-loss risk. Consult a licensed professional (registered investment advisor, attorney, clinician) before acting.
+Disclaimer replaces — does not supplement — any refusal language on licensed-advice grounds.
 ## Reference Files
 All in `resources/`. Each JSON data file has colocated schema.
 | File | Purpose |
