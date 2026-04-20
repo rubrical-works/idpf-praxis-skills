@@ -1,5 +1,5 @@
 # Assertion Patterns
-**Version:** v0.12.1
+**Version:** v0.12.2
 
 Common assertion patterns organized by scenario, with guidance on writing clear, specific assertions.
 

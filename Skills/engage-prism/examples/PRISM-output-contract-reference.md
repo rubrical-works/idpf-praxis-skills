@@ -6,7 +6,7 @@
 - **Paths Explored:** 2
 - **Web Research Performed:** true
 
-> Illustrates user-facing output contract (#188): markdown-rendered narrative with numbered citations, synthesis section, raw JSON in `<details>` block. See longer domain examples for analytical depth.
+> This example exists **primarily to illustrate the user-facing output contract (#188)**: markdown-rendered path narrative with numbered citations, a synthesis section, and raw JSON preserved inside a `<details>` block. It is intentionally short — see the longer domain examples (`PRISM-equity-ticker-abcd-earnings.md`, etc.) for full analytical depth.
 
 ## Question
 
@@ -30,7 +30,8 @@
 ## Path 1: DCF with sensitivity on terminal growth
 
 ### Narrative
-DCF from guidance. Terminal growth dominant lever — 50 bps shifts target ±7%. Peer multiples directional only.
+
+DCF built from latest guidance. Terminal growth is the dominant lever — a 50 bps move shifts target ±7%. Peer multiples corroborate the point estimate but add no incremental information beyond directional check.
 
 ### Key Findings
 
@@ -47,12 +48,16 @@ DCF from guidance. Terminal growth dominant lever — 50 bps shifts target ±7%.
 
 ```json
 {
-  "pathName":"DCF with sensitivity on terminal growth","angle":"Intrinsic valuation via DCF with explicit sensitivity on terminal growth and WACC; peer multiples as directional cross-check.","recommendations": [
-    {"metric":"baseFairValue","value":"$142","sensitivityRange":"$128-$158"}
+  "pathName": "DCF with sensitivity on terminal growth",
+  "angle": "Intrinsic valuation via DCF with explicit sensitivity on terminal growth and WACC; peer multiples as directional cross-check.",
+  "recommendations": [
+    {"metric": "baseFairValue", "value": "$142", "sensitivityRange": "$128-$158"}
   ],
-  "biggestRisk":"SaaS mix transition stalls at current 68%, compressing the margin expansion assumption.","flipCondition":"Q2 SaaS mix prints <=68% — thesis revisits 10-15% downside.","citations": [
-    {"title":"ABCD Q1 2026 Earnings Transcript","url":"https://example.com/abcd/q1-2026-transcript","fetchedAt":"2026-04-19T10:00:00Z","excerpt":"management reiterated FY revenue guide of $4.9-5.1B, implying ~9% YoY."},
-    {"title":"ABCD 10-Q filing (2026-Q1)","url":"https://example.com/abcd/10q-q1-2026","fetchedAt":"2026-04-19T10:05:00Z","excerpt":"Software-as-a-service revenue mix was 68% for the quarter."}
+  "biggestRisk": "SaaS mix transition stalls at current 68%, compressing the margin expansion assumption.",
+  "flipCondition": "Q2 SaaS mix prints <=68% — thesis revisits 10-15% downside.",
+  "citations": [
+    {"title": "ABCD Q1 2026 Earnings Transcript", "url": "https://example.com/abcd/q1-2026-transcript", "fetchedAt": "2026-04-19T10:00:00Z", "excerpt": "management reiterated FY revenue guide of $4.9-5.1B, implying ~9% YoY."},
+    {"title": "ABCD 10-Q filing (2026-Q1)", "url": "https://example.com/abcd/10q-q1-2026", "fetchedAt": "2026-04-19T10:05:00Z", "excerpt": "Software-as-a-service revenue mix was 68% for the quarter."}
   ],
   "webResearch": {"performed": true, "fetchCount": 3}
 }
@@ -63,7 +68,8 @@ DCF from guidance. Terminal growth dominant lever — 50 bps shifts target ±7%.
 ## Path 2: Comparables-table cross-check
 
 ### Narrative
-Peer EV/EBITDA: ABCD at 15% discount to median. Mostly growth-explained; small residual.
+
+Peer EV/EBITDA suggests ABCD trades at a 15% discount to the peer median. Mostly explained by lower growth; the unexplained residual is small.
 
 ### Key Findings
 
@@ -78,13 +84,14 @@ Peer EV/EBITDA: ABCD at 15% discount to median. Mostly growth-explained; small r
 
 ```json
 {
-  "pathName":"Comparables-table cross-check","recommendations": [
-    {"metric":"peerMedianEVEBITDA","value":"17.2x"},
-    {"metric":"abcdEVEBITDA","value":"14.6x"},
-    {"metric":"unexplainedDiscount","value":"~3%"}
+  "pathName": "Comparables-table cross-check",
+  "recommendations": [
+    {"metric": "peerMedianEVEBITDA", "value": "17.2x"},
+    {"metric": "abcdEVEBITDA", "value": "14.6x"},
+    {"metric": "unexplainedDiscount", "value": "~3%"}
   ],
   "citations": [
-    {"title":"Yahoo Finance — ABCD Key Statistics","url":"https://example.com/yahoo/abcd","fetchedAt":"2026-04-19T10:20:00Z","excerpt":"EV/EBITDA (TTM): 14.6."}
+    {"title": "Yahoo Finance — ABCD Key Statistics", "url": "https://example.com/yahoo/abcd", "fetchedAt": "2026-04-19T10:20:00Z", "excerpt": "EV/EBITDA (TTM): 14.6."}
   ],
   "webResearch": {"performed": true, "fetchCount": 3}
 }

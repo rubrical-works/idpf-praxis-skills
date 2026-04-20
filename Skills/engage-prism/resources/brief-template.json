@@ -149,6 +149,9 @@
     "Vary angle wording across subagents — don't accidentally push two of them toward the same framing.",
     "Pass the full researchPlan to every subagent so they share entity anchors, source classes, and recency window.",
     "If WebFetch/WebSearch is unavailable, brief the subagent to set webResearch.performed=false with a specific reason in its report rather than silently producing training-recall output.",
+    "Include this directive in every brief: 'If WebFetch/WebSearch fail on the first attempt, you MUST try at least one alternative source (different URL or query) before setting webResearch.performed=false. Declaring unavailability without any attempted call is a contract violation. Record each attempt in webResearch.attemptedCalls[] (method, targetUrl/query, errorMessage, httpStatus?, attemptedAt). A report with performed=false and empty attemptedCalls[] will be rejected and re-dispatched.'",
+    "Pass freshnessClass (enum: geopolitical | market | general; default: general) with each brief. For freshnessClass=geopolitical or market, the recency-gate threshold is 24h; for general it is 72h. Subagents whose freshest anchor citation exceeds the threshold are rejected and re-dispatched once with directive: 'Fetch a source dated within the last {threshold}h before re-submitting.'",
+    "Include this directive in every brief for time-sensitive entities (active conflicts, live markets, breaking news): 'Include the current date as YYYY-MM-DD or `last 24h` in at least one search query before accepting results. Generic queries on fast-moving topics surface multi-day-stale wire pieces; date-qualified queries surface current state.'",
     "You may optionally add an exclusions hint if you're worried a subagent will drift toward another path's angle (e.g., 'Do not use comparable-company multiples in this path')."
   ]
 }

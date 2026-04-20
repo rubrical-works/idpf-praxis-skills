@@ -1,5 +1,5 @@
 # API Error Patterns
-**Version:** v0.12.1
+**Version:** v0.12.2
 
 Best practices for API error responses.
 

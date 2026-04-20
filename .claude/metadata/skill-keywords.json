@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-20T00:58:47.312Z",
+  "generatedAt": "2026-04-20T03:15:33.026Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [

@@ -17,7 +17,12 @@ Reference data is schema-validated JSON in `resources/`. Loads only matched entr
 - **Node.js 18+** — shells to `node scripts/match-signals.js` (Step 1b) and `node scripts/load-entries.js` (Selective Loading). No non-Node fallback.
 - **WebFetch / WebSearch** — required by default. Every path performs live web research and cites sources. When unavailable (`--no-web`), each report records degradation.
 - **Optional: `ajv`** — validates inputs against `*-input-schema.json` when available; skipped silently otherwise.
-Node 18+ floor matches active/previous LTS. If Node missing, see `install-node` skill.
+Node 18+ floor matches active/previous LTS. If Node missing, install Node 18+ from https://nodejs.org/ and retry.
+### Preflight (runs before Step 0)
+Before Step 0 — before research scoping, keyword extraction, signal matching — the primary agent MUST run `node --version`. If the command fails or reports a major version less than 18, HALT with:
+> **engage-prism requires Node.js 18+ to run `match-signals.js` and `load-entries.js`. Install Node 18+ from https://nodejs.org/ and retry.**
+
+Do not proceed to Step 0. Preflight also logs whether `ajv` is importable (`node -e "require('ajv')"`); missing `ajv` is non-fatal but recorded so synthesis knows input-schema validation was skipped.
 ## When to use this skill
 Use for non-code analytical questions:
 - **Business strategy** (competitive positioning, GTM, portfolio, operating model)
@@ -85,6 +90,13 @@ Every non-derived claim must cite a source conforming to `resources/citation-sch
 Reports without schema-conformant citations are flagged and deprioritized.
 ### Degradation path
 When WebFetch/WebSearch unavailable (sandbox, offline, `--no-web`), each report sets `webResearch.performed = false` with non-empty `reason`. Primary agent surfaces degradation in final recommendation.
+**Attempted-call evidence required.** Setting `performed = false` requires `webResearch.attemptedCalls[]` with ≥1 entry (method, targetUrl/query, errorMessage, optional httpStatus, attemptedAt ISO-8601). Subagents must try ≥1 alternative source before declaring unavailability — bare claims without any attempted call are a contract violation. Primary agent rejects `performed=false` + empty `attemptedCalls[]`, re-dispatches once with "attempt at least one fetch" directive; if retry still returns zero, accepts and tags `degradationEvidence="unverified"` so synthesis deprioritizes.
+### Recency gate (fast-moving topics)
+- **`freshnessClass` arg** — enum `geopolitical | market | general`; default `general`. Thresholds: geopolitical/market=24h, general=72h. Overridable per-run.
+- **Gate:** for each cited anchor source compute `ageHours = now − max(publishedAt, fetchedAt)`. If `max > threshold`, reject and re-dispatch once with "fetch a source dated within the last {threshold}h" directive (reuses the validator-rejection + one-retry pattern).
+- **≥2-source corroboration:** before a probability weight or price level enters synthesis as an anchor, require ≥2 independent citations (distinct domains). Single-source anchors tagged `anchorEvidence="single-source"` and deprioritized.
+- **Date-qualified queries:** for time-sensitive entities include current date (`YYYY-MM-DD` or `last 24h`) in ≥1 search query before accepting results.
+- **Graceful degradation:** if retry cannot satisfy the gate, emit `⚠️ Recency-gate degraded: freshest citation Xh old (threshold Yh)` in path Report — never silent.
 ## Step 1 — Parse Question and Confirm Keywords
 1. **Parse question** — identify decision, constraints, what "useful answer" looks like.
 2. **Extract signal keywords** from question and Step 0 anchors.
@@ -218,6 +230,7 @@ Read `resources/proposal-template.json`. Sections:
 ## Error Handling
 | Failure Mode | Expected Behavior |
 |---|---|
+| Node missing or < 18 | Report preflight error with install link (https://nodejs.org/); halt before Step 0 |
 | JSON data fails schema validation | Report error with file path; halt |
 | Reference file missing | Fail with file-not-found |
 | No signals match | Switch to adaptive (tension-driven) mode |

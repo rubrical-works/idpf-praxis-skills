@@ -32,7 +32,14 @@
  *   metadata that lets callers tier match quality without re-deriving it from
  *   model judgment.
  *
- * Refs #158, #165
+ * Fuzzier matching (#192):
+ *   - Separator normalization: hyphens/underscores → spaces on both user and
+ *     signal keywords before comparison (so "cache-invalidation" ~ "cache invalidation").
+ *   - Light suffix strip in the 0.3 substring tier only: {s, es, ing, ed, al, ly}
+ *     with a ≥4-char residue guard (so "caching" ~ "cache" but "al" alone does
+ *     not pull compound signal keywords via substring).
+ *
+ * Refs #158, #165, #192
  */
 'use strict';
 
@@ -136,28 +143,62 @@ function parseArgs(argv) {
  * Word-boundary uses non-letter/digit characters (-, _, space, /) as delimiters,
  * which matches how signal keywords are typically written in cross-references.json.
  */
+function normalizeSeparators(kw) {
+  return kw.toLowerCase().trim().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ');
+}
+
+/**
+ * Strip one trailing morphological suffix from a single word if the residue
+ * is ≥4 characters. Used only in the 0.3 substring tier (#192).
+ */
+function stripCommonSuffix(word) {
+  const suffixes = ['ing', 'es', 'ed', 'al', 'ly', 's'];
+  for (const suf of suffixes) {
+    if (word.endsWith(suf) && word.length - suf.length >= 4) {
+      return word.slice(0, -suf.length);
+    }
+  }
+  return word;
+}
+
 function scoreHitRelevance(userKw, sigKw) {
   if (userKw === sigKw) return 1.0;
-  if (!sigKw.includes(userKw) && !userKw.includes(sigKw)) return 0;
 
   const longer = userKw.length >= sigKw.length ? userKw : sigKw;
   const shorter = userKw.length >= sigKw.length ? sigKw : userKw;
 
-  // Word-boundary check: shorter must be flanked by non-word chars (or string ends) inside longer
-  const escaped = shorter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const boundary = new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i');
-  if (boundary.test(longer)) return 0.7;
+  if (longer.includes(shorter)) {
+    // Word-boundary check: shorter must be flanked by non-word chars (or string ends) inside longer
+    const escaped = shorter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const boundary = new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i');
+    if (boundary.test(longer)) return 0.7;
+    // 0.3 substring tier — require ≥4 chars so short fragments do not match
+    if (shorter.length >= 4) return 0.3;
+    return 0;
+  }
 
-  return 0.3;
+  // Suffix-strip fallback (0.3 tier only): compare per-word stems with ≥4-char guard.
+  const longerStems = longer.split(/\s+/).map(stripCommonSuffix);
+  const shorterStems = shorter.split(/\s+/).map(stripCommonSuffix);
+  const stemmed = longerStems.join(' ') !== longer || shorterStems.join(' ') !== shorter;
+  if (!stemmed) return 0;
+  const allMatch = shorterStems.length > 0 && shorterStems.every(ss =>
+    ss.length >= 4 && longerStems.some(ls =>
+      ls.length >= 4 && (ls === ss || ls.startsWith(ss) || ss.startsWith(ls))
+    )
+  );
+  if (allMatch) return 0.3;
+
+  return 0;
 }
 
 function matchKeywords(keywords, signals) {
-  const normalizedKeywords = keywords.map(k => k.toLowerCase().trim());
+  const normalizedKeywords = keywords.map(normalizeSeparators);
   const matched = [];
   const matchedKeywordSet = new Set();
 
   for (const signal of signals) {
-    const signalKeywords = signal.keywords.map(k => k.toLowerCase());
+    const signalKeywords = signal.keywords.map(normalizeSeparators);
     const hits = [];
     const hitDetails = [];
 

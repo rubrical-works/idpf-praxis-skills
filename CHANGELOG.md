@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.2] - 2026-04-20
+
+### Changed
+- **engage-prism / engage-exocortex: fuzzier keyword matching** — `match-signals.js` now normalizes hyphens/underscores to spaces on both user and signal keywords, and applies a light suffix strip (`s`, `es`, `ing`, `ed`, `al`, `ly`) in the 0.3 substring tier only, guarded by a ≥4-char residue rule. Exact (1.0) and word-boundary (0.7) tiers unchanged. Closes the mechanical-miss class where `"agriculture"` failed to reach `"agricultural commodities"` and `"next-quarter"` failed to reach `"next quarter"`. (#191, #192)
+- **engage-prism: attempted-call evidence required for degraded reports** — a subagent setting `webResearch.performed = false` must now populate `webResearch.attemptedCalls[]` with ≥1 entry documenting an actual fetch attempt. Reports with `performed=false` and empty `attemptedCalls[]` are rejected as contract violations and re-dispatched once with an explicit "attempt at least one fetch" directive; if the retry still returns zero attempts, the report is accepted but tagged `degradationEvidence="unverified"` so synthesis deprioritizes it further. Touches `report-template.json`, `brief-template.json`, `synthesis-config.json`, `SKILL.md`. (#193)
+- **engage-prism: recency gate + anchor corroboration + date-qualified queries** — new configurable `freshnessClass` arg (`geopolitical | market | general`; default `general`) with thresholds 24h/24h/72h. When a path's freshest cited anchor source exceeds the threshold, the path is rejected and re-dispatched once with a "fetch a source dated within the last {threshold}h" directive. Probability weights and price levels now require ≥2 independent-domain citations before driving synthesis (single-source anchors tagged `anchorEvidence="single-source"`). Subagent briefs instruct including `YYYY-MM-DD` or `last 24h` in ≥1 search query for time-sensitive entities. Gate failure after retry emits `⚠️ Recency-gate degraded: freshest citation Xh old (threshold Yh)` in the path Report — never silent. (#194)
+- **engage-prism / engage-exocortex: fail-fast Node preflight** — both `SKILL.md` files now document a Preflight step that runs `node --version` before Step 0 / any workflow step. Missing node or version < 18 halts with an explicit error and install link (https://nodejs.org/); a new `Node missing or < 18` row appears in each Error Handling table. The `engage-prism` prerequisites section now points to nodejs.org directly instead of the previously unresolved `install-node` skill referral. Language mirrors between the two skills so they degrade identically. (#196, #197)
+
+### Added
+- `tests/skills/engage-prism/match-signals-fuzzy.test.js`, `tests/skills/engage-exocortex/match-signals-fuzzy.test.js` — fuzzier-matching unit tests covering separator normalization, suffix-strip hits, ≥4-char guard, and 1.0/0.7 tier regression.
+- `tests/skills/engage-prism-attempted-calls.test.js`, `tests/skills/engage-prism-recency-gate.test.js` — contract tests pinning the attempted-call and recency-gate language across `report-template.json`, `brief-template.json`, `synthesis-config.json`, and `SKILL.md`.
+- `tests/skills/engage-prism-preflight.test.js`, `tests/skills/engage-exocortex-preflight.test.js` — preflight contract tests (including cross-skill consistency check).
+
 ## [0.12.1] - 2026-04-19
 
 ### Changed

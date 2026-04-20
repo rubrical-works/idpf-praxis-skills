@@ -1,5 +1,5 @@
 # Ruby Anti-Patterns
-**Version:** v0.12.1
+**Version:** v0.12.2
 
 Common anti-patterns specific to Ruby development.
 

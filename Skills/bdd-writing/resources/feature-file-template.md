@@ -1,5 +1,5 @@
 # Feature File Template
-**Version:** v0.12.1
+**Version:** v0.12.2
 ## Basic Template
 ```gherkin
 @tag1 @tag2

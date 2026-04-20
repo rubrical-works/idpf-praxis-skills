@@ -1,5 +1,5 @@
 # Common Refactorings Catalog
-**Version:** v0.12.1
+**Version:** v0.12.2
 Standard refactoring patterns for improving code during the TDD REFACTOR phase.
 ## Extract Method
 **When:** Code block does one identifiable thing; function is too long.

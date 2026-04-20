@@ -1,5 +1,5 @@
 # Architecture Inference Guide
-**Version:** v0.12.1
+**Version:** v0.12.2
 **Purpose:** Patterns for inferring system architecture from codebase structure
 ## Architecture Style Detection
 ### Monolith Patterns

@@ -16,7 +16,12 @@ Reference data is schema-validated JSON in `resources/`. Loads only matched entr
 ## Prerequisites
 - **Node.js 18+** — shells to `node scripts/match-signals.js` (Step 1b) and `node scripts/load-entries.js` (Selective Loading). No non-Node fallback.
 - **Optional: `ajv`** — validates inputs against `*-input-schema.json` when available; skipped silently otherwise.
-Node 18+ floor matches active/previous LTS.
+Node 18+ floor matches active/previous LTS. If Node missing, install Node 18+ from https://nodejs.org/ and retry.
+### Preflight (runs before any workflow step)
+Before any workflow step — before question parsing, keyword extraction, signal matching, or subagent dispatch — the primary agent MUST run `node --version`. If the command fails or reports a major version less than 18, HALT with:
+> **engage-exocortex requires Node.js 18+ to run `match-signals.js` and `load-entries.js`. Install Node 18+ from https://nodejs.org/ and retry.**
+
+Do not proceed. Preflight also logs whether `ajv` is importable (`node -e "require('ajv')"`); `ajv` is optional and a missing `ajv` is non-fatal, but its absence is recorded so downstream validation knows input-schema checks were skipped. Mirrors the `engage-prism` contract so both skills degrade identically.
 ## When to use this skill
 Any coding/algorithm problem where:
 - Multiple plausible data structures, algorithms, or architectural approaches
@@ -272,6 +277,7 @@ Read `resources/proposal-template.json`. Sections:
 ## Error Handling
 | Failure Mode | Expected Behavior |
 |---|---|
+| Node missing or < 18 | Report preflight error with install link (https://nodejs.org/); halt before workflow starts |
 | JSON fails schema validation | Report error with file path and violation; halt |
 | Reference file missing | Fail with file-not-found naming file |
 | No signals match | Report "no matching paradigms found" with unmatched characteristics |

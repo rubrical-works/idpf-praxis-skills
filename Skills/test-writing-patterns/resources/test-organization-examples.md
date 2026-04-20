@@ -1,5 +1,5 @@
 # Test Organization Examples
-**Version:** v0.12.1
+**Version:** v0.12.2
 
 Practical examples of test file and suite organization for different project types.
 

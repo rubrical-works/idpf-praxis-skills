@@ -30,7 +30,9 @@
           "name": "Web research status check",
           "instructions": [
             "If webResearch.performed=false, the entire report is degraded. Do not let it win on architectural dimensions if another report was research-grounded.",
-            "If webResearch.performed=true but citations[] is empty, flag as malformed."
+            "If webResearch.performed=true but citations[] is empty, flag as malformed.",
+            "If webResearch.performed=false AND webResearch.attemptedCalls is empty or missing, REJECT the report as a contract violation and re-dispatch the subagent once with the explicit directive: 'Attempt at least one fetch before declaring unavailability. Record each attempt in webResearch.attemptedCalls[].' Accept the retry's output even if attemptedCalls is still empty, but tag degradationEvidence='unverified' so this angle is deprioritized further in scoring.",
+            "If webResearch.performed=false AND webResearch.attemptedCalls has one or more entries, accept the degradation claim as evidenced and proceed with the normal degraded-report handling."
           ]
         },
         {
@@ -39,6 +41,18 @@
           "instructions": [
             "Check citation fetchedAt and (when available) publishedAt against the Step 0 research plan's recencyWindow.",
             "Claims resting on sources outside the recency window are flagged and their weight reduced in scoring."
+          ]
+        },
+        {
+          "id": "recency-gate",
+          "name": "Recency gate (fast-moving topics)",
+          "instructions": [
+            "Read freshnessClass from the run args (enum: geopolitical | market | general; default: general).",
+            "Threshold hours: geopolitical=24, market=24, general=72. May be overridden per-run.",
+            "For every citation with a parseable date, compute ageHours = now − max(publishedAt, fetchedAt).",
+            "If max(ageHours) across the path's cited anchor sources exceeds the threshold, REJECT the path report and re-dispatch the subagent once with the directive: 'Fetch a source dated within the last {threshold}h before re-submitting.' Reuse the validator-rejection + one-retry pattern from #193.",
+            "If the retry still cannot satisfy the gate, accept the path but emit an explicit warning in the path Report: '⚠️ Recency-gate degraded: freshest citation Xh old (threshold Yh)'. Never silent.",
+            "Before any probability weight or price level enters synthesis as an anchor, require ≥2 independent citations (distinct domains) supporting that anchor. Single-source anchors are tagged anchorEvidence='single-source' and deprioritized in Path scoring."
           ]
         }
       ]

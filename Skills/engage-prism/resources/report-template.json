@@ -25,7 +25,8 @@
       "subfields": [
         { "field": "performed", "label": "Performed", "type": "boolean", "required": true, "description": "Was WebFetch/WebSearch actually used?" },
         { "field": "reason", "label": "Reason", "type": "string", "required": false, "description": "If performed=false, why not (sandbox, --no-web, unavailable tool)." },
-        { "field": "fetchCount", "label": "Fetch count", "type": "integer", "required": true, "description": "Number of WebFetch/WebSearch calls made. Must be 0 if performed=false." }
+        { "field": "fetchCount", "label": "Fetch count", "type": "integer", "required": true, "description": "Number of WebFetch/WebSearch calls made. Must be 0 if performed=false." },
+        { "field": "attemptedCalls", "label": "Attempted calls", "type": "array", "required": true, "description": "Evidence that at least one fetch was attempted. REQUIRED (minItems: 1) when performed=false — bare claims of tool unavailability without an attempted-call record are rejected and re-dispatched. Each entry: { method: 'WebFetch'|'WebSearch', targetUrl?, query?, errorMessage, httpStatus?, attemptedAt (ISO-8601) }. May be empty when performed=true (fetchCount alone documents success)." }
       ]
     },
     {
@@ -105,6 +106,9 @@
   "synthesisNotes": [
     "Every non-derived claim must reference a citation. Claims without citations are treated as speculation in synthesis.",
     "Fit score is a signal, not ground truth — subagents briefed to explore one angle will naturally find reasons it works.",
-    "If webResearch.performed=false, treat the entire report as degraded evidence and flag that explicitly in the final recommendation."
+    "If webResearch.performed=false, treat the entire report as degraded evidence and flag that explicitly in the final recommendation.",
+    "If webResearch.performed=false AND webResearch.attemptedCalls is empty, REJECT the report and re-dispatch the subagent once with an explicit 'attempt at least one fetch before declaring unavailability' directive. If the retry also returns zero attempts, accept the degraded report but tag degradationEvidence='unverified' so synthesis deprioritizes it further.",
+    "Recency gate: for fast-moving topics (freshnessClass geopolitical/market threshold 24h; general 72h), if the freshest cited anchor source exceeds the threshold, REJECT the path and re-dispatch once with 'fetch a source dated within the last {threshold}h' directive. If retry cannot satisfy the gate, emit '⚠️ Recency-gate degraded: freshest citation Xh old (threshold Yh)' in the path Report — never silent.",
+    "Anchor corroboration: a probability weight or price level must be supported by ≥2 independent citations (distinct domains) before it drives synthesis. Single-source anchors are tagged anchorEvidence='single-source' and deprioritized."
   ]
 }
