@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.12.3
+**Version:** v0.13.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -24,6 +24,7 @@
 | codebase-analysis | 1.0.0 | 2026-04-02 | Active |
 | command-spec-audit | 1.0.0 | 2026-04-02 | Active |
 | common-errors | 1.0.0 | 2026-03-17 | Active |
+| debate-prism | 1.0.0 | 2026-04-22 | Active |
 | digitalocean-app-setup | 1.0.0 | 2026-03-17 | Active |
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
 | electron-cross-build | 1.0.0 | 2026-03-17 | Active |
@@ -170,6 +171,58 @@ Skills/[skill-name]/
 └── resources/        # Supporting files (OPTIONAL)
     └── *.md, *.json, etc.
 ```
+
+### Shared scripts (build-time inlining)
+
+A skill may declare helper scripts that live authoritatively in
+`.claude/scripts/shared/lib/` and get copied into the skill's `scripts/`
+directory at test-time and package-time. The mechanism keeps the source
+repo DRY while each shipped skill stays self-contained — end users never
+see the shared lib.
+
+**To consume a shared script:**
+
+1. Add a `sharedScripts:` frontmatter entry to the skill's SKILL.md listing
+   the filenames to inline:
+
+   ```yaml
+   sharedScripts: [match-signals.js, match-signals-input-schema.json]
+   ```
+
+2. Do not commit the inlined files. They are gitignored as build artifacts.
+   `.claude/scripts/framework/inline-shared-scripts.js` regenerates them on
+   each test and package run.
+
+3. If the shared script reads a per-skill config from an adjacent JSON file
+   (e.g. `match-signals-config.json` next to `match-signals.js`), commit
+   that config — it's source, not an artifact.
+
+**How inlining runs:**
+
+- Jest `globalSetup` (`tests/jest-global-setup.js`) runs the inliner before
+  the suite so tests that spawn `Skills/<skill>/scripts/<shared>.js`
+  always find an up-to-date copy.
+- `.claude/scripts/framework/build-skill-packages.js` runs the inliner
+  before the packaging walk so every zip contains the current shared
+  source.
+
+**Drift protection:**
+
+`tests/skills/shared-script-inlining.test.js` asserts each consumer's
+inlined file is byte-identical to the shared source. A missed inliner run
+(or an orphan edit to a build artifact) fails CI.
+
+**Adding a new shared script:**
+
+1. Add the file to `.claude/scripts/shared/lib/`.
+2. Add a negation rule to `.gitignore` so the file is tracked (the
+   `.claude/scripts/shared/lib/*` rule ignores by default).
+3. Declare any skills that consume it by adding `sharedScripts:` entries
+   to their SKILL.md.
+
+Related: issue #209 (initial rollout to `engage-prism` and
+`engage-exocortex`), issue #212 (fallback-allowlist adoption for
+`engage-*` siblings).
 
 ### SKILL.md Header Format
 
@@ -389,6 +442,54 @@ When a skill becomes obsolete:
 
 1. Compare `install/lib/constants.js` mappings with dependency matrix above
 2. Verify no typos in skill names
+
+---
+
+## Adversarial Sibling Skills — When to Pick Which
+
+Two adversarial-pattern skills complement the cooperative `/engage-*` family:
+
+- **`/debate-prism`** — for **business / marketing / finance** questions with a stated direction. Runs for-advocate + against-advocate in parallel with zero-URL-overlap citation enforcement; a judge subagent names which piece of evidence settled the call. Paired with `/engage-prism` (cooperative exploration).
+- **`/spar-exocortex`** — for **algorithm / code-design** questions with a stated baseline. Runs a propose-attack-measure loop with execution-backed validation; an attacker subagent produces a concrete failing input; a challenger subagent proposes a different approach that survives. Paired with `/engage-exocortex` (cooperative exploration).
+
+### When to pick which
+
+| Question shape | Use |
+|---|---|
+| "What are the angles on X?" (open-ended, business/finance/marketing) | `/engage-prism` |
+| "Should we X?" / "Is X a good idea?" (directional, business/finance/marketing) | `/debate-prism` |
+| "What are the approaches to problem Y?" (open-ended, code/algorithm/architecture) | `/engage-exocortex` |
+| "Is this baseline the right algorithm?" / "Should we redesign component Z?" (directional with baseline, code/algorithm) | `/spar-exocortex` |
+
+The adversarial skills drop the paradigm/structure/strategy taxonomy (labeled diversity) and substitute mechanical diversity: `/debate-prism` requires zero URL overlap between for- and against-advocate citations; `/spar-exocortex` requires distinct `targetComplexity` or `invariantChoice` between baseline and challenger. Both preserve the citation schema, recency gate, attempted-call evidence requirement, and disclaimer template from their `/engage-*` siblings.
+
+---
+
+## Backward Compatibility Recipes
+
+### engage-prism — restoring pre-#213 behavior
+
+Issue #213 changed four defaults in `engage-prism`:
+
+| Change | Pre-#213 behavior | Post-#213 default | Flag to restore old behavior |
+|---|---|---|---|
+| Step 1 `AskUserQuestion` keyword-confirmation gate | Mandatory | Skipped | `--confirm-keywords` |
+| Path selection via `match-signals.js` + catalog | Mandatory routing | Primary agent names paths directly | `--structured-routing` |
+| Anti-overlap diversity | (paradigm, structure, strategy) tuples | Distinct `primarySourceClass` per path | (no flag — this is now a hard contract; see issue #213 AC 3) |
+| Proposal output | Full signal table + raw JSON inline | Slim proposal + `.audit.json` sibling | (no flag — slim-by-default; the audit sibling carries every byte that used to be inline) |
+
+**Pre-#213 run invocation:** `engage-prism --confirm-keywords --structured-routing`
+
+This restores the mandatory keyword-confirmation gate and the catalog-driven
+path routing. The source-class diversity rule and the slim-proposal split
+are contracts rather than defaults — they apply regardless of flags. Users
+who need the previous *proposal layout* can consume the `.audit.json` sibling
+directly and ignore the main proposal, since the audit JSON carries the
+full structured data that used to live inline.
+
+The red-team path trigger for directional questions (AC 4) and the
+disagreement-audit / convergent-flag emission (AC 5) are also contracts
+rather than flag-gated behavior.
 
 ---
 

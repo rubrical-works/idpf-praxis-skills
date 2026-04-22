@@ -11,17 +11,16 @@ relevantTechStack: [flask, python, virtualenv, pip]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Flask Setup for Beginners
-Guides beginners through Flask environment setup with verification steps.
+Guides beginners through Flask env setup with verification.
 ## When to Use
-- User wants to build a Flask web app
-- Beginner needs Flask environment setup
-- "How do I set up Flask?" / "start a Flask project?"
-- Project is a web app using Flask / Python web API / server
-- Flask tutorial or learning resources needed
+- Build Flask web app / Python web API or server
+- Beginner needs Flask env setup
+- User asks "How do I set up Flask?"
+- Flask tutorial/learning needed
 ## Instructions for ASSISTANT
 **CRITICAL:** Format ALL technical instructions as **Claude Code copy/paste blocks**.
-**DO NOT provide manual instructions** (no "Open File Explorer", "Navigate", "Right-click", "Type in terminal").
-**ALWAYS format as:**
+DO NOT provide manual instructions ("Open File Explorer", "Navigate", "Right-click", "Type in terminal").
+ALWAYS format as:
 ```
 TASK: Set up Flask project
 STEP 1: Copy this entire code block (including this line)
@@ -45,27 +44,23 @@ Report:
 - What results did you see?
 ```
 ## Setup Knowledge
+Convert the following into Claude Code commands:
 ### Create Project and Verify Python
-**What:** Opens CLI in project directory
-**Verify:** project folder path in terminal
+- Opens CLI in project dir; verify project path shown in terminal.
 ### Responsibility Acknowledgement Gate
-Implements `responsibility-gate` pattern. See `Skills/responsibility-gate/SKILL.md`.
-- **Fires:** before creating virtualenv and `pip install flask`.
-- **Asks:** accept responsibility for changes to Python env, project dir, installed packages, venv folder.
-- **On decline:** exit cleanly; "Declined — no changes made."
-- **Persistence:** per-invocation.
-Use `AskUserQuestion` with `"I accept responsibility — proceed"` and `"Decline — exit without changes"`.
+Implements `responsibility-gate` skill (see `Skills/responsibility-gate/SKILL.md`).
+- **Fires:** before creating virtualenv and running `pip install flask` in user's project dir.
+- **Asks:** acceptance of responsibility for changes to Python env, project dir, installed packages, venv folder.
+- **On decline:** exit cleanly; report "Declined — no changes made."; make no system changes.
+- **Persistence:** per-invocation. Re-fires every run; acceptance never persisted.
+Use `AskUserQuestion` with required options (`"I accept responsibility — proceed"`, `"Decline — exit without changes"`).
 ### STEP 3: Create Virtual Environment
 ```bash
 python -m venv venv
 ```
-**What:** creates isolated Python env; installs packages separately from system; prevents conflicts.
-**Why:** isolated dependencies; per-project versions; portable/reproducible.
-**Wait:** 10-30 seconds
-**Verify:** new `venv` folder exists
-**Common issues:**
-- "python: command not found" → not installed or not in PATH; install from python.org; Windows: check "Add Python to PATH"
-- "python3" instead → try `python3 -m venv venv`
+- Creates isolated Python env; packages separate from system; prevents conflicts.
+- Wait: 10-30s. Verify: new `venv` folder.
+- Issues: "python: command not found" → install from python.org, check "Add Python to PATH" (Windows). Try `python3 -m venv venv`.
 ### STEP 4: Activate Virtual Environment
 **Windows PowerShell:**
 ```bash
@@ -79,87 +74,60 @@ venv\Scripts\activate.bat
 ```bash
 source venv/bin/activate
 ```
-**What:** switches terminal to venv's Python; installs go into env only.
-**Success:** `(venv)` prefix in prompt.
-**Example:**
-```
-Before: C:\Projects\my-app>
-After:  (venv) C:\Projects\my-app>
-```
-**Common issues:**
-- "Execution policy error" (Windows) → run as Admin:
+- Switches terminal to venv Python; packages install into env only.
+- Success: `(venv)` prefix on prompt. Example: `(venv) C:\Projects\my-app>`.
+- Issues: "Execution policy error" (Windows) →
   ```bash
   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
   ```
-- Nothing happens → check you're in project dir
-- `(venv)` missing → close/reopen terminal
+  Nothing happens → check project dir. `(venv)` missing → reopen terminal.
 ### STEP 5: Install Flask
 ```bash
 pip install flask
 ```
-**What:** downloads Flask from PyPI into venv; available for import.
-**Wait:** 30-60 seconds
-**You'll see:** download progress; "Successfully installed flask-X.X.X"
-**Installed:** Flask, Werkzeug, Jinja2, Click, dependencies
-**Common issues:**
-- "pip: command not found" → venv not activated (Step 4)
-- Slow → normal if internet slow
-- Permission errors → venv not activated
+- Downloads Flask + deps (Werkzeug, Jinja2, Click) into venv.
+- Wait: 30-60s. Ends with "Successfully installed flask-X.X.X".
+- Issues: "pip: command not found" → venv not activated (Step 4). Permission errors → venv not activated.
 ### STEP 6: Create app.py File
-1. Open text editor (VS Code, Sublime, PyCharm, Notepad++)
+1. Open editor (VS Code, PyCharm Community, Sublime, Notepad++)
 2. Create new file
 3. Save as `app.py` in project folder (same level as `venv`)
-**Recommended editors:** VS Code (free, Python support), PyCharm Community (free), Sublime Text, Notepad++
-**Location:**
 ```
 my-project/
 ├── venv/           ← Virtual environment folder
 └── app.py          ← Your main Flask file (create this)
 ```
-**Don't create app.py inside venv!**
+**Do NOT create app.py inside the venv folder.**
 ### STEP 7: Verify Installation
-**Check Python version:**
 ```bash
 python --version
 ```
-Expected: `Python 3.8.x`+
-**Check installed packages:**
+Expected: `Python 3.8.x` or higher.
 ```bash
 pip list
 ```
-Expected:
-```
-Package      Version
------------- -------
-click        X.X.X
-Flask        X.X.X
-Jinja2       X.X.X
-Werkzeug     X.X.X
-```
-**Test Flask import:**
+Expected: Flask + deps (click, Flask, Jinja2, Werkzeug).
 ```bash
 python -c "import flask; print(flask.__version__)"
 ```
-Expected: Flask version (e.g., `3.0.0`)
+Expected: Flask version (e.g., `3.0.0`).
 ### STEP 8: Report Completion
-- "Setup complete! I see (venv) and Flask is installed"
-- Or: "Stuck at step X with error: [exact error]"
+- "Setup complete! I see (venv) and Flask is installed", or
+- "Stuck at step X with error: [exact error]"
 ## What Happens Next
-1. Create first Flask route
-2. Write "Hello World"
-3. Start Flask dev server
+1. Guide through first Flask route
+2. Write "Hello World" app
+3. Start dev server
 4. View first web page
-## Troubleshooting Quick Reference
+## Troubleshooting
 See `resources/verification-checklist.md`.
-**Most common issues:**
+Most common:
 1. Forgot to activate venv → Step 4
 2. Python not in PATH → reinstall with "Add to PATH"
 3. Wrong directory → `cd` to project folder
 4. Permission errors → venv not activated
-5. Port/firewall → addressed when running server
+5. Port/firewall → addressed at server run
 ## Next Steps
-- Create first Flask route
-- Learn dev server
-- Understand request/response cycle
-- Build first web page
+- First Flask route; dev server; request/response cycle; first web page.
+---
 **Remember:** Keep terminal with `(venv)` open while developing.

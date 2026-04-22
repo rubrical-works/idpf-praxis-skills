@@ -1,0 +1,16 @@
+{
+  "$schema": "../../../.claude/scripts/shared/lib/match-signals-config.schema.json",
+  "fallbackAllowlist": [
+    "finance", "financial", "stock", "stocks", "etf", "options", "bonds",
+    "sector", "market", "portfolio", "invest", "trade", "trading", "hedge",
+    "macro", "economic", "recession", "inflation", "rates", "fed",
+    "commodity", "equity", "equities"
+  ],
+  "fallbackPath": {
+    "paradigm": "scenario-analysis",
+    "structure": "scenario-grid",
+    "strategy": "ev-vs-risk-framing"
+  },
+  "fallbackConfidence": 0.15,
+  "fallbackMessage": "Low-confidence fallback: no signal matched but keywords include finance/macro vocabulary. Subagent must surface this degradation and prompt for keyword refinement before proceeding."
+}

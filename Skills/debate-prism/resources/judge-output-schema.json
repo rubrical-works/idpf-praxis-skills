@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "judge-output-schema.json",
+  "title": "Judge Output (debate-prism)",
+  "description": "Schema for the judge subagent's output in debate-prism. Required fields enforce decision-shaped output: weakeningEvidence names the specific piece of evidence that settled the call; verdict is one of endorse/reject/revise; flipConditions name what would flip the verdict.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["weakeningEvidence", "verdict", "flipConditions", "confidence", "confidenceRationale", "degradationFlags"],
+  "properties": {
+    "weakeningEvidence": {
+      "description": "Either a named citation from the against-advocate's report (index + one-line excerpt) that most weakened the for-case, OR the literal string 'none' with a justification. A missing field fails validation and blocks proposal generation.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["citationIndex", "excerpt"],
+          "properties": {
+            "citationIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "0-based index into the against-advocate's citations[]."
+            },
+            "excerpt": {
+              "type": "string",
+              "minLength": 1,
+              "description": "One-line summary of the specific piece of evidence that weakened the for-case."
+            },
+            "justification": {
+              "type": "string",
+              "description": "Optional longer justification."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "justification"],
+          "properties": {
+            "value": {
+              "type": "string",
+              "enum": ["none"],
+              "description": "Literal 'none' when no against-advocate citation meaningfully weakened the for-case."
+            },
+            "justification": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Required non-empty rationale for recording 'none' — e.g., 'the against-advocate's citations addressed a different aspect of the claim and did not engage the for-case's core evidence.'"
+            }
+          }
+        }
+      ]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["endorse", "reject", "revise"],
+      "description": "The judge's verdict on the claim. endorse = the for-case held up; reject = the against-case succeeded; revise = neither survived intact, issue a revised claim."
+    },
+    "revisedClaim": {
+      "type": "string",
+      "description": "Required when verdict === 'revise'. The revised claim statement the judge issues in place of the original."
+    },
+    "flipConditions": {
+      "type": "string",
+      "minLength": 1,
+      "description": "When verdict is endorse or reject, names what would flip the verdict the other way. When verdict is revise, names what would need to be true to reject the revised claim."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Judge's confidence in the verdict."
+    },
+    "confidenceRationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One-line rationale for the confidence level."
+    },
+    "degradationFlags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Collects any citationOverlap='unresolved', degradationEvidence='unverified', or recency-gate degradation warnings surfaced in earlier steps. Empty array when no degradation."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "verdict": { "const": "revise" } },
+        "required": ["verdict"]
+      },
+      "then": {
+        "required": ["revisedClaim"]
+      }
+    }
+  ]
+}

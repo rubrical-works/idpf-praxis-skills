@@ -1,5 +1,5 @@
 # Triangulation Examples
-**Version:** v0.12.3
+**Version:** v0.13.0
 ## What is Triangulation?
 Triangulation uses multiple specific tests to guide toward a general implementation.
 1. Write first test -> implement with hardcoded value

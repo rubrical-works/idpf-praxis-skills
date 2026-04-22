@@ -48,14 +48,26 @@ Before anything else, the primary agent builds a research plan:
 See [research-plan-guide.md](research-plan-guide.md) for how to scope this
 well.
 
-### Step 1 — Keywords and confirmation
+### Step 1 — Keywords and (opt-in) confirmation
 
 The agent extracts keywords: `market-sizing`, `EV charging`, `Germany`,
-`competitive entry`, `public infrastructure`. It uses `AskUserQuestion` to
-confirm the restated question, the keywords, and the research plan before
-spending any compute on signal matching.
+`competitive entry`, `public infrastructure`.
 
-### Step 1b — Signal matching and selective loading
+**By default it proceeds directly to path selection**, restating the
+interpreted question and keywords inline in its narrative so you can
+redirect. Pass `--confirm-keywords` to re-enable the `AskUserQuestion` gate
+for team or advisory contexts where a wrong-signal dispatch is expensive.
+
+### Step 1b / 2 — Path selection (default vs. structured routing)
+
+**Default routing (no flag):** the primary agent names the N paths itself —
+one sentence each — grounded in Step 0's entity anchors and source classes.
+The paradigm / structure / strategy catalogs become an optional palette; the
+agent may open a specific entry when it would improve the brief, but will
+not load the full catalogs or run the matcher.
+
+**Structured routing (`--structured-routing`):** restores the original
+match-signals flow for users who want the catalog-driven enumeration:
 
 ```bash
 node scripts/match-signals.js "market-sizing" "EV charging" "Germany" "competitive entry" --paths 3
@@ -64,22 +76,34 @@ node scripts/load-entries.js structure driver-tree porter-five-forces
 node scripts/load-entries.js strategy top-down-vs-bottom-up triangulation
 ```
 
-Only the matched entries are loaded. Never read the full `paradigms.json` /
-`structures.json` / `strategies.json` directly.
+Only the matched entries are loaded when this flag is set. Never read the
+full `paradigms.json` / `structures.json` / `strategies.json` directly.
 
-### Step 2 — Naming paths
+### Step 2 — Naming paths (with source-class diversity)
 
-With 3 paths, the primary agent might define:
+With 3 paths, the primary agent might define — each declaring a distinct
+`primarySourceClass` so the evidential diversity is substantive, not just
+labeled:
 
-1. **Bottom-up TAM via charger-level unit economics** (market-sizing +
-   driver-tree + top-down-vs-bottom-up)
-2. **Porter's Five Forces with substitution-risk weighting** (competitive-analysis
-   + porter-five-forces + benchmark-comparison)
-3. **Triangulated TAM from BNetzA statistics, analyst reports, and peer filings**
-   (market-sizing + comparables-table + triangulation)
+1. **Bottom-up TAM via charger-level unit economics** — `primarySourceClass:
+   quantitative-dataset` (BNetzA panels, KBA registrations, charger census).
+2. **Porter's Five Forces with substitution-risk weighting** —
+   `primarySourceClass: practitioner-retrospective` (operator case studies,
+   entry post-mortems, interviews).
+3. **Triangulated TAM with primary-filing anchor** —
+   `primarySourceClass: primary-filing` (regulator publications, company
+   10-K/20-F/annual reports, official statistics).
 
-The naming convention and anti-overlap check are covered in the SKILL.md
-workflow.
+Two paths sharing a `primarySourceClass` fail the anti-overlap check —
+rename one before Step 3. The validator is in
+`scripts/anti-overlap-validator.js`.
+
+**Red-team path for directional questions.** The walkthrough's question
+("*Should we* enter...") states a direction, so one of the three paths must
+be a designated bear path — strongest counter-case, citations drawn from
+sources the other paths did not use, `primarySourceClass:
+adversarial-bear-source`. Synthesis explicitly reports whether the bear
+survived validation. See SKILL.md Step 2 for the full trigger heuristic.
 
 ### Step 3 — Parallel subagents
 
@@ -90,18 +114,28 @@ research, produces a structured report per
 [`resources/report-template.json`](../resources/report-template.json), and
 returns. See [report-format.md](report-format.md).
 
-### Step 4 — Synthesis
+### Step 4 — Synthesis (with disagreement audit)
 
 The primary agent validates each report's claims against its citations,
-scores the angles, checks for hybridization, and produces a final
-recommendation. The validation phase is what distinguishes prism from
-engage-exocortex — see [synthesis-guide.md](synthesis-guide.md).
+scores the angles, runs the **disagreement audit** (which sets the
+`convergent` flag — true when paths agreed across all validated dimensions,
+false when material disagreements exist), optionally hybridizes, and
+produces a final recommendation. The recommendation must surface both the
+convergent flag and the bear-path outcome explicitly. Convergence may mean
+consensus OR groupthink — the user judges. See
+[synthesis-guide.md](synthesis-guide.md).
 
-### Step 5 — Proposal document
+### Step 5 — Proposal document (slim) + audit JSON sibling
 
-By default a persistent markdown proposal is written to
-`Proposal/PRISM-enter-germany-ev-charging.md`. The structure is described in
-[proposal-format-guide.md](proposal-format-guide.md).
+By default **two** artifacts are written:
+
+- `Proposal/PRISM-enter-germany-ev-charging.md` — decision-focused main
+  proposal, target under 8KB for typical runs.
+- `Proposal/PRISM-enter-germany-ev-charging.audit.json` — raw subagent
+  envelopes, full citation lists, per-dimension scoring matrix,
+  `attemptedCalls[]` records, and signal-matching tables.
+
+See [proposal-format-guide.md](proposal-format-guide.md).
 
 ---
 
@@ -128,6 +162,8 @@ guided reading order.
 | `--no-proposal` | Skip writing the proposal document |
 | `--no-web` | Suppress web research; each report must record `webResearch.performed = false` |
 | `--model <model>` | Override subagent model (opus / sonnet / haiku) |
+| `--confirm-keywords` | Opt-in: re-enable the Step 1 `AskUserQuestion` confirmation gate (default: off) |
+| `--structured-routing` | Opt-in: route path selection through `match-signals.js` and the paradigm/structure/strategy catalog (default: off) |
 
 `--no-web` is for sandboxed environments where WebFetch / WebSearch are
 unavailable. Degraded runs are surfaced explicitly in the final

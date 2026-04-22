@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-04-20T17:57:07.462Z",
+  "generatedAt": "2026-04-22T15:35:55.672Z",
   "version": "0.1.0",
-  "skillCount": 45,
+  "skillCount": 46,
   "skills": [
     {
       "name": "anti-pattern-analysis",
@@ -32,7 +32,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "e40809d0bbc753439e7259e827c36cd82e59a7aeab82b87317bfbaafbd3f91d1",
+      "checksum": "b0a2a1409bef91e2da44aeb8ec142fdb1fcacd4802c9dc5fca86444a7b304c32",
       "category": "api",
       "relevantTechStack": [
         "rest",
@@ -50,7 +50,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "eff0fb0e5cd0958464b6dca2d984e2a6c20855eda83699438fa319f000c1d812",
+      "checksum": "fbe908cfecb8b14868740c449594009c634e7b61059894186307b66df2802a44",
       "category": "platform",
       "relevantTechStack": [
         "astro",
@@ -69,7 +69,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "76b1d6f3374d60025e21405c812ea26251ba0de74bb7a23d053b94bc48b3c204",
+      "checksum": "0d4c0d557502d27f459c0433fdd1ba1576a36702269b1defc0f4dc0489d17451",
       "category": "testing",
       "relevantTechStack": [
         "cucumber",
@@ -105,7 +105,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "c08b8ec1bd84486706fb97eb02fda6787e2b21a9332889411cb1d5d0e975beaf",
+      "checksum": "a2a2bc5644259e3512af9470994a7f1bd05a04091c17d2b81041de0df09ef060",
       "category": "devops",
       "relevantTechStack": [
         "github-actions",
@@ -123,7 +123,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "fabbc15ca1bb5ccab6bf622a176a650838b27513206715f7af28eff6d16939a6",
+      "checksum": "515679b7b44661d361ab1bfa8ee303ff5a6ff20eb5fce6abb2fd0902cf0148dd",
       "category": "analysis",
       "relevantTechStack": [
         "javascript",
@@ -139,7 +139,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "d66270c589e530610172ffe3fe3b89db01c1a9b0935dda060160bfcc10c34efb",
+      "checksum": "f9206882444f87c554d90608a0562541e170333404cf2d258a07d7953e7bc1d6",
       "category": "code-quality",
       "relevantTechStack": [
         "javascript",
@@ -165,7 +165,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "0308deda79941270c7f7236cb870b7a6b1efe6e7f0fa6f28b904748e8dfaf6ac",
+      "checksum": "90eb4020b3c64696b559d9eb406e445f7446ec0f1bbc54c6124a9e163c5d506c",
       "category": "code-quality",
       "defaultSkill": true,
       "copyright": "\"Rubrical Works (c) 2026\""
@@ -188,13 +188,33 @@
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
+      "name": "debate-prism",
+      "description": "Adversarial for/against/judge analyst for contested business, marketing, and financial claims. Extracts the claim under debate, runs a baseline pass, dispatches a for-advocate and an against-advocate in parallel with mechanical citation diversity, then routes to a judge subagent that names the specific evidence that settled the call. Preserves the citation schema, recency gate, attempted-call evidence, and disclaimer contract from /engage-prism.",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.80.0",
+      "lastUpdated": "2026-04-22",
+      "checksum": "59748592f3f267a744d3ea12e4b4d8e7bf6cee11885e4dd67caa3df15e7db968",
+      "category": "analysis",
+      "relevantTechStack": [
+        "business-analysis",
+        "market-research",
+        "financial-analysis",
+        "web-research",
+        "adversarial-analysis",
+        "debate-pattern",
+        "json-schema"
+      ],
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
       "name": "digitalocean-app-setup",
       "description": "Configure automated preview, staging, and production deployments with DigitalOcean App Platform",
       "triggers": [],
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "ab553d0770032580330c69870305269dadfd4c920dc0a38e21a8d0a46c41f87b",
+      "checksum": "cc26df348e6f652571ce50f28259715b8fb9053a69613f1a5947dd754ce373a2",
       "category": "platform",
       "relevantTechStack": [
         "digitalocean",
@@ -211,7 +231,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "f19f9bf6e6495c5379918582011bd5d95df0141c125c163fdd3a2c32e3c2576b",
+      "checksum": "aedbf2331fa9b52b73e71c3fd37397ab9e30da31e5d8915bff599e8cd8f1bc4d",
       "category": "documentation",
       "relevantTechStack": [
         "drawio",
@@ -268,7 +288,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-04",
-      "checksum": "b4fe8b62f46d5b89084c721a1403c109fed19764157c1acffe4427ad17b32389",
+      "checksum": "8415b666411ebb73eb9866b0122748e93f2fc6ae6415f289c23fbd4b88276a2c",
       "category": "problem-solving",
       "relevantTechStack": [
         "algorithms",
@@ -285,7 +305,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "dcac17ceda282418a6ef682163a2af4d7c6e2390fd51e05e537242b45c4ffd04",
+      "checksum": "f8155b70d9300922b2931bfa9b1ce264ea7760d4e7b6b1da1ae2ab12b138b1a4",
       "category": "analysis",
       "relevantTechStack": [
         "business-analysis",
@@ -326,7 +346,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "ba02b4416a558def2a00a7e786f73f1b2e177ca3017211524d0372615a9c51f0",
+      "checksum": "22521eae34d30badc01e13212924b06b67b8c3cd6dadaad137f26f0a6b1cd9a1",
       "category": "platform",
       "relevantTechStack": [
         "flask",
@@ -343,7 +363,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "01d82d02effcd16d43b8bd553dd246b90905b3345b7c5023b443c89f4c3f1896",
+      "checksum": "d55fe5656de078e0c1f13f954aa9e9bb4ae396ec6c0cbb616ecc69d073541f49",
       "category": "web",
       "relevantTechStack": [
         "i18n",
@@ -361,7 +381,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "e76dbd9a37da425247940fe384ece80254979667dc9ac7fa75d5179e267ade7f",
+      "checksum": "4efed349dccd14be6380d73e440d1c476086668b088aea48075c1121d36c5e62",
       "category": "setup",
       "relevantTechStack": [
         "node",
@@ -383,7 +403,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "a0ca3ee43f394fd5d2315cbf81f22ddea9359ba50666e539314c0960e3edd1fe",
+      "checksum": "773bd46eede662876266329009fade0baaf5b2da5834a0991e65d7c4ca1bf529",
       "category": "analysis",
       "relevantTechStack": [
         "json",
@@ -400,7 +420,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "aa07b021932106a3a1bc5d9d06438ef33bdde10ace731dfdeb5c9d60fd948da1",
+      "checksum": "110499977eea9b5d60ee5d2d18a1d1875903d3203d3138cba5fd7f082df97cd1",
       "category": "database",
       "relevantTechStack": [
         "sql",
@@ -419,7 +439,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "8c3d96b5a4e07e7c896a845cfab4a60895b5b8ed5297791f37e6e94f1eeb18d2",
+      "checksum": "5d6b83cce218d473c89372eb0167178e709ae1a4d53b7b616fd8ebb5e53ac95d",
       "category": "testing",
       "relevantTechStack": [
         "stryker",
@@ -455,7 +475,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "ad6739665db04eee0d3061e95ff9033f77af688ad106924a6e0abc9f095682ab",
+      "checksum": "a74f2b0a4f98867f102732d70672f349d5af6946e4b79d911efba73596c5d435",
       "category": "testing",
       "relevantTechStack": [
         "playwright",
@@ -473,7 +493,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "671a7f49be42606457d8d60baa3baee115960e8b991c618870768a3cd57884fb",
+      "checksum": "cbd6cfc77fd2c22d936e060d604bf6031a205c0c648e976c45df75c4c1f5dff2",
       "category": "testing",
       "relevantTechStack": [
         "playwright",
@@ -490,7 +510,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "c11e580abd2668f301342bb42994ab7e0b4890661cfdd954909a3f3fc747074a",
+      "checksum": "ff9f757d57d856155c405d240a58ccb17ed4176d45ebd5d6dd1dceae0a752e15",
       "category": "database",
       "relevantTechStack": [
         "postgresql",
@@ -544,7 +564,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "73284fc8f03750f7bf73974e4d2d232bf1202383840e872581804de52d146326",
+      "checksum": "d72397858a50cec12bc9b7585b436a1190f812820ae1ec3f18105250928a79ea",
       "category": "platform",
       "relevantTechStack": [
         "railway",
@@ -562,7 +582,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "c3776f25116236df71e552b9ba9752ce534d215cd59af03088c26df226fea932",
+      "checksum": "f75222b050afe0fe59e0989569133d8fa2190993c6684d53989570aa268ab320",
       "category": "platform",
       "relevantTechStack": [
         "render",
@@ -580,7 +600,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "e6129ac3ee48b8623bd42bfbf0d7232d7d5942db4f49720cf5c5f364a477dd18",
+      "checksum": "d08e007ced95167209e0dbe5fb87849fc3a17bef30b50361d70780f14aa7c921",
       "category": "development",
       "relevantTechStack": [
         "distributed-systems",
@@ -601,7 +621,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "009bb6a6431d7d9a4f91af650c556af27067414db4915c768ba7d87a02402ca5",
+      "checksum": "9dc9f47869d0e0f24c7f7571a84f1f3c93c6e48e19695be1506bed81476f59c5",
       "category": "setup",
       "relevantTechStack": [
         "skill-authoring",
@@ -636,7 +656,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "0f9be9a6db5c9c6ce8c29e22a4f55b68f3b3ddbe75026a4bf5217a9c96d08d99",
+      "checksum": "667996c15fc003916148aed28fc10c7f3791c2cfc09706fdd31d68151ecd8798",
       "category": "platform",
       "relevantTechStack": [
         "sinatra",
@@ -653,7 +673,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "0da294f82c85bb802bc8b7729b74e2ed2b1023d83a9ac6929723255fcce151c2",
+      "checksum": "a4d4ea183511716552a33193ecbe4eb53a353edc05258093abc0012f665c0dcf",
       "category": "database",
       "relevantTechStack": [
         "sqlite",
@@ -672,7 +692,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "26c966c860e7fd69f76e034083b8dda28802c0a1099ab5ef0508e8c3b5b441bd",
+      "checksum": "24549733e178dc05ccf724d9a4c5cec7594cea5bba230d96b49d4fbc37f516b2",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -694,7 +714,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "50f058e50ed34652541083a10f170ed42e674262c60f884604dbbc486598266a",
+      "checksum": "fe969370659cc6ad85ff4f476ab4563723408ad24d3eec646dec0e49a3532cab",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -726,7 +746,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "018a90c3477fac5291f61b295e1268ac2245f494bb61f2a07a0457e83be23e44",
+      "checksum": "15b410d65868c40922ee705684479ae1ea06c7f291ce669285039004015f27d3",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -742,7 +762,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-06",
-      "checksum": "189f0eac4ac87eda11ca9cab6222c78d5b47d484bfd279f7abcea74961bb873f",
+      "checksum": "f6e9fb74663b16bc2d86c2570ab78b0443666cfb71c33a421a74d7f59159224f",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -758,7 +778,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "19cc1e2445d1226570decfa23a432cdde0d59d1083ca4add91ba240caba52fe3",
+      "checksum": "dbed0ed4b3cb7988c5040f166c3230f9a8ad560a1f3f93c00a3770dfd2757fe0",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
@@ -774,7 +794,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "36d39f86ab2b124aba1d3440f1eb390151ba4ee6fe2f2685283e1e37ca79a89e",
+      "checksum": "52db0402f9f2bfe67c643f4a57288c44ad5702f51f6e39f34f89ef57e1ec72ac",
       "category": "testing",
       "relevantTechStack": [
         "testing",
@@ -822,7 +842,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "6a460888bc336e510695bd11791568379bd33baf4d3d201cd8ca109d2c25e377",
+      "checksum": "5336803890fc04d5ade1c57a3fea349b65f3adb49748a38d84fcd78a170bf2c6",
       "category": "platform",
       "relevantTechStack": [
         "vercel",

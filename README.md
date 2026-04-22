@@ -3,7 +3,7 @@
 [![Skill CI](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml)
 [![CodeQL](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml)
 [![Latest Release](https://img.shields.io/github/v/release/rubrical-works/idpf-praxis-skills)](https://github.com/rubrical-works/idpf-praxis-skills/releases/latest)
-[![Skills](https://img.shields.io/badge/skills-45-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
+[![Skills](https://img.shields.io/badge/skills-46-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 Ready-to-use skills for [Claude Code](https://claude.ai/code). Browse skill documentation below, then install what you need.
@@ -53,7 +53,7 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, Windows considerations |
 | [electron-cross-build](Skills/electron-cross-build/) | Platform | Cross-compile Electron apps from Linux to Windows |
 
-### Invokable Skills (16)
+### Invokable Skills (17)
 
 Interactive guided workflows. Install and use as slash commands.
 
@@ -74,6 +74,7 @@ Interactive guided workflows. Install and use as slash commands.
 | [json-validator](Skills/json-validator/) | Analysis | Validate JSON files against schemas |
 | [engage-exocortex](Skills/engage-exocortex/) | Problem Solving | JSON-driven parallel solution explorer |
 | [engage-prism](Skills/engage-prism/) | Analytical Reasoning | JSON-driven parallel analytical explorer with citation-first contract |
+| [debate-prism](Skills/debate-prism/) | Analytical Reasoning | Adversarial for/against debate on a question with citation-overlap contract and structured judging |
 | [install-node](Skills/install-node/) | Setup | Safe, guided Node.js installer with dry-run default and responsibility gate |
 
 ### Reference Skills (17)

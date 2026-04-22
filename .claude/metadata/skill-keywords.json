@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-20T17:57:07.509Z",
+  "generatedAt": "2026-04-22T15:35:55.705Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
@@ -69,6 +69,11 @@
       "common-errors",
       "common",
       "errors"
+    ],
+    "debate-prism": [
+      "debate-prism",
+      "debate",
+      "prism"
     ],
     "digitalocean-app-setup": [
       "digitalocean-app-setup",
@@ -274,6 +279,7 @@
     "codebase-analysis": "code-quality",
     "command-spec-audit": "code-quality",
     "common-errors": "code-quality",
+    "debate-prism": "analysis",
     "digitalocean-app-setup": "platform",
     "drawio-generation": "documentation",
     "electron-cross-build": "platform",

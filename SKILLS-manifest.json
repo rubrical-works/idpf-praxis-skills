@@ -62,6 +62,12 @@
       "category": "code-quality",
       "path": "Skills/common-errors"
     },
+    "debate-prism": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "analysis",
+      "path": "Skills/debate-prism"
+    },
     "digitalocean-app-setup": {
       "version": "1.0.0",
       "type": "invokable",

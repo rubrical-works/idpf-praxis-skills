@@ -1,0 +1,86 @@
+{
+  "$schema": "against-brief-schema.json",
+  "description": "Template for the debate-prism against-advocate brief. Build the strongest case AGAINST the claim using sources the for-advocate did not use.",
+  "preamble": "You are the AGAINST-advocate in an adversarial debate. Build the strongest case AGAINST the stated claim. Your citations MUST share zero URLs with the for-advocate's citations — this is a mechanical contract, not a stylistic preference. Prefer bear sources (short-seller reports, counter-case filings, contrary analyst coverage, regulatory enforcement actions, critical post-mortems) that typically surface evidence the for-advocate will not. Every non-derived claim cites a source conforming to citation-schema.json. If you can identify which specific for-advocate citation your case most directly rebuts, record its index in targetedCitationIndex; if you cannot identify a single target, set targetedCitationIndex to null.",
+  "slots": [
+    {
+      "field": "claim",
+      "label": "The Claim Under Debate",
+      "type": "string",
+      "required": true,
+      "description": "The directional claim you are arguing AGAINST."
+    },
+    {
+      "field": "forAdvocateCitationUrls",
+      "label": "For-Advocate Citation URLs (for overlap avoidance)",
+      "type": "array",
+      "required": true,
+      "description": "URLs the for-advocate cited. Your citations MUST NOT include any of these. Primary agent enforces this after both reports return; first violation triggers one re-dispatch; second violation accepts the report tagged citationOverlap='unresolved'."
+    },
+    {
+      "field": "researchPlan",
+      "label": "Research Plan",
+      "type": "object",
+      "required": true,
+      "description": "Entity anchors, source classes, recency window, freshness class, authority preferences, and fetch budget from Step 0."
+    },
+    {
+      "field": "citationRequirement",
+      "label": "Citation Requirement",
+      "type": "string",
+      "required": true,
+      "description": "Every non-derived claim cites a source conforming to resources/citation-schema.json. Zero URL overlap with forAdvocateCitationUrls."
+    },
+    {
+      "field": "fetchBudget",
+      "label": "Fetch Budget",
+      "type": "integer",
+      "required": true,
+      "description": "Maximum number of WebFetch/WebSearch calls this advocate may make.",
+      "default": 4
+    },
+    {
+      "field": "freshnessClass",
+      "label": "Freshness Class",
+      "type": "string",
+      "required": true,
+      "description": "Enum geopolitical | market | general."
+    }
+  ],
+  "taskInstructions": {
+    "description": "Instructions given to the against-advocate subagent.",
+    "sections": [
+      {
+        "order": 1,
+        "label": "Core position",
+        "instruction": "State your core position in one or two sentences — the best-supported case AGAINST the claim."
+      },
+      {
+        "order": 2,
+        "label": "Web research",
+        "instruction": "Perform WebFetch/WebSearch within the fetch budget. Citations MUST NOT overlap with forAdvocateCitationUrls. Prefer adversarial / bear sources. Record every source via the citation schema."
+      },
+      {
+        "order": 3,
+        "label": "Analysis",
+        "instruction": "Work through the counter-case analysis with explicit reference to fetched evidence. Every non-derived claim must cite."
+      },
+      {
+        "order": 4,
+        "label": "Targeted citation index",
+        "instruction": "If your case most directly rebuts a specific for-advocate citation, record its 0-based index from forAdvocateCitationUrls in targetedCitationIndex. If your case attacks the claim generally rather than any single for-citation, set targetedCitationIndex to null."
+      },
+      {
+        "order": 5,
+        "label": "Recommendation",
+        "instruction": "Given only the against-case, what is the best-supported recommendation? Be direct."
+      }
+    ],
+    "outputConstraint": "Return ONLY the structured report conforming to against-brief-schema.json."
+  },
+  "primaryAgentNotes": [
+    "Primary agent computes URL overlap after both reports return. First detection → re-dispatch against-advocate once with directive 'fetch counter-evidence from distinct sources (different domains)' and an explicit list of overlapping URLs. Second detection → accept with citationOverlap='unresolved' tag.",
+    "Bear sources are preferred but not mandatory; what matters is distinct citation URLs.",
+    "Same attemptedCalls[] degradation-evidence contract as the for-advocate and /engage-prism."
+  ]
+}

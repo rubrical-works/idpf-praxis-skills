@@ -47,4 +47,38 @@ function validateAntiOverlap(matchedSignalIds, chosenStrategyIds) {
   return { ok: violations.length === 0, violations };
 }
 
-module.exports = { validateAntiOverlap, CONDITIONAL_RULES };
+function validateSourceClassDiversity(paths) {
+  const violations = [];
+
+  paths.forEach((p, i) => {
+    if (!p.primarySourceClass || typeof p.primarySourceClass !== 'string' || p.primarySourceClass.trim() === '') {
+      violations.push({
+        reason: 'missing or empty primarySourceClass',
+        path: p.name || `path[${i}]`,
+        remediation: 'Set primarySourceClass to one of the documented classes (primary-filing, practitioner-retrospective, quantitative-dataset, adversarial-bear-source, trade-press, analyst-coverage) and ensure it differs from every other path.'
+      });
+    }
+  });
+
+  const byClass = new Map();
+  for (const p of paths) {
+    const cls = p.primarySourceClass;
+    if (!cls || typeof cls !== 'string' || cls.trim() === '') continue;
+    if (!byClass.has(cls)) byClass.set(cls, []);
+    byClass.get(cls).push(p.name || `path#${paths.indexOf(p)}`);
+  }
+
+  for (const [cls, pathNames] of byClass.entries()) {
+    if (pathNames.length > 1) {
+      violations.push({
+        duplicateSourceClass: cls,
+        paths: pathNames,
+        remediation: `Change one of ${pathNames.join(', ')} to a different primarySourceClass — two paths sharing '${cls}' produce labeled-but-not-substantive diversity. Swap to a primary-vs-practitioner-vs-quantitative-vs-adversarial split instead.`
+      });
+    }
+  }
+
+  return { ok: violations.length === 0, violations };
+}
+
+module.exports = { validateAntiOverlap, validateSourceClassDiversity, CONDITIONAL_RULES };

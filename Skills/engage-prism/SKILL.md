@@ -8,77 +8,94 @@ lastUpdated: "2026-04-19"
 license: Complete terms in LICENSE.txt
 category: analysis
 relevantTechStack: [business-analysis, market-research, financial-analysis, web-research, parallel-exploration, json-schema]
+sharedScripts: [match-signals.js, match-signals-input-schema.json]
 copyright: "Rubrical Works (c) 2026"
 ---
+
 # Engage Prism — Parallel Business / Market / Finance Analyst
-Fans non-technical analytical questions (business, marketing, financial) into N independent paths in parallel, grounds each in live web research, and synthesizes structured subagent reports.
-Reference data is schema-validated JSON in `resources/`. Loads only matched entries. Every path cites sources per `resources/citation-schema.json`.
+
+Skill for non-technical analytical questions (business strategy, marketing, financial/market analysis): fans out into N parallel analytical paths, grounds each in live web research, and synthesizes structured subagent reports.
+Reference data is schema-validated JSON in `resources/`. Load only matched entries. Every path must cite sources per `resources/citation-schema.json`.
+
 ## Prerequisites
-- **Node.js 18+** — shells to `node scripts/match-signals.js` (Step 1b) and `node scripts/load-entries.js` (Selective Loading). No non-Node fallback.
-- **WebFetch / WebSearch** — required by default. Every path performs live web research and cites sources. When unavailable (`--no-web`), each report records degradation.
-- **Optional: `ajv`** — validates inputs against `*-input-schema.json` when available; skipped silently otherwise.
-Node 18+ floor matches active/previous LTS. If Node missing, install Node 18+ from https://nodejs.org/ and retry.
-### Preflight (runs before Step 0)
-Before Step 0 — before research scoping, keyword extraction, signal matching — the primary agent MUST run `node --version`. If the command fails or reports a major version less than 18, HALT with:
+- **Node.js 18+** — required for `scripts/match-signals.js` and `scripts/load-entries.js`. No fallback.
+- **WebFetch / WebSearch** — required by default. `--no-web` records degradation explicitly.
+- **Optional `ajv`** — validates input schemas when present; silently skipped when absent.
+
+If Node missing: install from https://nodejs.org/ and retry.
+
+### Preflight (before Step 0)
+Primary agent MUST run:
+```bash
+node --version
+```
+If fails or major version < 18, HALT with:
 > **engage-prism requires Node.js 18+ to run `match-signals.js` and `load-entries.js`. Install Node 18+ from https://nodejs.org/ and retry.**
 
-Do not proceed to Step 0. Preflight also logs whether `ajv` is importable (`node -e "require('ajv')"`); missing `ajv` is non-fatal but recorded so synthesis knows input-schema validation was skipped.
-## When to use this skill
-Use for non-code analytical questions:
-- **Business strategy** (competitive positioning, GTM, portfolio, operating model)
-- **Marketing** (campaign, channel mix, segmentation, pricing, messaging, funnel)
-- **Financial / capital markets** (equity/ticker, valuation, macro, sector, risk)
-- **Market sizing / demand** (TAM/SAM/SOM, adoption, geography)
-- **Business / market trends** (behaviors, regulatory, tech adoption)
-- Answer depends on current external info — training recall insufficient
+Also log `node -e "require('ajv')"` — missing `ajv` is non-fatal but recorded so synthesis knows input-schema validation was skipped.
+
+## When to use
+- Business strategy (positioning, GTM, portfolio, operating model)
+- Marketing (campaigns, channels, segmentation, pricing, messaging, funnel)
+- Financial / capital markets (equity/ticker, valuation, macro, sector, risk)
+- Market sizing / demand (TAM/SAM/SOM, adoption, geography)
+- Business / market trends
+- Answer depends on **current external info**; training recall insufficient
 - User says "analyze", "compare", "should we…", "what's the case for…", "explore options for…"
+
 **Do NOT use for:**
 - Code/algorithm/IT-architecture — use `engage-exocortex`
-- Questions fully resolvable from repo or single doc — direct answer cheaper
-- Trade execution/order placement (never executes trades regardless of request)
-- Substitute for licensed clinical/legal/regulatory judgment — specific-security analysis permitted; outputs MUST carry the disclaimer template
+- Questions fully resolvable from repo/single doc
+- **Trade execution/order placement** — never executes trades, orders, brokerage API calls. Analysis of securities permitted; transactions not.
+- **Substitute for licensed clinical/legal/regulatory judgment** — analysis permitted; does not replace RIA/attorney/clinician. Finance/legal/medical outputs MUST carry disclaimer (below).
+
 ## Options
+
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--paths N` | Parallel paths (2-4) | 3 |
 | `--no-proposal` | Skip proposal doc | *(writes)* |
-| `--model <model>` | Override subagent model (`opus`, `sonnet`, `haiku`) | `opus` |
-| `--no-web` | Suppress web research (paths record degradation) | *(web required)* |
-`--no-web` is scoped opt-out for sandboxed envs. Each report must include `webResearch: { performed: false, reason: "..." }`.
+| `--model <model>` | Subagent model (opus/sonnet/haiku) | opus |
+| `--no-web` | Suppress web research; paths declare training-recall degradation | *(web required)* |
+| `--confirm-keywords` | Opt-in: enforce Step 1 `AskUserQuestion` gate | *(off)* |
+| `--structured-routing` | Opt-in: route via `match-signals.js` and paradigm/structure/strategy catalog | *(off)* |
+
+- `--no-web`: scoped opt-out for sandbox. Each report must include `webResearch: { performed: false, reason: "..." }`.
+- `--confirm-keywords`: scoped opt-in. Default restates question/keywords inline and proceeds. Enable for team/advisory.
+- `--structured-routing`: scoped opt-in. Default names paths in one sentence; catalogs optional palette. Enable for catalog-driven enumeration.
+
 ## Core Workflow
 ```
 PRIMARY AGENT
-     │
-     ├── 0. Mandatory web-research scoping — identify domains to fetch/search and budget
-     │
-     ├── 1. Parse question + context → extract signal keywords
+     ├── 0. Mandatory web-research scoping
+     ├── 1. Parse question → extract signal keywords
      ├── 2. Match signals → load matched JSON entries selectively
-     ├── 3. Score matches → select N paths (deterministic)
-     ├── 4. Anti-overlap check → ensure path diversity
-     │
-     ├── 5. Spawn N subagents in PARALLEL (slot-filled briefs, web-research required)
-     │       │
-     │       ├── Path 1: [angle] ──► JSON report (with citations[])
-     │       ├── Path 2: [angle] ──► JSON report (with citations[])
-     │       └── Path N: [angle] ──► JSON report (with citations[])
-     │
-     ├── 6. SYNTHESIS: validate claims against citations, score, optionally hybridize ──► recommendation
-     │
-     └── 7. [Default] Write analysis proposal to Proposal/PRISM-{slug}.md
+     ├── 3. Score → select N paths (deterministic)
+     ├── 4. Anti-overlap check
+     ├── 5. Spawn N subagents in PARALLEL (web-research required)
+     │       ├── Path 1: [angle] ──► JSON report (citations[])
+     │       ├── Path 2: [angle] ──► JSON report (citations[])
+     │       └── Path N: [angle] ──► JSON report (citations[])
+     ├── 6. SYNTHESIS: validate, score, hybridize ──► recommendation
+     └── 7. [Default] Write proposal to Proposal/PRISM-{slug}.md
 ```
 **Opt-out:** `--no-proposal` skips Step 7. `--no-web` suppresses web research.
+
 ## Step 0 — Web-Research Scoping (Mandatory)
-Required; distinguishes prism from exocortex. Skipping produces stale, hallucination-prone answers.
+**Required; distinguishes `engage-prism` from `engage-exocortex`.** Business/market/finance questions need current external info.
+
 ### What to scope
-Before signal matching, produce a research plan with:
-1. **Entity anchors.** Names, tickers, geographies, industries, products, events.
-2. **Source classes.** news, earnings transcripts, regulatory filings, analyst reports, trade press, industry bodies, official statistics, company pages, review sites.
-3. **Recency window.** e.g., last 30 days (trend), last earnings cycle (equity), last 12 months (sizing).
-4. **Authority preferences.** Primary (filings, regulator, official stats) > aggregators > opinion.
-5. **Budget.** Fetches per path (default 3–5).
-Record plan in proposal Context section. Subagents inherit via brief template.
+Before signal matching, plan:
+1. **Entity anchors** — names, tickers, geographies, industries, products, events.
+2. **Source classes** — news, earnings transcripts, filings, analyst reports, trade press, industry bodies, official stats, company pages, review sites.
+3. **Recency window** — e.g., 30d for trend, last earnings for equity, 12mo for sizing.
+4. **Authority** — primary sources > aggregators > opinion.
+5. **Budget** — fetches/path (default 3–5).
+
+Record plan in proposal Context. Subagents inherit via brief.
+
 ### Citation discipline
-Every non-derived claim must cite a source conforming to `resources/citation-schema.json`:
+Every non-derived claim must cite per `resources/citation-schema.json`:
 ```json
 {
   "title": "string",
@@ -87,192 +104,291 @@ Every non-derived claim must cite a source conforming to `resources/citation-sch
   "excerpt": "short quoted or paraphrased extract supporting the claim"
 }
 ```
-Reports without schema-conformant citations are flagged and deprioritized.
+Reports without schema-conformant citations flagged and deprioritized.
+
 ### Degradation path
-When WebFetch/WebSearch unavailable (sandbox, offline, `--no-web`), each report sets `webResearch.performed = false` with non-empty `reason`. Primary agent surfaces degradation in final recommendation.
-**Attempted-call evidence required.** Setting `performed = false` requires `webResearch.attemptedCalls[]` with ≥1 entry (method, targetUrl/query, errorMessage, optional httpStatus, attemptedAt ISO-8601). Subagents must try ≥1 alternative source before declaring unavailability — bare claims without any attempted call are a contract violation. Primary agent rejects `performed=false` + empty `attemptedCalls[]`, re-dispatches once with "attempt at least one fetch" directive; if retry still returns zero, accepts and tags `degradationEvidence="unverified"` so synthesis deprioritizes.
+When WebFetch/WebSearch unavailable (sandbox, offline, `--no-web`), each report sets `webResearch.performed = false` with non-empty `reason`. Primary agent surfaces degradation explicitly — degraded answers never presented as research-grounded.
+
+**Attempted-call evidence required.** `performed = false` requires `webResearch.attemptedCalls[]` with ≥1 entry documenting actual attempt (method, `targetUrl` or `query`, `errorMessage`, optional `httpStatus`, `attemptedAt` ISO-8601). Subagents must try ≥1 alternative source before declaring unavailability. Primary agent rejects reports with `performed=false` and empty `attemptedCalls[]`, re-dispatches once with "attempt at least one fetch" directive; retry with zero attempts → tag `degradationEvidence="unverified"` and deprioritize further.
+
 ### Recency gate (fast-moving topics)
-- **`freshnessClass` arg** — enum `geopolitical | market | general`; default `general`. Thresholds: geopolitical/market=24h, general=72h. Overridable per-run.
-- **Gate:** for each cited anchor source compute `ageHours = now − max(publishedAt, fetchedAt)`. If `max > threshold`, reject and re-dispatch once with "fetch a source dated within the last {threshold}h" directive (reuses the validator-rejection + one-retry pattern).
-- **≥2-source corroboration:** before a probability weight or price level enters synthesis as an anchor, require ≥2 independent citations (distinct domains). Single-source anchors tagged `anchorEvidence="single-source"` and deprioritized.
-- **Date-qualified queries:** for time-sensitive entities include current date (`YYYY-MM-DD` or `last 24h`) in ≥1 search query before accepting results.
-- **Graceful degradation:** if retry cannot satisfy the gate, emit `⚠️ Recency-gate degraded: freshest citation Xh old (threshold Yh)` in path Report — never silent.
+- **`freshnessClass` run arg** — `geopolitical | market | general`; default `general`. Thresholds: `geopolitical`/`market` = 24h; `general` = 72h.
+- **Gate:** For every cited anchor, `ageHours = now − max(publishedAt, fetchedAt)`. If `max(ageHours) > threshold`, reject and re-dispatch once with "fetch a source dated within the last {threshold}h".
+- **≥2-source corroboration for anchors:** Probability weights / price levels entering synthesis as anchors require ≥2 independent citations (distinct domains). Single-source → tag `anchorEvidence="single-source"` and deprioritize.
+- **Date-qualified queries:** Time-sensitive entities require current date (`YYYY-MM-DD` or `last 24h`) in ≥1 query before accepting results.
+- **Graceful degradation:** After retry, accept with warning: `⚠️ Recency-gate degraded: freshest citation Xh old (threshold Yh)`. Never silent.
+
 ## Step 1 — Parse Question and Confirm Keywords
-1. **Parse question** — identify decision, constraints, what "useful answer" looks like.
-2. **Extract signal keywords** from question and Step 0 anchors.
-### Keyword Confirmation Gate (Mandatory)
-Before signal matching, confirm interpreted question and keywords via `AskUserQuestion`.
-- Restate interpreted question in 1–2 sentences
-- List extracted keywords
-- `AskUserQuestion` with:
-  - Question: `"I'll analyze: {restated}\n\nExtracted keywords: {list}\n\nWeb-research plan: {summary}"`
-  - Options: `"Confirmed — proceed"`, `"Let me adjust keywords"`, `"Rephrase the question"`, `"Adjust research plan"`
-**On response:**
-- **Confirmed**: proceed to signal matching
-- **Adjust keywords**: accept corrections; re-display
-- **Rephrase**: accept new; re-parse
-- **Adjust research plan**: accept tweaks; re-display
-**No signal matching or dispatch may occur without confirmation.**
-### Step 1b — Match Signals
-```bash
-node scripts/match-signals.js "keyword1" "keyword2" [...] [--paths N]
-```
-Reads `resources/cross-references.json`, matches keywords, aggregates weighted scores across paradigms/structures/strategies, returns top N candidates JSON.
-Parse output — `ok: true` means matched. Use `scores.paradigms`, `scores.structures`, `scores.strategies`.
-**Fallback path (`result.fallback === true`):** matcher found zero signal matches but allowlist term (finance/macro vocabulary) present. Envelope carries `confidence: 0.15`, `matchedSignals: []`, default path (`scenario-analysis` / `scenario-grid` / `ev-vs-risk-framing`). Subagent MUST open with low-confidence acknowledgement and ask one keyword-refinement question before proceeding.
+1. Parse decision, constraints, "useful answer" definition.
+2. Extract signal keywords from question + Step 0 anchors.
+
+### Keyword Confirmation Gate (opt-in via `--confirm-keywords`)
+**Default: skipped.** Primary agent restates question/keywords inline and proceeds.
+
+**3. When `--confirm-keywords` is set**, use `AskUserQuestion`:
+- Restate question 1–2 sentences.
+- List keywords.
+- Question: `"I'll analyze: {restated question}\n\nExtracted keywords: {keyword list}\n\nWeb-research plan: {plan summary}"`
+- Options: `"Confirmed — proceed"`, `"Let me adjust keywords"`, `"Rephrase the question"`, `"Adjust research plan"`
+
+**On response (when set):**
+- **Confirmed** → signal matching.
+- **Adjust keywords** → re-display for re-confirmation.
+- **Rephrase** → re-parse from scratch.
+- **Adjust research plan** → re-display.
+
+When flag set, no dispatch without passing this gate. When unset, inline restatement is the confirmation surface.
+
+### Default routing — primary agent names paths directly
+Without `--structured-routing`, skip signal matching: primary agent names N paths itself, one sentence each, grounded in Step 0 anchors/source classes. Catalogs optional palette — MAY open single entry from `paradigms.json`/`structures.json`/`strategies.json` when genuinely useful, MUST NOT load full catalog or use matcher.
+- Must satisfy anti-overlap rules Step 2 (distinct primary `sourceClass` — AC #213-3).
+- Rejected angles named inline one line each.
+- `--paths N` caps count (default 3, bounds 2–4).
+
+### Step 1b — Match Signals (only when `--structured-routing` set)
+**Runs only when `--structured-routing` passed.** Default flow skip to Step 2.
+
+4. Run matcher:
+   ```bash
+   node scripts/match-signals.js "keyword1" "keyword2" [...] [--paths N]
+   ```
+   Reads `resources/cross-references.json`, aggregates weighted scores across paradigms/structures/strategies, returns top N candidates as JSON.
+
+5. Parse output — `ok: true` = matches found. Use `scores.paradigms`, `scores.structures`, `scores.strategies` for Step 2.
+
+**Fallback path — when `result.fallback === true`:** matcher found zero signal matches but detected finance/macro vocabulary allowlist hit. Envelope carries `confidence: 0.15`, `matchedSignals: []`, single default `paths` entry (paradigm `scenario-analysis`, structure `scenario-grid`, strategy `ev-vs-risk-framing`). Subagent MUST open with one-line low-confidence note and ask user one focused keyword-refinement question before proceeding. Do not silently proceed.
+
 ### Selective Loading
+For each top-scoring entry, load only matched:
 ```bash
 node scripts/load-entries.js paradigm <id1> [id2] [...]
 node scripts/load-entries.js structure <id1> [id2] [...]
 node scripts/load-entries.js strategy <id1> [id2] [...]
 ```
-Returns only requested entries. Do **not** read full resource files directly.
-**Token budget:** combined output < 10K tokens; script warns when exceeded.
+Do **not** read full resource files directly.
+**Token budget:** combined output < 10K tokens. Script warns when exceeded.
+
 ### Step 1c — Classify Match Quality
 | Tier | Condition | Mode |
 |------|-----------|------|
-| **Strong** | 3+ signals, 2+ distinct primary paradigms | Structured |
-| **Weak** | 1–2 signals, or all same primary paradigm | Structured with adaptation |
-| **None** | Zero signals (`ok: false`) | Adaptive (tension-driven) |
+| **Strong** | 3+ matched signals with ≥2 distinct primary paradigms | Structured |
+| **Weak** | 1–2 matched signals, or all share same primary paradigm | Structured with adaptation |
+| **None** | Zero matched (`ok: false`) | Adaptive (tension-driven) |
+
 Report tier at confirmation gate.
-When no signals match, **adaptive mode**: primary agent identifies 2–4 fundamental tensions (*growth vs. margin*, *build vs. buy*, *early vs. late entry*, *concentrated vs. diversified*, *qualitative vs. quantitative*) and defines each path by a distinct resolution. Web research still mandatory.
+
+Adaptive mode: primary agent identifies 2–4 fundamental tensions (growth vs margin, build vs buy, early vs late, concentrated vs diversified, qualitative vs quantitative) and defines each path by distinct resolution. Web research still mandatory.
+
 ## Step 2 — Determine N and Name Paths
-Applies to Strong and Weak. Adaptive paths already defined.
+**Applies to Strong and Weak tiers.** Adaptive defined in Step 1c.
+
 ### Adaptive N selection
 | Question characteristics | Recommended N |
 |---|---|
 | One dominant angle, minor variations | 2 |
-| Multiple competing angles with trade-offs | 3 (default) |
-| Underspecified or unusual decision space | 4 |
-| User specifies (`--paths 3`) | User's N |
-| **Weak match** | **2** |
+| Multiple competing angles, real trade-offs | 3 (default) |
+| Underspecified / unusual decision space | 4 |
+| User-specified (e.g., `--paths 3`) | User's N |
+| **Weak match tier** | **2** |
+
 Never below 2. Above 4 rarely useful.
+
 ### Path naming
 Encode **both** analytical paradigm and key structure/strategy.
 ```
-✅ Good: "Bottom-up TAM via channel-level unit economics"
-✅ Good: "Comparable-company multiples with peer-group regression"
-✅ Good: "Porter's Five Forces with substitution-risk weighting"
-❌ Bad:  "Market sizing approach"
-❌ Bad:  "Financial analysis"
+✅ "Bottom-up TAM via channel-level unit economics"
+✅ "Comparable-company multiples with peer-group regression"
+✅ "Porter's Five Forces with substitution-risk weighting"
+❌ "Market sizing approach"
+❌ "Financial analysis"
 ```
+
 ### Anti-overlap check
-Verify against `resources/cross-references.json` → `antiOverlapRules[]`:
-- No two paths share paradigm **and** structure
-- Each path distinct primary paradigm where possible
-- No identical (paradigm, structure, strategy) tuples
+`match-signals.js` `paths[]` applies paradigm diversity. Verify against `resources/cross-references.json` → `antiOverlapRules[]`:
+- No two paths share paradigm **and** structure.
+- Distinct primary paradigm where possible.
+- No identical (paradigm, structure, strategy) tuples.
+- **Every path declares distinct `primarySourceClass`** (AC #213-3). Invoke `scripts/anti-overlap-validator.js → validateSourceClassDiversity(paths)` before spawning; reject/rename duplicates before Step 3.
+
+### Red-team path for directional questions
+**Trigger (primary agent at Step 2).** When question contains a **stated direction**, one path MUST be designated red-team (bear). Detect when matches any:
+- **Phrase patterns:** "should we X", "is X a good idea", "does it make sense to X", "are we right to X", "is X the right call", "should we buy/enter/expand/divest/launch/kill X".
+- **Imperative verb on named action:** framed as endorsing/rejecting specific action ("expanding into Japan B2B SaaS 2026", "doubling down on outbound", "shutting consumer line"), not open-ended.
+- **User volunteers working thesis:** claim followed by validation-seeking question.
+
+**Not triggered by** open-ended exploratory ("what are trade-offs on X"), sizing ("how big is market for Z"), or benchmark ("how do we compare on pricing") — normal parallel-exploration.
+
+**Bear path brief contract.** When triggered, bear path brief MUST specify:
+1. **Assigned angle: strongest counter-case against stated direction.** Name claim attacked in plain text.
+2. **Citation diversity requirement:** sources for-paths didn't use. `citations[]` shares **zero URLs** with union of other paths'. Failure → re-dispatch once with "fetch counter-evidence from distinct sources (different domains)". Second failure tags `bearCitationOverlap="unresolved"` and deprioritizes.
+3. **`primarySourceClass`** set to distinct adversarial class — typically `adversarial-bear-source` (short-seller reports, contrary analyst coverage, regulatory enforcement).
+4. **Synthesis reporting:** records whether bear survived validation. Final recommendation names "bear survived" or "bear failed" as first-class signal.
+
+`--structured-routing` does not disable — applies to both default and structured-routing flows whenever trigger fires.
+
 ## Step 3 — Spawn Subagents in Parallel
-Spawn all N simultaneously via Agent tool. Subagents research/reason/write — analysis of specific tickers, ETFs, options, shorts/hedges permitted. **Never execute trades or interact with brokerage APIs** regardless of request. Finance/legal/medical outputs MUST stamp the disclaimer template.
+Spawn all N at same time via Agent tool. Subagents perform research/reasoning/writing — including analysis of specific tickers, ETFs, options structures, short/hedge ideas. Subagents **never execute trades, place orders, or interact with brokerage APIs**. Finance/legal/medical outputs MUST stamp standard disclaimer.
+
 ### Brief generation (slot-filling)
 Read `resources/brief-template.json`. Fill per path:
-- `questionStatement` — user's question
-- `assignedAngle` — path name, paradigm/structure/strategy, tension resolution if adaptive
-- `constraints` — decision constraints from Step 1
-- `researchPlan` — anchors, source classes, recency, authority, budget (Step 0)
-- `citationRequirement` — reference to `resources/citation-schema.json`
-- `maxSteps`, `maxOutputLines`
+- `questionStatement` — user's question.
+- `assignedAngle` — path name, paradigm/structure/strategy, tension resolution if adaptive.
+- `constraints` — from Step 1.
+- `researchPlan` — anchors, source classes, recency, authority, fetch budget (Step 0).
+- `citationRequirement` — reference `resources/citation-schema.json`.
+- `maxSteps` — exploration depth limit.
+- `maxOutputLines` — output size cap.
+
 ### Subagent task
-Each subagent:
-- States angle and fit
-- **Performs web research** via WebFetch/WebSearch within budget, recording each via citation schema
-- Analyzes with reference to fetched evidence
-- Produces reasoned recommendation, honest about data limits
-- Identifies risks, counter-evidence, what would change answer
+- State angle and fit.
+- **Perform web research** via WebFetch/WebSearch within fetch budget, record via citation schema.
+- Work through analysis referencing fetched evidence.
+- Produce reasoned recommendation, honest about data limits.
+- Identify risks, counter-evidence, what would change answer.
+
 ### Report format
-JSON per `resources/report-template.json`, including `citations: []` (each per `citation-schema.json`) and `webResearch: { performed, reason?, fetchCount }`.
-Validate via `resources/report-schema.json`. Malformed, or empty `citations` while `webResearch.performed = true` → flag and deprioritize.
+JSON per `resources/report-template.json`, including `citations: []` (each per `resources/citation-schema.json`) and `webResearch: { performed, reason?, fetchCount }`.
+Validate via `resources/report-schema.json`. Malformed or empty `citations` while `performed=true` → flag and deprioritize.
+
 ### User-facing output contract
-JSON envelope is for validation/audit, NOT direct user consumption. Synthesis agent MUST render each path as markdown before including in final narrative.
-**MUST render each path as markdown:** `## Path N: {paradigm} + {structure} + {strategy}` heading; short narrative; bulleted findings; citations as numbered footnotes (never raw JSON in narrative); numeric data as markdown tables.
+JSON envelope is validation/audit, **not** direct user consumption. Top-level synthesis agent MUST render each path into markdown.
+
+**MUST render each path as markdown** with:
+- `## Path N: {paradigm} + {structure} + {strategy}` heading (or adaptive path-name)
+- Short narrative summary (thesis + fit)
+- Bulleted findings/recommendations
+- Citations as numbered footnotes or inline links (never raw JSON)
+- Numeric/tabular data as markdown table
+
 **MUST include `## Synthesis` section** (validation, scoring, hybridization).
-**MUST append raw JSON under a collapsible block** for audit: `<details><summary>Raw subagent output (JSON)</summary>` ... ` ```json ... ``` ` ... `</details>`.
-**MUST NOT paste raw JSON into the primary narrative.** Relaying the envelope verbatim is a contract violation.
+
+**MUST append raw JSON under collapsible block:**
+```
+<details><summary>Raw subagent output (JSON)</summary>
+
+```json
+{ ...validated subagent envelope... }
+```
+
+</details>
+```
+
+**MUST NOT paste raw JSON into primary narrative.** Render first, then append.
+
 ## Step 4 — Synthesis
 Read `resources/synthesis-config.json` for scoring rubric.
+
 Phases:
-1. **Validate** — check claims against citations (does excerpt support claim?). Flag unsupported.
-2. **Score** — rate on: *evidence strength*, *analytical rigor*, *decision usefulness*, *counter-evidence handling*, *source authority*, conditional domain dimensions.
-3. **Hybridize** — combine best angle of one path with best evidence base/framing of another.
-4. **Output** — final recommendation, naming grafted elements.
+1. **Validate** — check claims against citations; flag unsupported.
+2. **Score** — evidence strength, analytical rigor, decision usefulness, counter-evidence handling, source authority, conditional domain dims.
+3. **Hybridize** — combine best angle with best evidence/framing.
+4. **Output** — final recommendation, explicitly name grafted elements.
+
 ### Final output format
 ```
 ## Parallel Analysis: [Question Title]
+
 ### Paths Explored (N=[n])
 - Path 1: [Name] — [one-sentence summary]
 - Path 2: [Name] — [one-sentence summary]
 ...
+
 ### Evidence Base
-[Source count, authority mix, recency, known gaps.]
+[Source count, authority mix, recency profile, known gaps.]
+
 ### Analysis
-[2–4 sentences per path: core claim, strongest citation, notable gaps. Call out unsupported claims.]
+[2–4 sentences per path: core claim, strongest citation, gaps.
+Call out unsupported claims from validation.]
+
 ### Recommendation
 **Best angle: [Name]**
 Reason: [2–3 sentences — why this wins given constraints and evidence]
+
 [Optional] **Hybrid:** [Name] framing + [Name] evidence base
-How: [1–2 sentences]
+How: [1–2 sentences on combination]
+
 ### What would change this answer
-[2–3 bullets naming evidence/assumption that would flip recommendation]
+[2–3 bullets — evidence/assumption updates that flip recommendation]
 ```
-## Step 5 — Generate Analysis Proposal Document
-Skip if `--no-proposal`.
-Write to `Proposal/PRISM-{question-slug}.md` (e.g., `expand-into-japan-b2b-saas`).
-Read `resources/proposal-template.json`. Sections:
-1. **Metadata** — date, skill, signals matched, paths count
-2. **Question** — original query
-3. **Research Plan** — anchors, source classes, recency, authority, budget (Step 0)
-4. **Signal Analysis** — matched signals, weights, loaded paradigms/structures/strategies
-5. **Path sections** (one per path):
-   - **Brief** — what subagent asked to analyze
-   - **Report** — full structured report with `citations[]` and `webResearch`
-6. **Synthesis** — scoring matrix, validation notes, hybridization
-7. **Recommendation** — final + "what would change this answer"
-8. **Rejected Angles** — considered but not selected, with reasons
+
+## Step 5 — Generate Analysis Proposal Document (slim) + Audit JSON Sibling
+**Skip if `--no-proposal`.**
+
+Write **two** artifacts:
+1. **Main proposal** — decision-focused markdown at `Proposal/PRISM-{question-slug}.md`. **Target: under 8KB for typical runs.**
+2. **Audit sibling** — machine-readable JSON at `Proposal/PRISM-{question-slug}.audit.json` with raw envelopes, full citations, per-dimension scoring matrix, `attemptedCalls[]`, signal-matching tables.
+
+`{question-slug}` is lowercase-hyphenated (e.g., `expand-into-japan-b2b-saas`).
+
+Read `resources/proposal-template.json`. Slimming rules:
+1. **Metadata** — Date, skill name, paths, webResearchPerformed, `convergent` flag, `bearPathTriggered` flag, pointer to audit sibling.
+2. **Question** — Original query.
+3. **Research Plan** — Anchors, source classes, recency, authority, fetch budget.
+4. **Signal Analysis — one-line footnote.** Name matched signals (or "adaptive mode — no signal match" / "default routing — primary agent named paths directly"). Full weight tables, per-paradigm scores, rejected angles → audit JSON, NOT main proposal.
+5. **Path sections** — each path narrative, not JSON dump:
+   - **Brief** — one-sentence angle + declared `primarySourceClass`. Full brief → audit JSON `paths[N].brief`.
+   - **Report** — 3–6 sentence narrative: core claim, strongest citation (title + one-line excerpt), gaps. Full structured — `citations[]`, `webResearch`, `attemptedCalls[]`, analysis steps → audit JSON `paths[N].report`. **Never paste raw JSON inline.**
+6. **Synthesis** — Disagreement audit (convergent flag + named disagreements), bear-path outcome, one-line-per-path scoring, named hybrid. Full scoring matrix → audit JSON.
+7. **Recommendation** — Final; must surface `convergent` flag, bear-path outcome, degraded paths.
+8. **What Would Change This Answer** — 2–3 specific observations that flip recommendation.
+9. **Audit** — pointer section naming audit JSON sibling.
+
 ## Error Handling
+
 | Failure Mode | Expected Behavior |
 |---|---|
-| Node missing or < 18 | Report preflight error with install link (https://nodejs.org/); halt before Step 0 |
-| JSON data fails schema validation | Report error with file path; halt |
+| Node missing or < 18 | Preflight error with install link (https://nodejs.org/); halt before Step 0 |
+| JSON data file fails schema | Report validation error with path; halt |
 | Reference file missing | Fail with file-not-found |
-| No signals match | Switch to adaptive (tension-driven) mode |
+| No signals match in `cross-references.json` | Switch to adaptive (tension-driven) mode |
 | Subagent returns non-conforming JSON | Flag violations; exclude from synthesis |
-| WebFetch/WebSearch unavailable | `webResearch.performed = false`; surface degradation |
-| Citation URL unreachable | Keep citation; flag `urlUnreachable: true`; don't invent alternatives |
-| Citation missing required fields | Report malformed — flag, deprioritize |
+| WebFetch/WebSearch unavailable | Record `webResearch.performed = false`; surface degradation |
+| Citation present but URL unreachable | Keep citation; flag `urlUnreachable: true`; don't invent alternatives |
+| Citation missing required fields | Flag malformed and deprioritize |
+
 ## Important Constraints
-- **Web research required by default.** `--no-web` must set `webResearch.performed = false`.
+- **Web research required by default.** `--no-web` must set `webResearch.performed = false` explicitly.
 - **Cite or derive.** Every non-derived claim needs schema-conformant citation.
 - **Primary agent validates.** Check claims against cited excerpt.
-- **Honest about ties.** Say so if angles genuinely equivalent.
-- **Flag weak evidence.** Name thin/opinion sources in recommendation.
+- **Honest about ties.** If two angles equivalent given evidence, say so.
+- **Flag weak evidence.** If recommendation rests on thin/opinion sources, name it.
 - **Selective loading only.** Never load entire reference files.
-- **No docs/ references.** `docs/` is human-readable; skill never reads at runtime.
-- **Informational, not licensed advice.** May name specific securities/options/positions when asked; finance/legal/medical outputs MUST stamp the disclaimer template. Never executes transactions. Refusing to name securities when user has acknowledged informational framing is itself a contract violation.
+- **No docs/ references.** Skill never reads `docs/` at runtime.
+- **Informational, not licensed advice.** May name specific securities/options/trades, but finance/legal/medical output MUST carry disclaimer. Does not substitute for RIA/attorney/clinician; never executes transactions.
+
 ### Disclaimer template
-Synthesis agent MUST stamp verbatim (or equivalent force) on finance/legal/medical outputs naming specific securities/options/positions/actions:
-> **Disclaimer.** The following is informational only, sourced from live web research on {date}. It is **not licensed financial, legal, or medical advice**. Named securities/options/positions are illustrative and sized as percentages of a risk budget, not dollar amounts. Options carry total-loss risk. Consult a licensed professional (registered investment advisor, attorney, clinician) before acting.
-Disclaimer replaces — does not supplement — any refusal language on licensed-advice grounds.
+When output recommends specific securities, options, positions, legal actions, or medical choices, synthesis agent MUST stamp (verbatim or equivalent):
+
+> **Disclaimer.** The following is informational only, sourced from live web research on {date}. It is **not licensed financial, legal, or medical advice**. Named securities, options, or positions are illustrative and sized as percentages of a risk budget, not dollar amounts. Options carry total-loss risk. You should consult a licensed professional (registered investment advisor, attorney, clinician) before acting.
+
+Disclaimer **replaces** — does not supplement — refusal language on licensed-advice grounds. Refusing to name securities when user explicitly asks and has acknowledged informational framing is itself a contract violation.
+
 ## Reference Files
-All in `resources/`. Each JSON data file has colocated schema.
+All in `resources/`. Each JSON has colocated schema.
+
 | File | Purpose |
 |---|---|
-| `cross-references.json` | Decision matrix: question signals → paradigm/structure/strategy keys |
-| `paradigms.json` | Analytical paradigms (market sizing, valuation, competitive, forecasting, causal inference) |
-| `structures.json` | Analytical structures (decision matrices, driver trees, cost–benefit, SWOT, Porter, cohort tables) |
-| `strategies.json` | Analytical strategies (top-down vs. bottom-up, triangulation, sensitivity, benchmark, stakeholder weighting) |
-| `brief-template.json` | Subagent brief slots with research plan and citation requirement |
-| `report-template.json` | Subagent report structure (`citations[]`, `webResearch`) |
+| `cross-references.json` | Decision matrix: signals → paradigm/structure/strategy keys |
+| `paradigms.json` | Dimension 1: paradigms (market sizing, valuation, competitive analysis, forecasting, causal inference) |
+| `structures.json` | Dimension 2: structures (decision matrices, driver trees, cost–benefit, SWOT, Porter, cohort tables) |
+| `strategies.json` | Dimension 3: strategies (top-down vs bottom-up, triangulation, sensitivity, benchmarks, stakeholder weighting) |
+| `brief-template.json` | Subagent brief slot template with research plan + citation requirement |
+| `report-template.json` | Expected report structure (with `citations[]` + `webResearch`) |
 | `report-schema.json` | Report validator |
-| `citation-schema.json` | Citation entry shape |
-| `synthesis-config.json` | Scoring rubric and synthesis rules, citation-validation phase |
-| `skill-context-map.json` | Domain-to-skill mapping for context gathering |
+| `citation-schema.json` | Required citation entry shape |
+| `synthesis-config.json` | Scoring rubric + synthesis rules, including citation-validation phase |
+| `skill-context-map.json` | Domain-to-skill mapping for optional context gathering |
 | `proposal-template.json` | Step 5 proposal structure template |
+
 ## Relationship to `engage-exocortex`
-Share DNA (JSON-driven, selective loading, parallel dispatch, anti-overlap, schema-validated). Differ:
+Share structural DNA (JSON-driven, selective loading, parallel dispatch, anti-overlap, schema-validated). Differ:
+
 | Dimension | `engage-exocortex` | `engage-prism` |
 |---|---|---|
-| Domain | Code / algorithms / IT architecture | Business / marketing / finance |
-| Knowledge | Training + optional codebase | Live web research (required) |
-| Paradigms | Algorithmic + SE architecture | Analytical + financial + marketing |
-| Citations | None | Every non-derived claim |
-| Degradation | Token budget | `--no-web` + explicit record |
-Don't invoke both on same question. Choose by domain.
+| Problem domain | Code / algorithms / IT architecture | Business / marketing / finance |
+| Knowledge base | Training recall + optional codebase | Live web research (required) |
+| Paradigm catalog | Algorithmic + SE architecture | Analytical + financial + marketing |
+| Citation requirement | None | Every non-derived claim |
+| Degradation | Token budget | `--no-web` + explicit degradation record |
+
+Do not invoke both on same question. `engage-exocortex` for code/architecture; `engage-prism` for business/market/finance.

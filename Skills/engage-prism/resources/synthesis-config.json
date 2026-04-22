@@ -44,6 +44,17 @@
           ]
         },
         {
+          "id": "bear-path-survival",
+          "name": "Red-team (bear) path survival check",
+          "instructions": [
+            "If the run included a red-team / bear path (triggered by a directional question — see SKILL.md Step 2), evaluate whether the bear path survived validation: its citations are schema-conformant, its claims are supported, its recency is within threshold, and its citation URLs share zero overlap with the other paths' citations.",
+            "Record bearSurvived=true if all checks pass; bearSurvived=false otherwise, with the specific failure named.",
+            "If bearCitationOverlap violated after one re-dispatch, tag the bear report bearCitationOverlap='unresolved' and deprioritize it in scoring without excluding it outright.",
+            "The final recommendation MUST include one of: 'Bear survived: <one-line counter-case summary>' OR 'Bear failed: <reason>'. Silent omission is a contract violation.",
+            "If the run did not trigger a bear path (non-directional question), this check is a no-op and synthesis records bearPathTriggered=false."
+          ]
+        },
+        {
           "id": "recency-gate",
           "name": "Recency gate (fast-moving topics)",
           "instructions": [
@@ -100,15 +111,31 @@
       "constraint": "State hybrids explicitly and name what each contributes. 'Use both' is not a synthesis."
     },
     {
-      "id": "output",
+      "id": "disagreement-audit",
       "order": 4,
+      "name": "Disagreement Audit",
+      "description": "Before writing the recommendation, enumerate where the paths disagreed. Record the audit result as a convergent flag. Convergence may mean consensus or groupthink — the user judges which.",
+      "instructions": [
+        "Walk each validated dimension (evidence strength, analytical rigor, decision usefulness, counter-evidence handling, source authority, plus any applicable conditional/operational dimensions).",
+        "For each dimension, note whether paths agreed on the winner or disagreed on ranking/claims. Record disagreement points explicitly: 'On counter-evidence handling, Path A cited X to rebut Path B's claim Y — disagreement.'",
+        "Also enumerate disagreements on the final directional call (endorse / revise / reject) and on named facts (numbers, entity claims, timing).",
+        "Set convergent: true when paths agreed on the winner AND agreed on named facts across all validated dimensions (no material disagreement recorded).",
+        "Set convergent: false when ANY material disagreement exists — different winners, conflicting facts, contradictory recommendations.",
+        "When convergent=true, surface a user-visible note: 'Run tagged convergent — all N paths agreed across validated dimensions. Convergence may signal consensus OR groupthink; user judges.' Do not silently hide the convergence signal.",
+        "When convergent=false, surface the disagreement points in the recommendation so the user sees where the analytical tension actually lives."
+      ]
+    },
+    {
+      "id": "output",
+      "order": 5,
       "name": "Write the Final Output",
       "description": "Follow the output format in SKILL.md exactly, including the 'What would change this answer' section.",
       "principles": [
         { "id": "be-direct", "name": "Be direct", "rule": "Name a winner. Hedging is acceptable only with a concrete decision rule (e.g., 'enter if projected unit economics reach gross margin 60%+, otherwise wait')." },
         { "id": "show-citations-in-reasoning", "name": "Show citations in reasoning", "rule": "The Analysis section must reference specific citations, not just restate the angle's claim." },
         { "id": "surface-degradation", "name": "Surface degradation", "rule": "If any path was produced with webResearch.performed=false, say so in the recommendation. Never present degraded answers as if they were research-grounded." },
-        { "id": "what-would-change-this", "name": "'What would change this answer' is mandatory", "rule": "End with 2-3 specific observations — new evidence, updated input, counterfactual — that would flip the recommendation." }
+        { "id": "what-would-change-this", "name": "'What would change this answer' is mandatory", "rule": "End with 2-3 specific observations — new evidence, updated input, counterfactual — that would flip the recommendation." },
+        { "id": "surface-convergent-flag", "name": "Surface the convergent flag", "rule": "Emit the convergent: true or convergent: false signal from the disagreement-audit phase directly in the user-facing recommendation. On convergent: true, include the consensus-or-groupthink caveat so the user can judge which it is. On convergent: false, name the specific disagreement points the audit recorded. Silent omission of the convergence signal is a contract violation." }
       ]
     }
   ],

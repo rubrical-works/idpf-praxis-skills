@@ -720,6 +720,10 @@
     {
       "description": "Scenario/shock-family signals must carry a risk-aware lens. When the matched signal is in {geopolitical-risk-positioning, commodity-shock-exposure, tactical-positioning-short-horizon, scenario-stress-test}, at least one chosen strategyId MUST be ev-vs-risk-framing OR sensitivity-analysis.",
       "check": "If signal ∈ {geopolitical-risk-positioning, commodity-shock-exposure, tactical-positioning-short-horizon, scenario-stress-test}, at least one chosen strategyId ∈ {ev-vs-risk-framing, sensitivity-analysis}"
+    },
+    {
+      "description": "Source-class diversity — no two selected paths may declare the same primarySourceClass. Enforces substantive evidential diversity (two paths fetching the same source classes produce labeled-but-not-substantive divergence).",
+      "check": "For all pairs (path_i, path_j) where i != j, path_i.primarySourceClass != path_j.primarySourceClass; every path's primarySourceClass must be non-empty"
     }
   ]
 }

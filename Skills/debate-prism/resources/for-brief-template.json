@@ -1,0 +1,74 @@
+{
+  "$schema": "for-brief-schema.json",
+  "description": "Template for the debate-prism for-advocate brief. The primary agent fills the slot fields when spawning the for-advocate subagent. The for-advocate builds the strongest case FOR the claim with schema-conformant citations.",
+  "preamble": "You are the FOR-advocate in an adversarial debate. Build the strongest case FOR the stated claim using live web research and schema-conformant citations. Prefer primary and high-authority sources (regulatory filings, official statistics, earnings transcripts) over aggregators. Every non-derived claim in your analysis must cite a source conforming to citation-schema.json. Your against-counterpart is dispatched in parallel and will attempt to cite sources you did not use — you do not need to anticipate every rebuttal, but you must engage contrary evidence honestly in your analysis if you encounter it.",
+  "slots": [
+    {
+      "field": "claim",
+      "label": "The Claim Under Debate",
+      "type": "string",
+      "required": true,
+      "description": "The directional claim extracted in Step 1. One sentence. You are advocating FOR this claim."
+    },
+    {
+      "field": "researchPlan",
+      "label": "Research Plan",
+      "type": "object",
+      "required": true,
+      "description": "Entity anchors, source classes, recency window, freshness class, authority preferences, and fetch budget from Step 0. Inherit without modification."
+    },
+    {
+      "field": "citationRequirement",
+      "label": "Citation Requirement",
+      "type": "string",
+      "required": true,
+      "description": "Every non-derived claim cites a source conforming to resources/citation-schema.json. Derived claims reference the citation they derive from."
+    },
+    {
+      "field": "fetchBudget",
+      "label": "Fetch Budget",
+      "type": "integer",
+      "required": true,
+      "description": "Maximum number of WebFetch/WebSearch calls this advocate may make.",
+      "default": 4
+    },
+    {
+      "field": "freshnessClass",
+      "label": "Freshness Class",
+      "type": "string",
+      "required": true,
+      "description": "Enum geopolitical | market | general. Recency-gate threshold follows: geopolitical/market=24h, general=72h."
+    }
+  ],
+  "taskInstructions": {
+    "description": "Instructions given to the for-advocate subagent.",
+    "sections": [
+      {
+        "order": 1,
+        "label": "Core position",
+        "instruction": "State your core position in one or two sentences — the best-supported version of the claim you can defend."
+      },
+      {
+        "order": 2,
+        "label": "Web research",
+        "instruction": "Perform WebFetch/WebSearch within the fetch budget. Prefer primary sources. Record every source via the citation schema."
+      },
+      {
+        "order": 3,
+        "label": "Analysis",
+        "instruction": "Work through the supporting analysis with explicit reference to fetched evidence. Every non-derived claim must cite."
+      },
+      {
+        "order": 4,
+        "label": "Recommendation",
+        "instruction": "Given only the for-case, what is the best-supported recommendation? Be direct and honest about the limits of the data."
+      }
+    ],
+    "outputConstraint": "Return ONLY the structured report conforming to for-brief-schema.json. Do not add preamble or conclusion outside it."
+  },
+  "primaryAgentNotes": [
+    "The for-advocate is dispatched in PARALLEL with the against-advocate. Both receive the same researchPlan and fetchBudget.",
+    "If WebFetch/WebSearch fail on the first attempt, the advocate MUST try at least one alternative source before setting webResearch.performed=false. Record each attempt in webResearch.attemptedCalls[]. Zero-attempt degradation claims are a contract violation.",
+    "Do NOT brief the for-advocate on the against-advocate's citations — they run in parallel. Only in round-two does the for-advocate see the against-case."
+  ]
+}

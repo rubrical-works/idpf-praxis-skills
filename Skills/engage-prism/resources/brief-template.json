@@ -30,6 +30,13 @@
           "type": "string",
           "required": true,
           "description": "1-2 sentences describing the angle at a high level — paradigm + structure + strategy or tension resolution if adaptive mode."
+        },
+        {
+          "field": "primarySourceClass",
+          "label": "Primary source class",
+          "type": "string",
+          "required": true,
+          "description": "The distinct primary source class this path's evidence base draws from. Examples: 'primary-filing' (regulatory/SEC filings, official statistics), 'practitioner-retrospective' (industry operators, case studies, post-mortems), 'quantitative-dataset' (market data feeds, survey panels, transaction datasets), 'adversarial-bear-source' (short-seller reports, counter-case filings, contrary analyst coverage), 'trade-press' (industry journalism, beat reporting), 'analyst-coverage' (sell-side research, rating reports). Two paths MUST NOT declare the same primarySourceClass — see cross-references.json antiOverlapRules. This field enforces substantive evidential diversity rather than labeled (paradigm, structure, strategy) diversity."
         }
       ]
     },

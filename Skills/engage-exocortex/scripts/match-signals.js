@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 /**
- * match-signals.js — Keyword-to-signal matcher for engage-exocortex
+ * match-signals.js — Keyword-to-signal matcher for engage-* skills
+ *
+ * Authoritative shared copy. Consumers declare `sharedScripts:
+ * [match-signals.js, match-signals-input-schema.json]` in their SKILL.md
+ * frontmatter; a build-time inliner copies this file (byte-identical) into
+ * each consumer's `scripts/` directory. End users never see the shared lib.
  *
  * Usage: node match-signals.js "keyword1" "keyword2" [...] [--paths N]
  *
- * Reads cross-references.json, matches keywords against signal definitions,
- * aggregates weighted scores for paradigms/structures/strategies, and outputs
- * top N path candidates as JSON.
+ * Reads cross-references.json from `../resources/` (relative to the inlined
+ * copy's location inside a skill), matches keywords against signal
+ * definitions, aggregates weighted scores for paradigms/structures/strategies,
+ * and outputs top N path candidates as JSON.
  *
  * Output schema:
  *   {
@@ -28,18 +34,32 @@
  *   - 1.0  exact keyword match
  *   - 0.7  word-boundary match (whole word/phrase inside compound keyword)
  *   - 0.3  substring-only overlap (e.g. "aggregation" inside "log-aggregation")
- *   The script's existing match behavior is unchanged — relevance is additive
- *   metadata that lets callers tier match quality without re-deriving it from
- *   model judgment.
  *
- * Fuzzier matching (#192):
+ * Fuzzier matching (#191):
  *   - Separator normalization: hyphens/underscores → spaces on both user and
- *     signal keywords before comparison (so "cache-invalidation" ~ "cache invalidation").
+ *     signal keywords before comparison (so "next-quarter" ~ "next quarter").
  *   - Light suffix strip in the 0.3 substring tier only: {s, es, ing, ed, al, ly}
- *     with a ≥4-char residue guard (so "caching" ~ "cache" but "al" alone does
- *     not pull compound signal keywords via substring).
+ *     with a ≥4-char residue guard (so "agriculture" ~ "agricultural" but "al"
+ *     alone does not pull "agricultural commodities").
  *
- * Refs #158, #165, #192
+ * Data-driven fallback (#187, #209):
+ *   When no signal matches, the script optionally emits a low-confidence
+ *   fallback path if an adjacent `match-signals-config.json` declares a
+ *   non-empty `fallbackAllowlist` and the user keywords hit it. Skills that
+ *   should hard-fail on no match (current engage-exocortex behavior) simply
+ *   omit the config file or leave `fallbackAllowlist` empty. Config shape:
+ *     {
+ *       fallbackAllowlist: string[],       // domain vocabulary terms
+ *       fallbackPath: {                    // default paradigm/structure/strategy
+ *         paradigm: string,
+ *         structure: string,
+ *         strategy: string
+ *       },
+ *       fallbackConfidence: number,        // typically 0.15
+ *       fallbackMessage: string            // surfaced to subagent as degradation notice
+ *     }
+ *
+ * Refs #158, #165, #187, #191, #209
  */
 'use strict';
 
@@ -48,6 +68,27 @@ const path = require('path');
 
 const RESOURCES_DIR = path.join(__dirname, '..', 'resources');
 const CROSS_REF_PATH = path.join(RESOURCES_DIR, 'cross-references.json');
+const CONFIG_PATH = path.join(__dirname, 'match-signals-config.json');
+
+function loadConfig() {
+  if (!fs.existsSync(CONFIG_PATH)) return null;
+  try {
+    const cfg = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
+    if (!Array.isArray(cfg.fallbackAllowlist) || cfg.fallbackAllowlist.length === 0) return null;
+    return cfg;
+  } catch (_e) {
+    return null;
+  }
+}
+
+function hasAllowlistHit(normalizedKeywords, allowlist) {
+  for (const kw of normalizedKeywords) {
+    for (const term of allowlist) {
+      if (kw.includes(term) || term.includes(kw)) return true;
+    }
+  }
+  return false;
+}
 
 function main() {
   const { keywords, numPaths } = parseArgs(process.argv.slice(2));
@@ -77,6 +118,32 @@ function main() {
   const { matched, unmatched } = matchKeywords(keywords, signals);
 
   if (matched.length === 0) {
+    const config = loadConfig();
+    if (config) {
+      const normalizedKeywords = keywords.map(k => k.toLowerCase().trim());
+      if (hasAllowlistHit(normalizedKeywords, config.fallbackAllowlist)) {
+        const fallbackResult = {
+          ok: true,
+          confidence: config.fallbackConfidence,
+          fallback: true,
+          matchedSignals: [],
+          unmatchedKeywords: unmatched,
+          scores: { paradigms: [], structures: [], strategies: [] },
+          paths: [{
+            paradigm: config.fallbackPath.paradigm,
+            paradigmScore: 0,
+            structure: config.fallbackPath.structure,
+            structureScore: 0,
+            strategy: config.fallbackPath.strategy,
+            strategyScore: 0
+          }],
+          message: config.fallbackMessage
+        };
+        process.stdout.write(JSON.stringify(fallbackResult, null, 2));
+        process.exit(0);
+      }
+    }
+
     const result = {
       ok: false,
       matchedSignals: [],
@@ -131,26 +198,10 @@ function parseArgs(argv) {
   return { keywords, numPaths };
 }
 
-/**
- * Score the semantic relevance of a single keyword-vs-signal-keyword match.
- *
- * Returns a value in [0, 1]:
- *   1.0  — exact match (userKw === sigKw)
- *   0.7  — word-boundary match (userKw is a whole word/phrase inside sigKw, or vice versa)
- *   0.3  — substring-only overlap (e.g. "aggregation" inside "log-aggregation")
- *   0    — no match
- *
- * Word-boundary uses non-letter/digit characters (-, _, space, /) as delimiters,
- * which matches how signal keywords are typically written in cross-references.json.
- */
 function normalizeSeparators(kw) {
   return kw.toLowerCase().trim().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ');
 }
 
-/**
- * Strip one trailing morphological suffix from a single word if the residue
- * is ≥4 characters. Used only in the 0.3 substring tier (#192).
- */
 function stripCommonSuffix(word) {
   const suffixes = ['ing', 'es', 'ed', 'al', 'ly', 's'];
   for (const suf of suffixes) {
@@ -168,16 +219,13 @@ function scoreHitRelevance(userKw, sigKw) {
   const shorter = userKw.length >= sigKw.length ? sigKw : userKw;
 
   if (longer.includes(shorter)) {
-    // Word-boundary check: shorter must be flanked by non-word chars (or string ends) inside longer
     const escaped = shorter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const boundary = new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i');
     if (boundary.test(longer)) return 0.7;
-    // 0.3 substring tier — require ≥4 chars so short fragments do not match
     if (shorter.length >= 4) return 0.3;
     return 0;
   }
 
-  // Suffix-strip fallback (0.3 tier only): compare per-word stems with ≥4-char guard.
   const longerStems = longer.split(/\s+/).map(stripCommonSuffix);
   const shorterStems = shorter.split(/\s+/).map(stripCommonSuffix);
   const stemmed = longerStems.join(' ') !== longer || shorterStems.join(' ') !== shorter;
@@ -217,8 +265,6 @@ function matchKeywords(keywords, signals) {
     }
 
     if (hits.length > 0) {
-      // Per-match relevance = maximum hit relevance for this signal.
-      // Rationale: one strong concept hit is more meaningful than many weak substring hits.
       const relevance = hitDetails.reduce((m, h) => Math.max(m, h.relevance), 0);
       matched.push({
         signal,
@@ -233,10 +279,6 @@ function matchKeywords(keywords, signals) {
   return { matched, unmatched };
 }
 
-/**
- * Aggregate confidence across all matched signals.
- * Mean of per-match relevances. Returns 0 when there are no matches.
- */
 function computeConfidence(matchedSignals) {
   if (matchedSignals.length === 0) return 0;
   const sum = matchedSignals.reduce((acc, m) => acc + (m.relevance || 0), 0);
@@ -277,13 +319,11 @@ function selectPaths(scores, numPaths) {
   const paths = [];
   const usedParadigms = new Set();
 
-  // Take top paradigms, ensuring diversity
   const paradigmCandidates = [...scores.paradigms];
 
   for (let i = 0; i < Math.min(numPaths, paradigmCandidates.length); i++) {
     let selected = null;
 
-    // Prefer unused paradigms for diversity
     for (const p of paradigmCandidates) {
       if (!usedParadigms.has(p.id)) {
         selected = p;
@@ -294,7 +334,6 @@ function selectPaths(scores, numPaths) {
     if (!selected) break;
     usedParadigms.add(selected.id);
 
-    // Pick best structure and strategy not yet heavily used
     const structure = pickBestUnused(scores.structures, paths, 'structure');
     const strategy = pickBestUnused(scores.strategies, paths, 'strategy');
 
@@ -320,7 +359,6 @@ function pickBestUnused(candidates, existingPaths, field) {
     if (val) usedCounts[val] = (usedCounts[val] || 0) + 1;
   }
 
-  // Prefer candidates not yet used, then by score
   const sorted = [...candidates].sort((a, b) => {
     const aUsed = usedCounts[a.id] || 0;
     const bUsed = usedCounts[b.id] || 0;
@@ -341,8 +379,8 @@ function validateInput(input, schemaPath) {
       return `Input validation failed: ${validate.errors.map(e => e.message).join(', ')}`;
     }
   } catch (e) {
-    if (e.code === 'MODULE_NOT_FOUND') return null; // ajv not available, skip
-    if (e.code === 'ENOENT') return null; // schema not found, skip
+    if (e.code === 'MODULE_NOT_FOUND') return null;
+    if (e.code === 'ENOENT') return null;
     throw e;
   }
   return null;

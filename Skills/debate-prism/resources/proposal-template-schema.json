@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "proposal-template-schema.json",
+  "title": "Proposal Template (debate-prism)",
+  "description": "Schema for the debate-prism proposal-template.json document-structure file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["description", "filePattern", "sections"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "description": { "type": "string" },
+    "filePattern": { "type": "string" },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "heading"],
+        "properties": {
+          "id": { "type": "string" },
+          "heading": { "type": "string" },
+          "content": { "type": "string" },
+          "optional": { "type": "boolean" },
+          "condition": { "type": "string" },
+          "repeating": { "type": "boolean" },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "label"],
+              "properties": {
+                "key": { "type": "string" },
+                "label": { "type": "string" },
+                "value": { "type": "string" },
+                "format": { "type": "string" }
+              }
+            }
+          },
+          "subsections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["heading", "content"],
+              "properties": {
+                "heading": { "type": "string" },
+                "content": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

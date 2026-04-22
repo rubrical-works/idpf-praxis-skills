@@ -5,11 +5,13 @@ turns N structured outputs into one recommendation. The contract is in
 [`resources/synthesis-config.json`](../resources/synthesis-config.json);
 this guide is its prose companion.
 
-Synthesis runs in four phases. The citation-validation phase is what
+Synthesis runs in **five** phases. The citation-validation phase is what
 distinguishes `engage-prism` from `engage-exocortex` — business /
 market / finance claims rest on live external evidence, and the primary
 agent must verify that evidence actually supports the claims made on
-top of it.
+top of it. The disagreement-audit phase (added in #213) makes path
+convergence a first-class signal so apparent consensus can't silently
+masquerade as independent agreement.
 
 ---
 
@@ -126,11 +128,56 @@ not a synthesis.
 
 ---
 
-## Phase 4 — Output
+## Phase 4 — Disagreement Audit
+
+Before writing the recommendation, enumerate where the paths disagreed.
+For each validated dimension (evidence strength, analytical rigor,
+decision usefulness, counter-evidence handling, source authority, and
+any applicable conditional/operational dimensions), note whether paths
+agreed on the winner or disagreed on ranking/claims. Record disagreement
+points explicitly — "On counter-evidence handling, Path A cited X to
+rebut Path B's claim Y — disagreement."
+
+Then set the **`convergent`** flag:
+
+- **`convergent: true`** — paths agreed on the winner AND on named facts
+  across all validated dimensions (no material disagreement recorded).
+- **`convergent: false`** — ANY material disagreement exists — different
+  winners, conflicting facts, contradictory recommendations.
+
+When `convergent: true`, the recommendation MUST surface the caveat:
+convergence may mean consensus or groupthink — the user judges which it
+is. Paths fed the same research plan and source-class constraints can
+reach the same conclusion by independent inference OR by sharing a
+hidden upstream assumption. Silent convergence hides this distinction;
+explicit convergence lets the user ask the next question.
+
+When `convergent: false`, surface the disagreement points directly in
+the recommendation so the user sees where the analytical tension
+actually lives.
+
+### Bear-path survival check
+
+When the run triggered a red-team / bear path (directional questions —
+see SKILL.md Step 2), the disagreement audit also records whether the
+bear path survived validation. The recommendation MUST include one of:
+
+- **"Bear survived: <one-line counter-case summary>"** — the bear's
+  best citation held up under the validation checks and is a genuine
+  reason for caution.
+- **"Bear failed: <reason>"** — the bear's citations didn't survive
+  recency, conformance, or claim-support checks, which strengthens the
+  for-case.
+
+Silent omission of the bear-path outcome is a contract violation.
+
+---
+
+## Phase 5 — Output
 
 Write the final output in the format SKILL.md specifies — including the
-mandatory "What Would Change This Answer" section. Four principles
-govern the write-up:
+mandatory "What Would Change This Answer" section and the explicit
+`convergent` flag from Phase 4. Five principles govern the write-up:
 
 - **Be direct** — name a winner. Hedging is acceptable only with a
   concrete decision rule ("enter if projected unit economics reach
@@ -141,6 +188,10 @@ govern the write-up:
   `webResearch.performed=false`, say so in the recommendation.
 - **"What would change this answer" is mandatory** — end with 2–3
   specific observations that would flip the recommendation.
+- **Surface the convergent flag** — emit `convergent: true` or `false`
+  directly in the recommendation. On `true`, include the consensus-or-
+  groupthink caveat. On `false`, name the specific disagreement points.
+  Silent omission is a contract violation.
 
 ---
 

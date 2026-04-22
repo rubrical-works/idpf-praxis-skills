@@ -1,7 +1,9 @@
 {
   "$schema": "proposal-template-schema.json",
-  "description": "Document structure template for engage-prism analysis proposal generation (Step 5)",
+  "description": "Document structure template for engage-prism analysis proposal generation (Step 5). Slim by design — decision-focused; raw subagent envelopes live in the sibling PRISM-{question-slug}.audit.json file. Target: main proposal < 8KB for typical runs.",
   "filePattern": "Proposal/PRISM-{question-slug}.md",
+  "auditSiblingPattern": "Proposal/PRISM-{question-slug}.audit.json",
+  "sizeTarget": "Main proposal < 8KB for typical runs. Keep decision-focused; offload raw structured data to the audit JSON sibling file.",
   "sections": [
     {
       "id": "metadata",
@@ -9,9 +11,11 @@
       "fields": [
         { "key": "date", "label": "Date", "format": "YYYY-MM-DD" },
         { "key": "skill", "label": "Skill", "value": "engage-prism" },
-        { "key": "signalsMatched", "label": "Signals Matched", "format": "comma-separated list" },
         { "key": "pathsExplored", "label": "Paths Explored", "format": "integer" },
-        { "key": "webResearchPerformed", "label": "Web Research Performed", "format": "boolean" }
+        { "key": "webResearchPerformed", "label": "Web Research Performed", "format": "boolean" },
+        { "key": "convergent", "label": "Convergent", "format": "boolean — see disagreement-audit phase" },
+        { "key": "bearPathTriggered", "label": "Bear Path Triggered", "format": "boolean — see Step 2 red-team heuristic" },
+        { "key": "auditSibling", "label": "Audit File", "format": "path to PRISM-{slug}.audit.json" }
       ]
     },
     {
@@ -27,7 +31,7 @@
     {
       "id": "signal-analysis",
       "heading": "## Signal Analysis",
-      "content": "Matched signals with weights; loaded paradigms/structures/strategies with IDs and scores."
+      "content": "One-line footnote only: name the matched signals or 'adaptive mode (no signal match)' or 'default routing — primary agent named paths directly'. Full signal-matching detail (weights, per-paradigm scores, rejected angles) lives in the sibling PRISM-{question-slug}.audit.json under signalAnalysis[]. Do not repeat the signal table inline — the main proposal is decision-focused."
     },
     {
       "id": "path",
@@ -36,11 +40,11 @@
       "subsections": [
         {
           "heading": "### Brief",
-          "content": "The filled brief sent to the subagent — assigned angle, research plan, citation requirement, exclusions (if any)."
+          "content": "One-sentence angle summary plus the path's declared primarySourceClass. Full brief (researchPlan, exclusions, constraints) lives in the audit JSON sibling file under paths[N].brief."
         },
         {
           "heading": "### Report",
-          "content": "Full structured report: core claim, webResearch status, citations[], evidenceBase, analysis steps with citation references, key numbers, counter-evidence, recommendation-in-angle, fit score."
+          "content": "Narrative summary only (3–6 sentences): core claim, strongest citation (title + one-line excerpt), notable gaps. Full structured report — citations[], webResearch, attemptedCalls[], evidenceBase, analysis steps, recommendation — lives in the audit JSON sibling file under paths[N].report. Never paste raw JSON inline."
         }
       ]
     },
@@ -49,23 +53,27 @@
       "heading": "## Synthesis",
       "subsections": [
         {
-          "heading": "### Citation Validation",
-          "content": "Per-path findings from the citation-conformance and claim-support checks: which claims are fully supported, which are partially supported, which are unsupported."
+          "heading": "### Disagreement Audit",
+          "content": "Convergent flag (true|false) and named disagreement points when convergent=false. On convergent=true, include the consensus-or-groupthink caveat. See disagreement-audit phase in synthesis-config.json."
         },
         {
-          "heading": "### Scoring Matrix",
-          "content": "Table of dimension scores per path (always-relevant + conditionally-relevant + operational dimensions)."
+          "heading": "### Bear Path Outcome",
+          "content": "When bearPathTriggered=true, state whether the bear survived validation and the one-line counter-case summary. When bearPathTriggered=false, omit this subsection."
         },
         {
-          "heading": "### Hybridization Analysis",
-          "content": "Cross-path combination opportunities — framing+evidence, base-case+tail-risk, aggregate+segment, quant+qual."
+          "heading": "### Scoring Summary",
+          "content": "One-line-per-path winner + disqualification notes only. Full scoring matrix (per-dimension scores) lives in the audit JSON sibling under synthesis.scoringMatrix."
+        },
+        {
+          "heading": "### Hybridization",
+          "content": "Named hybrid (if any) with specific integration point. Skip if no hybrid."
         }
       ]
     },
     {
       "id": "recommendation",
       "heading": "## Recommendation",
-      "content": "Final recommendation with rationale that references specific citations. If any path was degraded (webResearch.performed=false), the recommendation names the degradation explicitly."
+      "content": "Final recommendation with rationale that references specific citations. Must explicitly surface convergent flag, bear-path outcome, and any degraded path."
     },
     {
       "id": "what-would-change-this",
@@ -73,9 +81,9 @@
       "content": "2-3 specific observations — new evidence, updated input, or counterfactual — that would flip the recommendation."
     },
     {
-      "id": "rejected-angles",
-      "heading": "## Rejected Angles",
-      "content": "Angles considered during signal matching but not selected. Each entry: angle name, paradigm/structure/strategy, reason for rejection (too similar to selected path, low signal match score, out-of-domain for this question)."
+      "id": "audit-pointer",
+      "heading": "## Audit",
+      "content": "Raw subagent envelopes, full citation lists, per-dimension scoring matrix, attemptedCalls[] records, and signal-matching tables are written alongside this proposal to PRISM-{question-slug}.audit.json. The audit file is machine-readable JSON conforming to the report-schema.json shape for each path plus a synthesis block. Keep the main proposal decision-focused; consult the audit JSON for verification."
     }
   ]
 }

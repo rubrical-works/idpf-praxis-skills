@@ -1,0 +1,83 @@
+{
+  "$schema": "proposal-template-schema.json",
+  "description": "Document structure template for debate-prism proposal generation (Step 6). Decision-focused narrative; disclaimer stamped when claim touches finance/legal/medical.",
+  "filePattern": "Proposal/DEBATE-{claim-slug}.md",
+  "sections": [
+    {
+      "id": "disclaimer",
+      "heading": "## Disclaimer",
+      "optional": true,
+      "condition": "stamp when claim or entity anchors contain finance/legal/medical keywords (finance, legal, medical, investment, securities, ticker, options, lawsuit, litigation, clinical, diagnosis, treatment, prescription)",
+      "content": "Renders the standard disclaimer template from SKILL.md verbatim. Informational-only framing. Named securities sized as percentages of a risk budget, not dollar amounts."
+    },
+    {
+      "id": "metadata",
+      "heading": "# Debate: {claimTitle}",
+      "fields": [
+        { "key": "date", "label": "Date", "format": "YYYY-MM-DD" },
+        { "key": "skill", "label": "Skill", "value": "debate-prism" },
+        { "key": "claim", "label": "Claim", "format": "string (from Step 1)" },
+        { "key": "fetchBudget", "label": "Fetch Budget", "format": "integer" },
+        { "key": "rounds", "label": "Rounds", "format": "1 or 2" },
+        { "key": "webResearchPerformed", "label": "Web Research Performed", "format": "boolean" },
+        { "key": "verdict", "label": "Verdict", "format": "endorse | reject | revise" },
+        { "key": "confidence", "label": "Confidence", "format": "high | medium | low" },
+        { "key": "degradationFlags", "label": "Degradation Flags", "format": "comma-separated list; empty when none" }
+      ]
+    },
+    {
+      "id": "claim",
+      "heading": "## Claim",
+      "content": "The full claim statement extracted in Step 1."
+    },
+    {
+      "id": "research-plan",
+      "heading": "## Research Plan",
+      "content": "Entity anchors, source classes, recency window, freshness class, authority preferences, fetch budget from Step 0."
+    },
+    {
+      "id": "baseline",
+      "heading": "## Baseline",
+      "content": "The primary agent's one-paragraph initial read with its single grounding citation. Establishes the reference point against which the adversaries are measured."
+    },
+    {
+      "id": "for-brief",
+      "heading": "## For-Brief",
+      "subsections": [
+        { "heading": "### Core Position", "content": "One-to-two-sentence core position from the for-advocate." },
+        { "heading": "### Citations", "content": "Table: index | title | url | sourceClass | one-line excerpt. Full citation entries conform to citation-schema.json." },
+        { "heading": "### Analysis Summary", "content": "Step-by-step analysis with inline citation-index references. 3–8 bullets." },
+        { "heading": "### For-Recommendation", "content": "What the for-advocate recommends given only the for-case." }
+      ]
+    },
+    {
+      "id": "against-brief",
+      "heading": "## Against-Brief",
+      "subsections": [
+        { "heading": "### Core Position", "content": "One-to-two-sentence counter-case from the against-advocate." },
+        { "heading": "### Citations", "content": "Table: index | title | url | sourceClass | one-line excerpt. ZERO URL overlap with for-brief citations (mechanically enforced). If citationOverlap='unresolved' was tagged, include the warning note here." },
+        { "heading": "### Targeted Citation", "content": "If targetedCitationIndex is non-null, name the for-advocate citation this case directly rebuts. Otherwise: 'General counter-case; no single for-citation targeted.'" },
+        { "heading": "### Analysis Summary", "content": "Step-by-step analysis with inline citation-index references." },
+        { "heading": "### Against-Recommendation", "content": "What the against-advocate recommends given only the counter-case." }
+      ]
+    },
+    {
+      "id": "judge",
+      "heading": "## Judge Output",
+      "subsections": [
+        { "heading": "### Weakening Evidence", "content": "Either the named against-citation (index + excerpt) that most weakened the for-case, OR 'None' with justification. Schema-enforced non-empty." },
+        { "heading": "### Verdict", "content": "endorse | reject | revise. If revise, state the revised claim." },
+        { "heading": "### Flip Conditions", "content": "What evidence would flip the verdict (or reject the revised claim)." },
+        { "heading": "### Confidence", "content": "high | medium | low, with one-line rationale." },
+        { "heading": "### Degradation Flags", "content": "List of degradation warnings surfaced in earlier steps (citationOverlap='unresolved', degradationEvidence='unverified', recency-gate warnings). Empty when none." }
+      ]
+    },
+    {
+      "id": "round-history",
+      "heading": "## Round History",
+      "optional": true,
+      "condition": "present when rounds > 1 (either judge demanded round-two OR --round-two flag was set)",
+      "content": "Summary of the round-two for-brief (core position + new citations + how it addressed the targetedCitationIndex) and the judge's second pass verdict."
+    }
+  ]
+}

@@ -17,7 +17,7 @@
     "phases": {
       "type": "array",
       "minItems": 4,
-      "maxItems": 4,
+      "maxItems": 6,
       "items": {
         "$ref": "#/definitions/phase"
       }

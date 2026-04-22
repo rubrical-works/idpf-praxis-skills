@@ -9,6 +9,8 @@
     "$schema": { "type": "string" },
     "description": { "type": "string" },
     "filePattern": { "type": "string" },
+    "auditSiblingPattern": { "type": "string", "description": "File pattern for the sibling audit JSON that carries raw subagent envelopes and full scoring matrix." },
+    "sizeTarget": { "type": "string", "description": "Human-readable size target for the main proposal (e.g., '< 8KB for typical runs')." },
     "sections": {
       "type": "array",
       "items": {

@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
-  "frameworkVersion": "0.12.3",
-  "generatedAt": "2026-04-20T17:57:07.675Z",
+  "frameworkVersion": "0.13.0",
+  "generatedAt": "2026-04-22T15:35:55.860Z",
   "fileCount": 15,
   "files": [
     {
@@ -11,13 +11,13 @@
     },
     {
       "relativePath": "Skills/engage-exocortex/scripts/match-signals.js",
-      "sha256": "f1f73a638d97a5e01afc3448fc6cfa2efb64a4702e8de5d719b4d80a16222f38",
-      "sizeBytes": 11369
+      "sha256": "ddef631023f84f351b40bbe4d04d32a14bffffbfcfdd2ea69bc33be4d704477a",
+      "sizeBytes": 12414
     },
     {
       "relativePath": "Skills/engage-prism/scripts/anti-overlap-validator.js",
-      "sha256": "9ede123bbff172ed9fe6ca9261fd1dea43a6b3dc0dce06e902febd80e16081c1",
-      "sizeBytes": 2022
+      "sha256": "7639822d212ef7dc9f2cf446637314788a32de09e0a7adf6bc85a7bb0e96bee0",
+      "sizeBytes": 3442
     },
     {
       "relativePath": "Skills/engage-prism/scripts/load-entries.js",
@@ -26,8 +26,8 @@
     },
     {
       "relativePath": "Skills/engage-prism/scripts/match-signals.js",
-      "sha256": "c3768d0932a51e09008237f96dc07aeb2047208364f3244fcb6b302d667ff392",
-      "sizeBytes": 12902
+      "sha256": "ddef631023f84f351b40bbe4d04d32a14bffffbfcfdd2ea69bc33be4d704477a",
+      "sizeBytes": 12414
     },
     {
       "relativePath": "Skills/json-validator/scripts/validate.js",
