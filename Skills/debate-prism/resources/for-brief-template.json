@@ -68,6 +68,7 @@
   },
   "primaryAgentNotes": [
     "The for-advocate is dispatched in PARALLEL with the against-advocate. Both receive the same researchPlan and fetchBudget.",
+    "SUBAGENT_TOOL_AVAILABILITY_DIRECTIVE — Include this directive verbatim in the for-advocate's brief: 'You have WebFetch and WebSearch available in this environment. Use them. Returning webResearch.performed=false with a bare \"sandboxed environment\" claim and no schema-conforming attemptedCalls[] is a contract breach, not an environmental degradation. Returning webResearch.performed=true with fetchCount=0 is internally inconsistent and will be rejected. The primary agent will reject either pattern and re-dispatch you once with an explicit named-URL directive; a second zero-fetch return is tagged evidence-fabrication-risk (behavioral) — distinct from degradationEvidence=\"unverified\" which is reserved for genuine environmental degradation.'",
     "If WebFetch/WebSearch fail on the first attempt, the advocate MUST try at least one alternative source before setting webResearch.performed=false. Record each attempt in webResearch.attemptedCalls[]. Zero-attempt degradation claims are a contract violation.",
     "Do NOT brief the for-advocate on the against-advocate's citations — they run in parallel. Only in round-two does the for-advocate see the against-case."
   ]

@@ -4,6 +4,12 @@
   "filePattern": "Proposal/DEBATE-{claim-slug}.md",
   "sections": [
     {
+      "id": "fabrication-risk-banner",
+      "heading": "> ⚠️ **Evidence-fabrication risk detected** on one or more advocates.",
+      "renderWhen": "fabricationRisk === true",
+      "content": "Banner renders ONLY when fabricationRisk=true (#221) — set when an advocate returned zero-fetch evidence twice (performed=false with non-conforming attemptedCalls[], or performed=true with fetchCount=0) and was tagged evidence-fabrication-risk by the Return-side validation in Step 0. Renders at the very top of the document, ABOVE the disclaimer. Names the affected advocate(s) and notes that the judge's confidenceRationale acknowledges the flag. Distinct from environmental degradation; the judge re-weights accordingly."
+    },
+    {
       "id": "disclaimer",
       "heading": "## Disclaimer",
       "optional": true,
@@ -22,6 +28,7 @@
         { "key": "webResearchPerformed", "label": "Web Research Performed", "format": "boolean" },
         { "key": "verdict", "label": "Verdict", "format": "endorse | reject | revise" },
         { "key": "confidence", "label": "Confidence", "format": "high | medium | low" },
+        { "key": "fabricationRisk", "label": "Evidence-Fabrication Risk", "format": "boolean", "default": false, "optional": true, "description": "Set true (#221) when one or more advocates returned zero-fetch evidence twice and was tagged evidence-fabrication-risk by Return-side validation. Surfaces the fabrication-risk-banner section at the top of the proposal." },
         { "key": "degradationFlags", "label": "Degradation Flags", "format": "comma-separated list; empty when none" }
       ]
     },

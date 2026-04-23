@@ -9,6 +9,7 @@ license: Complete terms in LICENSE.txt
 category: analysis
 relevantTechStack: [business-analysis, market-research, financial-analysis, web-research, parallel-exploration, json-schema]
 sharedScripts: [match-signals.js, match-signals-input-schema.json]
+argument-hint: "[--paths N] [--no-proposal] [--no-web] [--model <opus|sonnet|haiku>] [--confirm-keywords] [--structured-routing]"
 copyright: "Rubrical Works (c) 2026"
 ---
 
@@ -110,6 +111,12 @@ Reports without schema-conformant citations flagged and deprioritized.
 When WebFetch/WebSearch unavailable (sandbox, offline, `--no-web`), each report sets `webResearch.performed = false` with non-empty `reason`. Primary agent surfaces degradation explicitly — degraded answers never presented as research-grounded.
 
 **Attempted-call evidence required.** `performed = false` requires `webResearch.attemptedCalls[]` with ≥1 entry documenting actual attempt (method, `targetUrl` or `query`, `errorMessage`, optional `httpStatus`, `attemptedAt` ISO-8601). Subagents must try ≥1 alternative source before declaring unavailability. Primary agent rejects reports with `performed=false` and empty `attemptedCalls[]`, re-dispatches once with "attempt at least one fetch" directive; retry with zero attempts → tag `degradationEvidence="unverified"` and deprioritize further.
+### Return-side validation — reject zero-fetch returns (#220)
+Primary agent treats subagent returns as untrusted. Applied **before** synthesis. These failures are behavioral (had tools, chose not to use), not environmental — must not be silently demoted to `degradationEvidence="unverified"`.
+**Reject pattern A — `performed=false` with non-conforming `attemptedCalls[]`.** Non-conforming = lacks any of `method`, `targetUrl` (or `query`), `errorMessage`, `attemptedAt` (ISO-8601). Bare narrative text does not satisfy schema. Reject + re-dispatch **once** with directive below.
+**Reject pattern B — `performed=true` with `fetchCount=0`.** Internally inconsistent. Reject + re-dispatch **once** with same directive.
+**Re-dispatch directive — must include a named primary-source URL.** Pick one URL from research plan's entity anchors (e.g., `https://www.eia.gov/petroleum/weekly/` for oil; `https://www.sec.gov/edgar/searchedgar/companysearch` for filings). Brief states, verbatim or equivalent: *"You have WebFetch and WebSearch. Fetch {named primary-source URL} and cite the actual published date. A second zero-fetch return is a contract breach, not a degradation."* MUST name a specific URL; generic "try harder" does not satisfy.
+**Second zero-fetch — tag `evidence-fabrication-risk` (behavioral), NOT `degradationEvidence="unverified"` (environmental).** On second zero-fetch, tag path `evidence-fabrication-risk` in synthesis. Distinct from `degradationEvidence="unverified"` (attempted but could not verify). MUST NOT conflate. Synthesis surfaces fabrication-risk paths at top of proposal under a fabrication-risk banner (see Step 5) and excludes them from any `convergent: true` claim.
 
 ### Recency gate (fast-moving topics)
 - **`freshnessClass` run arg** — `geopolitical | market | general`; default `general`. Thresholds: `geopolitical`/`market` = 24h; `general` = 72h.
@@ -283,6 +290,11 @@ Phases:
 2. **Score** — evidence strength, analytical rigor, decision usefulness, counter-evidence handling, source authority, conditional domain dims.
 3. **Hybridize** — combine best angle with best evidence/framing.
 4. **Output** — final recommendation, explicitly name grafted elements.
+### Citation liveness spot-check (#220)
+Before writing the proposal, primary agent performs URL liveness spot-check on ≥**one citation URL per path** (one per subagent). WebFetch (HEAD or GET) the cited URL and confirm:
+1. **Reachability** — URL resolves (any 2xx/3xx). 4xx/5xx or DNS failure tags citation `urlUnreachable: true` without inventing alternatives.
+2. **Publish-date sanity** — page's actual publish date matches `publishedAt` (or falls within plausible window of `fetchedAt` when absent). Blatant mismatch (e.g., cited 2026-04-21 but page reads 2024-03-15) = fabrication signal: re-dispatch path once with directive "fetch a current source and cite the actual published date"; second mismatch tags path `evidence-fabrication-risk` (see Step 0 Return-side validation).
+Per-path not per-citation — full per-citation HEAD is too expensive for 3-path runs. Per-path sufficient to catch subagents that fabricated all citations from training memory: a fabricated set fails the spot-check on its first sampled URL with high probability.
 
 ### Final output format
 ```

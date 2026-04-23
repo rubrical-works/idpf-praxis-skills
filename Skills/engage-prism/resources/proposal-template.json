@@ -6,6 +6,12 @@
   "sizeTarget": "Main proposal < 8KB for typical runs. Keep decision-focused; offload raw structured data to the audit JSON sibling file.",
   "sections": [
     {
+      "id": "fabrication-risk-banner",
+      "heading": "> ⚠️ **Evidence-fabrication risk detected** on one or more paths.",
+      "renderWhen": "fabricationRisk === true",
+      "content": "Banner is rendered ONLY when the synthesis output sets fabricationRisk=true (see #220). Renders at the very top of the document, above the metadata heading. Names the affected path(s) and states: 'A subagent on this path returned zero-fetch evidence twice (performed=false with non-conforming attemptedCalls[], or performed=true with fetchCount=0) and was tagged evidence-fabrication-risk — distinct from environmental degradation. Affected path's citations did not survive primary-agent verification; treat its claims as unverified.'"
+    },
+    {
       "id": "metadata",
       "heading": "# Parallel Analysis: {questionTitle}",
       "fields": [
@@ -15,6 +21,7 @@
         { "key": "webResearchPerformed", "label": "Web Research Performed", "format": "boolean" },
         { "key": "convergent", "label": "Convergent", "format": "boolean — see disagreement-audit phase" },
         { "key": "bearPathTriggered", "label": "Bear Path Triggered", "format": "boolean — see Step 2 red-team heuristic" },
+        { "key": "fabricationRisk", "label": "Evidence-Fabrication Risk", "format": "boolean", "default": false, "optional": true, "description": "Set true (#220) when one or more paths returned zero-fetch evidence twice and was tagged evidence-fabrication-risk by return-side validation. Distinct from environmental degradation; surfaces the fabrication-risk-banner section at the top of the proposal." },
         { "key": "auditSibling", "label": "Audit File", "format": "path to PRISM-{slug}.audit.json" }
       ]
     },

@@ -156,6 +156,13 @@ guided reading order.
 
 ## Opt-outs
 
+The full flag inventory is surfaced at skill registration time via the
+`argument-hint:` field in `SKILL.md` frontmatter — that is the authoritative
+discovery surface for invocation-time flag hints. The table below documents the
+same flags with a short effect gloss; a parity test
+(`tests/skills/engage-prism-argument-hint-parity.test.js`) fails if the
+frontmatter and the in-body Options table drift apart.
+
 | Flag | Effect |
 |------|--------|
 | `--paths N` | Use N paths (2–4); default 3 |
@@ -168,6 +175,29 @@ guided reading order.
 `--no-web` is for sandboxed environments where WebFetch / WebSearch are
 unavailable. Degraded runs are surfaced explicitly in the final
 recommendation — never silently passed off as research-grounded.
+
+### Two distinct failure modes — environmental degradation vs evidence-fabrication-risk
+
+The skill draws a hard line between two return shapes that look superficially
+similar but mean very different things:
+
+- **Environmental degradation** — `webResearch.performed=false` with
+  schema-conforming `attemptedCalls[]` entries (method, targetUrl/query,
+  errorMessage, ISO-8601 attemptedAt). The subagent attempted to fetch and
+  the environment refused. Tagged `degradationEvidence="unverified"` after
+  one re-dispatch. The path's analysis is degraded but honest.
+- **Evidence-fabrication-risk** — `webResearch.performed=false` with **no**
+  conforming `attemptedCalls[]` (bare narrative claim of unavailability),
+  OR `webResearch.performed=true` with `fetchCount=0` (internally
+  inconsistent). The subagent had WebFetch/WebSearch available and chose
+  not to use them. Tagged `evidence-fabrication-risk` (behavioral) on the
+  second zero-fetch return, NOT `degradationEvidence="unverified"`. The
+  proposal renders a top-of-document banner naming the affected path; the
+  path is excluded from any `convergent: true` claim.
+
+The distinction matters for user trust: an honest "I tried and the sandbox
+blocked me" is acceptable; an unverified "the sandbox blocked me" with no
+attempt evidence is a contract breach the user should see explicitly.
 
 ---
 

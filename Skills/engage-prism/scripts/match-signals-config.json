@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../.claude/scripts/shared/lib/match-signals-config.schema.json",
+  "$schema": "../../../scripts/skills-shared/match-signals-config.schema.json",
   "fallbackAllowlist": [
     "finance", "financial", "stock", "stocks", "etf", "options", "bonds",
     "sector", "market", "portfolio", "invest", "trade", "trading", "hedge",

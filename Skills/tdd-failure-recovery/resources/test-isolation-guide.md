@@ -1,5 +1,5 @@
 # Test Isolation Guide
-**Version:** v0.13.0
+**Version:** v0.13.1
 Tests must be: **Independent** (pass/fail regardless of other tests), **Repeatable** (same result every run), **Self-contained** (set up and clean up own data).
 ## Mocking External Dependencies
 **When to Mock:** External APIs, third-party services, system clock/time, random number generators

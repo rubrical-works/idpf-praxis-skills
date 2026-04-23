@@ -32,7 +32,20 @@
             "If webResearch.performed=false, the entire report is degraded. Do not let it win on architectural dimensions if another report was research-grounded.",
             "If webResearch.performed=true but citations[] is empty, flag as malformed.",
             "If webResearch.performed=false AND webResearch.attemptedCalls is empty or missing, REJECT the report as a contract violation and re-dispatch the subagent once with the explicit directive: 'Attempt at least one fetch before declaring unavailability. Record each attempt in webResearch.attemptedCalls[].' Accept the retry's output even if attemptedCalls is still empty, but tag degradationEvidence='unverified' so this angle is deprioritized further in scoring.",
-            "If webResearch.performed=false AND webResearch.attemptedCalls has one or more entries, accept the degradation claim as evidenced and proceed with the normal degraded-report handling."
+            "If webResearch.performed=false AND webResearch.attemptedCalls has one or more entries, accept the degradation claim as evidenced and proceed with the normal degraded-report handling.",
+            "(#220) If webResearch.performed=false AND attemptedCalls[] has entries but they are non-conforming (missing method, targetUrl/query, errorMessage, or attemptedAt ISO-8601), REJECT and re-dispatch ONCE with a directive that names a specific primary-source URL drawn from the research plan's entity anchors (e.g., 'Fetch https://www.eia.gov/petroleum/weekly/ and cite the actual published date. A second zero-fetch return is a contract breach, not a degradation.'). On the second zero-fetch return, set the path's fabricationRisk=true and propagate to synthesis output — distinct from degradationEvidence='unverified' which is reserved for genuine environmental degradation (subagent attempted but could not verify).",
+            "(#220) If webResearch.performed=true AND fetchCount=0, the report is internally inconsistent. REJECT and re-dispatch ONCE with the same named-URL directive. On the second inconsistent return, set the path's fabricationRisk=true and propagate to synthesis output.",
+            "(#220) When fabricationRisk=true on any path, the run-level fabricationRisk flag is set true; the proposal-template renders its fabrication-risk-banner section at the top of the document (above metadata). fabricationRisk paths are excluded from any convergent=true claim."
+          ]
+        },
+        {
+          "id": "citation-liveness",
+          "name": "Citation liveness spot-check (#220)",
+          "instructions": [
+            "Before writing the proposal, perform a URL liveness spot-check on at least one citation URL per path (one citation per brief, per subagent). Use WebFetch against the cited URL.",
+            "Reachability: the URL resolves (2xx/3xx). On 4xx/5xx or DNS failure, tag the citation urlUnreachable=true without inventing alternatives.",
+            "Publish-date sanity: the page's actual publish date matches publishedAt (or, when publishedAt is absent, falls within a plausible window of fetchedAt). On blatant mismatch, treat as a fabrication signal — re-dispatch the path once with the directive 'fetch a current source and cite the actual published date'.",
+            "On second mismatch (or second urlUnreachable on a different sampled URL from the same path), set the path's fabricationRisk=true (see web-research-status-check)."
           ]
         },
         {

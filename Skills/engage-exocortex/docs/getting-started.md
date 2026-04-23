@@ -112,3 +112,32 @@ Use `--model sonnet` or `--model haiku` to run subagents on a lighter model. Thi
 - **State what matters most.** "Optimize for read latency" or "minimize memory footprint" helps the synthesis phase pick a winner.
 - **Ask for more paths when uncertain.** Use `--paths 4` when the problem space is wide or underspecified.
 - **Ask for fewer paths when focused.** Use `--paths 2` when you already know the general direction but want to compare two specific approaches.
+
+## Why no web-research enforcement (#222)
+
+Sister skills `/engage-prism` and `/debate-prism` carry a strict
+contract for subagent web research: every non-derived claim must cite
+a source via `citation-schema.json`, `webResearch.performed=false` must
+include a schema-conforming `attemptedCalls[]` record, and the primary
+agent rejects zero-fetch returns and re-dispatches with named-URL
+directives (#220, #221).
+
+`/engage-exocortex` does **not** carry these requirements because its
+subagents are briefed to reason about algorithms and architecture from
+training memory, with optional codebase context loaded via
+`skill-context-map.json` (read-only Read calls into project files, not
+WebFetch). There is no `webResearch` field on the report, no
+`attemptedCalls[]` array, no `citations[]` array, no `fetchCount` —
+the fabrication-risk attack surface that motivates the prism enforcement
+simply does not exist here.
+
+If you want web-grounded reasoning (current docs, RFCs, CVEs) for an
+architecture decision, use `/engage-prism` instead — its catalog covers
+business and architectural framings and its citation contract makes the
+evidence base auditable. Or run both, but on different parts of the
+question.
+
+This is intentional design, not an enforcement gap. Don't file a bug
+asking for the prism contract to be ported to `/engage-exocortex`
+without also proposing a citation-schema and a per-claim fetch budget.
+

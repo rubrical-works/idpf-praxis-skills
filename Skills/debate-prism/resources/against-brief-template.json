@@ -79,7 +79,8 @@
     "outputConstraint": "Return ONLY the structured report conforming to against-brief-schema.json."
   },
   "primaryAgentNotes": [
-    "Primary agent computes URL overlap after both reports return. First detection → re-dispatch against-advocate once with directive 'fetch counter-evidence from distinct sources (different domains)' and an explicit list of overlapping URLs. Second detection → accept with citationOverlap='unresolved' tag.",
+    "SUBAGENT_TOOL_AVAILABILITY_DIRECTIVE — Include this directive verbatim in the against-advocate's brief: 'You have WebFetch and WebSearch available in this environment. Use them. Returning webResearch.performed=false with a bare \"sandboxed environment\" claim and no schema-conforming attemptedCalls[] is a contract breach, not an environmental degradation. Returning webResearch.performed=true with fetchCount=0 is internally inconsistent and will be rejected. The primary agent will reject either pattern and re-dispatch you once with an explicit named-URL directive; a second zero-fetch return is tagged evidence-fabrication-risk (behavioral) — distinct from degradationEvidence=\"unverified\" which is reserved for genuine environmental degradation.'",
+    "Primary agent computes URL overlap after both reports return AND after the fabrication-risk check (overlap on fabricated URLs is meaningless). First detection → re-dispatch against-advocate once with directive 'fetch counter-evidence from distinct sources (different domains)' and an explicit list of overlapping URLs. Second detection → accept with citationOverlap='unresolved' tag.",
     "Bear sources are preferred but not mandatory; what matters is distinct citation URLs.",
     "Same attemptedCalls[] degradation-evidence contract as the for-advocate and /engage-prism."
   ]

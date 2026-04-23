@@ -77,7 +77,16 @@
     "degradationFlags": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Collects any citationOverlap='unresolved', degradationEvidence='unverified', or recency-gate degradation warnings surfaced in earlier steps. Empty array when no degradation."
+      "description": "Collects any citationOverlap='unresolved', degradationEvidence='unverified', evidence-fabrication-risk, or recency-gate degradation warnings surfaced in earlier steps. Empty array when no degradation."
+    },
+    "perAdvocateFabricationRisk": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "(#221) Per-advocate fabrication-risk flag propagated from Step 0 Return-side validation. Optional and defaulted false-false; existing pre-#221 judge outputs validate unchanged. When either flag is true, the judge MUST reference it in confidenceRationale.",
+      "properties": {
+        "for": { "type": "boolean", "default": false },
+        "against": { "type": "boolean", "default": false }
+      }
     }
   },
   "allOf": [

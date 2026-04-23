@@ -94,7 +94,7 @@ Domain knowledge loaded on demand during relevant work.
 | [tdd-red-phase](Skills/tdd-red-phase/) | Testing | Deep TDD RED phase guidance |
 | [tdd-green-phase](Skills/tdd-green-phase/) | Testing | Deep TDD GREEN phase guidance |
 | [tdd-refactor-phase](Skills/tdd-refactor-phase/) | Testing | Deep TDD REFACTOR phase guidance |
-| [tdd-refactor-coverage-audit](Skills/tdd-refactor-coverage-audit/) | Testing | JSON-driven test coverage audit for new source files (advisory) |
+| [tdd-refactor-coverage-audit](Skills/tdd-refactor-coverage-audit/) | Testing | JSON-driven test coverage audit for new source files (advisory). Default skill for IDPF projects. |
 | [tdd-failure-recovery](Skills/tdd-failure-recovery/) | Testing | TDD failure diagnosis and recovery |
 | [bdd-writing](Skills/bdd-writing/) | Testing | Gherkin syntax and step definitions |
 | [codebase-analysis](Skills/codebase-analysis/) | Analysis | Codebase detection mappings |

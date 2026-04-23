@@ -8,6 +8,7 @@ lastUpdated: "2026-04-22"
 license: Complete terms in LICENSE.txt
 category: analysis
 relevantTechStack: [business-analysis, market-research, financial-analysis, web-research, adversarial-analysis, debate-pattern, json-schema]
+argument-hint: "[--no-proposal] [--no-web] [--model <opus|sonnet|haiku>] [--fetch-budget N] [--round-two]"
 copyright: "Rubrical Works (c) 2026"
 ---
 # Debate Prism — Adversarial For/Against/Judge Analyst
@@ -70,6 +71,13 @@ Record plan in proposal Context section. Both advocates + judge inherit it.
 Every non-derived claim must cite a source conforming to `resources/citation-schema.json`. Reports without schema-conformant citations flagged in judge pass + deprioritized.
 ### Degradation path + attempted-call evidence
 Identical to `/engage-prism`. `webResearch.performed=false` requires populating `webResearch.attemptedCalls[]` with ≥1 documented attempt (method, `targetUrl` or `query`, `errorMessage`, optional `httpStatus`, `attemptedAt` ISO-8601). Bare unavailability claims are a contract violation. Primary agent rejects zero-attempt reports, re-dispatches once with explicit directive — if retry also zero attempts, accept but tag `degradationEvidence="unverified"`.
+### Return-side validation — reject zero-fetch advocate returns (#221)
+Primary agent treats advocate returns as untrusted input. Applied **before** citation-overlap gate (Step 3) and **before** judge pass (Step 4). These failures are behavioral (advocate had tools, chose not to use them), not environmental — must not be silently demoted to `degradationEvidence="unverified"`.
+**Reject pattern A — `performed=false` with non-conforming `attemptedCalls[]`.** Non-conforming = lacks any of `method`, `targetUrl` (or `query`), `errorMessage`, `attemptedAt` (ISO-8601). Bare narrative text does not satisfy schema. Reject + re-dispatch **once** with directive below.
+**Reject pattern B — `performed=true` with `fetchCount=0`.** Internally inconsistent. Reject + re-dispatch **once** with same directive.
+**Re-dispatch directive — must include a named primary-source URL.** Pick one URL from research plan's entity anchors (e.g., `https://www.eia.gov/petroleum/weekly/` for oil claim, `https://www.sec.gov/edgar/searchedgar/companysearch` for filings-grounded claim). Brief states, verbatim or equivalent: *"You have WebFetch and WebSearch. Fetch {named primary-source URL} and cite the actual published date. A second zero-fetch return is a contract breach, not a degradation."* MUST name a specific URL; generic "try harder" does not satisfy contract.
+**Second zero-fetch — tag `evidence-fabrication-risk` (behavioral), NOT `degradationEvidence="unverified"` (environmental).** On second zero-fetch (either pattern), tag advocate's report `evidence-fabrication-risk`. Distinct from `degradationEvidence="unverified"` (advocate attempted but could not verify). MUST NOT conflate: fabrication-risk = had tools, chose not to use; unverified = attempted but could not verify. Judge receives per-advocate `fabricationRisk` flag and must acknowledge in `confidenceRationale` (see Step 4).
+**Ordering.** Fabrication-risk check runs **before** citation-overlap gate. Computing URL overlap on fabricated citations is meaningless — two agents inventing URLs produce non-overlapping but equally unverified sets, falsely passing the diverse-source pressure test. Only proceed to Step 3 citation-overlap once both reports passed fabrication-risk validation.
 ### Recency gate
 Identical to `/engage-prism`. For every cited anchor source, `ageHours = now − max(publishedAt, fetchedAt)`. If `max(ageHours) > threshold`, reject report and re-dispatch once with directive "fetch a source dated within the last {threshold}h before re-submitting". Graceful degradation emits explicit warning; never silent.
 ## Step 1 — Claim Extraction
@@ -121,8 +129,14 @@ Judge MUST produce output conforming to `resources/judge-output-schema.json` wit
 4. **`flipConditions`** — when `verdict === "revise"`, names what evidence would need to be true to reject the revised claim. When `"endorse"` or `"reject"`, names what would flip verdict the other way.
 5. **`confidence`** — enum `"high" | "medium" | "low"`.
 6. **`confidenceRationale`** — one-line rationale.
-7. **`degradationFlags`** — array collecting any `citationOverlap="unresolved"`, `degradationEvidence="unverified"`, or recency-gate degradation warnings surfaced in Step 3.
+7. **`degradationFlags`** — array collecting any `citationOverlap="unresolved"`, `degradationEvidence="unverified"`, `evidence-fabrication-risk`, or recency-gate degradation warnings surfaced in Step 3.
+8. **`perAdvocateFabricationRisk`** (#221) — object `{for: boolean, against: boolean}` propagated from Step 0 return-side validation. Judge brief includes as first-class input; judge MUST reference it in `confidenceRationale` whenever either flag true (fabrication-present case): e.g., "Confidence reduced to medium because the for-advocate's evidence base was tagged evidence-fabrication-risk; the weakeningEvidence citation from the against-advocate carries proportionally more weight." When both false, reference may be omitted — but if either true and judge does not reference, proposal blocked + judge re-dispatched once.
 Judge does NOT re-run web research. Its job is to weigh evidence advocates produced.
+### Weakening-evidence URL live-verification (#221)
+Before writing proposal (Step 6), primary agent live-verifies citation URL named by `weakeningEvidence.citationIndex` (when not the literal `"none"`). WebFetch (HEAD or GET) against cited URL and confirm:
+1. **Reachability** — URL resolves (any 2xx/3xx). 4xx/5xx or DNS failure = dead URL.
+2. **Publish-date sanity** — page's actual publish date matches `publishedAt` (or, when absent, falls within plausible window of `fetchedAt`).
+Dead URL or blatant publish-date mismatch on the load-bearing weakening-evidence citation is a fabrication signal. Re-dispatch **judge** once with directive: *"The citation at against-advocate index {N} did not live-verify ({reason: dead URL | publish-date mismatch}). Pick a different citation from the against-advocate's `citations[]` that does live-verify, OR set `weakeningEvidence` to `'none'` with a justification noting the citation issue."* On second failure, proposal blocked with explicit error rather than written with unverified weakening citation.
 ## Step 5 — Round-Two Gate
 After judge returns, primary agent decides whether to re-dispatch:
 **Automatic trigger — re-dispatch when EITHER:**

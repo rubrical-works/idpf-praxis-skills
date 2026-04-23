@@ -5,11 +5,11 @@ type: reference
 disable-model-invocation: true
 version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-04-06"
+lastUpdated: "2026-04-23"
 license: Complete terms in LICENSE.txt
 category: testing
 relevantTechStack: [tdd, testing]
-defaultSkill: false
+defaultSkill: true
 copyright: "Rubrical Works (c) 2026"
 ---
 

@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.13.0
+**Version:** v0.13.1
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -55,7 +55,7 @@
 | tdd-green-phase | 1.0.0 | 2026-04-01 | Active |
 | tdd-process | 1.0.0 | 2026-04-01 | Active |
 | tdd-red-phase | 1.0.0 | 2026-04-01 | Active |
-| tdd-refactor-coverage-audit | 1.0.0 | 2026-04-06 | Active |
+| tdd-refactor-coverage-audit | 1.0.0 | 2026-04-23 | Active |
 | tdd-refactor-phase | 1.0.0 | 2026-04-01 | Active |
 | test-scaffold | 1.0.0 | 2026-04-01 | Active |
 | test-writing-patterns | 1.0.0 | 2026-04-01 | Active |
@@ -175,10 +175,17 @@ Skills/[skill-name]/
 ### Shared scripts (build-time inlining)
 
 A skill may declare helper scripts that live authoritatively in
-`.claude/scripts/shared/lib/` and get copied into the skill's `scripts/`
-directory at test-time and package-time. The mechanism keeps the source
-repo DRY while each shipped skill stays self-contained — end users never
-see the shared lib.
+`scripts/skills-shared/` (project-owned, at the repo root) and get copied
+into the skill's `scripts/` directory at test-time and package-time. The
+mechanism keeps the source repo DRY while each shipped skill stays
+self-contained — end users never see the shared lib.
+
+**Why `scripts/skills-shared/` and not `.claude/scripts/shared/lib/`?**
+v0.90 of the IDPF framework symlinked `.claude/scripts/shared/` to the
+hub installation, which does not provide these project-specific scripts.
+The shared source was relocated out of framework territory in #225 to
+prevent the hub upgrade from erasing it. Design rationale:
+[Construction/Design-Decisions/2026-04-22-shared-scripts-relocated-post-v0.90.md].
 
 **To consume a shared script:**
 
@@ -214,15 +221,16 @@ inlined file is byte-identical to the shared source. A missed inliner run
 
 **Adding a new shared script:**
 
-1. Add the file to `.claude/scripts/shared/lib/`.
-2. Add a negation rule to `.gitignore` so the file is tracked (the
-   `.claude/scripts/shared/lib/*` rule ignores by default).
+1. Add the file to `scripts/skills-shared/`.
+2. Commit the file (the `scripts/skills-shared/` directory is tracked
+   normally — no negation rule required).
 3. Declare any skills that consume it by adding `sharedScripts:` entries
    to their SKILL.md.
 
 Related: issue #209 (initial rollout to `engage-prism` and
 `engage-exocortex`), issue #212 (fallback-allowlist adoption for
-`engage-*` siblings).
+`engage-*` siblings), issue #225 (relocation out of framework territory
+post-v0.90 hub upgrade).
 
 ### SKILL.md Header Format
 

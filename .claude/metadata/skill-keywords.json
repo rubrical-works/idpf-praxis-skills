@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-22T15:35:55.705Z",
+  "generatedAt": "2026-04-23T23:32:13.948Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
@@ -11,6 +11,7 @@
     "tdd-green-phase",
     "tdd-process",
     "tdd-red-phase",
+    "tdd-refactor-coverage-audit",
     "tdd-refactor-phase",
     "test-writing-patterns"
   ],

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-22T15:35:55.672Z",
+  "generatedAt": "2026-04-23T23:32:13.883Z",
   "version": "0.1.0",
   "skillCount": 46,
   "skills": [
@@ -194,7 +194,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-22",
-      "checksum": "59748592f3f267a744d3ea12e4b4d8e7bf6cee11885e4dd67caa3df15e7db968",
+      "checksum": "8f584ffdec9aabeb4878a68efc763a48e6d73f518e8d91e18296c2ebf323a4c0",
       "category": "analysis",
       "relevantTechStack": [
         "business-analysis",
@@ -288,7 +288,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-04",
-      "checksum": "8415b666411ebb73eb9866b0122748e93f2fc6ae6415f289c23fbd4b88276a2c",
+      "checksum": "98275eb1b1d0c70c32f2a9208c465707324e69935247e01a37fcde6af28cd420",
       "category": "problem-solving",
       "relevantTechStack": [
         "algorithms",
@@ -305,7 +305,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "f8155b70d9300922b2931bfa9b1ce264ea7760d4e7b6b1da1ae2ab12b138b1a4",
+      "checksum": "092e7a07dcf204b6aa95608c0fc960cfa717bb18510e12073c113e15d3e4060a",
       "category": "analysis",
       "relevantTechStack": [
         "business-analysis",
@@ -346,7 +346,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "22521eae34d30badc01e13212924b06b67b8c3cd6dadaad137f26f0a6b1cd9a1",
+      "checksum": "a7d4a0e6c24984e5d23e97f13dc7de915c3862d474db814ef6c74699adaf3293",
       "category": "platform",
       "relevantTechStack": [
         "flask",
@@ -761,14 +761,14 @@
       "triggers": [],
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-04-06",
-      "checksum": "f6e9fb74663b16bc2d86c2570ab78b0443666cfb71c33a421a74d7f59159224f",
+      "lastUpdated": "2026-04-23",
+      "checksum": "1b4326f382c5a8911aafff74c0ae4acbe7eef0a8145d17c4c406f58a83115c0c",
       "category": "testing",
       "relevantTechStack": [
         "tdd",
         "testing"
       ],
-      "defaultSkill": false,
+      "defaultSkill": true,
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {

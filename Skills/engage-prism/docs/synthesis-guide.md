@@ -213,6 +213,32 @@ The config lists five:
 
 ---
 
+## Distinguishing environmental degradation from evidence-fabrication-risk (#220)
+
+Two superficially similar return shapes mean very different things, and the
+synthesis phase tags them differently:
+
+| Shape | Tag | Meaning | Treatment |
+|---|---|---|---|
+| `performed=false` with conforming `attemptedCalls[]` (method + targetUrl/query + errorMessage + ISO-8601 attemptedAt) | `degradationEvidence="unverified"` | The subagent attempted to fetch and the environment refused. Honest degradation. | Accept after one re-dispatch; deprioritize in scoring; surface in recommendation. |
+| `performed=false` with non-conforming `attemptedCalls[]` (bare narrative, no schema fields), OR `performed=true` with `fetchCount=0` | `evidence-fabrication-risk` | The subagent had WebFetch/WebSearch and chose not to use them. Behavioral, not environmental. | Reject and re-dispatch ONCE with a directive that names a specific URL from the research plan. On the second zero-fetch return, set the path's `fabricationRisk=true`. |
+
+`fabricationRisk=true` propagates to the run-level `fabricationRisk` flag,
+which causes the proposal-template to render its `fabrication-risk-banner`
+section at the very top of the document (above metadata) and excludes the
+affected path from any `convergent: true` claim. The two tags MUST NOT be
+conflated — `evidence-fabrication-risk` indicates the subagent had tools
+and chose not to use them; `degradationEvidence="unverified"` indicates
+genuine environmental degradation the subagent attempted to verify.
+
+In addition, the citation-liveness spot-check phase samples one citation
+URL per path via WebFetch and checks reachability + publish-date sanity. A
+blatant cited-vs-actual date mismatch on the sampled URL is a fabrication
+signal that re-dispatches the path; on the second mismatch, the path is
+tagged `fabricationRisk=true`.
+
+---
+
 ## See also
 
 - [citation-guide.md](citation-guide.md) — the schema Phase 1 validates

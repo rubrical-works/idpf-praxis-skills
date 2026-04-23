@@ -22,6 +22,7 @@
           "content": { "type": "string" },
           "optional": { "type": "boolean" },
           "condition": { "type": "string" },
+          "renderWhen": { "type": "string", "description": "Conditional render expression (e.g., 'fabricationRisk === true'). When present, the section is rendered only when the expression is satisfied at proposal-write time." },
           "repeating": { "type": "boolean" },
           "fields": {
             "type": "array",
@@ -32,7 +33,10 @@
                 "key": { "type": "string" },
                 "label": { "type": "string" },
                 "value": { "type": "string" },
-                "format": { "type": "string" }
+                "format": { "type": "string" },
+                "default": { "type": ["string", "boolean", "number", "null"] },
+                "optional": { "type": "boolean" },
+                "description": { "type": "string" }
               },
               "additionalProperties": false
             }

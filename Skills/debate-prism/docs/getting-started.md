@@ -81,6 +81,16 @@ record. Finance/legal/medical claims stamp the standard disclaimer.
 
 ## Opt-outs
 
+The full flag inventory is surfaced at skill registration time via the
+`argument-hint:` field in `SKILL.md` frontmatter — that is the authoritative
+discovery surface for invocation-time flag hints. The table below documents the
+same flags with a short effect gloss; a parity test
+(`tests/skills/debate-prism-argument-hint-parity.test.js`) fails if the
+frontmatter and the in-body Options table drift apart.
+
+`--round-two` is the highest-value flag surfaced this way — it forces a second
+round of adversarial pressure regardless of judge confidence.
+
 | Flag | Effect |
 |------|--------|
 | `--no-proposal` | Skip writing the proposal |
