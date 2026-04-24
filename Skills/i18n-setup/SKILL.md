@@ -5,7 +5,7 @@ version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
 lastUpdated: "2026-03-17"
 license: Complete terms in LICENSE.txt
-category: web
+category: platform
 type: invokable
 relevantTechStack: [i18n, i18next, react-intl, formatjs, localization]
 copyright: "Rubrical Works (c) 2026"

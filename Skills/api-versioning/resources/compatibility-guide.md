@@ -1,5 +1,5 @@
 # Backward Compatibility Guide
-**Version:** v0.13.1
+**Version:** v0.14.0
 ## Compatibility Levels
 ### Fully Compatible (No Version Bump)
 - Adding new endpoints

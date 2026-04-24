@@ -6,7 +6,7 @@ frameworkCompatibility: ">=0.60.0"
 lastUpdated: "2026-03-17"
 license: Complete terms in LICENSE.txt
 type: injector
-category: development
+category: code-quality
 relevantTechStack: [javascript, typescript, python, go, rust, java, node, error-handling]
 disable-model-invocation: true
 user-invocable: false

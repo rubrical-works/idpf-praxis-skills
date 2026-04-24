@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-23T23:32:13.883Z",
+  "generatedAt": "2026-04-24T21:45:43.184Z",
   "version": "0.1.0",
   "skillCount": 46,
   "skills": [
@@ -12,6 +12,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "c4e8cdd6615a20df6f80a4e3cb67899f6a207b0bd99971ea897c4ea60e1892fe",
       "category": "code-quality",
+      "categoryLabel": "Code Quality",
       "relevantTechStack": [
         "javascript",
         "typescript",
@@ -34,6 +35,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "b0a2a1409bef91e2da44aeb8ec142fdb1fcacd4802c9dc5fca86444a7b304c32",
       "category": "api",
+      "categoryLabel": "API",
       "relevantTechStack": [
         "rest",
         "graphql",
@@ -52,6 +54,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "fbe908cfecb8b14868740c449594009c634e7b61059894186307b66df2802a44",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "astro",
         "javascript",
@@ -71,6 +74,7 @@
       "lastUpdated": "2026-04-02",
       "checksum": "0d4c0d557502d27f459c0433fdd1ba1576a36702269b1defc0f4dc0489d17451",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "cucumber",
         "gherkin",
@@ -89,6 +93,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "b3b6432ea49488c23bd886718594f12af616e5c8ea2ca682430188b5cffcb476",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "flask",
         "sinatra",
@@ -107,6 +112,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "a2a2bc5644259e3512af9470994a7f1bd05a04091c17d2b81041de0df09ef060",
       "category": "devops",
+      "categoryLabel": "DevOps",
       "relevantTechStack": [
         "github-actions",
         "ci",
@@ -125,6 +131,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "515679b7b44661d361ab1bfa8ee303ff5a6ff20eb5fce6abb2fd0902cf0148dd",
       "category": "analysis",
+      "categoryLabel": "Analysis",
       "relevantTechStack": [
         "javascript",
         "typescript"
@@ -141,6 +148,7 @@
       "lastUpdated": "2026-04-02",
       "checksum": "f9206882444f87c554d90608a0562541e170333404cf2d258a07d7953e7bc1d6",
       "category": "code-quality",
+      "categoryLabel": "Code Quality",
       "relevantTechStack": [
         "javascript",
         "typescript",
@@ -167,6 +175,7 @@
       "lastUpdated": "2026-04-02",
       "checksum": "90eb4020b3c64696b559d9eb406e445f7446ec0f1bbc54c6124a9e163c5d506c",
       "category": "code-quality",
+      "categoryLabel": "Code Quality",
       "defaultSkill": true,
       "copyright": "\"Rubrical Works (c) 2026\""
     },
@@ -179,6 +188,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "61042e9513e0046478e7b38e9581d75848e8a414be9a60bc464d1d2d5370db9e",
       "category": "code-quality",
+      "categoryLabel": "Code Quality",
       "relevantTechStack": [
         "flask",
         "sinatra",
@@ -194,8 +204,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-22",
-      "checksum": "8f584ffdec9aabeb4878a68efc763a48e6d73f518e8d91e18296c2ebf323a4c0",
+      "checksum": "b191bc1fcc3b1b570f5df225b92b732a9179b9352d1b2f37908bf9f725eb6400",
       "category": "analysis",
+      "categoryLabel": "Analysis",
       "relevantTechStack": [
         "business-analysis",
         "market-research",
@@ -216,6 +227,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "cc26df348e6f652571ce50f28259715b8fb9053a69613f1a5947dd754ce373a2",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "digitalocean",
         "docker",
@@ -233,6 +245,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "aedbf2331fa9b52b73e71c3fd37397ab9e30da31e5d8915bff599e8cd8f1bc4d",
       "category": "documentation",
+      "categoryLabel": "Documentation",
       "relevantTechStack": [
         "drawio",
         "diagrams",
@@ -252,6 +265,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "6f4b3a5e36c43e4e5df1dd6f32b3f5f4b060e220f28224c2ba27d6312981e666",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "electron",
         "linux",
@@ -272,6 +286,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "2043d1a9751cb6c5e3c91d2a95c326a4d4113423c93188cec9d8e7ee5623cc12",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "electron",
         "vite",
@@ -288,8 +303,9 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-04",
-      "checksum": "98275eb1b1d0c70c32f2a9208c465707324e69935247e01a37fcde6af28cd420",
-      "category": "problem-solving",
+      "checksum": "15f39b153821d230a1f97b1608d629f5d4c6333b2366fa9096d8fac1d5ec8add",
+      "category": "analysis",
+      "categoryLabel": "Analysis",
       "relevantTechStack": [
         "algorithms",
         "data-structures",
@@ -305,8 +321,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "092e7a07dcf204b6aa95608c0fc960cfa717bb18510e12073c113e15d3e4060a",
+      "checksum": "b2381d414a694c1ffab85c3416a3c4f74b8d6ce989bdf4fb866d91300347a54e",
       "category": "analysis",
+      "categoryLabel": "Analysis",
       "relevantTechStack": [
         "business-analysis",
         "market-research",
@@ -324,8 +341,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "46c9ffab168a37552b41249e2c399dc1ea0513934781094aad0e8ff3ef6b3410",
-      "category": "development",
+      "checksum": "efcfc846e18323c5eccc7d2d4d8bfe85089d4f0d660eb21499caf1c80889f322",
+      "category": "code-quality",
+      "categoryLabel": "Code Quality",
       "relevantTechStack": [
         "javascript",
         "typescript",
@@ -348,6 +366,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "a7d4a0e6c24984e5d23e97f13dc7de915c3862d474db814ef6c74699adaf3293",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "flask",
         "python",
@@ -363,8 +382,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "d55fe5656de078e0c1f13f954aa9e9bb4ae396ec6c0cbb616ecc69d073541f49",
-      "category": "web",
+      "checksum": "bfb4c2cdca30a165f61bbc855694dee6a92ab5f46e606d6f5bfc432b90897a73",
+      "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "i18n",
         "i18next",
@@ -381,8 +401,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "4efed349dccd14be6380d73e440d1c476086668b088aea48075c1121d36c5e62",
-      "category": "setup",
+      "checksum": "221531d4ffaf161c764a12578a8280bbd846ebdaa9ce776ffab6cb8a85007bb1",
+      "category": "devops",
+      "categoryLabel": "DevOps",
       "relevantTechStack": [
         "node",
         "nodejs",
@@ -405,6 +426,7 @@
       "lastUpdated": "2026-04-02",
       "checksum": "773bd46eede662876266329009fade0baaf5b2da5834a0991e65d7c4ca1bf529",
       "category": "analysis",
+      "categoryLabel": "Analysis",
       "relevantTechStack": [
         "json",
         "json-schema",
@@ -422,6 +444,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "110499977eea9b5d60ee5d2d18a1d1875903d3203d3138cba5fd7f082df97cd1",
       "category": "database",
+      "categoryLabel": "Database",
       "relevantTechStack": [
         "sql",
         "postgresql",
@@ -441,6 +464,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "5d6b83cce218d473c89372eb0167178e709ae1a4d53b7b616fd8ebb5e53ac95d",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "stryker",
         "mutation-testing",
@@ -458,6 +482,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "b5c932f773e1e517d519479dd0059e4ca28f26f50c647e4cb9cc57bad6b51194",
       "category": "devops",
+      "categoryLabel": "DevOps",
       "relevantTechStack": [
         "opentelemetry",
         "grafana",
@@ -477,6 +502,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "a74f2b0a4f98867f102732d70672f349d5af6946e4b79d911efba73596c5d435",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "playwright",
         "e2e",
@@ -495,6 +521,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "cbd6cfc77fd2c22d936e060d604bf6031a205c0c648e976c45df75c4c1f5dff2",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "playwright",
         "e2e",
@@ -512,6 +539,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "ff9f757d57d856155c405d240a58ccb17ed4176d45ebd5d6dd1dceae0a752e15",
       "category": "database",
+      "categoryLabel": "Database",
       "relevantTechStack": [
         "postgresql",
         "sql",
@@ -530,6 +558,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "0076f65b5ca810c083d1b60cfdc8434d1a3f2da845df1b45cb89b20e1af5a69f",
       "category": "compliance",
+      "categoryLabel": "Compliance",
       "relevantTechStack": [
         "gdpr",
         "ccpa",
@@ -548,6 +577,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "6e1121ff40dd03974bfd4c18c65fb017a5348aa5e0492dcc258452a223062040",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "fast-check",
         "hypothesis",
@@ -566,6 +596,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "d72397858a50cec12bc9b7585b436a1190f812820ae1ec3f18105250928a79ea",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "railway",
         "docker",
@@ -584,6 +615,7 @@
       "lastUpdated": "2026-03-17",
       "checksum": "f75222b050afe0fe59e0989569133d8fa2190993c6684d53989570aa268ab320",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "render",
         "docker",
@@ -600,8 +632,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "d08e007ced95167209e0dbe5fb87849fc3a17bef30b50361d70780f14aa7c921",
-      "category": "development",
+      "checksum": "e6e82a5d4dc7525cdf3656c9bb2099bb326e889a7d0aaba7e2e6ee9c189541d4",
+      "category": "code-quality",
+      "categoryLabel": "Code Quality",
       "relevantTechStack": [
         "distributed-systems",
         "microservices",
@@ -621,8 +654,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-19",
-      "checksum": "9dc9f47869d0e0f24c7f7571a84f1f3c93c6e48e19695be1506bed81476f59c5",
-      "category": "setup",
+      "checksum": "549f319abbf41d019d1c621e90ea9cc2c665c7dea2abefe816ae507fbf71cd0b",
+      "category": "devops",
+      "categoryLabel": "DevOps",
       "relevantTechStack": [
         "skill-authoring",
         "safety",
@@ -638,8 +672,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "e268b4c2e665de63be385f50c95db86309dbbc5ea7324d207bfe018f8d1bbd52",
-      "category": "web",
+      "checksum": "13a9fdba594acfa3fe047200b2476bbeacce733cd7cd8a7f3c0e7e732aa95a20",
+      "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "seo",
         "html",
@@ -658,6 +693,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "667996c15fc003916148aed28fc10c7f3791c2cfc09706fdd31d68151ecd8798",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "sinatra",
         "ruby",
@@ -675,6 +711,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "a4d4ea183511716552a33193ecbe4eb53a353edc05258093abc0012f665c0dcf",
       "category": "database",
+      "categoryLabel": "Database",
       "relevantTechStack": [
         "sqlite",
         "sql",
@@ -694,6 +731,7 @@
       "lastUpdated": "2026-04-02",
       "checksum": "24549733e178dc05ccf724d9a4c5cec7594cea5bba230d96b49d4fbc37f516b2",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "tdd",
         "jest",
@@ -716,6 +754,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "fe969370659cc6ad85ff4f476ab4563723408ad24d3eec646dec0e49a3532cab",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "tdd",
         "testing"
@@ -732,6 +771,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "f85ec5ccd33f83dbc01355562e5cc9ace7ad91bad8f4fe52042567ba4bd61fc8",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "tdd",
         "testing"
@@ -748,6 +788,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "15b410d65868c40922ee705684479ae1ea06c7f291ce669285039004015f27d3",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "tdd",
         "testing"
@@ -762,8 +803,9 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-23",
-      "checksum": "1b4326f382c5a8911aafff74c0ae4acbe7eef0a8145d17c4c406f58a83115c0c",
+      "checksum": "4ff3f65490ccbc53470a356a161277aff63ef5b56d5c99eccc26272b16fe466e",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "tdd",
         "testing"
@@ -780,6 +822,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "dbed0ed4b3cb7988c5040f166c3230f9a8ad560a1f3f93c00a3770dfd2757fe0",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "tdd",
         "testing"
@@ -796,6 +839,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "52db0402f9f2bfe67c643f4a57288c44ad5702f51f6e39f34f89ef57e1ec72ac",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "testing",
         "playwright",
@@ -821,6 +865,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "2a9f85f32f6f641fbd6c3e1c8ec3bc3d9cedadf39b0e592ae519a79337494b33",
       "category": "testing",
+      "categoryLabel": "Testing",
       "relevantTechStack": [
         "jest",
         "vitest",
@@ -844,6 +889,7 @@
       "lastUpdated": "2026-04-01",
       "checksum": "5336803890fc04d5ade1c57a3fea349b65f3adb49748a38d84fcd78a170bf2c6",
       "category": "platform",
+      "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
         "vercel",
         "next",

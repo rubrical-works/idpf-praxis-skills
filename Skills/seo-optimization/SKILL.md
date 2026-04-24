@@ -6,7 +6,7 @@ version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
 lastUpdated: "2026-04-01"
 license: Complete terms in LICENSE.txt
-category: web
+category: platform
 relevantTechStack: [seo, html, meta-tags, structured-data, sitemap]
 copyright: "Rubrical Works (c) 2026"
 ---

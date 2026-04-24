@@ -6,7 +6,7 @@ version: "2.0.0"
 frameworkCompatibility: ">=0.80.0"
 lastUpdated: "2026-04-04"
 license: Complete terms in LICENSE.txt
-category: problem-solving
+category: analysis
 relevantTechStack: [algorithms, data-structures, parallel-exploration, json-schema]
 sharedScripts: [match-signals.js, match-signals-input-schema.json]
 copyright: "Rubrical Works (c) 2026"

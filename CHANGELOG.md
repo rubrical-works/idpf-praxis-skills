@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2026-04-24
+
+### Added
+- **Canonical skill category taxonomy with authoring-side label ownership** — introduces `.claude/local-metadata/skill-categories.json` (+ schema) as the single source of truth for category slugs AND display labels. Initial 9-slug taxonomy (`testing`, `code-quality`, `analysis`, `documentation`, `platform`, `api`, `database`, `devops`, `compliance`) with a deprecation/aliases map so renames (e.g., `problem-solving` → `analysis`) never break historical SKILL.md frontmatter. New `.claude/scripts/framework/skill-category-loader.js` centralizes load + resolve + alias routing; `build-skill-registry.js` enriches every registry entry with a canonical `category` slug and a `categoryLabel`. `SKILL-DEVELOPMENT-GUIDE.md` gains a **Skill Categories** section covering the list, slug naming rule, selection heuristic, and the expansion process (adding a new category is a JSON edit — no code changes to the generator, validator, or auditor). Design decision captured in `Construction/Design-Decisions/2026-04-24-skill-category-taxonomy-source-of-truth.md`. (#228)
+- **`validate-skill-category.js` — category enforcement CLI** — new `.claude/scripts/framework/validate-skill-category.js` resolves a SKILL.md's category through the loader: exits 0 on canonical slugs, exits 0 with a `Deprecated alias` warning for aliases, exits 1 with skill path + value + reason on unknown slugs. Wired into `/skill-validate` Step 2.2 and `/fw-audit-skills` Step 3d so authoring-time drift fails at edit rather than at display. (#228)
+
+### Changed
+- **Registry generator fails fast on unknown category slugs** — `build-skill-registry.js` now resolves each skill's `category:` through `skill-category-loader.js` and exits 1 with a skill-by-skill list when any value is neither canonical nor aliased. Bad categories cannot reach the dist repo. (#228)
+- **7 skills migrated to canonical category slugs** — `engage-exocortex` (`problem-solving` → `analysis`), `error-handling-patterns` + `resilience-patterns` (`development` → `code-quality`; reclassified from the proposal's default `platform` suggestion because both are programming-pattern references), `i18n-setup` + `seo-optimization` (`web` → `platform`), `install-node` + `responsibility-gate` (`setup` → `devops`). 46 skills now distributed across 9 canonical slugs; 0 skills on aliases (alias map remains as a safety net). (#228)
+- **`/fw-audit-skills`, `/skill-validate`, `/fw-add-skill`, `/fw-edit-skill` load from `skill-categories.json`** — command specs updated to read categories from the new source of truth instead of the obsolete `validCategories` array in `skill-requirements.json`. Deprecated aliases now surface as `warn` findings naming the canonical replacement. (#228)
+
+### Fixed
+- **3 pre-existing failing test suites converted to proper jest form** — `tests/skills/build-skill-packages.test.js` (19 assertions → 9 jest tests), `Skills/tdd-process/tests/tdd-checklist.test.js` (custom runner → 10 jest tests), `Skills/tdd-refactor-coverage-audit/tests/test-coverage-audit.test.js` (custom runner → 22 jest tests). All three used a `tests.push()` + `process.exit()` harness that jest's worker-lifecycle reported as "suite failed to run" while the inner assertions all passed — producing false red on every full-suite run and defeating regression gates. Canonical `npm test` (jest --runInBand): 1039/1039 tests, 75/75 suites, 0 failures. (#230)
+- **`.github/workflows/skill-ci.yml` drops the custom-runner step** — the CI workflow explicitly excluded `build-skill-packages` from the jest step and invoked it separately as `node tests/skills/build-skill-packages.test.js`, because the file was historically a standalone script. With the #230 conversion to describe/it blocks, the custom invocation fails with `describe is not defined`. Drop the special step; jest covers the whole `tests/skills/` tree uniformly. (#230)
+
+### Deprecated
+- **`validCategories` array in `skill-requirements.json`** — removed in favor of `.claude/local-metadata/skill-categories.json`. A `_validCategoriesNote` pointer is left in place. Tooling that still reads `validCategories` should migrate to `skill-categories.json` → `categories[].slug` + `aliases`. (#228)
+
 ## [0.13.1] - 2026-04-23
 
 ### Changed

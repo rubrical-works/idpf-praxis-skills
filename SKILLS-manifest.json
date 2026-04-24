@@ -95,7 +95,7 @@
     "engage-exocortex": {
       "version": "2.0.0",
       "type": "invokable",
-      "category": "problem-solving",
+      "category": "analysis",
       "path": "Skills/engage-exocortex"
     },
     "engage-prism": {
@@ -107,7 +107,7 @@
     "error-handling-patterns": {
       "version": "1.0.0",
       "type": "injector",
-      "category": "development",
+      "category": "code-quality",
       "path": "Skills/error-handling-patterns"
     },
     "flask-setup": {
@@ -119,13 +119,13 @@
     "i18n-setup": {
       "version": "1.0.0",
       "type": "invokable",
-      "category": "web",
+      "category": "platform",
       "path": "Skills/i18n-setup"
     },
     "install-node": {
       "version": "1.0.0",
       "type": "invokable",
-      "category": "setup",
+      "category": "devops",
       "path": "Skills/install-node"
     },
     "json-validator": {
@@ -197,19 +197,19 @@
     "resilience-patterns": {
       "version": "1.0.0",
       "type": "reference",
-      "category": "development",
+      "category": "code-quality",
       "path": "Skills/resilience-patterns"
     },
     "responsibility-gate": {
       "version": "1.0.0",
       "type": "reference",
-      "category": "setup",
+      "category": "devops",
       "path": "Skills/responsibility-gate"
     },
     "seo-optimization": {
       "version": "1.0.0",
       "type": "educational",
-      "category": "web",
+      "category": "platform",
       "path": "Skills/seo-optimization"
     },
     "sinatra-setup": {

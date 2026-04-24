@@ -6,7 +6,7 @@ version: "1.0.0"
 frameworkCompatibility: ">=0.80.0"
 lastUpdated: "2026-04-19"
 license: Complete terms in LICENSE.txt
-category: setup
+category: devops
 relevantTechStack: [skill-authoring, safety, installation, user-consent]
 copyright: "Rubrical Works (c) 2026"
 ---

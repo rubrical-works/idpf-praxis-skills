@@ -7,7 +7,7 @@ version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
 lastUpdated: "2026-04-01"
 license: Complete terms in LICENSE.txt
-category: development
+category: code-quality
 relevantTechStack: [distributed-systems, microservices, api, node, python, go, java, rust]
 copyright: "Rubrical Works (c) 2026"
 ---
