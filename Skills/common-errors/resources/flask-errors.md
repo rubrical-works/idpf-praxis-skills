@@ -1,5 +1,5 @@
 # Flask-Specific Errors
-**Version:** v0.14.0
+**Version:** v0.14.1
 
 ## Import/Routing Errors
 

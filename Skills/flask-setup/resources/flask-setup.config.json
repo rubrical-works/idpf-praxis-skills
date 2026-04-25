@@ -1,0 +1,37 @@
+{
+  "$schema": "flask-setup.config.schema.json",
+  "_description": "Volatile configuration for flask-setup. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "language": {
+    "name": "Python",
+    "supportedMajors": [3],
+    "minimumVersion": "3.8",
+    "fallbackVersion": "3.12"
+  },
+  "envManagement": {
+    "createCommand": "python -m venv venv",
+    "createCommandFallback": "python3 -m venv venv",
+    "activateCommands": {
+      "windowsPowerShell": "venv\\Scripts\\Activate.ps1",
+      "windowsCmd": "venv\\Scripts\\activate.bat",
+      "macos": "source venv/bin/activate",
+      "linux": "source venv/bin/activate"
+    },
+    "promptIndicator": "(venv)",
+    "executionPolicyFix": "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser"
+  },
+  "starterPackages": {
+    "primary": ["flask"],
+    "installCommand": "pip install {package}",
+    "_autoInstalled": ["Werkzeug", "Jinja2", "Click", "itsdangerous", "MarkupSafe", "blinker"]
+  },
+  "verify": {
+    "languageVersion": "python --version",
+    "languageVersionFallback": "python3 --version",
+    "listPackages": "pip list",
+    "importTest": "python -c \"import flask; print(flask.__version__)\""
+  },
+  "specFiles": {
+    "verificationChecklist": "resources/verification-checklist.md"
+  }
+}

@@ -2,9 +2,9 @@
 name: postgresql-integration
 description: Guide developers through PostgreSQL setup, connection configuration, query patterns, and best practices
 type: invokable
-version: "1.0.0"
+version: "2.0.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-03-17"
+lastUpdated: "2026-04-25"
 license: Complete terms in LICENSE.txt
 category: database
 relevantTechStack: [postgresql, sql, node, python, pg]
@@ -12,6 +12,8 @@ copyright: "Rubrical Works (c) 2026"
 ---
 # PostgreSQL Integration
 Guide for PostgreSQL integration: connection setup, query patterns, transactions, and pooling.
+## Step 0 — Re-read Config (MANDATORY)
+Read `resources/postgresql-integration.config.json` and validate against `resources/postgresql-integration.config.schema.json` at the start of every invocation. Config is source of truth for default host/port, env-var name (`DATABASE_URL`), connection-string format, SSL mode list, per-language clients (Node `pg`, Python `psycopg2-binary`) with install commands, ORM options, pgbouncer convention. SKILL.md must not duplicate config values.
 ## When to Use
 - Setting up PostgreSQL in a new project
 - Implementing DB queries/operations

@@ -1,0 +1,47 @@
+{
+  "$schema": "sinatra-setup.config.schema.json",
+  "_description": "Volatile configuration for sinatra-setup. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "language": {
+    "name": "Ruby",
+    "supportedMajors": [3],
+    "minimumVersion": "3.0",
+    "fallbackVersion": "3.2"
+  },
+  "platformInstall": {
+    "windows": {
+      "url": "https://rubyinstaller.org/",
+      "guidance": "Download RubyInstaller — choose the 'Ruby+Devkit' bundle for the supported major. Check 'Add Ruby to PATH' during installation."
+    },
+    "macos": {
+      "command": "brew install ruby",
+      "_note": "Pre-installed Ruby on macOS may be old; brew or rbenv recommended for current versions."
+    },
+    "linux": {
+      "command": "sudo apt-get update && sudo apt-get install ruby-full",
+      "_note": "Ubuntu/Debian. Other distros use their own package managers."
+    }
+  },
+  "envManagement": {
+    "bundlerInstallCommand": "gem install bundler",
+    "bundlerInstallSudoFallback": "sudo gem install bundler",
+    "bundleInstallCommand": "bundle install",
+    "bundleInstallLocalPathFallback": "bundle install --path vendor/bundle"
+  },
+  "starterGem": {
+    "name": "sinatra",
+    "gemfileSource": "https://rubygems.org",
+    "gemfileTemplate": "source '{gemfileSource}'\n\ngem '{name}'\n",
+    "_autoInstalled": ["rack", "rack-protection", "tilt"]
+  },
+  "verify": {
+    "languageVersion": "ruby --version",
+    "bundlerVersion": "bundle --version",
+    "listGems": "bundle list",
+    "importTest": "ruby -e \"require 'sinatra'; puts 'Sinatra works!'\"",
+    "runApp": "bundle exec ruby app.rb"
+  },
+  "specFiles": {
+    "verificationChecklist": "resources/verification-checklist.md"
+  }
+}

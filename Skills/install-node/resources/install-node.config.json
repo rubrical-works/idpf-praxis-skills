@@ -1,0 +1,74 @@
+{
+  "$schema": "install-node.config.schema.json",
+  "_description": "Volatile configuration for install-node — LTS policy, version-manager preference, per-platform installer commands, bootstrap URLs. Read at invocation by SKILL.md Step 0. SKILL.md prose must not duplicate values from this file.",
+  "version": "1.0.0",
+  "lts": {
+    "supportedMajors": [20, 22],
+    "fallbackMajor": 22,
+    "resolveFrom": "https://nodejs.org/dist/index.json",
+    "_note": "When the live fetch fails, use fallbackMajor. supportedMajors lists the active LTS plus prior LTS that are still acceptable."
+  },
+  "versionManagers": {
+    "preferenceOrder": ["volta", "fnm", "nvm"],
+    "volta": {
+      "detectCommand": "volta --version",
+      "installCommand": "volta install node@lts"
+    },
+    "fnm": {
+      "detectCommand": "fnm --version",
+      "installCommand": "fnm install --lts && fnm use lts"
+    },
+    "nvm": {
+      "detectCommand": "nvm --version",
+      "installCommand": "nvm install --lts && nvm alias default lts/*",
+      "uninstallCommand": "rm -rf \"$NVM_DIR\"",
+      "windowsDetectCommand": "nvm version",
+      "bootstrap": {
+        "scriptUrl": "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh",
+        "downloadCommand": "curl -o nvm-install.sh {scriptUrl}",
+        "verifyGuidance": "Inspect the downloaded script before running. Compute sha256sum locally and compare against the upstream-published checksum.",
+        "runCommand": "bash nvm-install.sh"
+      }
+    }
+  },
+  "platforms": {
+    "windows": {
+      "primaryRoute": "winget",
+      "winget": {
+        "packageId": "OpenJS.NodeJS.LTS",
+        "installCommand": "winget install --id {packageId} -e --scope=user",
+        "systemScopeCommand": "winget install --id {packageId} -e --scope=machine",
+        "uninstallCommand": "winget uninstall --id {packageId}"
+      },
+      "discouraged": {
+        "choco": {
+          "reason": "Introduces a new package manager as a side effect of installing Node. Acceptable only when Chocolatey is already in use."
+        }
+      }
+    },
+    "macos": {
+      "primaryRoute": "brew",
+      "brew": {
+        "packagePattern": "node@{major}",
+        "installCommand": "brew install node@{major}",
+        "linkCommand": "brew link --force --overwrite node@{major}",
+        "uninstallCommand": "brew uninstall node@{major}"
+      },
+      "discouraged": {
+        "pkgInstaller": {
+          "reason": "The .pkg installer from nodejs.org writes to system paths and is harder to uninstall cleanly."
+        }
+      }
+    },
+    "linux": {
+      "primaryRoute": "nvm-bootstrap",
+      "_note": "When no Node and no manager are present, bootstrap nvm via versionManagers.nvm.bootstrap, then run versionManagers.nvm.installCommand.",
+      "discouraged": {
+        "distroPackage": {
+          "command": "apt install nodejs",
+          "reason": "The distro package version on most distros is well behind LTS."
+        }
+      }
+    }
+  }
+}

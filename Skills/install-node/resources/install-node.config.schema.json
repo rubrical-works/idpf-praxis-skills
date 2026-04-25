@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "install-node.config.schema.json",
+  "title": "install-node skill configuration",
+  "description": "Validates resources/install-node.config.json — volatile knobs for the install-node skill (LTS policy, manager preferences, per-platform installer commands).",
+  "type": "object",
+  "required": ["version", "lts", "versionManagers", "platforms"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "lts": {
+      "type": "object",
+      "required": ["supportedMajors", "fallbackMajor", "resolveFrom"],
+      "additionalProperties": true,
+      "properties": {
+        "supportedMajors": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "fallbackMajor": { "type": "integer", "minimum": 1 },
+        "resolveFrom": { "type": "string", "format": "uri" },
+        "_note": { "type": "string" }
+      }
+    },
+    "versionManagers": {
+      "type": "object",
+      "required": ["preferenceOrder", "volta", "fnm", "nvm"],
+      "additionalProperties": true,
+      "properties": {
+        "preferenceOrder": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["volta", "fnm", "nvm"] },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "volta": { "$ref": "#/$defs/managerEntry" },
+        "fnm": { "$ref": "#/$defs/managerEntry" },
+        "nvm": {
+          "allOf": [
+            { "$ref": "#/$defs/managerEntry" },
+            {
+              "type": "object",
+              "required": ["bootstrap"],
+              "properties": {
+                "bootstrap": {
+                  "type": "object",
+                  "required": ["scriptUrl", "downloadCommand", "verifyGuidance", "runCommand"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "scriptUrl": { "type": "string", "format": "uri" },
+                    "downloadCommand": { "type": "string" },
+                    "verifyGuidance": { "type": "string" },
+                    "runCommand": { "type": "string" }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "platforms": {
+      "type": "object",
+      "required": ["windows", "macos", "linux"],
+      "additionalProperties": false,
+      "properties": {
+        "windows": {
+          "type": "object",
+          "required": ["primaryRoute", "winget"],
+          "additionalProperties": true,
+          "properties": {
+            "primaryRoute": { "type": "string" },
+            "winget": {
+              "type": "object",
+              "required": ["packageId", "installCommand", "uninstallCommand"],
+              "additionalProperties": true,
+              "properties": {
+                "packageId": { "type": "string" },
+                "installCommand": { "type": "string" },
+                "systemScopeCommand": { "type": "string" },
+                "uninstallCommand": { "type": "string" }
+              }
+            },
+            "discouraged": { "type": "object" }
+          }
+        },
+        "macos": {
+          "type": "object",
+          "required": ["primaryRoute", "brew"],
+          "additionalProperties": true,
+          "properties": {
+            "primaryRoute": { "type": "string" },
+            "brew": {
+              "type": "object",
+              "required": ["packagePattern", "installCommand", "uninstallCommand"],
+              "additionalProperties": true,
+              "properties": {
+                "packagePattern": { "type": "string" },
+                "installCommand": { "type": "string" },
+                "linkCommand": { "type": "string" },
+                "uninstallCommand": { "type": "string" }
+              }
+            },
+            "discouraged": { "type": "object" }
+          }
+        },
+        "linux": {
+          "type": "object",
+          "required": ["primaryRoute"],
+          "additionalProperties": true,
+          "properties": {
+            "primaryRoute": { "type": "string" },
+            "_note": { "type": "string" },
+            "discouraged": { "type": "object" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "managerEntry": {
+      "type": "object",
+      "required": ["detectCommand", "installCommand"],
+      "additionalProperties": true,
+      "properties": {
+        "detectCommand": { "type": "string" },
+        "installCommand": { "type": "string" },
+        "uninstallCommand": { "type": "string" },
+        "windowsDetectCommand": { "type": "string" }
+      }
+    }
+  }
+}

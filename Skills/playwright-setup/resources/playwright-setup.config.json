@@ -1,0 +1,42 @@
+{
+  "$schema": "playwright-setup.config.schema.json",
+  "_description": "Volatile configuration for playwright-setup. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "prerequisites": {
+    "nodeMinimumMajor": 18,
+    "_note": "Playwright requires Node 18+. Bump when upstream raises the floor."
+  },
+  "install": {
+    "package": "@playwright/test",
+    "installPackageCommand": "npm install -D {package}",
+    "installBrowsersCommand": "npx playwright install",
+    "installSystemDepsCommand": "npx playwright install-deps",
+    "installWithDepsCommand": "npx playwright install --with-deps",
+    "installSpecificBrowserCommand": "npx playwright install {browser}",
+    "forceReinstallCommand": "npx playwright install --force"
+  },
+  "verify": {
+    "listInstalledBrowsersCommand": "npx playwright install --dry-run",
+    "listTestsCommand": "npx playwright test --list",
+    "packageCheckCommand": "npm ls {package}"
+  },
+  "browsers": ["chromium", "firefox", "webkit"],
+  "browserCacheLocations": {
+    "windows": "%USERPROFILE%\\AppData\\Local\\ms-playwright",
+    "macos": "~/Library/Caches/ms-playwright",
+    "linux": "~/.cache/ms-playwright"
+  },
+  "ci": {
+    "dockerImage": "mcr.microsoft.com/playwright",
+    "githubActions": {
+      "checkout": "actions/checkout@v4",
+      "setupNode": "actions/setup-node@v4",
+      "uploadArtifact": "actions/upload-artifact@v4",
+      "defaultNodeVersion": 20
+    }
+  },
+  "specFiles": {
+    "ciPatterns": "resources/ci-patterns.md",
+    "commonErrors": "resources/common-errors.md"
+  }
+}

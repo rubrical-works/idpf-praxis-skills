@@ -1,0 +1,52 @@
+{
+  "$schema": "sqlite-integration.config.schema.json",
+  "_description": "Volatile configuration for sqlite-integration. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "fileNaming": {
+    "extension": ".db",
+    "alternativeExtensions": [".sqlite", ".sqlite3"],
+    "defaultDbFile": "app.db",
+    "_note": "Use .db by default; .sqlite/.sqlite3 are accepted alternatives."
+  },
+  "drivers": {
+    "python": {
+      "primary": {
+        "name": "sqlite3",
+        "installCommand": null,
+        "_note": "sqlite3 is in the Python standard library — no install needed."
+      },
+      "ormAlternatives": [
+        { "name": "SQLAlchemy", "installCommand": "pip install sqlalchemy" }
+      ]
+    },
+    "ruby": {
+      "primary": {
+        "name": "sqlite3",
+        "installCommand": "gem install sqlite3",
+        "gemfileEntry": "gem 'sqlite3'"
+      },
+      "ormAlternatives": [
+        { "name": "Sequel", "installCommand": "gem install sequel" }
+      ]
+    },
+    "node": {
+      "primary": {
+        "name": "better-sqlite3",
+        "installCommand": "npm install better-sqlite3",
+        "_note": "Synchronous, fast, no async overhead — preferred for most Node use cases."
+      },
+      "alternatives": [
+        { "name": "sqlite3", "installCommand": "npm install sqlite3", "_note": "Async/callback-style; older API" }
+      ]
+    }
+  },
+  "schemaConventions": {
+    "primaryKey": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "timestampColumn": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    "_note": "Beginner-friendly defaults. Production schemas often replace AUTOINCREMENT with ROWID."
+  },
+  "starterTable": {
+    "name": "notes",
+    "createSql": "CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+  }
+}

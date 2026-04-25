@@ -1,0 +1,41 @@
+{
+  "$schema": "railway-project-setup.config.schema.json",
+  "_description": "Volatile configuration for railway-project-setup. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "cli": {
+    "name": "railway",
+    "installCommand": "npm install -g @railway/cli",
+    "loginCommand": "railway login",
+    "linkCommand": "railway link",
+    "initCommand": "railway init"
+  },
+  "deployCommands": {
+    "up": "railway up --service {service}",
+    "upWithEnv": "railway up --service {service} --environment {environment}",
+    "logs": "railway logs --service {service}",
+    "logsForDeployment": "railway logs --deployment-id {deploymentId}",
+    "listDeployments": "railway deployments",
+    "rollback": "railway rollback"
+  },
+  "secrets": {
+    "required": [
+      {
+        "name": "RAILWAY_TOKEN",
+        "source": "Railway account → tokens",
+        "description": "API authentication token; scope to the target project"
+      }
+    ],
+    "vars": [
+      {
+        "name": "RAILWAY_SERVICE",
+        "description": "Service name to target with railway up"
+      }
+    ]
+  },
+  "autoInjectedEnv": ["PORT", "RAILWAY_ENVIRONMENT", "RAILWAY_SERVICE_NAME"],
+  "specFiles": {
+    "config": "resources/railway.toml",
+    "deployWorkflow": "resources/deploy.yml",
+    "envSetupGuide": "resources/env-setup.md"
+  }
+}

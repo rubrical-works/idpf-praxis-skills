@@ -1,0 +1,52 @@
+{
+  "$schema": "vercel-project-setup.config.schema.json",
+  "_description": "Volatile configuration for vercel-project-setup. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "cli": {
+    "name": "vercel",
+    "installCommand": "npm install -g vercel",
+    "loginCommand": "vercel login",
+    "linkCommand": "vercel link",
+    "createCommand": "vercel",
+    "devCommand": "vercel dev"
+  },
+  "deployCommands": {
+    "list": "vercel ls",
+    "rollback": "vercel rollback {deploymentUrl}",
+    "logs": "vercel logs {deploymentUrl}",
+    "logsFollow": "vercel logs {deploymentUrl} --follow",
+    "inspect": "vercel inspect {deploymentUrl}",
+    "deployProductionFlag": "--prod"
+  },
+  "githubAction": {
+    "uses": "amondnet/vercel-action@v25",
+    "tokenInput": "vercel-token",
+    "orgIdInput": "vercel-org-id",
+    "projectIdInput": "vercel-project-id"
+  },
+  "secrets": {
+    "required": [
+      {
+        "name": "VERCEL_TOKEN",
+        "source": "Vercel account → tokens",
+        "description": "API authentication token"
+      },
+      {
+        "name": "VERCEL_ORG_ID",
+        "source": ".vercel/project.json → orgId (created by vercel link)",
+        "description": "Vercel organization id"
+      },
+      {
+        "name": "VERCEL_PROJECT_ID",
+        "source": ".vercel/project.json → projectId (created by vercel link)",
+        "description": "Vercel project id"
+      }
+    ]
+  },
+  "previewUrlPattern": "https://{project}-{hash}-{scope}.vercel.app",
+  "specFiles": {
+    "config": "resources/vercel.json",
+    "deployWorkflow": "resources/deploy.yml",
+    "envSetupGuide": "resources/env-setup.md"
+  }
+}

@@ -69,7 +69,7 @@
       "path": "Skills/debate-prism"
     },
     "digitalocean-app-setup": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "platform",
       "path": "Skills/digitalocean-app-setup"
@@ -111,19 +111,19 @@
       "path": "Skills/error-handling-patterns"
     },
     "flask-setup": {
-      "version": "1.0.1",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "platform",
       "path": "Skills/flask-setup"
     },
     "i18n-setup": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "platform",
       "path": "Skills/i18n-setup"
     },
     "install-node": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "devops",
       "path": "Skills/install-node"
@@ -159,13 +159,13 @@
       "path": "Skills/playwright-explorer"
     },
     "playwright-setup": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "testing",
       "path": "Skills/playwright-setup"
     },
     "postgresql-integration": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "database",
       "path": "Skills/postgresql-integration"
@@ -183,13 +183,13 @@
       "path": "Skills/property-based-testing"
     },
     "railway-project-setup": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "platform",
       "path": "Skills/railway-project-setup"
     },
     "render-project-setup": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "platform",
       "path": "Skills/render-project-setup"
@@ -213,13 +213,13 @@
       "path": "Skills/seo-optimization"
     },
     "sinatra-setup": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "platform",
       "path": "Skills/sinatra-setup"
     },
     "sqlite-integration": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "database",
       "path": "Skills/sqlite-integration"
@@ -273,7 +273,7 @@
       "path": "Skills/test-writing-patterns"
     },
     "vercel-project-setup": {
-      "version": "1.0.0",
+      "version": "2.0.0",
       "type": "invokable",
       "category": "platform",
       "path": "Skills/vercel-project-setup"

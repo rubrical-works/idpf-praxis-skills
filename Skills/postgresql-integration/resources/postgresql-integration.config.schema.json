@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "postgresql-integration.config.schema.json",
+  "type": "object",
+  "required": ["version", "defaults", "connectionString", "ssl", "clientLibraries"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "defaults": {
+      "type": "object",
+      "required": ["host", "port", "envVar"],
+      "additionalProperties": true,
+      "properties": {
+        "host": { "type": "string" },
+        "port": { "type": "integer" },
+        "envVar": { "type": "string" }
+      }
+    },
+    "connectionString": {
+      "type": "object",
+      "required": ["format", "components"],
+      "additionalProperties": false,
+      "properties": {
+        "format": { "type": "string" },
+        "components": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "ssl": {
+      "type": "object",
+      "required": ["modes", "productionRecommended"],
+      "additionalProperties": true,
+      "properties": {
+        "modes": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "productionRecommended": { "type": "string" }
+      }
+    },
+    "clientLibraries": {
+      "type": "object",
+      "required": ["node", "python"],
+      "additionalProperties": true,
+      "properties": {
+        "node": { "$ref": "#/$defs/languageEntry" },
+        "python": { "$ref": "#/$defs/languageEntry" }
+      }
+    },
+    "pooling": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "languageEntry": {
+      "type": "object",
+      "required": ["primary"],
+      "additionalProperties": true,
+      "properties": {
+        "primary": {
+          "type": "object",
+          "required": ["name", "installCommand"],
+          "additionalProperties": true,
+          "properties": {
+            "name": { "type": "string" },
+            "installCommand": { "type": "string" }
+          }
+        },
+        "alternatives": { "type": "array" },
+        "orms": { "type": "array" }
+      }
+    }
+  }
+}

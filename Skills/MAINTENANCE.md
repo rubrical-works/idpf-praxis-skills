@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.14.0
+**Version:** v0.14.1
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -25,32 +25,32 @@
 | command-spec-audit | 1.0.0 | 2026-04-02 | Active |
 | common-errors | 1.0.0 | 2026-03-17 | Active |
 | debate-prism | 1.0.0 | 2026-04-22 | Active |
-| digitalocean-app-setup | 1.0.0 | 2026-03-17 | Active |
+| digitalocean-app-setup | 2.0.0 | 2026-04-25 | Active |
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
 | electron-cross-build | 1.0.0 | 2026-03-17 | Active |
 | electron-development | 1.0.0 | 2026-03-17 | Active |
 | engage-exocortex | 2.0.0 | 2026-04-04 | Active |
 | engage-prism | 1.0.0 | 2026-04-19 | Active |
 | error-handling-patterns | 1.0.0 | 2026-03-17 | Active |
-| flask-setup | 1.0.1 | 2026-04-01 | Active |
-| i18n-setup | 1.0.0 | 2026-03-17 | Active |
-| install-node | 1.0.0 | 2026-04-19 | Active |
+| flask-setup | 2.0.0 | 2026-04-25 | Active |
+| i18n-setup | 2.0.0 | 2026-04-25 | Active |
+| install-node | 2.0.0 | 2026-04-25 | Active |
 | json-validator | 1.0.0 | 2026-04-02 | Active |
 | migration-patterns | 1.0.0 | 2026-03-17 | Active |
 | mutation-testing | 1.0.0 | 2026-03-17 | Active |
 | observability-setup | 1.0.0 | 2026-03-17 | Active |
 | playwright-explorer | 1.0.0 | 2026-03-17 | Active |
-| playwright-setup | 1.0.0 | 2026-03-17 | Active |
-| postgresql-integration | 1.0.0 | 2026-03-17 | Active |
+| playwright-setup | 2.0.0 | 2026-04-25 | Active |
+| postgresql-integration | 2.0.0 | 2026-04-25 | Active |
 | privacy-compliance | 1.0.0 | 2026-03-17 | Active |
 | property-based-testing | 1.0.0 | 2026-03-17 | Active |
-| railway-project-setup | 1.0.0 | 2026-03-17 | Active |
-| render-project-setup | 1.0.0 | 2026-03-17 | Active |
+| railway-project-setup | 2.0.0 | 2026-04-25 | Active |
+| render-project-setup | 2.0.0 | 2026-04-25 | Active |
 | resilience-patterns | 1.0.0 | 2026-04-01 | Active |
 | responsibility-gate | 1.0.0 | 2026-04-19 | Active |
 | seo-optimization | 1.0.0 | 2026-04-01 | Active |
-| sinatra-setup | 1.0.0 | 2026-04-01 | Active |
-| sqlite-integration | 1.0.0 | 2026-04-01 | Active |
+| sinatra-setup | 2.0.0 | 2026-04-25 | Active |
+| sqlite-integration | 2.0.0 | 2026-04-25 | Active |
 | tdd-failure-recovery | 1.0.0 | 2026-04-02 | Active |
 | tdd-green-phase | 1.0.0 | 2026-04-01 | Active |
 | tdd-process | 1.0.0 | 2026-04-01 | Active |
@@ -59,7 +59,7 @@
 | tdd-refactor-phase | 1.0.0 | 2026-04-01 | Active |
 | test-scaffold | 1.0.0 | 2026-04-01 | Active |
 | test-writing-patterns | 1.0.0 | 2026-04-01 | Active |
-| vercel-project-setup | 1.0.0 | 2026-04-01 | Active |
+| vercel-project-setup | 2.0.0 | 2026-04-25 | Active |
 
 **Status Values:** Active, Deprecated, Archived
 

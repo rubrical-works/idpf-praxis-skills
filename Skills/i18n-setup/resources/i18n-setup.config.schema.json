@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "i18n-setup.config.schema.json",
+  "type": "object",
+  "required": ["version", "supportedLibraries", "localeStructure", "languageDetection", "translationPlatforms"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "supportedLibraries": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["installCommand"],
+        "additionalProperties": true,
+        "properties": { "installCommand": { "type": "string" } }
+      }
+    },
+    "localeStructure": {
+      "type": "object",
+      "required": ["rootDir", "perLocaleDirPattern", "translationFileFormats", "defaultFormat"],
+      "additionalProperties": true,
+      "properties": {
+        "rootDir": { "type": "string" },
+        "perLocaleDirPattern": { "type": "string", "pattern": "\\{locale\\}" },
+        "translationFileFormats": { "type": "array", "items": { "type": "string", "enum": ["json", "yaml"] } },
+        "defaultFormat": { "type": "string", "enum": ["json", "yaml"] }
+      }
+    },
+    "languageDetection": {
+      "type": "object",
+      "required": ["sources", "defaultOrder"],
+      "additionalProperties": false,
+      "properties": {
+        "sources": { "type": "array", "items": { "type": "string" } },
+        "defaultOrder": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "translationPlatforms": {
+      "type": "object",
+      "required": ["supported"],
+      "additionalProperties": true,
+      "properties": {
+        "supported": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "extraction": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

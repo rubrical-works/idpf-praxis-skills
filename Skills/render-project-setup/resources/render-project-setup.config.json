@@ -1,0 +1,41 @@
+{
+  "$schema": "render-project-setup.config.schema.json",
+  "_description": "Volatile configuration for render-project-setup. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "cli": {
+    "name": "render-cli",
+    "installCommand": "npm install -g @render-cli/cli",
+    "_optional": true,
+    "_note": "Render's primary path is GitHub-native auto-deploy + REST API; CLI is optional."
+  },
+  "api": {
+    "baseUrl": "https://api.render.com/v1",
+    "deployTriggerEndpoint": "/services/{serviceId}/deploys",
+    "deployTriggerCommand": "curl -X POST \"{baseUrl}{deployTriggerEndpoint}\" -H \"Authorization: Bearer ${apiKeyEnv}\""
+  },
+  "secrets": {
+    "required": [
+      {
+        "name": "RENDER_API_KEY",
+        "source": "Render account → API keys",
+        "description": "API key used by GitHub Actions for deploy triggers"
+      }
+    ],
+    "vars": [
+      {
+        "name": "RENDER_SERVICE_ID",
+        "description": "Render service id (per environment); use a GitHub Actions repository variable"
+      }
+    ]
+  },
+  "defaults": {
+    "httpPort": 10000,
+    "freeTierIdleMinutes": 15
+  },
+  "previewUrlPattern": "https://{service}-pr-{number}.onrender.com",
+  "specFiles": {
+    "blueprint": "resources/render.yaml",
+    "deployWorkflow": "resources/deploy.yml",
+    "envSetupGuide": "resources/env-setup.md"
+  }
+}

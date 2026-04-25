@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "vercel-project-setup.config.schema.json",
+  "type": "object",
+  "required": ["version", "cli", "deployCommands", "githubAction", "secrets", "specFiles"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "cli": {
+      "type": "object",
+      "required": ["name", "installCommand", "loginCommand", "linkCommand"],
+      "additionalProperties": { "type": "string" }
+    },
+    "deployCommands": {
+      "type": "object",
+      "required": ["list", "rollback", "logs"],
+      "additionalProperties": { "type": "string" }
+    },
+    "githubAction": {
+      "type": "object",
+      "required": ["uses", "tokenInput", "orgIdInput", "projectIdInput"],
+      "additionalProperties": false,
+      "properties": {
+        "uses": { "type": "string", "pattern": "@" },
+        "tokenInput": { "type": "string" },
+        "orgIdInput": { "type": "string" },
+        "projectIdInput": { "type": "string" }
+      }
+    },
+    "secrets": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["name", "source", "description"]
+          }
+        }
+      }
+    },
+    "previewUrlPattern": { "type": "string" },
+    "specFiles": {
+      "type": "object",
+      "required": ["config"],
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

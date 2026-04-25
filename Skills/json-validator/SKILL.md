@@ -18,36 +18,39 @@ Validate JSON files against their `$schema` references.
 | Argument | Description |
 |----------|-------------|
 | `[file.json]` | Validate a single JSON file |
-| `--all` | Scan project for all JSON files with `$schema` references |
+| `--all` | Scan project and subdirectories for all JSON files with `$schema` references |
 | `--dir path` | Scan a specific directory and subdirectories |
 If no arguments provided, prompt the user to choose a mode.
 ## Workflow
 ### Step 1: Discover Files
-Single file: Validate the provided file path exists. If not, report error and STOP.
-`--all` mode: Glob `**/*.json` in project root. Exclude `node_modules/`, `.git/`, `package-lock.json`, generated files.
-`--dir path` mode: Glob `**/*.json` under specified directory.
+- Single file: verify path exists; if not, report error and STOP.
+- `--all`: Glob `**/*.json` from project root. Exclude `node_modules/`, `.git/`, `package-lock.json`, generated files.
+- `--dir path`: Glob `**/*.json` under given directory.
 ### Step 2: Check for Schema References
-For each JSON file: 1) Read file 2) Check for root-level `$schema` field 3) If present, add to validation queue 4) If absent, skip.
+For each file: 1) Read 2) Check root-level `$schema` 3) If present, queue; if absent, skip.
 Report: `Found {N} JSON files, {M} with $schema references.`
 If none have `$schema`, report and STOP.
 ### Step 3: Resolve Schemas
-For each queued file, parse `$schema` value:
-- Relative path (e.g., `"my-schema.json"`): resolve relative to the JSON file's directory
-- Absolute path: use as-is
-- URL: fetch via WebFetch if available, otherwise warn and skip
-If schema file not found, warn and skip that file.
+For each queued file, parse `$schema`:
+1. Relative path (e.g., `"my-schema.json"`): resolve relative to JSON file's directory
+2. Absolute path: use as-is
+3. URL (e.g., `https://json-schema.org/...`): fetch via WebFetch if available, otherwise warn and skip
+4. If schema not found:
+   - Ask: "Schema `{$schema value}` not found for `{file}`. Provide schema path, or skip?"
+   - If user provides path: re-run with `--schema-override "file=schemaPath"`
+   - If "skip": proceed without validating that file
 ### Step 4: Validate
-For each file with resolved schema, read both files and check:
+For each file with resolved schema, read both and check:
 - `required` fields present
 - `type` constraints satisfied
 - `enum` values match
 - `additionalProperties` constraints
 - Nested `properties` recursively
-- `pattern` constraints on strings
+- `pattern` on strings
 - `minimum`/`maximum` on numbers
 - `minItems`/`maxItems` on arrays
-Collect all violations per file.
-### Step 5: Report
+Collect violations per file.
+### Step 5: Report Results
 ```
 JSON Schema Validation Results
 ------------------------------

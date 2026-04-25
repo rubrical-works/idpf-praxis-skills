@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "railway-project-setup.config.schema.json",
+  "type": "object",
+  "required": ["version", "cli", "deployCommands", "secrets", "specFiles"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "cli": {
+      "type": "object",
+      "required": ["name", "installCommand", "loginCommand"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "installCommand": { "type": "string" },
+        "loginCommand": { "type": "string" },
+        "linkCommand": { "type": "string" },
+        "initCommand": { "type": "string" }
+      }
+    },
+    "deployCommands": {
+      "type": "object",
+      "required": ["up", "logs", "rollback"],
+      "additionalProperties": { "type": "string" }
+    },
+    "secrets": {
+      "type": "object",
+      "required": ["required"],
+      "additionalProperties": true
+    },
+    "autoInjectedEnv": { "type": "array", "items": { "type": "string" } },
+    "specFiles": {
+      "type": "object",
+      "required": ["config"],
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

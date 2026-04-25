@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "sinatra-setup.config.schema.json",
+  "type": "object",
+  "required": ["version", "language", "platformInstall", "envManagement", "starterGem", "verify"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "language": {
+      "type": "object",
+      "required": ["name", "supportedMajors", "minimumVersion"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "supportedMajors": { "type": "array", "items": { "type": "integer" }, "minItems": 1 },
+        "minimumVersion": { "type": "string" },
+        "fallbackVersion": { "type": "string" }
+      }
+    },
+    "platformInstall": {
+      "type": "object",
+      "required": ["windows", "macos", "linux"],
+      "additionalProperties": false,
+      "properties": {
+        "windows": { "type": "object", "additionalProperties": true },
+        "macos": { "type": "object", "additionalProperties": true },
+        "linux": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "envManagement": {
+      "type": "object",
+      "required": ["bundlerInstallCommand", "bundleInstallCommand"],
+      "additionalProperties": { "type": "string" }
+    },
+    "starterGem": {
+      "type": "object",
+      "required": ["name", "gemfileSource", "gemfileTemplate"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "gemfileSource": { "type": "string", "pattern": "^https://" },
+        "gemfileTemplate": { "type": "string" }
+      }
+    },
+    "verify": {
+      "type": "object",
+      "required": ["languageVersion", "bundlerVersion", "listGems", "runApp"],
+      "additionalProperties": { "type": "string" }
+    },
+    "specFiles": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

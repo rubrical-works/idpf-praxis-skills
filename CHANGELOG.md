@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.1] - 2026-04-25
+
+### Fixed
+- **`build-skill-packages.js` produces spec-compliant ZIPs on Windows** — replaced the Windows PowerShell `Compress-Archive` branch with the cross-platform `archiver` package. The old branch produced backslash path separators (e.g. `docs\foo.md`), violating ZIP APPNOTE 4.4.17.1 and causing Claude Desktop's skill-upload validator to reject every Windows-built distributable zip with the misleading "Skill files must have a .skill, .zip, or .md file extension." error. One archiver-based code path now serves Windows, macOS, and Linux. New regression test inspects every `Skills/Packaged/*.zip` central directory and fails on any backslash entry. All 46 packaged zips rebuilt. (#238)
+
+### Changed
+- **8 invokable/reference skills refurbished to the JSON-driven config pattern** — `install-node` (#231); the five hosted-platform setup skills `digitalocean-app-setup`, `playwright-setup`, `railway-project-setup`, `render-project-setup`, `vercel-project-setup` (#232); `flask-setup` + `sinatra-setup` (#233); and the three invokable scaffold/integration skills `i18n-setup`, `postgresql-integration`, `sqlite-integration` (#234). Each skill bumped to v2.0.0; volatile knobs (CLI install commands, doctl/CLI subcommand templates, default ports, secret names, GitHub Action versions) moved to `resources/{skill}.config.json` validated by a sibling `.schema.json`; SKILL.md gains a mandatory Step 0 config re-read; companion `docs/{skill}-rationale.md` preserves the original prose during refurbishment.
+- **External-orchestration audit pattern added to `/fw-audit-skills`** — new Step 3f (External-Orchestration Drift) checks that any skill declaring `externalOrchestration: true` in `.claude/local-metadata/skill-requirements.json` keeps its config keys aligned with what SKILL.md references. Schema entry + new section in `SKILL-DEVELOPMENT-GUIDE.md`. Design decision captured in `Construction/Design-Decisions/2026-04-25-external-orchestration-config-pattern.md`. (#235)
+
 ## [0.14.0] - 2026-04-24
 
 ### Added

@@ -2,106 +2,127 @@
 name: digitalocean-app-setup
 description: Configure automated preview, staging, and production deployments with DigitalOcean App Platform
 type: invokable
-version: "1.0.0"
+version: "2.0.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-03-17"
+lastUpdated: "2026-04-25"
 license: Complete terms in LICENSE.txt
 category: platform
 relevantTechStack: [digitalocean, docker, node, python]
 copyright: "Rubrical Works (c) 2026"
 ---
+
 # Skill: digitalocean-app-setup
+
 **Purpose:** Guide DigitalOcean App Platform deployments with GitHub integration
 **Audience:** Developers deploying web apps, APIs, static sites to DigitalOcean
-**Related:** `ci-cd-pipeline-design`
+**Related Skills:** `ci-cd-pipeline-design`
+
+## Step 0 — Re-read Config (MANDATORY)
+
+Read `resources/digitalocean-app-setup.config.json` from disk at every invocation. Validate against `resources/digitalocean-app-setup.config.schema.json`. Config is source of truth for `doctl` install commands, doctl subcommand templates, GitHub Action version, required secret name, default HTTP port. SKILL.md must not duplicate config values. If a needed value is not in the config, refuse and report — do not invent.
+
 ## Overview
-App Platform uses an app spec (`app-spec.yaml`) for IaC, supports review apps for PRs, and offers native GitHub auto-deploy.
+
+App Platform uses `app-spec.yaml` (IaC), supports review apps for PRs, native GitHub integration with auto-deploys.
+
+## Initial Setup
+
 ## Responsibility Acknowledgement Gate
-Implements `responsibility-gate` pattern. See `Skills/responsibility-gate/SKILL.md`.
-- **Fires:** before `brew/snap install doctl`, `doctl auth init`, or `doctl apps create`.
-- **Asks:** accept responsibility for changes to package managers (brew/snap), doctl auth state, and DigitalOcean account resources.
-- **On decline:** exit cleanly; "Declined — no changes made."
-- **Persistence:** per-invocation.
-Use `AskUserQuestion` with `"I accept responsibility — proceed"` and `"Decline — exit without changes"`.
+
+Implements the **`responsibility-gate`** skill pattern. See `Skills/responsibility-gate/SKILL.md`.
+
+- **Fires before:** any `cli.install.*`, `cli.auth.command` (`doctl auth init`), or `appCommands.create` from config.
+- **Asks:** acceptance for changes to system package managers, local doctl auth state, DigitalOcean account (new App Platform resources).
+- **On decline:** exit cleanly; report "Declined — no changes made."; no system changes.
+- **Persistence:** per-invocation; never persisted across runs.
+
+Use `AskUserQuestion` with required options (`"I accept responsibility — proceed"`, `"Decline — exit without changes"`).
+
 ### Prerequisites
+
 - DigitalOcean account
-- `doctl` CLI: `brew install doctl` or `snap install doctl`
-- GitHub repo connected to DigitalOcean
+- `doctl` CLI installed — pick from `cli.install` per detected platform
+- GitHub repository connected to DigitalOcean
+
 ### Installing doctl
-```bash
-# macOS
-brew install doctl
-# Linux
-snap install doctl
-# Authenticate
-doctl auth init
-```
+
+Detect platform; run matching `cli.install.<platform>`. Then run `cli.auth.command` to authenticate (prompts for API token from DigitalOcean account API page).
+
 ### Creating an App
-```bash
-# From app spec file
-doctl apps create --spec resources/app-spec.yaml
-# Or via Dashboard
-# https://cloud.digitalocean.com/apps → Create App → Select GitHub repo
-```
+
+Run `appCommands.create`, substituting `{specPath}` (default: `specFiles.appSpec`). Subcommand template lives in config; updates are JSON edits.
+
+For dashboard-based creation, ask the user what they see — dashboard layout changes without notice.
+
 ## Environment Configuration
+
 ### Required Secrets
-Configure in GitHub (Settings > Secrets and variables > Actions):
-| Secret | Source | Description |
-|--------|--------|-------------|
-| `DIGITALOCEAN_ACCESS_TOKEN` | DO Dashboard > API > Tokens | Personal access token |
+
+Configure secrets named in `secrets.required[].name` in GitHub repo secrets. Each entry includes source and description.
+
 ### App-Level Environment Variables
-Set in app spec or Dashboard:
-- **App-level**: Shared across all components
-- **Component-level**: Scoped to single service/worker
+
+Set in app spec or dashboard:
+
+- **App-level**: shared across all components
+- **Component-level**: scoped to a single service/worker
+
 See `resources/env-setup.md`.
+
 ## GitHub Integration
+
 ### Auto-Deploy on Push
-1. Dashboard > Apps > Create App
-2. Select GitHub as source
-3. Choose repository and branch
-4. App Platform detects framework and configures build
+
+DigitalOcean auto-deploys on push. Ask user to follow App Platform UI's "create app from repo" flow — navigation labels not stable enough to script.
+
 ### Review Apps (Preview Deployments)
-1. App > Settings > Review Apps > Enable
-2. Each PR gets unique URL
-3. Destroyed when PR closes
+
+Isolated per-PR environments with unique URLs; destroyed when PR closes. Enable in App Platform UI app settings; ask user what they see.
+
 ### GitHub Actions Deployment
+
+Use action at `githubAction.uses`. Token input name is `githubAction.tokenInput`; populating secret is the entry in `secrets.required` with `name == cli.auth.envVar`.
+
 ```yaml
-# See resources/deploy.yml for complete workflow
-- uses: digitalocean/action-doctl@v2
-  with:
-    token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-- run: doctl apps create-deployment ${{ vars.DO_APP_ID }}
+# See resources/deploy.yml for the complete workflow.
+# The action reference and token input come from the config.
 ```
+
 ## Deployment Strategies
+
 ### Production via Branch Deploy
+
 ```
 main branch → Production app (automatic)
 ```
+
 ### Staging via Separate App
-```bash
-doctl apps create --spec staging-app-spec.yaml
-```
+
+Second app with staging-specific spec, using `appCommands.create` with `{specPath}` set to staging spec.
+
 ### Manual Deployment
-```bash
-doctl apps create-deployment <app-id>
-doctl apps list-deployments <app-id>
-```
+
+Use `appCommands.createDeployment` (substitute `{appId}`). List with `appCommands.listDeployments`.
+
 ### Rollback
-```bash
-doctl apps list-deployments <app-id> --format ID,Phase,Progress
-doctl apps create-deployment <app-id> --revision <deployment-id>
-```
+
+Use `appCommands.rollback` substituting `{appId}` and `{deploymentId}`. Find target id via `appCommands.listDeployments`.
+
 ## Monitoring and Debugging
+
 ### Logs
-```bash
-doctl apps logs <app-id> --follow
-doctl apps logs <app-id> --type build
-```
+
+- **Runtime:** `appCommands.logs` (substitute `{appId}`)
+- **Build:** `appCommands.buildLogs`
+
 ### Dashboard Metrics
-- CPU/memory per component
-- HTTP request rate, latency, error rate
-- Bandwidth, container restarts
+
+Built-in monitoring (CPU, memory, HTTP rate, latency, error rate, bandwidth, container restarts). Surface via dashboard, do not script.
+
 ### Health Checks
+
+Configure in app spec:
+
 ```yaml
 services:
   - name: web
@@ -110,24 +131,42 @@ services:
       initial_delay_seconds: 10
       period_seconds: 30
 ```
-## Common Pitfalls
+
+## Common Pitfalls and Troubleshooting
+
 ### Build Issues
-- **Buildpack detection failure**: ensure `package.json`/`requirements.txt` exist or use Dockerfile
-- **Build timeout**: use `.doignore` to exclude files
-- **Node.js version**: set `engines.node` or `NODEJS_VERSION` env
+
+- **Buildpack detection failure**: ensure standard project files exist (`package.json`, `requirements.txt`, etc.) or use Dockerfile
+- **Build timeout**: use `.doignore` to exclude unnecessary files
+- **Node.js version**: set `engines.node` in `package.json` or `NODEJS_VERSION` env var
+
 ### Deployment Issues
-- **Port binding**: expects HTTP on 8080; use `HTTP_PORT` or `$PORT`
+
+- **Port binding**: defaults to `defaults.httpPort` (config). Set `HTTP_PORT` in spec or use `$PORT`
 - **Static site routing**: configure catch-all routes for SPAs
-- **Database connections**: use pools and Managed Databases in production
+- **Database connections**: use connection pools and DigitalOcean Managed Databases for production
+
 ### Review App Issues
+
 - **Cost**: review apps count as separate instances
-- **Database isolation**: shares production DB by default; use separate dev DBs
-- **Env var conflicts**: inherit from main app; override per-component
+- **Database isolation**: review apps share production DB by default; use separate dev DBs
+- **Env var conflicts**: review app env vars inherit from main app; override per-component
+
 ## App Spec Reference
-See `resources/app-spec.yaml` covering: service definitions (web, worker, job), database provisioning, env vars, build/run commands, domain config, health checks.
+
+`app-spec.yaml` defines infrastructure. See `specFiles.appSpec` for reference covering: service definitions (web, worker, job), database provisioning, environment variables, build/run commands, domain configuration, health checks.
+
 ## Related Skills
-- **`ci-cd-pipeline-design`** — CI/CD architecture patterns
+
+- **`ci-cd-pipeline-design`** — CI/CD architecture patterns, stage design, security
+
 ## Resources
-- `resources/app-spec.yaml` — Reference spec
-- `resources/deploy.yml` — GitHub Actions workflow
-- `resources/env-setup.md` — Env variable setup
+
+| File | Purpose |
+|------|---------|
+| `resources/digitalocean-app-setup.config.json` | Volatile knobs (CLI install commands, doctl subcommand templates, GitHub Action version, secret names, default port). Re-read at every invocation. |
+| `resources/digitalocean-app-setup.config.schema.json` | JSON Schema validating the config. |
+| `resources/app-spec.yaml` | Reference DigitalOcean App Platform spec. |
+| `resources/deploy.yml` | GitHub Actions workflow for DigitalOcean deployment. |
+| `resources/env-setup.md` | Environment variable setup guide. |
+| `docs/digitalocean-app-setup-rationale.md` | Original prose rationale preserved during refurbishment. |

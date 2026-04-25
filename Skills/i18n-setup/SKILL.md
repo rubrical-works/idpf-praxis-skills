@@ -1,9 +1,9 @@
 ---
 name: i18n-setup
 description: Scaffold internationalization infrastructure including i18n library config, string extraction tooling, locale file scaffolding, and translation workflow setup
-version: "1.0.0"
+version: "2.0.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-03-17"
+lastUpdated: "2026-04-25"
 license: Complete terms in LICENSE.txt
 category: platform
 type: invokable
@@ -11,8 +11,10 @@ relevantTechStack: [i18n, i18next, react-intl, formatjs, localization]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Internationalization (i18n) Setup
-Scaffolds i18n infrastructure for web/mobile apps: config templates and implementation patterns for string externalization, locale-aware formatting, and translation workflows.
+Scaffolds i18n infrastructure for web/mobile apps: config templates and patterns for string externalization, locale-aware formatting, and translation workflows.
 **Companion Domain:** Domains/i18n — evaluative review criteria
+## Step 0 — Re-read Config (MANDATORY)
+Read `resources/i18n-setup.config.json` from disk and validate against `resources/i18n-setup.config.schema.json` at the start of every invocation. Config is source of truth for: supported i18n libraries + install commands, locale directory pattern, language-detection source order, supported translation platforms (Crowdin, Lokalise) with action/CLI pins. SKILL.md must not duplicate config values.
 ## When to Use
 - Setting up i18n for new web/mobile project
 - Configuring i18next, react-intl, or FormatJS
@@ -47,6 +49,12 @@ Use `AskUserQuestion` with `"I accept responsibility — proceed"` and `"Decline
 - CI integration for translation sync
 - PR workflow for translation updates
 - Context/screenshot attachments for translators
+## Resources
+| File | Purpose |
+|------|---------|
+| `resources/i18n-setup.config.json` | Volatile knobs (libraries + install commands, locale dir pattern, language-detection sources, translation platforms). Re-read every invocation. |
+| `resources/i18n-setup.config.schema.json` | JSON Schema validating the config. |
+| `docs/i18n-setup-rationale.md` | Original prose rationale preserved during refurbishment. |
 ## Related Skills
 - `seo-optimization` — hreflang tags, locale URLs
 - `error-handling-patterns` — localized error messages

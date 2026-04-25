@@ -1,0 +1,48 @@
+{
+  "$schema": "digitalocean-app-setup.config.schema.json",
+  "_description": "Volatile configuration for digitalocean-app-setup — doctl install commands, doctl subcommand templates, GitHub Action versions, default secret names. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "cli": {
+    "name": "doctl",
+    "install": {
+      "macos": "brew install doctl",
+      "linux": "snap install doctl",
+      "windows": "scoop install doctl"
+    },
+    "auth": {
+      "command": "doctl auth init",
+      "envVar": "DIGITALOCEAN_ACCESS_TOKEN"
+    }
+  },
+  "appCommands": {
+    "create": "doctl apps create --spec {specPath}",
+    "createDeployment": "doctl apps create-deployment {appId}",
+    "rollback": "doctl apps create-deployment {appId} --revision {deploymentId}",
+    "listDeployments": "doctl apps list-deployments {appId} --format ID,Phase,Progress",
+    "logs": "doctl apps logs {appId} --follow",
+    "buildLogs": "doctl apps logs {appId} --type build"
+  },
+  "githubAction": {
+    "uses": "digitalocean/action-doctl@v2",
+    "tokenInput": "token",
+    "_note": "Action major version pinned to v2; bump here when upstream releases v3+"
+  },
+  "secrets": {
+    "required": [
+      {
+        "name": "DIGITALOCEAN_ACCESS_TOKEN",
+        "source": "DigitalOcean account → API → Tokens",
+        "description": "Personal access token used by doctl and GitHub Actions"
+      }
+    ]
+  },
+  "defaults": {
+    "httpPort": 8080,
+    "_note": "App Platform expects HTTP on port 8080 by default. Override via HTTP_PORT in the app spec or use $PORT."
+  },
+  "specFiles": {
+    "appSpec": "resources/app-spec.yaml",
+    "deployWorkflow": "resources/deploy.yml",
+    "envSetupGuide": "resources/env-setup.md"
+  }
+}

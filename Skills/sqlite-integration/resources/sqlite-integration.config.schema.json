@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "sqlite-integration.config.schema.json",
+  "type": "object",
+  "required": ["version", "fileNaming", "drivers", "schemaConventions"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "fileNaming": {
+      "type": "object",
+      "required": ["extension", "defaultDbFile"],
+      "additionalProperties": true,
+      "properties": {
+        "extension": { "type": "string", "pattern": "^\\." },
+        "alternativeExtensions": { "type": "array", "items": { "type": "string" } },
+        "defaultDbFile": { "type": "string" }
+      }
+    },
+    "drivers": {
+      "type": "object",
+      "required": ["python", "ruby", "node"],
+      "additionalProperties": true,
+      "properties": {
+        "python": { "$ref": "#/$defs/driverEntry" },
+        "ruby": { "$ref": "#/$defs/driverEntry" },
+        "node": { "$ref": "#/$defs/driverEntry" }
+      }
+    },
+    "schemaConventions": {
+      "type": "object",
+      "required": ["primaryKey", "timestampColumn"],
+      "additionalProperties": true,
+      "properties": {
+        "primaryKey": { "type": "string" },
+        "timestampColumn": { "type": "string" }
+      }
+    },
+    "starterTable": {
+      "type": "object",
+      "required": ["name", "createSql"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "createSql": { "type": "string", "pattern": "CREATE TABLE" }
+      }
+    }
+  },
+  "$defs": {
+    "driverEntry": {
+      "type": "object",
+      "required": ["primary"],
+      "additionalProperties": true,
+      "properties": {
+        "primary": {
+          "type": "object",
+          "required": ["name"],
+          "additionalProperties": true,
+          "properties": {
+            "name": { "type": "string" },
+            "installCommand": { "type": ["string", "null"] }
+          }
+        },
+        "alternatives": { "type": "array" },
+        "ormAlternatives": { "type": "array" }
+      }
+    }
+  }
+}

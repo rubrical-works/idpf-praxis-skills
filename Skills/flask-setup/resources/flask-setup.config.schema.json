@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "flask-setup.config.schema.json",
+  "type": "object",
+  "required": ["version", "language", "envManagement", "starterPackages", "verify"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "language": {
+      "type": "object",
+      "required": ["name", "supportedMajors", "minimumVersion"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "supportedMajors": { "type": "array", "items": { "type": "integer" }, "minItems": 1 },
+        "minimumVersion": { "type": "string" },
+        "fallbackVersion": { "type": "string" }
+      }
+    },
+    "envManagement": {
+      "type": "object",
+      "required": ["createCommand", "activateCommands", "promptIndicator"],
+      "additionalProperties": true,
+      "properties": {
+        "createCommand": { "type": "string" },
+        "createCommandFallback": { "type": "string" },
+        "activateCommands": {
+          "type": "object",
+          "required": ["windowsPowerShell", "windowsCmd", "macos", "linux"],
+          "additionalProperties": { "type": "string" }
+        },
+        "promptIndicator": { "type": "string" },
+        "executionPolicyFix": { "type": "string" }
+      }
+    },
+    "starterPackages": {
+      "type": "object",
+      "required": ["primary", "installCommand"],
+      "additionalProperties": true,
+      "properties": {
+        "primary": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "installCommand": { "type": "string", "pattern": "\\{package\\}" }
+      }
+    },
+    "verify": {
+      "type": "object",
+      "required": ["languageVersion", "listPackages", "importTest"],
+      "additionalProperties": { "type": "string" }
+    },
+    "specFiles": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

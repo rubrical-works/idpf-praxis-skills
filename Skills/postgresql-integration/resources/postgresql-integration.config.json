@@ -1,0 +1,60 @@
+{
+  "$schema": "postgresql-integration.config.schema.json",
+  "_description": "Volatile configuration for postgresql-integration. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "defaults": {
+    "host": "localhost",
+    "port": 5432,
+    "envVar": "DATABASE_URL"
+  },
+  "connectionString": {
+    "format": "postgresql://[user[:password]@][host][:port][/dbname][?param1=value1&...]",
+    "components": ["user", "password", "host", "port", "dbname"]
+  },
+  "ssl": {
+    "modes": ["disable", "allow", "prefer", "require", "verify-ca", "verify-full"],
+    "productionRecommended": "verify-full",
+    "_note": "verify-full requires a CA cert; require is the minimum production baseline."
+  },
+  "clientLibraries": {
+    "node": {
+      "primary": {
+        "name": "pg",
+        "installCommand": "npm install pg",
+        "_note": "node-postgres — most widely used Node driver"
+      },
+      "alternatives": [
+        { "name": "postgres", "installCommand": "npm install postgres", "_note": "porsager/postgres — modern, faster" }
+      ],
+      "orms": [
+        { "name": "Prisma", "installCommand": "npm install prisma @prisma/client" },
+        { "name": "Sequelize", "installCommand": "npm install sequelize pg pg-hstore" },
+        { "name": "TypeORM", "installCommand": "npm install typeorm pg" }
+      ]
+    },
+    "python": {
+      "primary": {
+        "name": "psycopg2-binary",
+        "installCommand": "pip install psycopg2-binary",
+        "_note": "psycopg2 is the de-facto Python driver; -binary avoids needing libpq build deps"
+      },
+      "alternatives": [
+        { "name": "asyncpg", "installCommand": "pip install asyncpg", "_note": "Async driver" }
+      ],
+      "orms": [
+        { "name": "SQLAlchemy", "installCommand": "pip install sqlalchemy psycopg2-binary" },
+        { "name": "Django ORM", "installCommand": "pip install django psycopg2-binary" }
+      ]
+    }
+  },
+  "pooling": {
+    "pgbouncer": {
+      "envVar": "PGBOUNCER_URL",
+      "_note": "Pgbouncer is the standard external pooler. Use transaction-mode for short-lived connections."
+    },
+    "nodePoolDefault": {
+      "max": 10,
+      "idleTimeoutMillis": 30000
+    }
+  }
+}

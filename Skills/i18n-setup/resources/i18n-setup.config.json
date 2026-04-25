@@ -1,0 +1,50 @@
+{
+  "$schema": "i18n-setup.config.schema.json",
+  "_description": "Volatile configuration for i18n-setup. Re-read at invocation by SKILL.md Step 0.",
+  "version": "1.0.0",
+  "supportedLibraries": {
+    "i18next": {
+      "installCommand": "npm install i18next i18next-browser-languagedetector i18next-http-backend",
+      "reactBindingPackage": "react-i18next",
+      "reactBindingInstall": "npm install react-i18next",
+      "configEntryPoint": "i18n.js"
+    },
+    "react-intl": {
+      "installCommand": "npm install react-intl",
+      "configEntryPoint": "intl.js",
+      "_note": "react-intl is the legacy name for FormatJS's React bindings"
+    },
+    "formatjs": {
+      "installCommand": "npm install @formatjs/intl",
+      "extractCliInstall": "npm install -D @formatjs/cli",
+      "configEntryPoint": "intl.js"
+    }
+  },
+  "localeStructure": {
+    "rootDir": "locales",
+    "perLocaleDirPattern": "locales/{locale}/",
+    "translationFileFormats": ["json", "yaml"],
+    "defaultFormat": "json",
+    "namespaceFilePattern": "locales/{locale}/{namespace}.json",
+    "defaultNamespaces": ["common", "errors"]
+  },
+  "languageDetection": {
+    "sources": ["browser", "url", "cookie", "user-preference"],
+    "defaultOrder": ["user-preference", "url", "cookie", "browser"]
+  },
+  "translationPlatforms": {
+    "supported": ["crowdin", "lokalise"],
+    "crowdin": {
+      "configFile": "crowdin.yml",
+      "ciActionUses": "crowdin/github-action@v1"
+    },
+    "lokalise": {
+      "configFile": ".lokalise.yml",
+      "cliInstall": "curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh"
+    }
+  },
+  "extraction": {
+    "i18nextScannerInstall": "npm install -D i18next-scanner",
+    "formatjsExtractCommand": "formatjs extract 'src/**/*.{js,ts,tsx}' --out-file lang/en.json"
+  }
+}
