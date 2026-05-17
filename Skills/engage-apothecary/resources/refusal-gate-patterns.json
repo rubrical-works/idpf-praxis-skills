@@ -1,0 +1,90 @@
+{
+  "$schema": "refusal-gate-patterns-schema.json",
+  "description": "Deterministic refusal-gate patterns for engage-apothecary. Each category contains regex-like patterns (case-insensitive) matched against user input at preflight. ANY match HALTs the skill with the category's redirect message. False positives are acceptable; false negatives are not — patterns deliberately over-match rather than under-match. NOT a content classifier — pattern-matching only.",
+  "version": 1,
+  "categories": {
+    "dosing": {
+      "description": "Inputs asking for medication dose calculations or pediatric/geriatric/renal/hepatic dose adjustments.",
+      "patterns": [
+        "\\bwhat dose\\b",
+        "\\bdose of\\b",
+        "\\bdosing for\\b",
+        "\\bdosing of\\b",
+        "\\bhow much .* (give|administer|prescribe)\\b",
+        "\\bmg ?/ ?kg\\b",
+        "\\bmcg ?/ ?kg\\b",
+        "\\bunits ?/ ?kg\\b",
+        "\\bpediatric dose\\b",
+        "\\bgeriatric dose\\b",
+        "\\brenal dosing\\b",
+        "\\bhepatic dosing\\b",
+        "\\badjust the dose\\b"
+      ],
+      "redirect": "For dosing decisions, consult a licensed clinician, a current drug reference (e.g., your institutional formulary), and the manufacturer's prescribing information. engage-apothecary does not produce dosing recommendations under any flag."
+    },
+    "prescribing": {
+      "description": "Inputs asking for a prescribing decision (which drug to prescribe, prescription writing, agent selection for a specific patient).",
+      "patterns": [
+        "\\bshould I prescribe\\b",
+        "\\bwhat should I prescribe\\b",
+        "\\bwhich (drug|agent|medication) (should|to) (I |we )?prescribe\\b",
+        "\\bgive my patient\\b",
+        "\\bstart my patient on\\b",
+        "\\bfirst-line (agent|drug|medication) for (my patient|this patient)\\b",
+        "\\bwrite a prescription\\b",
+        "\\bwrite an Rx\\b",
+        "\\bRx for (my patient|this patient)\\b"
+      ],
+      "redirect": "For prescribing decisions, consult a licensed clinician with the patient in front of them. engage-apothecary does not produce prescribing recommendations under any flag."
+    },
+    "individualizedCare": {
+      "description": "Inputs asking about a specific patient or asking for individualized treatment recommendations.",
+      "patterns": [
+        "\\bmy patient\\b",
+        "\\bthis patient\\b",
+        "\\bI have a patient\\b",
+        "\\bI'?ve got a patient\\b",
+        "\\bI saw a patient\\b",
+        "\\bfor this (person|individual|patient)\\b",
+        "\\bwhat should I do for (this patient|my patient|him|her|them)\\b",
+        "\\bindividualized (treatment|care|recommendation)\\b",
+        "\\bnext step for (my patient|this patient|this person)\\b",
+        "\\bbest treatment for my patient\\b"
+      ],
+      "redirect": "For individualized patient care, consult a licensed clinician. engage-apothecary teaches differential reasoning on de-identified educational hypotheticals — not treatment recommendations for individual patients. Reframe as a hypothetical (e.g., 'a 45-year-old with X') and re-invoke."
+    },
+    "patientIdentifying": {
+      "description": "Inputs containing patient names, dates of birth, medical record numbers, specific clinic/hospital identifiers, or specific dates of care.",
+      "patterns": [
+        "\\bpatient name\\b",
+        "\\bMRN[: ]\\s*\\d",
+        "\\bmedical record number\\b",
+        "\\bDOB[: ]\\s*\\d",
+        "\\bdate of birth[: ]\\s*\\d",
+        "\\bborn (on )?\\d{4}",
+        "\\b\\d{4}-\\d{2}-\\d{2}\\b",
+        "\\bat (Mass General|Mayo Clinic|Cleveland Clinic|Johns Hopkins|Stanford|UCSF|NYU Langone|Mount Sinai|Brigham and Women|Massachusetts General)\\b",
+        "\\bSSN[: ]\\s*\\d",
+        "\\bsocial security number\\b"
+      ],
+      "redirect": "Do not share patient-identifying information. Reframe as a de-identified hypothetical (e.g., 'a 45-year-old with X') and re-invoke. engage-apothecary does not accept patient-identifying details under any flag."
+    },
+    "acuteSymptom": {
+      "description": "Inputs reporting acute, ongoing, or just-occurring symptoms — phrased as a real situation rather than a hypothetical case.",
+      "patterns": [
+        "\\bchest pain right now\\b",
+        "\\bhaving chest pain\\b",
+        "\\bI am having .* (chest pain|trouble breathing|severe headache|shortness of breath|stroke symptoms)\\b",
+        "\\bI'?m having .* (chest pain|trouble breathing|severe headache|shortness of breath|stroke symptoms)\\b",
+        "\\bsudden severe (headache|chest pain|abdominal pain)\\b",
+        "\\bworst headache of (my|his|her|their|the) life\\b",
+        "\\btrouble breathing\\b",
+        "\\bcan'?t breathe\\b",
+        "\\bhaving a stroke\\b",
+        "\\bjust started having\\b",
+        "\\bemergency symptom\\b"
+      ],
+      "redirect": "For acute symptoms, call emergency services (911 / your local equivalent) or seek immediate clinical care. Do not use a learning tool for acute presentations. engage-apothecary is for educational reasoning on hypothetical cases — never for acute symptoms in real time."
+    }
+  }
+}

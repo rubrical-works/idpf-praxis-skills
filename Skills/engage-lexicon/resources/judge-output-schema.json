@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "judge-output-schema.json",
+  "title": "Judge Output (engage-lexicon)",
+  "description": "Schema for the judge subagent's output in engage-lexicon. Required fields enforce decision-shaped output specialized for the legal domain: jurisdiction (propagated), weakeningEvidence (with authorityWeight + authorityType annotations on the cited authority), verdict, controlling-vs-persuasive distinction on every cited authority. Missing the controlling-vs-persuasive distinction blocks proposal generation (#202 AC6).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["jurisdiction", "weakeningEvidence", "verdict", "flipConditions", "confidence", "confidenceRationale", "degradationFlags"],
+  "properties": {
+    "jurisdiction": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The declared jurisdiction the judge reached its verdict under. Propagated from the gate; immutable input."
+    },
+    "weakeningEvidence": {
+      "description": "Either a named citation from the against-advocate's report (index + one-line excerpt + authorityWeight + authorityType) that most weakened the for-case, OR the literal string 'none' with a justification. Missing field fails validation and blocks proposal generation. When a citation is named, the authorityWeight and authorityType MUST be present — these are the controlling-vs-persuasive distinction this skill enforces (#202 AC6).",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["citationIndex", "excerpt", "authorityWeight", "authorityType"],
+          "properties": {
+            "citationIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "0-based index into the against-advocate's citations[]."
+            },
+            "excerpt": {
+              "type": "string",
+              "minLength": 1,
+              "description": "One-line summary of the specific piece of evidence that weakened the for-case."
+            },
+            "authorityWeight": {
+              "type": "string",
+              "enum": ["controlling", "persuasive"],
+              "description": "The controlling-vs-persuasive distinction on the cited authority. Required (#202 AC6). 'controlling' = binding on {jurisdiction}; 'persuasive' = informative but not binding."
+            },
+            "authorityType": {
+              "type": "string",
+              "enum": ["statute", "regulation", "controlling-case", "persuasive-case", "agency-guidance", "treaty", "constitutional-provision", "restatement", "treatise", "law-review", "bar-publication", "amicus-brief", "news", "other"],
+              "description": "Authority type, drawn from citation-schema.json's authorityType enum. Required (#202 AC6)."
+            },
+            "justification": {
+              "type": "string",
+              "description": "Optional longer justification."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "justification"],
+          "properties": {
+            "value": {
+              "type": "string",
+              "enum": ["none"],
+              "description": "Literal 'none' when no against-advocate citation meaningfully weakened the for-case under {jurisdiction}."
+            },
+            "justification": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Required non-empty rationale for recording 'none' — e.g., 'the against-advocate's citations were all persuasive-only and did not weaken the for-advocate's reliance on controlling Supreme Court authority.'"
+            }
+          }
+        }
+      ]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["endorse", "reject", "revise"],
+      "description": "The judge's verdict on the claim under {jurisdiction}. endorse = the for-case held up; reject = the against-case succeeded; revise = neither survived intact, issue a revised claim. In survey mode, mapped semantically: endorse -> synthesis-recommended; revise -> synthesis-deferred; reject -> further-research-required (with surveyMode=true in envelope)."
+    },
+    "revisedClaim": {
+      "type": "string",
+      "description": "Required when verdict === 'revise'. The revised claim statement the judge issues in place of the original, framed within {jurisdiction}."
+    },
+    "flipConditions": {
+      "type": "string",
+      "minLength": 1,
+      "description": "When verdict is endorse or reject, names what would flip the verdict the other way under {jurisdiction}. When verdict is revise, names what would need to be true to reject the revised claim."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Judge's confidence in the verdict."
+    },
+    "confidenceRationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One-line rationale for the confidence level. When perAdvocateFabricationRisk has any true flag, this field MUST acknowledge it. When degradationFlags includes statutoryRecencyStale on a material citation, this field MUST acknowledge it."
+    },
+    "degradationFlags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Collects any citationOverlap='unresolved', authorityHierarchyOverlap='unresolved', degradationEvidence='unverified', evidence-fabrication-risk, statutoryRecencyStale, statutoryRecencyUnverified, or recency-gate degradation warnings surfaced in earlier steps. Empty array when no degradation."
+    },
+    "perAdvocateFabricationRisk": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Per-advocate fabrication-risk flag propagated from Step 0 Return-side validation. Optional and defaulted false-false. When either flag is true, the judge MUST reference it in confidenceRationale.",
+      "properties": {
+        "for": { "type": "boolean", "default": false },
+        "against": { "type": "boolean", "default": false }
+      }
+    },
+    "surveyMode": {
+      "type": "boolean",
+      "default": false,
+      "description": "Optional. Set true when the judge ran in --mode survey (refraction over N analytical perspectives instead of for/against/judge). In survey mode, verdict is semantically reframed (endorse=synthesis-recommended, revise=synthesis-deferred, reject=further-research-required) — see SKILL.md Step 5."
+    },
+    "controllingAuthoritiesReferenced": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["authority", "authorityWeight", "authorityType"],
+        "properties": {
+          "authority": { "type": "string", "minLength": 1, "description": "Canonical citation form (e.g., '15 U.S.C. § 78j(b)', 'Basic Inc. v. Levinson, 485 U.S. 224 (1988)')." },
+          "authorityWeight": { "type": "string", "enum": ["controlling", "persuasive"] },
+          "authorityType": { "type": "string", "enum": ["statute", "regulation", "controlling-case", "persuasive-case", "agency-guidance", "treaty", "constitutional-provision", "restatement", "treatise", "law-review", "bar-publication", "amicus-brief", "news", "other"] }
+        }
+      },
+      "description": "Optional but recommended. Inventory of every authority the judge relied on in this output, each annotated with the controlling-vs-persuasive distinction. Useful for downstream proposal generation when the judge cited authorities beyond the named weakeningEvidence."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "verdict": { "const": "revise" } },
+        "required": ["verdict"]
+      },
+      "then": {
+        "required": ["revisedClaim"]
+      }
+    }
+  ]
+}

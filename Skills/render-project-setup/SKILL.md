@@ -11,117 +11,100 @@ relevantTechStack: [render, docker, node, python, deployment]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Skill: render-project-setup
-**Purpose:** Guide Render deployments with GitHub integration.
-**Audience:** Developers deploying web apps, APIs, static sites to Render.
-**Related Skills:** `ci-cd-pipeline-design`.
+**Purpose:** Guide developers through setting up Render deployments with GitHub integration
+**Audience:** Developers deploying web applications, APIs, and static sites to Render
+**Related Skills:** `ci-cd-pipeline-design`
 ## Step 0 — Re-read Config (MANDATORY)
-Read `resources/render-project-setup.config.json` and validate against `resources/render-project-setup.config.schema.json` at start of every invocation. Config is source of truth for CLI install command, deploy-trigger API endpoint/curl template, required secrets, default HTTP port, preview URL pattern. SKILL.md must not duplicate config values.
+Read `resources/render-project-setup.config.json` from disk and validate against `resources/render-project-setup.config.schema.json` at start of every invocation. Config is source of truth for (optional) CLI install command, deploy-trigger API endpoint and curl template, required secrets, default HTTP port, preview URL pattern. SKILL.md must not duplicate values.
 ## Overview
-Render uses IaC via `render.yaml` blueprints, supports automatic PR preview environments, native GitHub integration with zero-config deploys.
+Render uses IaC via `render.yaml` blueprints, supports automatic preview environments for PRs, offers native GitHub integration with zero-configuration deploys.
 ## Initial Setup
-### Responsibility Acknowledgement Gate
-Implements `responsibility-gate` skill pattern (`Skills/responsibility-gate/SKILL.md`).
-- **Fires before:** running `npm install -g @render-cli/cli` or creating/connecting a Render service and adding `render.yaml`.
-- **Asks:** acceptance for changes to global npm env, Render account (services, GitHub integration), project `render.yaml`.
-- **Decline:** exit cleanly; "Declined — no changes made."; no system changes.
-- **Persistence:** per-invocation; never persisted across runs.
-Use `AskUserQuestion` with required options (`"I accept responsibility — proceed"`, `"Decline — exit without changes"`).
+## Responsibility Acknowledgement Gate
+Implements pattern in **`responsibility-gate`** skill. See `Skills/responsibility-gate/SKILL.md`.
+- **When this fires:** before running `npm install -g @render-cli/cli` or creating/connecting a Render service and adding a `render.yaml` blueprint to the project.
+- **What is asked:** acceptance of responsibility for change to global npm environment, Render account (new services, GitHub integration), and project's `render.yaml` configuration.
+- **On decline:** exit cleanly; report "Declined — no changes made."; no system changes.
+- **Persistence:** per-invocation; never persisted.
+Use `AskUserQuestion` with two required options (`"I accept responsibility — proceed"` and `"Decline — exit without changes"`).
 ### Prerequisites
 - Render account (free tier available)
-- GitHub repo connected to Render
-- Render CLI (optional) — install via `cli.installCommand` from config
+- GitHub repository connected to Render
+- Render CLI (optional) — install via `cli.installCommand` from config when CLI workflows needed
 ### Connecting GitHub
-Dashboard flow — cannot script. Ask user what they see rather than describing navigation (layout unstable). Minimum: sign in with GitHub, grant repo access, create Web Service pointing at target repo/branch.
-### Blueprint (IaC)
-```yaml
-# See resources/render.yaml for complete blueprint
-services:
-  - type: web
-    name: my-app
-    runtime: node
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-```
+Dashboard flow skill cannot script. Ask user what they see in Render dashboard rather than describing a navigation path — dashboard layout unstable. Minimum: sign in with GitHub, grant repository access, create Web Service pointing at target repo and branch.
+### Blueprint (Infrastructure as Code)
+Render uses `render.yaml` to define services declaratively. See `resources/render.yaml`. Example: `services: - type: web, name: my-app, runtime: node, buildCommand: npm install && npm run build, startCommand: npm start`.
 ## Environment Configuration
 ### Environment Variables
-Configure in Dashboard (Service > Environment) or `render.yaml`:
+Configure in Render Dashboard (Service > Environment tab) or via `render.yaml`:
 | Variable | Scope | Description |
 |----------|-------|-------------|
 | `RENDER_API_KEY` | GitHub Actions | API key for deploy triggers |
-| `DATABASE_URL` | Service | DB connection (auto-set for Render DBs) |
+| `DATABASE_URL` | Service | Database connection (auto-set for Render databases) |
 | `PORT` | Auto-injected | Render assigns port 10000 by default |
 ### Environment Groups
+Render supports shared environment groups across services:
 1. Dashboard > Environment Groups > New
-2. Add shared variables
-3. Reference: `envVarGroups: [{ name: shared-config }]`
+2. Add variables shared across services
+3. Reference in `render.yaml`: `envVarGroups: [{ name: shared-config }]`
 See `resources/env-setup.md`.
 ## GitHub Integration
 ### Auto-Deploy on Push
-Auto-deploys on push to configured branch. Enable: Service > Settings > Build & Deploy.
+Render auto-deploys when commits land on configured branch. Enable in Service > Settings > Build & Deploy.
 ### Preview Environments
+Render creates preview instances for pull requests automatically:
 1. Service > Settings > Preview Environments > Enable
-2. Each PR: `https://my-app-pr-{number}.onrender.com`
-3. Uses same build/start commands as production
-4. Auto-destroyed when PR closes
+2. Each PR gets unique URL: `https://my-app-pr-{number}.onrender.com`
+3. Preview environments use same build/start commands as production
+4. Destroyed automatically when PR closed
 ### GitHub Actions Deployment
-```yaml
-# See resources/deploy.yml for complete workflow
-- name: Trigger Render Deploy
-  run: |
-    curl -X POST "https://api.render.com/v1/services/${{ vars.RENDER_SERVICE_ID }}/deploys"
-      -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
-```
+See `resources/deploy.yml`. Step: `run: curl -X POST "https://api.render.com/v1/services/${{ vars.RENDER_SERVICE_ID }}/deploys" -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"`.
 ## Deployment Strategies
 ### Production via Branch Deploy
+Render auto-deploys from configured production branch:
 ```
 main branch → Production service (automatic)
 ```
 ### Staging via Separate Service
+Create second service pointing to staging branch:
 1. Dashboard > New > Web Service
-2. Same repo, different branch (e.g., `develop`)
-3. Configure staging-specific env vars
+2. Select same repo, different branch (e.g., `develop`)
+3. Configure staging-specific environment variables
 ### Blue-Green Deployments
-Zero-downtime by default: new version built alongside running, health check passes → traffic switches, old version terminated.
+Render performs zero-downtime deployments by default: new version built alongside running version; health check passes → traffic switches; old version terminated.
 ### Manual Deploy and Rollback
-```bash
-# Via Dashboard: Service > Deploys > previous deploy > Rollback
-# Via API
-curl -X POST "https://api.render.com/v1/services/{service-id}/deploys" \
-  -H "Authorization: Bearer $RENDER_API_KEY"
-```
+Via Dashboard: Service > Deploys > select previous deploy > Rollback. Via API: `curl -X POST "https://api.render.com/v1/services/{service-id}/deploys" -H "Authorization: Bearer $RENDER_API_KEY"`.
 ## Monitoring and Debugging
 ### Logs
-Dashboard (Service > Logs) or API. Build logs show full build; runtime logs stream output; filter by time/search.
+Access in Render Dashboard (Service > Logs) or via API:
+- Build logs show full build process
+- Runtime logs stream application output
+- Log filtering by time range and search
 ### Metrics
-Built-in: CPU/memory, HTTP request rate/latency, bandwidth.
+Render provides built-in metrics for: CPU and memory usage; HTTP request rate and latency; bandwidth consumption.
 ### Health Checks
-```yaml
-services:
-  - type: web
-    healthCheckPath: /api/health
-```
-Render checks endpoint after deployment, rolls back on failure.
+Configure health check path in `render.yaml` (`services: - type: web, healthCheckPath: /api/health`) or Dashboard. Render checks endpoint after deployment and rolls back if it fails.
 ## Common Pitfalls and Troubleshooting
 ### Build Issues
-- **Build timeout:** 30-min default; optimize or use build caching
-- **Node.js version:** specify in `engines` in `package.json` or `RENDER_NODE_VERSION` env var
-- **Missing native deps:** use `render.yaml` `preDeployCommand`
+- **Build timeout**: Default 30-minute limit. Optimize build steps or use build caching
+- **Node.js version**: Specify in `engines` field in `package.json` or use `RENDER_NODE_VERSION` env var
+- **Missing native dependencies**: Use `render.yaml` `preDeployCommand` to install system packages
 ### Deployment Issues
-- **Port binding:** use `defaults.httpPort` (from config) or `PORT` env var. Always `process.env.PORT`
-- **Cold starts on free tier:** free instances spin down after `defaults.freeTierIdleMinutes` (from config); upgrade for always-on
-- **Static site routing:** for SPAs, rewrite all routes to `index.html`
+- **Port binding**: Render expects your app on `defaults.httpPort` (from config) or `PORT` env var. Always use `process.env.PORT`
+- **Cold starts on free tier**: Free instances spin down after `defaults.freeTierIdleMinutes` of inactivity (from config). Upgrade for always-on
+- **Static site routing**: For SPAs, set rewrite rules to redirect all routes to `index.html`
 ### Preview Environment Issues
-- **DB sharing:** previews share production DB by default; use separate DBs for isolation
-- **Env var conflicts:** previews inherit from main; override per-preview
-- **Cost awareness:** each preview = separate instance; monitor on team plans
+- **Database sharing**: Preview environments share production database by default. Use separate databases for isolation
+- **Environment variable conflicts**: Preview environments inherit from main service. Override specific variables in preview settings
+- **Cost awareness**: Each preview environment is a separate service instance. Monitor usage on team plans
 ## Related Skills
-- **`ci-cd-pipeline-design`** — CI/CD pipeline architecture, stage design, security
+- **`ci-cd-pipeline-design`** — Architecture patterns for CI/CD pipelines
 ## Resources
 | File | Purpose |
 |------|---------|
-| `resources/render-project-setup.config.json` | Volatile knobs (CLI install, API templates, secrets, default port, preview URL pattern). Re-read every invocation. |
-| `resources/render-project-setup.config.schema.json` | JSON Schema validating config. |
-| `resources/render.yaml` | Reference Render blueprint. |
-| `resources/deploy.yml` | GitHub Actions workflow. |
-| `resources/env-setup.md` | Env variable setup guide. |
+| `resources/render-project-setup.config.json` | Volatile knobs (CLI install, API templates, secrets, default port, preview URL pattern). Re-read at every invocation. |
+| `resources/render-project-setup.config.schema.json` | JSON Schema validating the config. |
+| `resources/render.yaml` | Reference Render blueprint configuration. |
+| `resources/deploy.yml` | GitHub Actions workflow for Render deployment. |
+| `resources/env-setup.md` | Environment variable setup guide. |
 | `docs/render-project-setup-rationale.md` | Original prose rationale preserved during refurbishment. |

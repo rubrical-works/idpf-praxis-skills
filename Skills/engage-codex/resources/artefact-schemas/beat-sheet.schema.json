@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "beat-sheet.schema.json",
+  "title": "Beat sheet artefact (paradigm-specific structural slots)",
+  "description": "A paradigm-specific beat sheet. Beats are the named structural slots of the chosen paradigm — Save-the-Cat's 15 beats, three-act's setup/confrontation/resolution beats, Kishōtenketsu's ki-shō-ten-ketsu, Harmon's 8 circle stations, Freytag's pyramid stages. The schema is paradigm-neutral on slot identity (beatId is a free string) but enforces ≥3 beats and per-beat label + summary.",
+  "type": "object",
+  "required": ["artefactType", "title", "paradigm", "beats"],
+  "properties": {
+    "artefactType": { "const": "beat-sheet" },
+    "title": { "type": "string", "minLength": 1 },
+    "paradigm": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the paradigm the beats correspond to (e.g., 'three-act', 'kishotenketsu', 'save-the-cat', 'harmon-circle', 'freytag-pyramid', 'hero-journey')."
+    },
+    "beats": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["beatId", "label", "summary"],
+        "properties": {
+          "beatId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Paradigm-specific beat identifier (e.g., 'opening-image', 'midpoint', 'all-is-lost', 'ki', 'ten', 'falling-action')."
+          },
+          "label": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 1 },
+          "approxPosition": {
+            "type": "string",
+            "description": "Optional rough position (e.g., 'page 12', '25%', 'act II opening')."
+          },
+          "characters": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

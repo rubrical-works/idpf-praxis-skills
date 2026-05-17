@@ -1,0 +1,105 @@
+{
+  "$schema": "proposal-template-schema.json",
+  "description": "Document structure template for engage-lexicon proposal generation (Step 7). Decision-focused narrative under a declared jurisdiction; the educational-only disclaimer is ALWAYS stamped at the top (#202 AC7) — no detection heuristic, mandatory on every output.",
+  "filePattern": "Proposal/LEXICON-{jurisdiction}-{claim-slug}.md",
+  "sections": [
+    {
+      "id": "educational-disclaimer",
+      "heading": "## Educational-Only Output — Not Licensed Legal Advice",
+      "content": "ALWAYS stamped at the top of every engage-lexicon proposal (#202 AC7). The contract for this skill is unconditional disclaimer — no heuristic detection, no opt-out. Renders the standard disclaimer template from SKILL.md → 'Disclaimer template (Educational-Only)' section verbatim, with {date} and {jurisdiction} filled. The disclaimer is the FIRST section, above any metadata or other content."
+    },
+    {
+      "id": "fabrication-risk-banner",
+      "heading": "> ⚠️ **Evidence-fabrication risk detected** on one or more advocates.",
+      "optional": true,
+      "condition": "fabricationRisk === true",
+      "content": "Banner renders ONLY when fabricationRisk=true — set when an advocate returned zero-fetch evidence twice and was tagged evidence-fabrication-risk by the Return-side validation. Renders immediately below the disclaimer and above metadata. Names the affected advocate(s) and notes the judge's confidenceRationale acknowledgement."
+    },
+    {
+      "id": "metadata",
+      "heading": "# Lexicon: {claimTitle}",
+      "fields": [
+        { "key": "date", "label": "Date", "format": "YYYY-MM-DD" },
+        { "key": "skill", "label": "Skill", "value": "engage-lexicon" },
+        { "key": "jurisdiction", "label": "Jurisdiction", "format": "string (from --jurisdiction gate)" },
+        { "key": "mode", "label": "Mode", "format": "debate | survey" },
+        { "key": "claim", "label": "Claim", "format": "string (from Step 1)" },
+        { "key": "fetchBudget", "label": "Fetch Budget", "format": "integer" },
+        { "key": "rounds", "label": "Rounds", "format": "1 or 2" },
+        { "key": "webResearchPerformed", "label": "Web Research Performed", "format": "boolean" },
+        { "key": "verdict", "label": "Verdict", "format": "endorse | reject | revise (survey: synthesis-recommended | further-research-required | synthesis-deferred)" },
+        { "key": "confidence", "label": "Confidence", "format": "high | medium | low" },
+        { "key": "fabricationRisk", "label": "Evidence-Fabrication Risk", "format": "boolean", "value": "false" },
+        { "key": "degradationFlags", "label": "Degradation Flags", "format": "comma-separated list; empty when none. Includes authorityHierarchyOverlap, statutoryRecencyStale flags." }
+      ]
+    },
+    {
+      "id": "claim",
+      "heading": "## Claim",
+      "content": "The full directional legal claim statement extracted in Step 1 (or, in survey mode, the restated landscape question). Anchored to {jurisdiction}."
+    },
+    {
+      "id": "jurisdiction",
+      "heading": "## Jurisdiction",
+      "content": "The declared jurisdiction with a one-line description of why it is the controlling forum (e.g., 'US-DE-Chancery — controller-transaction claims under Delaware corporate law are heard in the Court of Chancery'). Forum-shopping cases note alternative jurisdictions the claim might also be brought in but is NOT brought in here."
+    },
+    {
+      "id": "research-plan",
+      "heading": "## Research Plan",
+      "content": "Authority anchors (specific statutes, regulations, leading cases, agency guidance), source classes, recency window, freshness class, authority preferences, fetch budget. Reflects Step 0 output."
+    },
+    {
+      "id": "baseline",
+      "heading": "## Baseline",
+      "content": "The primary agent's one-paragraph initial read with its single grounding controlling-authority citation. Establishes the reference point against which the adversaries are measured."
+    },
+    {
+      "id": "for-brief",
+      "heading": "## For-Brief (or Survey Perspective 1)",
+      "subsections": [
+        { "heading": "### Core Position", "content": "One-to-two-sentence core position from the for-advocate (or survey perspective 1)." },
+        { "heading": "### Citations", "content": "Table: index | title | url | authorityType | authorityWeight | jurisdiction | courtLevel | year | pinCite | one-line excerpt. Full citation entries conform to citation-schema.json." },
+        { "heading": "### Analysis Summary", "content": "Step-by-step analysis with inline citation-index references. 3–8 bullets." },
+        { "heading": "### For-Recommendation", "content": "What the for-advocate's analysis supports under {jurisdiction}, framed in the educational-only register (not as legal advice)." }
+      ]
+    },
+    {
+      "id": "against-brief",
+      "heading": "## Against-Brief (or Survey Perspectives 2 and 3)",
+      "subsections": [
+        { "heading": "### Core Position", "content": "One-to-two-sentence counter-case from the against-advocate (or perspectives 2/3 in survey mode)." },
+        { "heading": "### Citations", "content": "Table: same columns as for-brief. ZERO URL overlap with for-brief citations (mechanically enforced). If citationOverlap='unresolved' or authorityHierarchyOverlap='unresolved' was tagged, include the warning note here." },
+        { "heading": "### Targeted Citation", "content": "If targetedCitationIndex is non-null, name the for-advocate citation this case directly rebuts. Otherwise: 'General counter-case; no single for-citation targeted.'" },
+        { "heading": "### Authority-Hierarchy Conflict", "content": "If authorityHierarchyConflict is non-null, name the specific point of hierarchy conflict and the conflictType (higher-authority | same-authority-different-holding | later-amendment | withdrawn-or-superseded | out-of-jurisdiction-controlling-elsewhere | split-of-authority). Otherwise omit this subsection." },
+        { "heading": "### Analysis Summary", "content": "Step-by-step analysis with inline citation-index references." },
+        { "heading": "### Against-Recommendation", "content": "What the against-advocate's analysis supports under {jurisdiction}, framed in the educational-only register." }
+      ]
+    },
+    {
+      "id": "judge",
+      "heading": "## Judge Output",
+      "subsections": [
+        { "heading": "### Weakening Evidence", "content": "Either the named against-citation (index + excerpt + authorityWeight + authorityType) that most weakened the for-case, OR 'None' with justification. The controlling-vs-persuasive distinction on the cited authority is REQUIRED — missing distinction blocks proposal generation (#202 AC6)." },
+        { "heading": "### Verdict", "content": "endorse | reject | revise (or survey-mode equivalents). If revise, state the revised claim under {jurisdiction}." },
+        { "heading": "### Flip Conditions", "content": "What evidence would flip the verdict (or reject the revised claim) under {jurisdiction}." },
+        { "heading": "### Confidence", "content": "high | medium | low, with one-line rationale. When perAdvocateFabricationRisk has any true flag, the rationale MUST acknowledge it. When statutoryRecencyStale is on a material citation, the rationale MUST acknowledge it." },
+        { "heading": "### Controlling Authorities Referenced", "content": "Optional table of every authority the judge relied on, each annotated with authorityWeight (controlling/persuasive) and authorityType. Renders when controllingAuthoritiesReferenced is non-empty." },
+        { "heading": "### Degradation Flags", "content": "List of degradation warnings surfaced in earlier steps (citationOverlap='unresolved', authorityHierarchyOverlap='unresolved', degradationEvidence='unverified', statutoryRecencyStale, statutoryRecencyUnverified, recency-gate warnings, evidence-fabrication-risk). Empty when none." }
+      ]
+    },
+    {
+      "id": "round-history",
+      "heading": "## Round History",
+      "optional": true,
+      "condition": "present when rounds > 1 (either judge demanded round-two OR --round-two flag was set)",
+      "content": "Summary of the round-two for-brief (core position + new citations + how it addressed the targetedCitationIndex and/or authorityHierarchyConflict) and the judge's second pass verdict."
+    },
+    {
+      "id": "statutory-recency-findings",
+      "heading": "## Statutory Recency Findings",
+      "optional": true,
+      "condition": "present when any cited statute, regulation, or agency-guidance authority was checked by the Step 6 recency gate",
+      "content": "Per-citation report on statutory/regulatory recency. Columns: citation index | authority | year cited | most-recent-amendment-date (or 'unverified') | recency status (current | statutoryRecencyStale | statutoryRecencyUnverified) | judge's materiality assessment (material | immaterial | not-assessed). Material amendments flagged in the table feed into the judge's confidenceRationale."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "strategies-schema.json",
+  "description": "Optional inspiration palette of research strategies. NOT consulted by runtime routing.",
+  "strategies": [
+    { "id": "discriminating-prediction-first", "name": "Discriminating-prediction-first", "description": "Identify the prediction the hypothesis makes that no competitor makes; design the cheapest test of that prediction." },
+    { "id": "confound-control-first", "name": "Confound-control-first", "description": "Identify the dominant confound; design controls before designing the manipulation." },
+    { "id": "replication-budget-first", "name": "Replication-budget-first", "description": "Plan replications proportional to base-rate novelty; novel findings need more replications than confirmatory ones." },
+    { "id": "pre-registration-first", "name": "Pre-registration-first", "description": "Specify predictions, sample size, and analysis plan before data collection. Strongest defense against post-hoc rationalization." },
+    { "id": "evidence-tier-aware", "name": "Evidence-tier-aware", "description": "Weight existing citations by tier (systematic-review > RCT > cohort > observational > expert > anecdote); avoid overweighting low-tier sources." },
+    { "id": "minimum-viable-experiment", "name": "Minimum-viable experiment", "description": "Design the cheapest experiment that would yield interpretable evidence, even if underpowered for full effect size. Triage step before expensive design." }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "proposal-template-schema.json",
+  "templateId": "CHORUS-proposal-1.0.0",
+  "description": "Document structure for Proposal/CHORUS-{situation-slug}.md (engage-chorus Step 5).",
+  "sections": [
+    { "id": "metadata", "title": "Metadata", "required": true, "fields": ["date", "skill", "situation", "sessionType", "stakeholders", "deprioritized"] },
+    { "id": "situation", "title": "Situation", "required": true, "description": "Restated negotiation + decision at stake." },
+    { "id": "stakeholders", "title": "Stakeholders", "required": true, "description": "One section per advocate with the full brief." },
+    { "id": "mediator-landscape", "title": "Mediator Landscape", "required": true, "description": "ZOPA + trade frontier + settlement zones + unresolved conflicts + concession sequencing + coalition map." },
+    { "id": "recommended-concession-sequence", "title": "Recommended Concession Sequence", "required": true, "description": "Ordered moves for the user to test the deal space." },
+    { "id": "what-would-change", "title": "What Would Change This Landscape", "required": true, "description": "2-3 bullets naming the assumption / stakeholder / constraint that would shift the recommendation." }
+  ]
+}

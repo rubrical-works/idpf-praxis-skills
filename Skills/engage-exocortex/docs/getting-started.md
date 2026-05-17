@@ -34,7 +34,6 @@ Or use trigger phrases in conversation:
 |------|--------|
 | `--paths N` | Specify how many paths to explore (2-4, default 3) |
 | `--no-proposal` | Skip writing the proposal document |
-| `--model <model>` | Override subagent model (default: `opus`) |
 
 ## Example Questions
 
@@ -91,19 +90,11 @@ Engage Exocortex spawns subagents with `model: "opus"` by default, regardless of
 | Component | Model | Why |
 |-----------|-------|-----|
 | Signal matching + path selection | Parent session | Needs deep problem understanding |
-| Subagent exploration | **Opus** (default) | The whole point — deep independent reasoning |
+| Subagent exploration | Parent session | Inherited — see `docs/subagent-brief-guide.md` for the rationale |
 | Synthesis + scoring | Parent session | Needs to catch errors in subagent reasoning |
 | Proposal document generation | Parent session | Mostly templated writing from structured data |
 
-### Overriding the Model
-
-Use `--model sonnet` or `--model haiku` to run subagents on a lighter model. This reduces cost and latency but produces shallower exploration:
-
-```
-/engage-exocortex --model sonnet What's the best caching strategy?
-```
-
-**Trade-off warning:** Lighter models tend to produce surface-level analysis. The synthesis step will have less to work with, and you may get results similar to a single-pass answer split into pieces. Use this override for quick explorations where cost matters more than depth.
+To run the whole skill on a lighter model, change the parent session's model — there is no per-subagent override.
 
 ## Tips for Better Results
 

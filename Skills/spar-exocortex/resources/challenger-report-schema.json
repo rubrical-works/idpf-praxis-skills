@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "challenger-report-schema.json",
+  "title": "spar-exocortex challenger report envelope",
+  "description": "Output of Step 3 — Challenger dispatch. Schema-level anti-overlap: targetComplexity OR invariantChoice must differ from the baseline's value. The validator (orchestration) cross-checks against the baseline; duplicate values fail validation.",
+  "type": "object",
+  "required": [
+    "targetComplexity",
+    "invariantChoice",
+    "targetLanguage",
+    "implementation",
+    "argumentWhyResists",
+    "addressesAttack"
+  ],
+  "properties": {
+    "targetComplexity": {
+      "type": "string",
+      "pattern": "^O\\(.+\\)$",
+      "description": "Big-O complexity claim. At least one of targetComplexity or invariantChoice must differ from baseline (enforced by validator, not by this schema alone)."
+    },
+    "invariantChoice": {
+      "type": "string",
+      "minLength": 5,
+      "description": "What is precomputed vs computed online. At least one of targetComplexity or invariantChoice must differ from baseline."
+    },
+    "targetLanguage": {
+      "type": "string",
+      "enum": ["js", "ts", "python"],
+      "description": "Must match baseline's targetLanguage (harness runs both candidates through the same adapter)."
+    },
+    "implementation": {
+      "type": "string",
+      "minLength": 20,
+      "description": "Self-contained executable text in targetLanguage. Must be runnable by the harness against shared tests + attacker's failingInput."
+    },
+    "argumentWhyResists": {
+      "type": "string",
+      "minLength": 30,
+      "description": "Brief argument tying the new design to the attacker's input. In sequential mode this MUST explicitly address the attacker's named failure mode."
+    },
+    "addressesAttack": {
+      "type": "boolean",
+      "description": "True iff the challenger explicitly addressed the attacker's named failure mode. In sequential mode (default) must be true. In --parallel-attack mode may be false (challenger didn't see the attack)."
+    },
+    "operationalAssumptions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional. Operational assumptions the challenger's design relies on."
+    }
+  },
+  "additionalProperties": false
+}

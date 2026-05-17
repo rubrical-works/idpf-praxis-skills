@@ -1,0 +1,31 @@
+{
+  "$schema": "structures-schema.json",
+  "description": "Optional inspiration palette of clinical-reasoning structural patterns. NOT consulted by runtime routing — the primary agent picks structures ad-hoc or selectively opens this file. Full-catalog loading is a contract violation (#205 AC7).",
+  "structures": [
+    {
+      "id": "presentation-to-system",
+      "name": "Presentation-to-organ-system mapping",
+      "description": "Map the presentation (e.g., 'dyspnea') to the organ systems whose dysfunction could cause it (cardiac, pulmonary, hematologic, neuromuscular, psychogenic). Generate one differential per relevant system."
+    },
+    {
+      "id": "test-then-think",
+      "name": "Test-then-think (LR-driven walk)",
+      "description": "Start from the highest-impact test available at the point of care (or in the brief's framing). What does each result update? Walk the differential by the test, not by the diagnosis. Strong fit for cases where the teaching point is which test to order and why."
+    },
+    {
+      "id": "must-not-miss-first",
+      "name": "Must-not-miss-first",
+      "description": "Reason red-flags first: which catastrophic-if-missed diagnoses share this presentation? What rules them out? Then walk the more common differentials. Strong fit for emergency-medicine education and triage reasoning."
+    },
+    {
+      "id": "epidemiologic-prior-first",
+      "name": "Epidemiologic-prior-first",
+      "description": "Order differentials by pre-test probability in the framed demographic. Reason from most-common to least-common. Strong fit for primary-care reasoning and resource-stewardship teaching."
+    },
+    {
+      "id": "test-characteristic-comparison",
+      "name": "Test-characteristic comparison",
+      "description": "Compare ≥2 tests by their sensitivity, specificity, and likelihood ratios. Discuss when each is appropriate. Strong fit for cases whose teaching point is the difference between rule-in and rule-out testing."
+    }
+  ]
+}

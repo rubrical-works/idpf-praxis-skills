@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "path-brief-template.json",
+  "title": "Subagent path-brief template (engage-forge)",
+  "description": "Slot template the primary agent fills before dispatching each path subagent. The brief carries the design problem, the assigned paradigm + artefact type, and constraints.",
+  "type": "object",
+  "required": ["problemStatement", "assignedParadigm", "assignedArtefactType", "constraints", "maxRationaleWords"],
+  "properties": {
+    "problemStatement": { "type": "string", "minLength": 1 },
+    "assignedParadigm": {
+      "type": "object",
+      "required": ["name", "rationale"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "paletteId": { "type": "string", "description": "Optional id from paradigms.json palette" },
+        "rationale": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "assignedArtefactType": {
+      "enum": ["flow", "ia-tree", "heuristic-matrix", "journey-map", "try-fail-cycle", "kano-grid"]
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "inspirationPalette": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "type": "string" }
+    },
+    "maxRationaleWords": { "type": "integer", "minimum": 50, "maximum": 500 }
+  },
+  "additionalProperties": false
+}

@@ -379,7 +379,9 @@ function validateInput(input, schemaPath) {
       return `Input validation failed: ${validate.errors.map(e => e.message).join(', ')}`;
     }
   } catch (e) {
-    if (e.code === 'MODULE_NOT_FOUND') return null;
+    if (e.code === 'MODULE_NOT_FOUND') {
+      return 'ajv module not found. Install with `npm install ajv` (in this skill directory or globally) to enable input schema validation, or invoke the no-Node fallback path (see SKILL.md "Fallback Procedure") — the fallback runs without schema validation.';
+    }
     if (e.code === 'ENOENT') return null;
     throw e;
   }

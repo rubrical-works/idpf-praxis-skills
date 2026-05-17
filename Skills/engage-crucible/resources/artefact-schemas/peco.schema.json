@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "peco.schema.json",
+  "title": "PECO experimental-design artefact",
+  "description": "Population, Exposure, Comparison, Outcome — the epidemiological / observational variant of PICO. Exposure is observed rather than intervened.",
+  "type": "object",
+  "required": ["artefactType", "population", "exposure", "comparison", "outcome", "primaryMeasurement"],
+  "properties": {
+    "artefactType": { "const": "peco" },
+    "population": {
+      "type": "object",
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "inclusionCriteria": { "type": "array", "items": { "type": "string" } },
+        "exclusionCriteria": { "type": "array", "items": { "type": "string" } },
+        "sampleSize": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "exposure": { "type": "string", "minLength": 1, "description": "The naturally-occurring exposure being studied (not manipulated)." },
+    "comparison": { "type": "string", "minLength": 1, "description": "The unexposed or differently-exposed comparator group." },
+    "outcome": { "type": "string", "minLength": 1 },
+    "primaryMeasurement": { "type": "string", "minLength": 1 },
+    "secondaryMeasurements": { "type": "array", "items": { "type": "string" } },
+    "confoundersToControl": { "type": "array", "items": { "type": "string" } },
+    "selectionBiasMitigation": { "type": "string", "description": "How selection bias will be minimized — observational designs require explicit handling." },
+    "dagSketch": { "type": "string" }
+  },
+  "additionalProperties": false
+}

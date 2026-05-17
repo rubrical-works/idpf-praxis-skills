@@ -1,0 +1,48 @@
+{
+  "$schema": "paradigms-schema.json",
+  "description": "Optional inspiration palette of narrative structural paradigms. NOT consulted by runtime routing — the primary agent picks paradigms ad-hoc or selectively opens this file to pull one entry into a path brief. Full-catalog routing via match-signals.js is a contract violation (#206 AC8).",
+  "paradigms": [
+    {
+      "id": "three-act",
+      "name": "Three-act structure",
+      "description": "Western feature-film default: Act I setup (inciting incident, plot point 1 at ~25%); Act II confrontation (midpoint reversal at ~50%, plot point 2 at ~75%); Act III resolution (climax + denouement). Strong fit for feature screenplays, novels with rising-action plots, and stories whose protagonist actively pursues a goal through escalating obstacles.",
+      "preferredArtefactTypes": ["beat-sheet", "try-fail-cycle", "scene-outline"]
+    },
+    {
+      "id": "kishotenketsu",
+      "name": "Kishōtenketsu (four-act re-framing structure)",
+      "description": "East-Asian four-act structure: ki (introduction), shō (development), ten (twist that re-frames meaning of ki + shō), ketsu (conclusion). Does NOT require a protagonist who pursues a goal through conflict — change comes from re-framing, not escalation. Strong fit for literary short stories, contemplative film, slice-of-life narratives, and stories whose resolution shifts the meaning of earlier events rather than resolving an opposed force.",
+      "preferredArtefactTypes": ["beat-sheet", "thematic-resonance-map"]
+    },
+    {
+      "id": "hero-journey",
+      "name": "Hero's journey (monomyth)",
+      "description": "Campbell's 17-stage monomyth, often condensed to 12 stages (ordinary world, call to adventure, refusal, mentor, threshold crossing, tests/allies/enemies, approach, ordeal, reward, road back, resurrection, return with elixir). Strong fit for fantasy, adventure, coming-of-age, and protagonist-arc-driven stories. Heavy character-arc grid pairing.",
+      "preferredArtefactTypes": ["beat-sheet", "character-arc-grid"]
+    },
+    {
+      "id": "save-the-cat",
+      "name": "Save-the-Cat beat sheet",
+      "description": "Snyder's 15-beat screenplay template: opening image, theme stated, set-up, catalyst, debate, break into 2, B-story, fun and games, midpoint, bad guys close in, all is lost, dark night of the soul, break into 3, finale, final image. Strong fit for commercial feature screenplays whose audience expects beat-rhythm familiarity. Page-position discipline matters: Save-the-Cat beats have approximate page positions.",
+      "preferredArtefactTypes": ["beat-sheet", "scene-outline"]
+    },
+    {
+      "id": "freytag-pyramid",
+      "name": "Freytag's pyramid",
+      "description": "Five-act dramatic structure: exposition, rising action, climax, falling action, dénouement. Symmetric around the climax (climax is at the midpoint, not the 75% point). Strong fit for classical-tragedy structure, stage plays in five acts, and stories whose falling action carries its own weight (the consequences of the climax matter as much as the climax itself).",
+      "preferredArtefactTypes": ["beat-sheet"]
+    },
+    {
+      "id": "harmon-circle",
+      "name": "Harmon's story circle",
+      "description": "Dan Harmon's 8-station circle: you (character in zone of comfort), need, go (cross threshold), search, find (what they wanted), take (pay the price), return, change. Cyclical structure — the protagonist returns to the starting point but is changed. Strong fit for episodic-TV pilots, half-hour comedy, and contained character pieces.",
+      "preferredArtefactTypes": ["beat-sheet", "scene-outline", "character-arc-grid"]
+    },
+    {
+      "id": "aristotelian-unities",
+      "name": "Aristotelian unities (poetics)",
+      "description": "Unity of action (single plot line), unity of place (single location), unity of time (single 24-hour span). Strong fit for stage plays, contained-thriller films, single-location short stories, and time-pressure narratives. Constrains rather than expands the artefact's structural slots.",
+      "preferredArtefactTypes": ["scene-outline", "try-fail-cycle"]
+    }
+  ]
+}

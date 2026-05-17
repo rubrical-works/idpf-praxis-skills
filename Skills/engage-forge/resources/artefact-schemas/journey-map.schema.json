@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "journey-map.schema.json",
+  "title": "Journey-map artefact",
+  "description": "A journey-stage table. Each row is one stage of the user journey: user state, touchpoint, emotion, opportunity. Used by contextual-inquiry and service-design paths.",
+  "type": "object",
+  "required": ["artefactType", "title", "persona", "stages"],
+  "properties": {
+    "artefactType": { "const": "journey-map" },
+    "title": { "type": "string", "minLength": 1 },
+    "persona": { "type": "string", "minLength": 1, "description": "The persona whose journey is mapped" },
+    "scenario": { "type": "string" },
+    "stages": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["stage", "userState", "touchpoint", "emotion", "opportunity"],
+        "properties": {
+          "stage": { "type": "string", "minLength": 1 },
+          "userState": { "type": "string", "minLength": 1 },
+          "touchpoint": { "type": "string", "minLength": 1 },
+          "emotion": { "type": "string", "minLength": 1 },
+          "opportunity": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

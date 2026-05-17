@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "red-flag-advocate-output-schema.json",
+  "title": "Red-flag advocate output schema (engage-apothecary Step 4)",
+  "description": "Output of the mandatory red-flag advocate role. Spawned on every invocation regardless of N or question shape. The advocate surfaces the must-not-miss diagnosis that could share the presentation with the proposed differentials, what makes it plausible, the cheapest test that would rule it out, and the severity of missing it. When no plausible must-not-miss exists for the scenario, the output must explicitly declare 'none-identified' with a rationale — silent omission is rejected.",
+  "type": "object",
+  "required": ["mustNotMissDiagnosis", "sharingFeaturesRationale", "rulingOutTest", "consequenceOfMissingSeverity"],
+  "properties": {
+    "mustNotMissDiagnosis": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The must-not-miss differential name, or literal 'none-identified' when no plausible candidate exists for the scenario."
+    },
+    "noneIdentifiedRationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Required when mustNotMissDiagnosis is 'none-identified'. Names why the scenario has no plausible must-not-miss."
+    },
+    "sharingFeaturesRationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What makes the must-not-miss diagnosis plausibly share the presentation with the proposed differentials."
+    },
+    "rulingOutTest": {
+      "type": "object",
+      "required": ["test"],
+      "properties": {
+        "test": { "type": "string", "minLength": 1 },
+        "lrPlus": { "type": "number" },
+        "lrMinus": { "type": "number" },
+        "qualitativeImpact": {
+          "enum": ["strong-rule-in", "moderate-rule-in", "weak-rule-in", "strong-rule-out", "moderate-rule-out", "weak-rule-out", "data-not-well-published"]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["lrPlus"] },
+        { "required": ["lrMinus"] },
+        { "required": ["qualitativeImpact"] }
+      ]
+    },
+    "consequenceOfMissingSeverity": {
+      "enum": ["catastrophic", "severe", "moderate"],
+      "description": "catastrophic = death or permanent disability; severe = major morbidity; moderate = significant but reversible."
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "mustNotMissDiagnosis": { "const": "none-identified" } }, "required": ["mustNotMissDiagnosis"] },
+      "then": { "required": ["noneIdentifiedRationale"] }
+    }
+  ]
+}

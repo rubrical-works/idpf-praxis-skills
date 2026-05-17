@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2026-05-17
+
+### Added
+- **6 new `/engage-*` cooperative-refraction skills** — broadens the engage-family beyond `/engage-prism` (business/marketing/finance) and `/engage-exocortex` (code/algorithm) into six new domains. Each refracts a question into N parallel subagent paths, enforces a domain-appropriate citation/artefact contract, and synthesizes a structured proposal: `engage-lexicon` (legal / policy / compliance — pre-emption analysis, jurisdictional citation discipline, #202); `engage-crucible` (scientific research / hypothesis generation — Bayesian prior-update, falsification gates, evidence-tier-weighted citations, `--offline` mode, #203); `engage-forge` (product / UX design exploration — artefact-first contract, paradigm-palette inspiration, mandatory audit + critique gates, #204); `engage-apothecary` (educational clinical reasoning — refusal-as-load-bearing-contract preflight, Bayesian pre/post-test reasoning, red-flag-advocate gate, strictly educational disclaimer, #205); `engage-codex` (narrative / screenplay / long-form structure — beat-sheet/scene-outline/character-arc/thematic-resonance artefact schemas, #206); `engage-chorus` (multi-stakeholder negotiation / mediation — stakeholder briefs + mediator output schema, #207). All ship with packaged zips, 3 worked examples each, and entries in `Skills/MAINTENANCE.md`'s "when to pick which" selector.
+- **`spar-exocortex` skill — propose-attack-measure loop with execution-backed validation** — adversarial sibling to `/engage-exocortex`. Spawns proposer/attacker subagent pairs that produce diff-and-test artefacts (real executable code, not prose), runs them in an isolated workspace, and a judge subagent scores proposals against measured outcomes rather than projected ones. Adopts the no-runtime preflight + scoped-fallback pattern. (#216)
+- **`/engage-exocortex` incremental refinements** — execution-phase enhancement: paths now produce real run artefacts under `examples/` (sliding-window-max algorithmic, rate-limiter architecture); complexity-class diversity enforced via `targetComplexity` + `invariantChoice` brief slots and `antiOverlapRules` in `cross-references.json`; paradigm-strategy tuples reclassified as advisory (no auto-routing); slim catalog reduces token budget while preserving the four core paradigms. (#215)
+
+### Changed
+- **No-Runtime Fallback Pattern (Pattern 4) rolled out across script-using skills** — invokable skills that depended on Node-based helper scripts now preflight for runtime availability and surface a scoped-fallback path with explicit "limited mode" messaging when Node is absent. Touches `engage-*` family preflights (#252), `json-validator` (#253), and `tdd-refactor-coverage-audit` (#254). Pattern formally documented in `SKILL-DEVELOPMENT-GUIDE.md`'s **No-Runtime Fallback Pattern** section so future skill authors adopt it by default. (#240, #251, #255)
+
+### Fixed
+- **4 skills brought into conformance with SKILL-DEVELOPMENT-GUIDE.md type-rule standards** (mechanical audit follow-up surfaced by `/fw-audit-skills` on 2026-05-16):
+  - `electron-cross-build` (#256): added 3 injector typeRule fields (`disable-model-invocation: true`, `user-invocable: false`, `defaultSkill: true`).
+  - `electron-development` (#257): same 3 injector typeRule fields.
+  - `responsibility-gate` (#258): added `disable-model-invocation: true` (reference-skill contract — was being auto-invoked from description prior to fix).
+  - `engage-prism` (#259): rephrased L411/L413 prose (`render each path` → `serialize each path`) to dodge the `provider-cli-invocation` drift-indicator regex collision; preserved markdown-rendering semantics. Output-contract test assertion updated to match.
+
 ## [0.14.1] - 2026-04-25
 
 ### Fixed

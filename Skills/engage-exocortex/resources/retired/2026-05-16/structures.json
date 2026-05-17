@@ -1,0 +1,1219 @@
+{
+  "$schema": "structures-schema.json",
+  "description": "Deep reference for core data structures — covers operations, variants, traps, and disqualifiers for each structure family.",
+  "usage": "Use when two candidate paths share the same algorithmic paradigm. The data structure chosen determines the constants, access patterns, mutation cost, and feasibility.",
+  "families": [
+    {
+      "id": "heap-priority-queue",
+      "name": "Heap / Priority Queue",
+      "coreContract": "Insert in O(log n); extract the minimum (or maximum) in O(log n); peek in O(1). Does not support arbitrary access or update without augmentation.",
+      "whenToPrefer": [
+        "You repeatedly need the globally best element (min or max) from a changing set",
+        "Dijkstra-style 'process cheapest frontier node next'",
+        "K-way merging, top-K queries, sliding window maximum without monotonic queue"
+      ],
+      "variants": [
+        {
+          "name": "Binary min/max heap",
+          "characteristic": "Standard; O(log n) push/pop",
+          "bestUsedWhen": "General priority queue needs"
+        },
+        {
+          "name": "Indexed heap (heap + position map)",
+          "characteristic": "O(log n) decrease-key by tracking positions",
+          "bestUsedWhen": "Dijkstra with edge relaxation, Prim's MST"
+        },
+        {
+          "name": "Two-heap partition",
+          "characteristic": "One min-heap + one max-heap sharing a population",
+          "bestUsedWhen": "Median of a data stream, range median"
+        },
+        {
+          "name": "Monotonic deque (deque-as-heap)",
+          "characteristic": "Maintains sorted order by evicting dominated elements",
+          "bestUsedWhen": "Sliding window max/min in O(n) total"
+        },
+        {
+          "name": "Lazy deletion heap",
+          "characteristic": "Stale entries left in heap; validity checked at pop time",
+          "bestUsedWhen": "Interval scheduling, task cooldown, sweep line events"
+        },
+        {
+          "name": "K-way merge heap",
+          "characteristic": "One entry per input stream; pop + re-insert from same stream",
+          "bestUsedWhen": "Merge K sorted lists, external sort"
+        }
+      ],
+      "implementationTraps": [
+        "Python's heapq is min-heap only — negate values for max-heap; don't forget to negate back",
+        "Lazy deletion requires a 'seen' set or a version counter; forgetting this causes incorrect pops",
+        "Two-heap median: rebalancing invariant (size difference <= 1) must be maintained on every insert and remove",
+        "Indexed heap position map must be updated on every swap during sift-up/sift-down, not just at insert"
+      ],
+      "disqualifiers": [
+        "Need to find an arbitrary element (use hash map instead)",
+        "Need sorted iteration over the full set (use BST or sort)",
+        "The set is static — just sort once"
+      ]
+    },
+    {
+      "id": "tree-variants",
+      "name": "Tree Variants",
+      "coreContract": "A family of hierarchical structures offering O(log n) search, insert, and delete on ordered data, plus range queries. The specific variant determines what additional operations are O(log n) vs O(n).",
+      "whenToPrefer": [
+        "Data is ordered and you need both point queries and range queries",
+        "Dynamic set with frequent insertions/deletions (vs. static -> just sort)",
+        "Need rank queries ('how many elements <= X?') or order statistics"
+      ],
+      "variants": [
+        {
+          "name": "BST (unbalanced)",
+          "characteristic": "Simple; degrades to O(n) on sorted input",
+          "bestUsedWhen": "Never in production; useful for teaching"
+        },
+        {
+          "name": "AVL / Red-Black tree",
+          "characteristic": "Self-balancing; O(log n) guaranteed",
+          "bestUsedWhen": "Ordered map/set (most language std libs)"
+        },
+        {
+          "name": "Segment tree",
+          "characteristic": "Each node covers a range; supports range query + point update",
+          "bestUsedWhen": "Range sum/min/max with point updates"
+        },
+        {
+          "name": "Segment tree with lazy propagation",
+          "characteristic": "Deferred range updates; O(log n) range update + range query",
+          "bestUsedWhen": "Range add + range sum, range set + range min"
+        },
+        {
+          "name": "Fenwick tree (BIT)",
+          "characteristic": "Implicit tree via index bit tricks; smaller constant than segment tree",
+          "bestUsedWhen": "Prefix sum with point update; 2D variants for grid"
+        },
+        {
+          "name": "Trie (prefix tree)",
+          "characteristic": "Characters at edges; O(L) ops where L = string length",
+          "bestUsedWhen": "Prefix matching, autocomplete, XOR maximization"
+        },
+        {
+          "name": "Persistent segment tree",
+          "characteristic": "Each update creates a new root; old versions accessible",
+          "bestUsedWhen": "Range kth element, versioned data, offline queries"
+        },
+        {
+          "name": "Merge sort tree",
+          "characteristic": "Segment tree where each node stores a sorted array of its range",
+          "bestUsedWhen": "Count elements in range [L,R] satisfying a predicate"
+        },
+        {
+          "name": "K-d tree",
+          "characteristic": "Partitions k-dimensional space alternating on each axis",
+          "bestUsedWhen": "Nearest neighbor in 2D/3D, range search in space"
+        },
+        {
+          "name": "Cartesian tree / Treap",
+          "characteristic": "Heap-ordered by priority, BST-ordered by key; randomized balance",
+          "bestUsedWhen": "Implicit sequence with split/merge, rope data structure"
+        }
+      ],
+      "implementationTraps": [
+        "Segment tree: 1-indexed vs 0-indexed; size must be next power of 2 or use recursive build",
+        "Lazy propagation: the lazy tag must be pushed down before recursing into children, not after",
+        "Fenwick tree: update(i, delta) and query(i) are both 1-indexed; off-by-one errors are common",
+        "Trie: remember to handle end-of-word markers separately from the existence of a child node",
+        "Persistent structures: copying the path (O(log n) nodes) not the whole tree"
+      ],
+      "disqualifiers": [
+        "Updates are rare and queries are batch -> sort offline instead",
+        "Data is unordered and you only need exact-match lookup -> hash map is faster and simpler",
+        "N is small (< 1000) -> just use a sorted array with binary search"
+      ]
+    },
+    {
+      "id": "hash-based-structures",
+      "name": "Hash-Based Structures",
+      "coreContract": "O(1) average insert, delete, and lookup. No ordering. Worst-case O(n) due to collisions, but rare with good hash functions.",
+      "whenToPrefer": [
+        "Fast exact-match lookup is the bottleneck",
+        "Counting frequencies, detecting duplicates, memoizing seen states",
+        "The key space is large but the active set is sparse"
+      ],
+      "variants": [
+        {
+          "name": "HashMap / dictionary",
+          "characteristic": "Key -> value; O(1) average",
+          "bestUsedWhen": "Any frequency count, index lookup, memo table"
+        },
+        {
+          "name": "HashSet",
+          "characteristic": "Membership only; O(1) average",
+          "bestUsedWhen": "Visited set in BFS, duplicate detection"
+        },
+        {
+          "name": "Counting array",
+          "characteristic": "Fixed-range keys (e.g., chars, small ints); O(1) true worst-case",
+          "bestUsedWhen": "Character frequency, bucket sort"
+        },
+        {
+          "name": "Rolling hash",
+          "characteristic": "Hash of a sliding window updated incrementally",
+          "bestUsedWhen": "Rabin-Karp substring search, longest duplicate substring"
+        },
+        {
+          "name": "Polynomial hash / string hashing",
+          "characteristic": "Map strings to integers for O(1) comparison",
+          "bestUsedWhen": "Anagram grouping, palindrome detection over substrings"
+        },
+        {
+          "name": "Two-sum complement map",
+          "characteristic": "Store seen values; for each new value check if complement exists",
+          "bestUsedWhen": "Two-sum, subarray sum equals K (prefix sum + map)"
+        },
+        {
+          "name": "Coordinate compression + map",
+          "characteristic": "Map large sparse values to dense indices",
+          "bestUsedWhen": "Segment tree on large value range, offline range queries"
+        }
+      ],
+      "implementationTraps": [
+        "Rolling hash collisions: use double hashing (two independent moduli) to reduce false positives",
+        "Python dicts preserve insertion order (3.7+) — don't rely on this in language-agnostic solutions",
+        "Counting array bounds: ensure the array is sized for the full input range, not just what you've seen",
+        "Coordinate compression: compress after reading all input; queries must use the same mapping as updates"
+      ],
+      "disqualifiers": [
+        "Need to iterate in sorted order (use BST or sorted array)",
+        "Need range queries ('all keys between X and Y') -> hash maps can't do this",
+        "Adversarial inputs can cause hash collisions -> use randomized hash or tree map"
+      ]
+    },
+    {
+      "id": "graph-representations",
+      "name": "Graph Representations",
+      "coreContract": "Encodes vertices and edges; the representation chosen governs the cost of the operations most frequently used (adjacency test, neighbor enumeration, edge weight lookup).",
+      "whenToPrefer": [],
+      "variants": [
+        {
+          "name": "Adjacency list",
+          "characteristic": "Space O(V + E); adjacency test O(degree); neighbor list O(degree)",
+          "bestUsedWhen": "Sparse graphs; most real problems"
+        },
+        {
+          "name": "Adjacency matrix",
+          "characteristic": "Space O(V^2); adjacency test O(1); neighbor list O(V)",
+          "bestUsedWhen": "Dense graphs; Floyd-Warshall; small V"
+        },
+        {
+          "name": "Edge list",
+          "characteristic": "Space O(E); adjacency test O(E); neighbor list O(E)",
+          "bestUsedWhen": "Kruskal's MST; sorting edges by weight"
+        },
+        {
+          "name": "Implicit graph",
+          "characteristic": "Space O(1) storage; computed on-the-fly",
+          "bestUsedWhen": "BFS/DFS on grid, state-space search"
+        },
+        {
+          "name": "CSR (Compressed Sparse Row)",
+          "characteristic": "Space O(V + E); adjacency test O(log degree); neighbor list O(degree)",
+          "bestUsedWhen": "Read-only graphs; cache-efficient traversal"
+        },
+        {
+          "name": "Multigraph with edge ids",
+          "characteristic": "Space O(V + E); adjacency test O(degree); neighbor list O(degree)",
+          "bestUsedWhen": "Multiple edges between same nodes; flow networks"
+        }
+      ],
+      "implicitGraphPatterns": [
+        "Grid as graph: cell (r, c) is a node; 4/8 neighbors are edges",
+        "State as node: (position, remaining_fuel, keys_held) is a node in BFS",
+        "Interval as node: edge from interval A to B if A ends before B starts (interval scheduling graph)",
+        "Bitmask as node: each subset is a node; DP on subsets is BFS on hypercube graph"
+      ],
+      "implementationTraps": [
+        "Directed vs. undirected: adding edge u->v in an undirected graph requires also adding v->u",
+        "Self-loops and parallel edges: adjacency matrix handles them naturally; adjacency list needs care",
+        "Implicit graphs: ensure the neighbor-generation function is correct for boundary cells (grid edges)",
+        "Graph of intervals: when converting intervals to a DAG, ensure you sort by start time first"
+      ],
+      "disqualifiers": [
+        "Problem is fundamentally about ordered sequences, not relationships -> don't force a graph",
+        "V is huge but edges are implicit and acyclic -> DP on the implicit DAG is cleaner than building the graph"
+      ]
+    },
+    {
+      "id": "union-find",
+      "name": "Union-Find (Disjoint Set Union)",
+      "coreContract": "Two operations — union(a, b) merges two sets; find(a) returns the canonical representative of a's set. With union-by-rank and path compression: both operations are effectively O(alpha(n)) ~ O(1).",
+      "whenToPrefer": [
+        "Dynamic connectivity: 'are these two nodes in the same component after adding edges?'",
+        "Detecting cycles while building a spanning tree (Kruskal's)",
+        "Offline connectivity queries where edges only appear, never disappear"
+      ],
+      "variants": [
+        {
+          "name": "Standard DSU",
+          "characteristic": "Union by rank + path compression",
+          "bestUsedWhen": "Component membership, Kruskal's MST"
+        },
+        {
+          "name": "Weighted/labeled DSU",
+          "characteristic": "Each node stores a value relative to its parent",
+          "bestUsedWhen": "Accounts with transfers, relative distances"
+        },
+        {
+          "name": "Rollback DSU (link-cut)",
+          "characteristic": "Union by rank without path compression; supports undo",
+          "bestUsedWhen": "Offline dynamic connectivity, divide-and-conquer on edges"
+        },
+        {
+          "name": "DSU on tree (small-to-large)",
+          "characteristic": "Merge smaller child's data into larger child's; O(n log n) total",
+          "bestUsedWhen": "Subtree queries, color counting on trees"
+        },
+        {
+          "name": "Bipartite checking DSU",
+          "characteristic": "Two nodes per vertex (true/false state); union checks consistency",
+          "bestUsedWhen": "2-colorability, odd cycle detection"
+        }
+      ],
+      "implementationTraps": [
+        "Path compression alone (without union by rank) gives O(log n) not O(alpha(n))",
+        "Rollback DSU: path compression breaks rollback — must use union by rank only",
+        "Weighted DSU: when doing path compression, the weights along the path must be composed correctly",
+        "Off-by-one in initialization: parent[i] = i for all nodes, including isolated ones"
+      ],
+      "disqualifiers": [
+        "Edges can be removed as well as added -> DSU doesn't support deletions; use link-cut trees or offline processing",
+        "Need to enumerate all members of a component -> DSU only gives representative, not membership list",
+        "Need shortest path -> DSU knows connectivity but not distance"
+      ]
+    },
+    {
+      "id": "monotonic-stack-and-queue",
+      "name": "Monotonic Stack and Queue",
+      "coreContract": "A stack or deque maintained in sorted order by evicting elements that can never be the answer to a future query. Each element is pushed and popped at most once -> O(n) total across all operations.",
+      "whenToPrefer": [
+        "'Next greater / smaller element' for each position",
+        "Sliding window maximum or minimum in O(n)",
+        "Largest rectangle / container problems",
+        "Problems where earlier elements become irrelevant once a better candidate appears"
+      ],
+      "variants": [
+        {
+          "name": "Monotonic increasing stack",
+          "characteristic": "Bottom to top: increasing",
+          "bestUsedWhen": "Next smaller element, largest rectangle in histogram"
+        },
+        {
+          "name": "Monotonic decreasing stack",
+          "characteristic": "Bottom to top: decreasing",
+          "bestUsedWhen": "Next greater element, stock span problem"
+        },
+        {
+          "name": "Monotonic deque (sliding window)",
+          "characteristic": "Front is current best; rear evicts dominated elements",
+          "bestUsedWhen": "Sliding window max/min, maximum of all subarrays of size K"
+        },
+        {
+          "name": "Two-stack queue",
+          "characteristic": "Two stacks simulate O(1) amortized queue with min/max tracking",
+          "bestUsedWhen": "Min-queue (queue supporting O(1) minimum queries)"
+        },
+        {
+          "name": "Cartesian tree construction",
+          "characteristic": "Monotonic stack builds the Cartesian tree in O(n)",
+          "bestUsedWhen": "Range minimum query structure, treap-like problems"
+        }
+      ],
+      "implementationTraps": [
+        "Deciding what to store: often store indices, not values, so you can compute spans/widths",
+        "Equality handling: 'strictly greater' vs 'greater or equal' changes which duplicates survive",
+        "Sliding window deque: evict from the front when the window slides past an element, from the rear when a new element dominates",
+        "Off-by-one in the span calculation: right - left - 1 not right - left when both pointers are exclusive"
+      ],
+      "disqualifiers": [
+        "Window size changes non-monotonically (deque no longer sufficient; use segment tree)",
+        "Need arbitrary access into the 'stack' by value (use a BST instead)",
+        "Query isn't about a contiguous range or a sliding window"
+      ]
+    },
+    {
+      "id": "sliding-window-and-two-pointer",
+      "name": "Sliding Window and Two Pointer",
+      "coreContract": "Maintain a contiguous subarray (sliding window) or two indices moving toward each other (two pointer) to answer queries in O(n) rather than O(n^2).",
+      "whenToPrefer": [
+        "'Longest/shortest subarray satisfying a property'",
+        "'Pair of elements summing to a target in a sorted array'",
+        "Constraint on a subarray is monotone: expanding the window can only make it harder (or easier) to satisfy"
+      ],
+      "variants": [
+        {
+          "name": "Fixed-size window",
+          "characteristic": "Right advances; left = right - k",
+          "bestUsedWhen": "Average of subarrays of size K, max sum of size K"
+        },
+        {
+          "name": "Variable-size window (shrink when invalid)",
+          "characteristic": "Right advances freely; left advances when constraint violated",
+          "bestUsedWhen": "Longest substring without repeating chars, min window substring"
+        },
+        {
+          "name": "Two pointer on sorted array",
+          "characteristic": "Left from start, right from end; move based on comparison",
+          "bestUsedWhen": "Two-sum in sorted array, container with most water"
+        },
+        {
+          "name": "Two pointer on linked list",
+          "characteristic": "Fast and slow pointers",
+          "bestUsedWhen": "Cycle detection, find middle node, Kth from end"
+        },
+        {
+          "name": "Multi-pointer (three pointers)",
+          "characteristic": "One anchor + two-pointer sweep",
+          "bestUsedWhen": "Three-sum, four-sum"
+        },
+        {
+          "name": "Prefix sum + two pointer",
+          "characteristic": "Precompute prefix sums; binary search or two-pointer on them",
+          "bestUsedWhen": "Subarray sum >= K (positive values), minimum size subarray sum"
+        }
+      ],
+      "implementationTraps": [
+        "Variable window: the shrink condition must restore validity fully before recording an answer",
+        "Two pointer on unsorted data: requires sorting first — the sort cost O(n log n) must be acceptable",
+        "Window with a frequency map: decrement the map when the left pointer moves; don't delete keys, check count == 0",
+        "Sliding window on circular arrays: run two passes or use modular indexing"
+      ],
+      "disqualifiers": [
+        "Constraint is not monotone (e.g., 'subarray with sum exactly K' on mixed-sign input -> prefix sum + hash map instead)",
+        "Array is unsorted and sorting would destroy required ordering",
+        "Queries are offline and non-contiguous (use segment tree or BIT)"
+      ]
+    },
+    {
+      "id": "bit-manipulation-and-bitsets",
+      "name": "Bit Manipulation and Bitsets",
+      "coreContract": "Operate on integers as arrays of bits. Modern CPUs execute bitwise ops in O(1) on 64-bit words; bitsets compress boolean arrays by 64x, enabling O(n/64) set operations.",
+      "whenToPrefer": [
+        "State is a subset of a small universe (N <= 20 for full bitmask DP; N <= 10^6 for bitset)",
+        "Need fast set intersection, union, or complement",
+        "Parity, power-of-two, or lowest-set-bit tricks replace arithmetic"
+      ],
+      "variants": [
+        {
+          "name": "Bitmask DP",
+          "characteristic": "State = bitmask of chosen items; transition flips bits",
+          "bestUsedWhen": "TSP, set cover, assignment with N <= 20"
+        },
+        {
+          "name": "XOR trick",
+          "characteristic": "a ^ b ^ b = a; XOR of a pair cancels",
+          "bestUsedWhen": "Find single non-duplicate, missing number, swap without temp"
+        },
+        {
+          "name": "Lowest set bit (LSB)",
+          "characteristic": "x & (-x) isolates the rightmost 1",
+          "bestUsedWhen": "Fenwick tree indexing, iterating over set bits"
+        },
+        {
+          "name": "Popcount",
+          "characteristic": "bin(x).count('1') or hardware POPCNT",
+          "bestUsedWhen": "Hamming distance, count set bits, parity"
+        },
+        {
+          "name": "Bit shifting for powers",
+          "characteristic": "1 << k = 2^k; x >> k = x // 2^k",
+          "bestUsedWhen": "Fast multiply/divide by powers of 2, flag masks"
+        },
+        {
+          "name": "Bitset DP",
+          "characteristic": "Use Python int or C++ bitset<N> as a dense boolean array",
+          "bestUsedWhen": "Subset sum feasibility for large N, reachability in boolean matrix"
+        },
+        {
+          "name": "Gray code",
+          "characteristic": "Consecutive values differ by exactly one bit",
+          "bestUsedWhen": "Generating permutations/subsets without revisiting, rotary encoders"
+        }
+      ],
+      "implementationTraps": [
+        "Signed integer overflow: 1 << 31 is undefined in C++ with int; use 1LL << 31",
+        "Python integers are arbitrary precision — bitmask DP works for N > 64, but gets slow",
+        "XOR swap: a ^= b; b ^= a; a ^= b fails when a and b are the same variable (same memory)",
+        "Iterating over all subsets of a mask: sub = mask; while sub > 0: process(sub); sub = (sub-1) & mask — don't forget to process sub = 0 separately if needed"
+      ],
+      "disqualifiers": [
+        "N > 20 for bitmask DP (2^20 = 1M states is borderline; 2^25 is too large)",
+        "Operations require ordering or range queries (bits don't have positional meaning beyond index)",
+        "Problem involves arithmetic that doesn't reduce to bit tricks"
+      ]
+    },
+    {
+      "id": "service-container",
+      "name": "Service Container / Dependency Injection",
+      "coreContract": "Manage object creation and dependency resolution through a centralized registry. Consumers declare dependencies; the container provides concrete implementations at construction time or on demand.",
+      "whenToPrefer": [
+        "Testability requires swapping real implementations for mocks or stubs",
+        "Loose coupling between modules with configurable dependency graphs",
+        "Multiple implementations of the same interface selected at runtime"
+      ],
+      "variants": [
+        {
+          "name": "Constructor injection",
+          "characteristic": "Dependencies passed as constructor parameters; immutable after creation",
+          "bestUsedWhen": "Default choice for DI; clear dependency declaration, easy to test"
+        },
+        {
+          "name": "Property injection",
+          "characteristic": "Dependencies set via setters or public properties after construction",
+          "bestUsedWhen": "Optional dependencies, circular dependency resolution, framework-managed lifecycle"
+        },
+        {
+          "name": "Service locator",
+          "characteristic": "Global registry queried at runtime; consumers pull dependencies",
+          "bestUsedWhen": "Legacy codebases, plugin systems where consumers are unknown at compile time"
+        },
+        {
+          "name": "Factory registry",
+          "characteristic": "Registry maps keys to factory functions; creates instances on demand",
+          "bestUsedWhen": "Dynamic object creation, strategy selection, handler dispatch by type"
+        }
+      ],
+      "implementationTraps": [
+        "Service locator hides dependencies — call sites don't declare what they need, making refactoring and testing harder",
+        "Circular dependencies cause infinite loops or incomplete initialization; detect cycles at registration time",
+        "Singleton vs transient lifetime confusion: shared mutable state leaks between consumers if lifetime is wrong",
+        "Over-abstraction: injecting interfaces for every dependency when only one implementation will ever exist"
+      ],
+      "disqualifiers": [
+        "Simple scripts or utilities with no dependency graph",
+        "Performance-critical hot paths where indirection overhead matters",
+        "Projects with fewer than 3-4 modules — direct instantiation is simpler"
+      ]
+    },
+    {
+      "id": "message-channel",
+      "name": "Message Channel / Event Bus",
+      "coreContract": "Decouple producers from consumers by routing messages through a shared channel. Publishers emit events without knowing who listens; subscribers react without knowing who published.",
+      "whenToPrefer": [
+        "Decoupled communication between modules or processes",
+        "Async workflows where producer should not block on consumer",
+        "Cross-process or cross-service messaging"
+      ],
+      "variants": [
+        {
+          "name": "In-process event emitter",
+          "characteristic": "Synchronous or microtask-based dispatch within a single process",
+          "bestUsedWhen": "Module decoupling in Node.js/browser, UI component communication"
+        },
+        {
+          "name": "IPC channel (Electron/Node)",
+          "characteristic": "Structured message passing between OS processes with serialization boundary",
+          "bestUsedWhen": "Electron main/renderer communication, Node child_process, worker threads"
+        },
+        {
+          "name": "Message broker (RabbitMQ/Redis pub-sub)",
+          "characteristic": "Network-based message routing with persistence, fan-out, and acknowledgment",
+          "bestUsedWhen": "Microservice communication, event-driven architecture, workload distribution"
+        },
+        {
+          "name": "Command bus (CQRS-style)",
+          "characteristic": "One-to-one dispatch: each command has exactly one handler",
+          "bestUsedWhen": "CQRS pattern, explicit command/query separation, audit trail"
+        }
+      ],
+      "implementationTraps": [
+        "Memory leaks from unremoved event listeners — always unsubscribe on teardown",
+        "Event ordering assumptions: async channels may deliver out of order; design for idempotency",
+        "Serialization boundary: IPC and broker channels require serializable payloads — no functions, circular refs, or class instances",
+        "Silent failures: events with no listeners vanish silently; add dead-letter or unhandled-event logging"
+      ],
+      "disqualifiers": [
+        "Synchronous function call is sufficient and simpler",
+        "Single-process application with no isolation or decoupling needs",
+        "Strict ordering and transactional guarantees required without additional infrastructure"
+      ]
+    },
+    {
+      "id": "sandbox-environment",
+      "name": "Sandbox Environment / Test Isolation",
+      "coreContract": "Create an isolated execution context where side effects (filesystem, environment, network, process state) are contained and do not leak into the host or other tests.",
+      "whenToPrefer": [
+        "Integration or E2E tests that touch filesystem, network, or environment variables",
+        "CI pipelines requiring hermetic test execution",
+        "Test isolation to prevent cross-test contamination"
+      ],
+      "variants": [
+        {
+          "name": "Temp directory isolation",
+          "characteristic": "Tests operate in an OS-provided temporary directory; cleaned up after each run",
+          "bestUsedWhen": "File I/O tests, config file generation, snapshot testing"
+        },
+        {
+          "name": "Virtual/mock filesystem",
+          "characteristic": "In-memory filesystem that intercepts fs calls without touching disk",
+          "bestUsedWhen": "Unit-level file tests, fast feedback loops, no disk cleanup needed"
+        },
+        {
+          "name": "Env var sandboxing",
+          "characteristic": "Save, override, and restore environment variables per test",
+          "bestUsedWhen": "Testing configuration layers, feature flag behavior, multi-environment logic"
+        },
+        {
+          "name": "Process fork with clean state",
+          "characteristic": "Spawn a child process with controlled env, args, and working directory",
+          "bestUsedWhen": "CLI tool testing, testing process lifecycle, signal handling"
+        },
+        {
+          "name": "Docker container isolation",
+          "characteristic": "Full OS-level isolation with reproducible image and network namespace",
+          "bestUsedWhen": "Database integration tests, multi-service E2E, environment parity with production"
+        }
+      ],
+      "implementationTraps": [
+        "Temp directory cleanup failures leave test artifacts on disk; use try/finally or afterEach hooks",
+        "Mock filesystem divergence from real fs behavior (permissions, symlinks, encoding) causes false positives",
+        "Env var restoration order matters when tests run in parallel — use per-test snapshots, not global save/restore",
+        "Docker startup latency can dominate test runtime; use persistent containers with state reset between tests"
+      ],
+      "disqualifiers": [
+        "Unit tests with mocks and stubs provide sufficient isolation",
+        "No file, process, or environment side effects in the code under test",
+        "Test runtime budget does not allow container or process startup overhead"
+      ]
+    },
+    {
+      "id": "configuration-layer",
+      "name": "Configuration Layer",
+      "coreContract": "Externalize runtime settings from code into a layered, validated, environment-aware configuration system. Later layers override earlier ones; schemas catch invalid values before they reach application logic.",
+      "whenToPrefer": [
+        "Multi-environment deployment (dev, staging, production) with different settings",
+        "Gradual feature rollout via feature flags",
+        "Validated settings that must conform to a known schema"
+      ],
+      "variants": [
+        {
+          "name": "Environment variable cascade (dotenv)",
+          "characteristic": "Layered .env files with precedence: .env.local > .env.{NODE_ENV} > .env",
+          "bestUsedWhen": "12-factor apps, container deployments, platform-provided config"
+        },
+        {
+          "name": "Feature flag service (LaunchDarkly, Unleash)",
+          "characteristic": "Remote flag evaluation with targeting rules, percentage rollouts, kill switches",
+          "bestUsedWhen": "Gradual rollouts, A/B testing, instant kill switch without deploy"
+        },
+        {
+          "name": "Schema-validated JSON/YAML config",
+          "characteristic": "Config files validated against JSON Schema or Zod/Yup at load time",
+          "bestUsedWhen": "Complex configuration with nested objects, type safety, documentation-as-schema"
+        },
+        {
+          "name": "Runtime config reload",
+          "characteristic": "Watch config source for changes; hot-reload without process restart",
+          "bestUsedWhen": "Long-running services, tuning parameters in production, feature flag sync"
+        },
+        {
+          "name": "Config inheritance (base + override)",
+          "characteristic": "Base config merged with environment-specific overrides using deep merge",
+          "bestUsedWhen": "Monorepo shared config, white-label apps, tenant-specific settings"
+        }
+      ],
+      "implementationTraps": [
+        "Env var type coercion: everything is a string — '0' is truthy in JS; parse explicitly",
+        "Secret leakage: config dumps or error messages may expose sensitive values; redact before logging",
+        "Override precedence confusion: document the merge order clearly; conflicting sources cause silent bugs",
+        "Schema drift: config schema and code expectations diverge over time; validate at startup, not just at build"
+      ],
+      "disqualifiers": [
+        "Single-environment application with no deployment variation",
+        "Hardcoded values are acceptable and unlikely to change",
+        "Configuration complexity exceeds the application complexity it serves"
+      ]
+    },
+    {
+      "id": "api-gateway",
+      "name": "API Gateway / Edge Layer",
+      "coreContract": "A single entry point that routes, transforms, authenticates, and rate-limits requests before they reach backend services. Clients see one API surface; the gateway handles cross-cutting concerns.",
+      "whenToPrefer": [
+        "Multiple backend services behind a unified API surface",
+        "Auth consolidation: one place for token validation, API keys, OAuth",
+        "Rate limiting, request transformation, or response aggregation at the edge"
+      ],
+      "variants": [
+        {
+          "name": "Reverse proxy (nginx, Envoy)",
+          "characteristic": "Path-based routing, TLS termination, load balancing; no application logic",
+          "bestUsedWhen": "Static routing, TLS offload, simple load balancing"
+        },
+        {
+          "name": "Backend-for-frontend (BFF)",
+          "characteristic": "Dedicated backend per client type (web, mobile, IoT) aggregating backend calls",
+          "bestUsedWhen": "Different clients need different data shapes, reduce over-fetching"
+        },
+        {
+          "name": "Edge function (Cloudflare Workers, Lambda@Edge)",
+          "characteristic": "Code runs at CDN edge; sub-millisecond cold start, geographic distribution",
+          "bestUsedWhen": "A/B testing at edge, geo-routing, auth token validation, header manipulation"
+        },
+        {
+          "name": "API gateway (Kong, AWS API Gateway)",
+          "characteristic": "Full-featured gateway with plugins for auth, rate limiting, transformation, observability",
+          "bestUsedWhen": "Enterprise API management, developer portal, quota enforcement, request/response transformation"
+        }
+      ],
+      "implementationTraps": [
+        "Single point of failure: gateway outage takes down all services; deploy with redundancy and health checks",
+        "Latency overhead: every request pays gateway processing cost; minimize middleware chain",
+        "Configuration sprawl: gateway routing rules become a second source of truth alongside service code",
+        "Over-aggregation in BFF: putting business logic in the gateway instead of backend services"
+      ],
+      "disqualifiers": [
+        "Single backend service with direct client access",
+        "Internal service-to-service communication that doesn't need edge concerns",
+        "Latency-sensitive paths where gateway overhead is unacceptable"
+      ]
+    },
+    {
+      "id": "contract-definition",
+      "name": "Contract Definition / API-First Design",
+      "coreContract": "Define the interface between systems as a machine-readable specification before implementation. The contract drives code generation, documentation, validation, and client SDKs.",
+      "whenToPrefer": [
+        "API-first design where contract is agreed before implementation",
+        "Client code generation from a specification",
+        "Documentation-as-code with guaranteed accuracy",
+        "Multi-team contracts where producer and consumer develop in parallel"
+      ],
+      "variants": [
+        {
+          "name": "OpenAPI/Swagger spec",
+          "characteristic": "YAML/JSON spec for REST APIs; drives codegen, docs, and validation middleware",
+          "bestUsedWhen": "REST APIs, broad tooling ecosystem, documentation portals"
+        },
+        {
+          "name": "GraphQL SDL + codegen",
+          "characteristic": "Schema Definition Language with type-safe client/server codegen",
+          "bestUsedWhen": "Flexible queries, strong typing, frontend-driven data requirements"
+        },
+        {
+          "name": "Protocol Buffers",
+          "characteristic": "Binary serialization format with strict schema evolution rules and gRPC integration",
+          "bestUsedWhen": "High-performance RPC, polyglot services, strict backward compatibility"
+        },
+        {
+          "name": "JSON Schema",
+          "characteristic": "Schema for JSON data structures; used for config validation, API payload validation",
+          "bestUsedWhen": "Validating request/response payloads, config files, event payloads"
+        },
+        {
+          "name": "AsyncAPI",
+          "characteristic": "OpenAPI-style spec for event-driven and message-based APIs",
+          "bestUsedWhen": "Message broker contracts, event-driven architecture documentation, async API portals"
+        }
+      ],
+      "implementationTraps": [
+        "Spec drift: implementation diverges from the contract; use CI validation (e.g., spectral lint, contract tests)",
+        "Over-specification: defining every possible field upfront; iterate with required fields first",
+        "Codegen lock-in: generated code becomes hard to customize; use extension points or partial generation",
+        "Version field omission: forgetting to version the contract makes breaking changes undetectable"
+      ],
+      "disqualifiers": [
+        "Internal-only API with a single consumer where direct function calls suffice",
+        "Rapid prototyping where the API shape changes every day",
+        "Overhead of maintaining the spec exceeds the coordination benefit"
+      ]
+    },
+    {
+      "id": "index-strategy",
+      "name": "Index Strategy (Database)",
+      "coreContract": "Create auxiliary data structures in the database that trade write-time overhead and storage for dramatically faster read queries. The right index turns a full table scan into an index lookup.",
+      "whenToPrefer": [
+        "Query optimization for frequently executed read patterns",
+        "Specific access patterns (range scans, equality checks, full-text search, spatial queries)",
+        "Read-heavy workloads where index maintenance cost is acceptable"
+      ],
+      "variants": [
+        {
+          "name": "B-tree (default, range queries)",
+          "characteristic": "Balanced tree supporting equality and range predicates; default index type in most RDBMS",
+          "bestUsedWhen": "General-purpose indexing, ORDER BY, BETWEEN, >, <, = queries"
+        },
+        {
+          "name": "Hash index (equality only)",
+          "characteristic": "O(1) average lookup for exact match; no range support",
+          "bestUsedWhen": "Exact-match lookups on high-cardinality columns, in-memory tables"
+        },
+        {
+          "name": "GIN (full-text, array containment)",
+          "characteristic": "Generalized Inverted Index; indexes composite values (arrays, JSONB, tsvector)",
+          "bestUsedWhen": "Full-text search, JSONB containment queries, array overlap/contains"
+        },
+        {
+          "name": "GiST (geometric, spatial)",
+          "characteristic": "Generalized Search Tree; supports spatial, range, and nearest-neighbor queries",
+          "bestUsedWhen": "PostGIS geometry, range types, nearest-neighbor search"
+        },
+        {
+          "name": "Partial index (filtered subset)",
+          "characteristic": "Index only rows matching a WHERE predicate; smaller and faster than full index",
+          "bestUsedWhen": "Indexing active records (WHERE deleted_at IS NULL), rare status values"
+        },
+        {
+          "name": "Covering index (index-only scan)",
+          "characteristic": "Index includes all columns needed by the query; avoids table heap lookup",
+          "bestUsedWhen": "High-frequency queries where eliminating heap access matters"
+        }
+      ],
+      "implementationTraps": [
+        "Over-indexing: each index slows writes and consumes storage; benchmark before adding",
+        "Index not used: query planner may ignore an index due to low selectivity, type mismatch, or function wrapping the column",
+        "Composite index column order matters: (a, b) supports WHERE a = ? AND b = ? but not WHERE b = ? alone",
+        "Partial index predicate mismatch: the query WHERE clause must match the index predicate exactly for the planner to use it"
+      ],
+      "disqualifiers": [
+        "Write-heavy tables where index maintenance cost dominates read benefit",
+        "Tiny tables (< 1000 rows) where sequential scan is faster than index overhead",
+        "Columns with very low cardinality (boolean flags) unless used as partial index predicate"
+      ]
+    },
+    {
+      "id": "migration-pipeline",
+      "name": "Migration Pipeline / Schema Evolution",
+      "coreContract": "Apply versioned, ordered, and reversible changes to a database schema or data model. Each migration is a discrete step with an up (apply) and optionally a down (rollback) operation.",
+      "whenToPrefer": [
+        "Schema evolution in production databases",
+        "Zero-downtime deployments requiring backward-compatible schema changes",
+        "Data transformation or backfill as part of a release"
+      ],
+      "variants": [
+        {
+          "name": "Sequential versioned migrations (Flyway/Knex)",
+          "characteristic": "Numbered or timestamped scripts executed in order; tracks applied versions in a metadata table",
+          "bestUsedWhen": "Standard schema evolution, most web applications, team-based development"
+        },
+        {
+          "name": "Idempotent migration scripts",
+          "characteristic": "Scripts use IF NOT EXISTS / IF EXISTS guards; safe to re-run",
+          "bestUsedWhen": "Environments where migration state tracking is unreliable, disaster recovery"
+        },
+        {
+          "name": "Expand-contract pattern",
+          "characteristic": "Add new column/table (expand), migrate data, remove old (contract) across multiple deploys",
+          "bestUsedWhen": "Zero-downtime deployments, renaming columns, changing types"
+        },
+        {
+          "name": "Blue-green schema migration",
+          "characteristic": "Maintain two schema versions simultaneously; switch traffic after validation",
+          "bestUsedWhen": "High-risk schema changes, large data migrations, rollback-critical deployments"
+        },
+        {
+          "name": "Shadow table approach",
+          "characteristic": "Create new table with desired schema, dual-write, backfill, then swap",
+          "bestUsedWhen": "Large table restructuring, adding indexes on huge tables without locking"
+        }
+      ],
+      "implementationTraps": [
+        "Irreversible migrations: some operations (DROP COLUMN, data truncation) cannot be rolled back; plan data preservation",
+        "Migration ordering conflicts in team development: use timestamps instead of sequential numbers",
+        "Long-running migrations lock tables: use online DDL (pt-online-schema-change, gh-ost) for large tables",
+        "Data migration mixed with schema migration: separate structure changes from data backfills for easier debugging"
+      ],
+      "disqualifiers": [
+        "Schema never changes after initial creation",
+        "Development-only database that can be recreated from scratch",
+        "NoSQL databases where schema is implicit (though data migrations may still apply)"
+      ]
+    },
+    {
+      "id": "distributed-lock",
+      "name": "Distributed Lock / Coordination Primitive",
+      "coreContract": "Ensure mutual exclusion across multiple processes or nodes. Only one holder can acquire the lock at a time; others block or fail fast. Locks must have TTL to prevent deadlocks from crashed holders.",
+      "whenToPrefer": [
+        "Distributed coordination where only one process should perform an action",
+        "Resource exclusivity: preventing double-processing of a job or message",
+        "Leader election in a cluster"
+      ],
+      "variants": [
+        {
+          "name": "Redis SETNX lock (Redlock)",
+          "characteristic": "Atomic set-if-not-exists with TTL; Redlock extends to multiple Redis instances for fault tolerance",
+          "bestUsedWhen": "Low-latency locking, Redis already in stack, short-lived locks"
+        },
+        {
+          "name": "ZooKeeper ephemeral node",
+          "characteristic": "Lock represented as ephemeral znode; automatically released if holder's session expires",
+          "bestUsedWhen": "Strong consistency requirements, leader election, configuration management"
+        },
+        {
+          "name": "Database advisory lock",
+          "characteristic": "Database-native lock (pg_advisory_lock, GET_LOCK) using existing database connection",
+          "bestUsedWhen": "No additional infrastructure needed, database already in stack, transaction-scoped locking"
+        },
+        {
+          "name": "etcd lease-based lock",
+          "characteristic": "Lock tied to a lease with TTL; revocation via lease expiry or explicit release",
+          "bestUsedWhen": "Kubernetes-native environments, strong consistency, watch-based coordination"
+        },
+        {
+          "name": "Optimistic locking (version column)",
+          "characteristic": "No explicit lock; read version, write with WHERE version = N, retry on conflict",
+          "bestUsedWhen": "Low contention scenarios, database-only coordination, no external lock service"
+        }
+      ],
+      "implementationTraps": [
+        "Clock skew in Redlock: nodes with drifting clocks can grant overlapping locks; use fencing tokens",
+        "Lock holder dies without releasing: always use TTL; design for lock expiry during normal operation",
+        "Retry storms: many clients retrying a contested lock simultaneously; use exponential backoff with jitter",
+        "Fencing token omission: downstream resources must validate the fencing token to prevent stale lock holders from acting"
+      ],
+      "disqualifiers": [
+        "Single-process application where in-memory mutex or semaphore suffices",
+        "Optimistic concurrency control (version column) is sufficient for the contention level",
+        "The coordination problem can be solved by partitioning work instead of locking"
+      ]
+    },
+    {
+      "id": "message-queue",
+      "name": "Message Queue / Delivery Semantics",
+      "coreContract": "Asynchronously deliver messages from producers to consumers with defined delivery guarantees. The queue decouples production rate from consumption rate and provides buffering, retry, and ordering semantics.",
+      "whenToPrefer": [
+        "Async processing where producer should not wait for consumer to finish",
+        "Workload distribution across multiple consumer instances",
+        "Retry semantics matter: at-least-once or exactly-once delivery required"
+      ],
+      "variants": [
+        {
+          "name": "Fire-and-forget (at-most-once)",
+          "characteristic": "Message sent without acknowledgment; may be lost but never duplicated",
+          "bestUsedWhen": "Metrics, telemetry, non-critical notifications where loss is acceptable"
+        },
+        {
+          "name": "Acknowledged delivery (at-least-once)",
+          "characteristic": "Consumer acknowledges processing; unacknowledged messages are redelivered",
+          "bestUsedWhen": "Default for most workloads; idempotent consumers handle duplicates"
+        },
+        {
+          "name": "Transactional outbox (exactly-once)",
+          "characteristic": "Write message to outbox table in same DB transaction as state change; relay to queue separately",
+          "bestUsedWhen": "Financial transactions, order processing, any state change that must not be lost or duplicated"
+        },
+        {
+          "name": "Dead letter queue",
+          "characteristic": "Messages that fail processing after N retries are routed to a separate queue for inspection",
+          "bestUsedWhen": "Poison message handling, debugging failed processing, compliance audit trail"
+        },
+        {
+          "name": "Priority queue",
+          "characteristic": "Messages assigned priority levels; higher-priority messages processed first",
+          "bestUsedWhen": "SLA-differentiated processing, urgent vs batch workloads, tiered service"
+        }
+      ],
+      "implementationTraps": [
+        "At-least-once without idempotency: duplicate processing causes double charges, double emails, duplicate records",
+        "Message ordering assumptions: most queues do not guarantee order across partitions; use partition keys for ordered delivery",
+        "Consumer lag monitoring: unmonitored queue depth leads to unbounded growth and eventual OOM or disk exhaustion",
+        "Retry without backoff: immediate retry of a failing message creates a tight loop consuming resources"
+      ],
+      "disqualifiers": [
+        "Synchronous RPC is sufficient and simpler for the use case",
+        "Message ordering is critical but the queue cannot guarantee it",
+        "The system has a single producer and single consumer with no buffering needs"
+      ]
+    },
+    {
+      "id": "state-store",
+      "name": "State Store / Client State Management",
+      "coreContract": "Centralize or distribute application state in a predictable, observable container. State changes flow through defined pathways, enabling debugging, persistence, and reactive UI updates.",
+      "whenToPrefer": [
+        "Shared UI state accessed by multiple components or routes",
+        "Server data synchronization with caching, invalidation, and optimistic updates",
+        "Reactive updates where state changes automatically propagate to dependent views"
+      ],
+      "variants": [
+        {
+          "name": "Global store (Redux, Zustand)",
+          "characteristic": "Single store with actions/reducers; predictable state transitions, devtools, middleware",
+          "bestUsedWhen": "Complex shared state, time-travel debugging, middleware for side effects"
+        },
+        {
+          "name": "Atomic state (Jotai, Recoil)",
+          "characteristic": "State split into independent atoms; components subscribe to only what they read",
+          "bestUsedWhen": "Fine-grained reactivity, avoiding unnecessary re-renders, bottom-up state design"
+        },
+        {
+          "name": "Signals/observables (Solid, RxJS)",
+          "characteristic": "Reactive primitives with automatic dependency tracking; synchronous fine-grained updates",
+          "bestUsedWhen": "High-frequency updates, derived state computation, real-time data streams"
+        },
+        {
+          "name": "Server state cache (TanStack Query, SWR)",
+          "characteristic": "Cached server responses with automatic refetch, stale-while-revalidate, and optimistic updates",
+          "bestUsedWhen": "API data fetching, server state synchronization, pagination, infinite scroll"
+        },
+        {
+          "name": "URL state (search params)",
+          "characteristic": "State encoded in URL query parameters; shareable, bookmarkable, history-integrated",
+          "bestUsedWhen": "Filter/sort state, pagination, shareable views, deep linking"
+        }
+      ],
+      "implementationTraps": [
+        "Global store over-use: putting everything in global state when local component state suffices; causes unnecessary re-renders",
+        "Stale closure bugs: event handlers capturing outdated state references in React; use refs or functional updates",
+        "Server state vs client state confusion: mixing fetched data with UI state in the same store; use separate layers",
+        "Selector instability: selectors returning new object references on every call trigger unnecessary re-renders; memoize selectors"
+      ],
+      "disqualifiers": [
+        "Local component state (useState/useReducer) is sufficient for the use case",
+        "Static pages or server-rendered content with no client-side interactivity",
+        "Simple forms where form state libraries (React Hook Form, Formik) are more appropriate"
+      ]
+    },
+    {
+      "id": "telemetry-pipeline",
+      "name": "Telemetry Pipeline / Observability Stack",
+      "coreContract": "Collect, process, store, and visualize signals (logs, metrics, traces) from running systems. The pipeline transforms raw telemetry into actionable insights for debugging, alerting, and capacity planning.",
+      "whenToPrefer": [
+        "Production systems requiring monitoring, alerting, and incident response",
+        "SLO tracking and reliability engineering",
+        "Distributed systems where request tracing across services is essential"
+      ],
+      "variants": [
+        {
+          "name": "OpenTelemetry collector",
+          "characteristic": "Vendor-neutral telemetry collection with receivers, processors, and exporters",
+          "bestUsedWhen": "Multi-vendor flexibility, standardized instrumentation, polyglot services"
+        },
+        {
+          "name": "Log aggregator (Fluentd, Logstash)",
+          "characteristic": "Collect, parse, transform, and route logs from multiple sources to storage backends",
+          "bestUsedWhen": "Centralized logging, log parsing and enrichment, compliance retention"
+        },
+        {
+          "name": "Time-series DB (Prometheus, InfluxDB)",
+          "characteristic": "Optimized for high-write, time-indexed numeric data with downsampling and retention policies",
+          "bestUsedWhen": "Metrics storage, alerting rules, Grafana dashboards, capacity planning"
+        },
+        {
+          "name": "Visualization (Grafana, Datadog)",
+          "characteristic": "Dashboards, alerting, and exploration across multiple telemetry backends",
+          "bestUsedWhen": "Operational dashboards, SLO visualization, incident investigation"
+        },
+        {
+          "name": "APM (New Relic, Dynatrace)",
+          "characteristic": "Full-stack application performance monitoring with auto-instrumentation and AI-assisted root cause analysis",
+          "bestUsedWhen": "End-to-end transaction tracing, performance bottleneck identification, business-impact correlation"
+        }
+      ],
+      "implementationTraps": [
+        "Cardinality explosion: high-cardinality labels (user ID, request ID) on metrics cause storage and query cost to explode",
+        "Alert fatigue: too many noisy alerts lead to ignored pages; use SLO-based alerting with burn-rate windows",
+        "Missing context in logs: structured logging (JSON) with correlation IDs is essential; free-text logs are unsearchable at scale",
+        "Sampling blind spots: aggressive sampling may drop the traces you need most — keep 100% sampling for errors and slow requests"
+      ],
+      "disqualifiers": [
+        "Development-only or local-only applications",
+        "Printf debugging is sufficient for the project's complexity",
+        "Cost of telemetry infrastructure exceeds the value of the insights it provides"
+      ]
+    },
+    {
+      "id": "credential-store",
+      "name": "Credential Store / Secrets Management",
+      "coreContract": "Store, access, rotate, and audit sensitive values (API keys, passwords, certificates) separately from application code. Secrets are never committed to version control or logged in plaintext.",
+      "whenToPrefer": [
+        "Production secrets that must be rotated, audited, or access-controlled",
+        "Credential rotation requirements (compliance, security policy)",
+        "Multi-environment secret management with different values per environment"
+      ],
+      "variants": [
+        {
+          "name": "HashiCorp Vault",
+          "characteristic": "Full-featured secrets engine with dynamic secrets, leasing, rotation, and fine-grained ACL",
+          "bestUsedWhen": "Enterprise secret management, dynamic database credentials, PKI certificate issuance"
+        },
+        {
+          "name": "Cloud secret manager (AWS Secrets Manager, GCP Secret Manager)",
+          "characteristic": "Managed service integrated with cloud IAM; automatic rotation for supported services",
+          "bestUsedWhen": "Cloud-native applications, IAM-based access control, managed rotation"
+        },
+        {
+          "name": "Encrypted config file",
+          "characteristic": "Secrets encrypted at rest in version control (SOPS, git-crypt); decrypted at deploy time",
+          "bestUsedWhen": "GitOps workflows, small teams, secrets-in-repo with encryption"
+        },
+        {
+          "name": "Environment variables",
+          "characteristic": "Secrets injected via env vars at runtime; no encryption at rest in the process",
+          "bestUsedWhen": "12-factor apps, container orchestration, platform-injected secrets (Heroku, Render)"
+        },
+        {
+          "name": "Hardware security module (HSM)",
+          "characteristic": "Tamper-resistant hardware for key storage; keys never leave the device",
+          "bestUsedWhen": "Regulatory compliance (PCI-DSS, FIPS 140-2), root CA key storage, signing operations"
+        }
+      ],
+      "implementationTraps": [
+        "Secret sprawl: secrets duplicated across env vars, config files, and vault; single source of truth is essential",
+        "Logging secrets: structured logging or error handlers may serialize and log secret values; redact before logging",
+        "Rotation downtime: rotating a secret without updating all consumers simultaneously causes auth failures; use grace periods",
+        "Overly broad access: granting all services access to all secrets; use least-privilege policies per service"
+      ],
+      "disqualifiers": [
+        "Development-only project with no sensitive credentials",
+        "Public configuration values that are not secret",
+        "The overhead of secret management exceeds the risk (single-developer hobby project)"
+      ]
+    },
+    {
+      "id": "orchestration-layer",
+      "name": "Orchestration Layer / Container Management",
+      "coreContract": "Automate deployment, scaling, networking, and lifecycle management of containerized or serverless workloads. The orchestrator ensures desired state matches actual state across the cluster.",
+      "whenToPrefer": [
+        "Multi-container applications requiring coordinated deployment",
+        "Auto-scaling based on load, schedule, or custom metrics",
+        "Multi-service deployment with service discovery and load balancing"
+      ],
+      "variants": [
+        {
+          "name": "Kubernetes (k8s)",
+          "characteristic": "Full-featured container orchestration with declarative config, extensibility via CRDs, and massive ecosystem",
+          "bestUsedWhen": "Large-scale production deployments, multi-team platform, complex networking and storage needs"
+        },
+        {
+          "name": "AWS ECS/Fargate",
+          "characteristic": "AWS-native container orchestration; Fargate removes server management entirely",
+          "bestUsedWhen": "AWS-centric workloads, simpler operational model than k8s, serverless containers"
+        },
+        {
+          "name": "Serverless platform (Lambda, Cloud Functions)",
+          "characteristic": "Event-driven function execution; zero idle cost, automatic scaling, no server management",
+          "bestUsedWhen": "Event-driven workloads, API endpoints, scheduled tasks, low-traffic or bursty traffic"
+        },
+        {
+          "name": "Nomad",
+          "characteristic": "HashiCorp orchestrator supporting containers, VMs, and standalone binaries; simpler than k8s",
+          "bestUsedWhen": "Mixed workloads (containers + legacy), simpler operational model, HashiCorp ecosystem"
+        },
+        {
+          "name": "Docker Compose (dev/small-scale)",
+          "characteristic": "Multi-container definition in a single YAML file; local orchestration with docker-compose up",
+          "bestUsedWhen": "Local development, small-scale production, demo environments, CI test environments"
+        }
+      ],
+      "implementationTraps": [
+        "Kubernetes complexity tax: k8s operational overhead is significant; don't adopt it for a single service",
+        "Cold start latency: serverless functions have variable cold start times; pre-warming or provisioned concurrency may be needed",
+        "Resource limit misconfiguration: too-tight CPU/memory limits cause OOM kills and throttling; too-loose wastes money",
+        "Service discovery assumptions: hardcoded hostnames break when orchestrators reassign IPs; use DNS-based service discovery"
+      ],
+      "disqualifiers": [
+        "Single server deployment where a process manager (systemd, PM2) suffices",
+        "Static hosting (CDN/S3) for frontend-only applications",
+        "The team does not have the operational expertise to run the chosen orchestrator"
+      ]
+    }
+  ],
+  "crossStructureDecisionGuide": [
+    {
+      "bottleneckOperation": "Best available element changes dynamically",
+      "reachFor": "Heap"
+    },
+    {
+      "bottleneckOperation": "Range query + point update on array",
+      "reachFor": "Fenwick tree (simple) or Segment tree (flexible)"
+    },
+    {
+      "bottleneckOperation": "Range update + range query",
+      "reachFor": "Segment tree with lazy propagation"
+    },
+    {
+      "bottleneckOperation": "Exact membership / frequency of arbitrary keys",
+      "reachFor": "HashMap / HashSet"
+    },
+    {
+      "bottleneckOperation": "Dynamic connectivity (edges only added)",
+      "reachFor": "Union-Find"
+    },
+    {
+      "bottleneckOperation": "Next greater/smaller in linear time",
+      "reachFor": "Monotonic stack"
+    },
+    {
+      "bottleneckOperation": "Sliding window aggregate in linear time",
+      "reachFor": "Monotonic deque"
+    },
+    {
+      "bottleneckOperation": "Ordered iteration + fast insert/delete",
+      "reachFor": "BST (std ordered map/set)"
+    },
+    {
+      "bottleneckOperation": "Prefix matching on strings",
+      "reachFor": "Trie"
+    },
+    {
+      "bottleneckOperation": "Subset enumeration over small universe",
+      "reachFor": "Bitmask"
+    },
+    {
+      "bottleneckOperation": "Contiguous subarray satisfying monotone constraint",
+      "reachFor": "Sliding window / two pointer"
+    },
+    {
+      "bottleneckOperation": "Testability and swappable dependencies",
+      "reachFor": "Service container (constructor injection)"
+    },
+    {
+      "bottleneckOperation": "Decoupled inter-module or inter-process communication",
+      "reachFor": "Message channel (event emitter or IPC)"
+    },
+    {
+      "bottleneckOperation": "Test isolation from filesystem, env, or process side effects",
+      "reachFor": "Sandbox environment"
+    },
+    {
+      "bottleneckOperation": "Multi-environment settings with validation",
+      "reachFor": "Configuration layer"
+    },
+    {
+      "bottleneckOperation": "Unified API surface over multiple backends",
+      "reachFor": "API gateway"
+    },
+    {
+      "bottleneckOperation": "Machine-readable API contract for codegen and validation",
+      "reachFor": "Contract definition (OpenAPI, GraphQL SDL, protobuf)"
+    },
+    {
+      "bottleneckOperation": "Slow read queries on large tables",
+      "reachFor": "Index strategy (B-tree, GIN, partial, covering)"
+    },
+    {
+      "bottleneckOperation": "Schema evolution without downtime",
+      "reachFor": "Migration pipeline (expand-contract)"
+    },
+    {
+      "bottleneckOperation": "Mutual exclusion across distributed processes",
+      "reachFor": "Distributed lock (Redis, ZooKeeper, advisory lock)"
+    },
+    {
+      "bottleneckOperation": "Async workload distribution with retry semantics",
+      "reachFor": "Message queue"
+    },
+    {
+      "bottleneckOperation": "Shared reactive UI state across components",
+      "reachFor": "State store (Redux, Zustand, Jotai, signals)"
+    },
+    {
+      "bottleneckOperation": "Production monitoring, alerting, and tracing",
+      "reachFor": "Telemetry pipeline (OpenTelemetry, Prometheus, Grafana)"
+    },
+    {
+      "bottleneckOperation": "Secure storage and rotation of production secrets",
+      "reachFor": "Credential store (Vault, cloud secret manager)"
+    },
+    {
+      "bottleneckOperation": "Multi-container deployment with scaling and service discovery",
+      "reachFor": "Orchestration layer (Kubernetes, ECS, serverless)"
+    }
+  ]
+}

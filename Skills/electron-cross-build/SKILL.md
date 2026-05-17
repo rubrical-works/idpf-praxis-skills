@@ -1,9 +1,12 @@
 ---
 name: electron-cross-build
 type: injector
+disable-model-invocation: true
+user-invocable: false
+defaultSkill: true
 version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-03-17"
+lastUpdated: "2026-05-17"
 description: Cross-compile Electron apps from Linux to produce Windows executables
 license: Complete terms in LICENSE.txt
 category: platform

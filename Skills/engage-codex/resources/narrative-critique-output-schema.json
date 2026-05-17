@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "narrative-critique-output-schema.json",
+  "title": "Narrative critique pass output (engage-codex Step 4)",
+  "description": "Output of the mandatory narrative critique pass. Contains one entry per path; each entry MUST populate four required categories (pacing valleys, unset-up payoffs, character-motivation gaps, unsupported tonal shifts) with either an array of findings OR an explicit clean=true declaration. Silent omission of any category is a contract violation — the user must be able to distinguish 'the critique found nothing in this category' from 'the critique skipped this category'.",
+  "type": "object",
+  "required": ["pathEntries"],
+  "properties": {
+    "pathEntries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/pathEntry" }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "pathEntry": {
+      "type": "object",
+      "required": [
+        "pathNumber",
+        "paradigm",
+        "artefactType",
+        "pacingValleys",
+        "unsetUpPayoffs",
+        "characterMotivationGaps",
+        "tonalShifts"
+      ],
+      "properties": {
+        "pathNumber": { "type": "integer", "minimum": 1 },
+        "paradigm": { "type": "string", "minLength": 1 },
+        "artefactType": {
+          "enum": ["beat-sheet", "scene-outline", "character-arc-grid", "thematic-resonance-map", "try-fail-cycle"]
+        },
+        "pacingValleys": { "$ref": "#/definitions/categoryEntry" },
+        "unsetUpPayoffs": { "$ref": "#/definitions/categoryEntry" },
+        "characterMotivationGaps": { "$ref": "#/definitions/categoryEntry" },
+        "tonalShifts": { "$ref": "#/definitions/categoryEntry" }
+      },
+      "additionalProperties": false
+    },
+    "categoryEntry": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["findings"],
+          "properties": {
+            "findings": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/finding" }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["clean"],
+          "properties": {
+            "clean": { "const": true }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "required": ["artefactElement", "friction", "remediation"],
+      "properties": {
+        "artefactElement": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Specific reference to the artefact element (e.g., 'Beat 7: All Is Lost', 'Scene 4: Coffee shop confrontation', 'Character: Mei, trajectory at midpoint')."
+        },
+        "friction": { "type": "string", "minLength": 1 },
+        "remediation": { "type": "string", "minLength": 1 },
+        "severity": {
+          "enum": ["minor", "major", "critical"],
+          "description": "Optional severity tag."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

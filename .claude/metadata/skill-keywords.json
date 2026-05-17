@@ -1,11 +1,13 @@
 {
-  "generatedAt": "2026-04-25T22:42:01.577Z",
+  "generatedAt": "2026-05-17T18:24:09.281Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
     "anti-pattern-analysis",
     "codebase-analysis",
     "command-spec-audit",
+    "electron-cross-build",
+    "electron-development",
     "error-handling-patterns",
     "tdd-failure-recovery",
     "tdd-green-phase",
@@ -98,12 +100,42 @@
       "electron",
       "development"
     ],
+    "engage-apothecary": [
+      "engage-apothecary",
+      "engage",
+      "apothecary"
+    ],
+    "engage-chorus": [
+      "engage-chorus",
+      "engage",
+      "chorus"
+    ],
+    "engage-codex": [
+      "engage-codex",
+      "engage",
+      "codex"
+    ],
+    "engage-crucible": [
+      "engage-crucible",
+      "engage",
+      "crucible"
+    ],
     "engage-exocortex": [
       "engage-exocortex",
       "engage",
       "exocortex",
       "parallel",
       "explorer"
+    ],
+    "engage-forge": [
+      "engage-forge",
+      "engage",
+      "forge"
+    ],
+    "engage-lexicon": [
+      "engage-lexicon",
+      "engage",
+      "lexicon"
     ],
     "engage-prism": [
       "engage-prism",
@@ -209,6 +241,11 @@
       "sinatra",
       "setup"
     ],
+    "spar-exocortex": [
+      "spar-exocortex",
+      "spar",
+      "exocortex"
+    ],
     "sqlite-integration": [
       "sqlite-integration",
       "sqlite",
@@ -285,7 +322,13 @@
     "drawio-generation": "documentation",
     "electron-cross-build": "platform",
     "electron-development": "platform",
+    "engage-apothecary": "clinical-education",
+    "engage-chorus": "analysis",
+    "engage-codex": "narrative",
+    "engage-crucible": "analysis",
     "engage-exocortex": "analysis",
+    "engage-forge": "design",
+    "engage-lexicon": "analysis",
     "engage-prism": "analysis",
     "error-handling-patterns": "code-quality",
     "flask-setup": "platform",
@@ -306,6 +349,7 @@
     "responsibility-gate": "devops",
     "seo-optimization": "platform",
     "sinatra-setup": "platform",
+    "spar-exocortex": "analysis",
     "sqlite-integration": "database",
     "tdd-failure-recovery": "testing",
     "tdd-green-phase": "testing",

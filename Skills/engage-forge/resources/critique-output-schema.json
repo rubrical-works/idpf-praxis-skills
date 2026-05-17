@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "critique-output-schema.json",
+  "title": "Critique pass output (engage-forge Step 5)",
+  "description": "Output of the mandatory critique pass. A named persona walks the recommended artefact and produces EXACTLY three friction points, each referencing a specific artefact element. The 'exactly 3' count is a deliberate design constraint — fewer understates the stress test; more dilutes prioritization.",
+  "type": "object",
+  "required": ["persona", "subjectArtefact", "frictionPoints"],
+  "properties": {
+    "persona": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "shortDescriptor": { "type": "string" },
+        "selectionSource": {
+          "enum": ["user-supplied-flag", "user-supplied-json", "selected-from-problem"],
+          "description": "How the persona was obtained — surfaced in the proposal so users can re-run with an explicit persona if the selected-from-problem choice was wrong."
+        }
+      },
+      "additionalProperties": true
+    },
+    "subjectArtefact": {
+      "type": "object",
+      "required": ["pathNumber", "artefactType"],
+      "properties": {
+        "pathNumber": { "type": "integer", "minimum": 1 },
+        "artefactType": {
+          "enum": ["flow", "ia-tree", "heuristic-matrix", "journey-map", "try-fail-cycle", "kano-grid"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "frictionPoints": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "description": "Exactly three friction points. minItems=3 + maxItems=3 enforces the 'exactly 3' contract.",
+      "items": {
+        "type": "object",
+        "required": ["artefactElement", "friction", "remediation"],
+        "properties": {
+          "artefactElement": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Specific reference to the artefact element (e.g., 'Step 4 of the flow', 'Stage Evaluate', 'Feature: Order tracking'). Must be a non-empty string — friction points without a specific element reference are rejected."
+          },
+          "friction": { "type": "string", "minLength": 1 },
+          "remediation": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,5 +1,5 @@
 # Tech Stack Detection Guide
-**Version:** v0.14.1
+**Version:** v0.15.0
 **Purpose:** Patterns for detecting technology stacks from codebase analysis
 ## Language Detection
 ### By File Extension

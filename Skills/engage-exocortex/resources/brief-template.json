@@ -41,6 +41,20 @@
       "description": "Optional hint if worried a subagent will drift toward another path's territory (e.g., 'Do not use a heap in this path')."
     },
     {
+      "field": "targetComplexity",
+      "label": "Target complexity class",
+      "type": "string",
+      "required": true,
+      "description": "Primary complexity class this path commits to (e.g., 'O(n log n) divide-and-conquer', 'O(n) streaming', 'O(n^2) baseline', 'O(log n) lookup'). For architecture problems with no meaningful asymptotic, use a descriptive label like 'request-bounded' or 'cache-amortized'. Drives complexity-class diversity in anti-overlap."
+    },
+    {
+      "field": "invariantChoice",
+      "label": "Invariant choice",
+      "type": "string",
+      "required": true,
+      "description": "What this path keeps invariant / precomputes vs. what it computes online. Examples: 'sorted-input invariant; queries online', 'precomputed prefix sums; range queries O(1)', 'online median via two heaps; no precomputation'. Paired with targetComplexity for the AC4 complexity-class diversity check — two paths sharing BOTH are rejected as overlapping."
+    },
+    {
       "field": "maxSteps",
       "label": "Maximum steps",
       "type": "integer",
@@ -89,6 +103,11 @@
         "order": 6,
         "label": "Honest strengths and weaknesses",
         "instruction": "Where does this shine, where does it struggle?"
+      },
+      {
+        "order": 7,
+        "label": "Implementation",
+        "instruction": "When the execution phase is engaged (--no-execution not set, default-on for algorithmic problems), produce a minimal runnable implementation of the approach: a testable function or pseudo-code-with-harness-stubs in a language listed by the problem (e.g., 'javascript', 'python'). Populate report.implementation.language and report.implementation.code per report-template.json. When --no-execution is set or the problem is architectural (Step 0 ran), this section may be omitted."
       }
     ],
     "outputConstraint": "Return ONLY the structured report. Do not add preamble or conclusion outside it."

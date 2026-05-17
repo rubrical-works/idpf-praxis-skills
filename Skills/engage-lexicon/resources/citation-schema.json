@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "citation-schema.json",
+  "title": "Citation (engage-lexicon)",
+  "description": "Required shape of every citation entry produced by an engage-lexicon subagent report. Forked from /debate-prism's citation-schema.json (#214) and extended with legal-domain fields: jurisdiction, courtLevel, year, pinCite, authorityType (the source-class enum specialized for legal authority), authorityWeight (the controlling-vs-persuasive distinction). Every non-derived claim in a report must point at one of these.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "url", "fetchedAt", "excerpt", "jurisdiction", "authorityType", "authorityWeight"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable title of the authority (case caption, statute short title, regulation name, agency guidance name, treatise title)."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "Absolute URL of the canonical or authoritative source. Must be http(s). Prefer official sources (court reporters, agency websites, Cornell LII, GovInfo) over aggregators."
+    },
+    "fetchedAt": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:?[0-9]{2})$",
+      "description": "ISO-8601 timestamp when the source was retrieved via WebFetch/WebSearch. Must include timezone."
+    },
+    "excerpt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "Short quoted or paraphrased extract from the source that supports the claim. Paraphrases must stay true to the source; do not fabricate text. For case citations, prefer the holding language; for statutes, prefer the operative text."
+    },
+    "jurisdiction": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The jurisdiction this authority controls in. Examples: 'US-Federal', 'US-CA', 'US-CA-9th', 'US-NY-SDNY', 'US-DE-Chancery', 'EU', 'EU-Germany', 'UK', 'CA-Ontario'. Matches the format declared via --jurisdiction. For authorities cited as persuasive across forum lines, this field is the authority's OWN controlling jurisdiction (not the forum the claim is in)."
+    },
+    "courtLevel": {
+      "type": "string",
+      "enum": [
+        "supreme-court",
+        "appellate",
+        "trial",
+        "specialty-court",
+        "administrative-tribunal",
+        "supranational",
+        "not-applicable"
+      ],
+      "description": "Court level for case citations. Use 'not-applicable' for statutes, regulations, agency guidance, secondary sources. 'specialty-court' covers tax court, bankruptcy court, ITC, etc. 'supranational' covers ECJ, ICJ, WTO panels."
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 1700,
+      "maximum": 2100,
+      "description": "The year the authority was issued, enacted, or most recently amended in the form the advocate is relying on. For cases, the decision year; for statutes/regulations, the version year (the recency gate compares this to the most-recent-amendment date)."
+    },
+    "pinCite": {
+      "type": "string",
+      "description": "Optional. Pin cite within the authority. For cases: page/paragraph number within the opinion (e.g., '485 U.S. 224, 232'). For statutes: subsection (e.g., '15 U.S.C. § 78j(b)'). For regulations: paragraph (e.g., '17 C.F.R. § 240.10b-5(b)'). Pin cites strengthen citations; absence is acceptable when the entire authority is being cited."
+    },
+    "authorityType": {
+      "type": "string",
+      "enum": [
+        "statute",
+        "regulation",
+        "controlling-case",
+        "persuasive-case",
+        "agency-guidance",
+        "treaty",
+        "constitutional-provision",
+        "restatement",
+        "treatise",
+        "law-review",
+        "bar-publication",
+        "amicus-brief",
+        "news",
+        "other"
+      ],
+      "description": "Source-class enum specialized for legal authority. The hierarchy from highest authority to lowest (within a declared jurisdiction): constitutional-provision > statute > regulation > controlling-case > agency-guidance > persuasive-case > treaty (varies) > restatement > treatise > law-review > bar-publication > amicus-brief > news > other. 'controlling-case' = binding precedent in the cited jurisdiction; 'persuasive-case' = out-of-jurisdiction or dicta. Authority-hierarchy diversity gate (#202 AC5) uses this enum together with authorityWeight."
+    },
+    "authorityWeight": {
+      "type": "string",
+      "enum": ["controlling", "persuasive"],
+      "description": "The controlling-vs-persuasive distinction (#202 AC6, AC5). 'controlling' = binding on the forum (statute applicable in jurisdiction, regulation applicable in jurisdiction, case from a court whose decisions bind the forum, treaty in force in jurisdiction with self-executing provisions). 'persuasive' = informative but not binding (out-of-jurisdiction cases, secondary sources, dicta, withdrawn guidance, non-self-executing treaty provisions, foreign case law cited for analogy). This distinction is what separates 'the Ninth Circuit decided X' from 'the Supreme Court decided X' in citation weight; the judge MUST annotate every cited authority with this field."
+    },
+    "author": {
+      "type": "string",
+      "description": "Optional. Author of the opinion (judge), drafter (statute), agency (regulation/guidance), or commentator (secondary source)."
+    },
+    "publishedAt": {
+      "type": "string",
+      "description": "Optional. ISO-8601 publication date (case decision date, statute enactment date, regulation final-rule date, agency guidance issuance date, article publication date). Used by the recency gate."
+    },
+    "mostRecentAmendmentDate": {
+      "type": "string",
+      "description": "Optional but recommended for authorityType in {statute, regulation, agency-guidance}. ISO-8601 date of the most recent amendment, repeal, or supersession that affects this authority. Used by the statutory recency gate (Step 6) — when this date is significantly after `year`, the citation is flagged statutoryRecencyStale and the judge must assess materiality."
+    },
+    "supersededBy": {
+      "type": "string",
+      "description": "Optional. If this authority has been superseded (case overruled, statute repealed and re-enacted, regulation withdrawn and re-issued), the canonical citation of the superseding authority. Use sparingly — only when the advocate is intentionally citing the superseded form for historical analysis."
+    },
+    "urlUnreachable": {
+      "type": "boolean",
+      "description": "Optional. Set true when the URL was valid at citation time but is no longer reachable. Do not invent an alternative."
+    }
+  }
+}

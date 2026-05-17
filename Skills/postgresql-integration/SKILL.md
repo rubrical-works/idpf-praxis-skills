@@ -11,148 +11,148 @@ relevantTechStack: [postgresql, sql, node, python, pg]
 copyright: "Rubrical Works (c) 2026"
 ---
 # PostgreSQL Integration
-Guide for PostgreSQL integration: connection setup, query patterns, transactions, and pooling.
+Guides developers through PostgreSQL database integration: connection setup, query patterns, transaction handling, connection pooling.
 ## Step 0 — Re-read Config (MANDATORY)
-Read `resources/postgresql-integration.config.json` and validate against `resources/postgresql-integration.config.schema.json` at the start of every invocation. Config is source of truth for default host/port, env-var name (`DATABASE_URL`), connection-string format, SSL mode list, per-language clients (Node `pg`, Python `psycopg2-binary`) with install commands, ORM options, pgbouncer convention. SKILL.md must not duplicate config values.
-## When to Use
-- Setting up PostgreSQL in a new project
-- Implementing DB queries/operations
+Read `resources/postgresql-integration.config.json` from disk and validate against `resources/postgresql-integration.config.schema.json` at start of every invocation. Config is source of truth for default host/port, env-var name (`DATABASE_URL`), connection-string format, SSL mode list, per-language client libraries (Node `pg`, Python `psycopg2-binary`) with install commands, ORM options, pgbouncer convention. SKILL.md must not duplicate values.
+## When to Use This Skill
+Invoke when:
+- Setting up PostgreSQL connection in a new project
+- Implementing database queries and operations
 - Configuring connection pooling (pgbouncer)
 - Handling transactions
-- Troubleshooting PostgreSQL issues
+- Troubleshooting common PostgreSQL issues
 - Using PostgreSQL with ORMs (Sequelize, Prisma)
 ## Prerequisites
-- PostgreSQL server running
-- Credentials available
-- Client library for your language
+- PostgreSQL server installed and running
+- Database credentials available
+- Appropriate client library for your language
 ## Responsibility Acknowledgement Gate
-Implements `responsibility-gate` skill (`Skills/responsibility-gate/SKILL.md`).
-- **Fires before:** installing clients (`pg`, `psycopg2`) and adding connection/pooling/query code.
-- **Asks:** acceptance of changes to manifest/lockfile, source files, env (e.g., `DATABASE_URL`).
-- **Decline:** exit cleanly; "Declined — no changes made."
-- **Persistence:** per-invocation, never persisted.
-Use `AskUserQuestion` with `"I accept responsibility — proceed"` and `"Decline — exit without changes"`.
+Implements pattern in **`responsibility-gate`** skill. See `Skills/responsibility-gate/SKILL.md`.
+- **When this fires:** before installing PostgreSQL client libraries (e.g., `pg`, `psycopg2`) and modifying the project to add database connection configuration, pooling, and query code.
+- **What is asked:** acceptance of responsibility for change to package manifest/lockfile, source files (connection/query code), and environment configuration (`DATABASE_URL`).
+- **On decline:** exit cleanly; report "Declined — no changes made."; no system changes.
+- **Persistence:** per-invocation; never persisted.
+Use `AskUserQuestion` with two required options (`"I accept responsibility — proceed"` and `"Decline — exit without changes"`).
 ## Connection Setup
-### Connection String
-```
-postgresql://[user[:password]@][host][:port][/dbname][?param1=value1&...]
-```
-Defaults: host=localhost, port=5432.
-### Security
-**NEVER hardcode credentials.** Use: env vars, config files (not committed), secret services.
-```
-DATABASE_URL=postgresql://user:password@localhost:5432/mydb
-```
-### SSL/TLS
-```
-?sslmode=require
-?sslmode=verify-ca
-?sslmode=verify-full
-```
-**Modes:** `disable`, `allow`, `prefer` (default), `require`, `verify-ca`, `verify-full`.
+### Connection String Format
+`postgresql://[user[:password]@][host][:port][/dbname][?param1=value1&...]`
+**Components:** `user` (username), `password` (consider env vars), `host` (default: localhost), `port` (default: 5432), `dbname`.
+### Security Best Practices
+**NEVER hardcode credentials in source code.** Recommended: Environment variables; Configuration files (not committed); Secret management services. Example: `DATABASE_URL=postgresql://user:password@localhost:5432/mydb`
+### SSL/TLS Configuration
+For production: `?sslmode=require`, `?sslmode=verify-ca`, `?sslmode=verify-full`
+**SSL modes:**
+- `disable` - No SSL
+- `allow` - Try SSL, fall back to non-SSL
+- `prefer` - Try SSL first (default)
+- `require` - Require SSL, no verification
+- `verify-ca` - Require SSL with CA verification
+- `verify-full` - Require SSL with full verification
 ## Query Patterns
 ### Parameterized Queries
-**ALWAYS use parameterized queries.**
+**ALWAYS use parameterized queries to prevent SQL injection.**
 ```
-# CORRECT
+# CORRECT - Parameterized
 SELECT * FROM users WHERE id = $1
-# WRONG (SQL injection)
+
+# WRONG - String interpolation (vulnerable to SQL injection)
 SELECT * FROM users WHERE id = {user_id}
 ```
 ### Common Operations
-```sql
-SELECT column1, column2 FROM table_name WHERE condition ORDER BY column1 LIMIT 100;
-INSERT INTO table_name (column1, column2) VALUES ($1, $2) RETURNING id;
-UPDATE table_name SET column1 = $1, updated_at = NOW() WHERE id = $2 RETURNING *;
-DELETE FROM table_name WHERE id = $1 RETURNING id;
-```
-### Batch
-```sql
-INSERT INTO table_name (column1, column2) VALUES ($1, $2), ($3, $4), ($5, $6);
-```
-Large datasets: `COPY table_name FROM STDIN WITH (FORMAT csv);`
+- **SELECT with filtering:** `SELECT col1, col2 FROM table WHERE condition ORDER BY col1 LIMIT 100;`
+- **INSERT with returning:** `INSERT INTO table (col1, col2) VALUES ($1, $2) RETURNING id;`
+- **UPDATE with conditions:** `UPDATE table SET col1 = $1, updated_at = NOW() WHERE id = $2 RETURNING *;`
+- **DELETE with confirmation:** `DELETE FROM table WHERE id = $1 RETURNING id;`
+### Batch Operations
+Multiple inserts: `INSERT INTO table (col1, col2) VALUES ($1,$2), ($3,$4), ($5,$6);`. Large datasets: `COPY table FROM STDIN WITH (FORMAT csv);`.
 ## Transaction Handling
-```sql
-BEGIN;
--- operations
-COMMIT;
--- or ROLLBACK;
-```
-### Isolation Levels
-| Level | Dirty Read | Non-repeatable Read | Phantom Read |
-|-------|------------|---------------------|--------------|
+### Transaction Basics
+`BEGIN; -- operations COMMIT;` (or `ROLLBACK;` on error).
+### Transaction Isolation Levels
+| Level | Dirty | Non-repeatable | Phantom |
+|-------|---|---|---|
 | READ UNCOMMITTED | Possible | Possible | Possible |
-| READ COMMITTED | Not possible | Possible | Possible |
-| REPEATABLE READ | Not possible | Not possible | Possible |
-| SERIALIZABLE | Not possible | Not possible | Not possible |
-**Default:** READ COMMITTED.
-```sql
-BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-```
+| READ COMMITTED | No | Possible | Possible |
+| REPEATABLE READ | No | No | Possible |
+| SERIALIZABLE | No | No | No |
+**PostgreSQL default:** READ COMMITTED. **Set:** `BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;`
 ### Savepoints
-```sql
-BEGIN;
-INSERT INTO table1 ...;
-SAVEPOINT my_savepoint;
-INSERT INTO table2 ...;
-ROLLBACK TO SAVEPOINT my_savepoint;
-INSERT INTO table2 ...;
-COMMIT;
-```
+Partial rollbacks: `BEGIN; INSERT INTO table1 ...; SAVEPOINT my_savepoint; INSERT INTO table2 ...; ROLLBACK TO SAVEPOINT my_savepoint; INSERT INTO table2 ...; COMMIT;`
 ### Best Practices
-1. Keep transactions short
-2. Handle errors with rollback
-3. Use appropriate isolation (higher = more overhead)
-4. Never wait for user input mid-transaction
+1. **Keep transactions short** - Long transactions block other operations
+2. **Handle errors explicitly** - Always have rollback logic
+3. **Use appropriate isolation** - Higher isolation = more overhead
+4. **Avoid user interaction** - Never wait for user input mid-transaction
 ## Connection Pooling
-Opening connections is expensive (TCP handshake, auth, memory). Pools reuse connections.
-### Pool Parameters
-- `min_connections`, `max_connections`
-- `connection_timeout`, `idle_timeout`, `max_lifetime`
-### Sizing
-```
-max_connections = (core_count * 2) + effective_spindle_count
-# SSD:
-max_connections = core_count * 2
-```
-Monitor usage, adjust for load, account for all app instances.
-### Monitoring
-Active/idle connections, wait time, errors, exhaustion events.
+### Why Connection Pooling
+Opening database connections is expensive (TCP handshake, authentication, memory allocation). Pools maintain open connections for reuse.
+### Pool Configuration
+**Key parameters:**
+- `min_connections` - Minimum to maintain
+- `max_connections` - Maximum allowed
+- `connection_timeout` - Time to wait for available connection
+- `idle_timeout` - Time before closing idle connection
+- `max_lifetime` - Maximum connection lifetime
+### Sizing Guidelines
+**Starting point:** `max_connections = (core_count * 2) + effective_spindle_count`
+For SSD-based systems: `max_connections = core_count * 2`
+**Considerations:** Monitor connection usage in production; adjust based on actual load patterns; account for all application instances.
+### Pool Health Monitoring
+Monitor: active connections, idle connections, wait time for connections, connection errors, pool exhaustion events.
 ## Error Handling
-### Common Errors
-- **Connection:** `ECONNREFUSED` (server/host), `ETIMEDOUT` (network/firewall), `authentication failed`
-- **Query:** `syntax error`, `relation does not exist`, `column does not exist`, `duplicate key`, `foreign key violation`
-### Pattern
+### Common Error Categories
+**Connection errors:**
+- `ECONNREFUSED` - Server not running or wrong host/port
+- `ETIMEDOUT` - Network issue or firewall blocking
+- `authentication failed` - Wrong credentials
+**Query errors:**
+- `syntax error` - Invalid SQL
+- `relation does not exist` - Table/view not found
+- `column does not exist` - Invalid column reference
+- `duplicate key` - Unique constraint violation
+- `foreign key violation` - Referential integrity error
+### Error Handling Pattern
 ```
 try:
     execute query
-catch connection_error: retry with backoff
-catch constraint_violation: handle business logic
-catch syntax_error: log and fix
-finally: return connection to pool
+catch connection_error:
+    retry with backoff
+catch constraint_violation:
+    handle business logic
+catch syntax_error:
+    log and fix query
+finally:
+    return connection to pool
 ```
-### Retry
-Exponential backoff, max 3 attempts, log retries, fail after max.
-## Performance
+### Retry Strategy
+For transient errors: wait with exponential backoff; maximum retry count (e.g., 3); log each retry; fail after max retries.
+## Performance Tips
 ### Indexing
-Index columns in WHERE, JOIN, ORDER BY.
+Create indexes for: columns used in WHERE clauses; columns used in JOIN conditions; columns used in ORDER BY.
 ```sql
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_orders_user_date ON orders(user_id, created_at);
 ```
 ### Query Analysis
+Use `EXPLAIN ANALYZE` to understand query execution:
 ```sql
 EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@example.com';
 ```
-Watch for: sequential scans on large tables, high cost, actual vs estimated rows.
-### Connection Tips
-- Close or return to pool promptly
-- Use pooling in production
-- Set timeouts, monitor count
+Look for: sequential scans on large tables (may need index); high cost estimates; actual vs estimated row counts.
+### Connection Considerations
+- Close connections promptly (or return to pool)
+- Use connection pooling in production
+- Set appropriate timeouts
+- Monitor connection count
 ## Resources
-- `resources/setup-guide.md`
-- `resources/query-patterns.md`
-- `resources/common-errors.md`
+See `resources/` directory for:
+- `setup-guide.md` - Detailed setup instructions
+- `query-patterns.md` - Additional query examples
+- `common-errors.md` - Error troubleshooting guide
 ## Relationship to Other Skills
-**Complements:** `sqlite-integration`, `migration-patterns`.
-**Independent from:** TDD skills.
+**Complements:** `sqlite-integration` (lighter alternative); `migration-patterns` (schema versioning).
+**Independent from:** TDD skills — this skill focuses on database integration, not testing.
+## Expected Outcome
+After using this skill: PostgreSQL connection configured securely; queries use parameterized inputs; transactions handled appropriately; connection pooling configured for production; common errors can be diagnosed and resolved.
+---
+**End of PostgreSQL Integration Skill**

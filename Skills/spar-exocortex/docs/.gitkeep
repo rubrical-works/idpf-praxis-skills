@@ -1,0 +1,9 @@
+Placeholder so git tracks this directory in the initial release.
+
+docs/ ships empty for spar-exocortex — SKILL.md is self-contained for the
+propose-attack-measure workflow, and the two operator-facing walkthroughs
+that engage-exocortex split into docs/getting-started.md and docs/synthesis-
+guide.md live under examples/ instead (01-lru-with-ttl.md, 02-parallel-code-
+review.md). If usage patterns surface a need for separate documentation
+surfaces (e.g., adapter-authoring guide, subagent-brief style guide), that's
+a follow-up enhancement.

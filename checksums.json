@@ -1,18 +1,18 @@
 {
   "manifestVersion": "1.0.0",
-  "frameworkVersion": "0.14.1",
-  "generatedAt": "2026-04-25T22:42:01.739Z",
-  "fileCount": 15,
+  "frameworkVersion": "0.15.0",
+  "generatedAt": "2026-05-17T18:24:09.460Z",
+  "fileCount": 18,
   "files": [
     {
       "relativePath": "Skills/engage-exocortex/scripts/load-entries.js",
-      "sha256": "20396bcb74eafa80135b714527e577ce2e9365a78b06f734115d8a80b2444d35",
-      "sizeBytes": 3564
+      "sha256": "99093dd3325998f1cb39736c70c705c22106b2ab4a94ed73b77816b5cd0fe320",
+      "sizeBytes": 4016
     },
     {
       "relativePath": "Skills/engage-exocortex/scripts/match-signals.js",
-      "sha256": "ddef631023f84f351b40bbe4d04d32a14bffffbfcfdd2ea69bc33be4d704477a",
-      "sizeBytes": 12414
+      "sha256": "bb88fb2ddaa8854f5e5d325a304b886cce60cdb99636c5a95bee9583887d9d75",
+      "sizeBytes": 12672
     },
     {
       "relativePath": "Skills/engage-prism/scripts/anti-overlap-validator.js",
@@ -21,18 +21,18 @@
     },
     {
       "relativePath": "Skills/engage-prism/scripts/load-entries.js",
-      "sha256": "20396bcb74eafa80135b714527e577ce2e9365a78b06f734115d8a80b2444d35",
-      "sizeBytes": 3564
+      "sha256": "99093dd3325998f1cb39736c70c705c22106b2ab4a94ed73b77816b5cd0fe320",
+      "sizeBytes": 4016
     },
     {
       "relativePath": "Skills/engage-prism/scripts/match-signals.js",
-      "sha256": "ddef631023f84f351b40bbe4d04d32a14bffffbfcfdd2ea69bc33be4d704477a",
-      "sizeBytes": 12414
+      "sha256": "bb88fb2ddaa8854f5e5d325a304b886cce60cdb99636c5a95bee9583887d9d75",
+      "sizeBytes": 12672
     },
     {
       "relativePath": "Skills/json-validator/scripts/validate.js",
-      "sha256": "eacb6ea492688704e0d5e1b1a2cebe713eb1843c377a9e96c8217c24d2090e20",
-      "sizeBytes": 7159
+      "sha256": "eb4f47e7e119dc4c908abb39f734fb529b23ff48e325a95edafd6a425b7df7d6",
+      "sizeBytes": 11039
     },
     {
       "relativePath": "Skills/playwright-explorer/lib/auto-install.js",
@@ -73,6 +73,21 @@
       "relativePath": "Skills/playwright-explorer/lib/session-lifecycle.js",
       "sha256": "6a079301c70fd0e11f9a3ab1f70c9e820299dc29c6e993ccd5a158c2de457906",
       "sizeBytes": 5311
+    },
+    {
+      "relativePath": "Skills/spar-exocortex/scripts/adapters/node-adapter.js",
+      "sha256": "f4ef264e1863eb3d8a5449d9449f87d4734ff8a4d945e57351da556dea98e20a",
+      "sizeBytes": 4172
+    },
+    {
+      "relativePath": "Skills/spar-exocortex/scripts/run-harness.js",
+      "sha256": "579ad7246b03a293db0a0a3147cb397302d8e987f03ad0f8ef73ca7acbc9f728",
+      "sizeBytes": 4165
+    },
+    {
+      "relativePath": "Skills/spar-exocortex/scripts/validate-output.js",
+      "sha256": "b2e9a5ee49689c845e72c8e8eab74b950ef2525b8f1b686137fe5da1f97d9712",
+      "sizeBytes": 5279
     },
     {
       "relativePath": "Skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js",

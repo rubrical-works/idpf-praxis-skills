@@ -1,0 +1,223 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "mediator-output-schema.json",
+  "title": "Mediator output (engage-chorus Step 4)",
+  "description": "Output of the mandatory named-mediator pass. Six required sections — each populated with structured content OR an explicit `{ value: 'none', reason: '...' }` declaring structural absence. The 'none' shape makes the absence auditable rather than silently omitted. Synthesis is a LANDSCAPE, not a winner (AC7) — the schema rejects a top-level 'winner' field.",
+  "type": "object",
+  "required": ["zopa", "tradeFrontier", "settlementZones", "unresolvedConflicts", "concessionSequencing", "coalitionMap"],
+  "properties": {
+    "zopa": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["status", "overlaps"],
+          "properties": {
+            "status": { "const": "populated" },
+            "overlaps": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["issue", "overlapDescription"],
+                "properties": {
+                  "issue": { "type": "string", "minLength": 1 },
+                  "overlapDescription": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        { "$ref": "#/definitions/noneWithReason" }
+      ]
+    },
+    "tradeFrontier": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["status", "trades"],
+          "properties": {
+            "status": { "const": "populated" },
+            "trades": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["giveUp", "inExchangeFor"],
+                "properties": {
+                  "giveUp": {
+                    "type": "object",
+                    "required": ["stakeholder", "concession"],
+                    "properties": {
+                      "stakeholder": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+                      "concession": { "type": "string", "minLength": 1 }
+                    },
+                    "additionalProperties": false
+                  },
+                  "inExchangeFor": {
+                    "type": "object",
+                    "required": ["stakeholder", "concession"],
+                    "properties": {
+                      "stakeholder": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+                      "concession": { "type": "string", "minLength": 1 }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        { "$ref": "#/definitions/noneWithReason" }
+      ]
+    },
+    "settlementZones": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["status", "ranked"],
+          "properties": {
+            "status": { "const": "populated" },
+            "ranked": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["rank", "outcome", "endorsedBy"],
+                "properties": {
+                  "rank": { "type": "integer", "minimum": 1 },
+                  "outcome": { "type": "string", "minLength": 1 },
+                  "endorsedBy": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        { "$ref": "#/definitions/noneWithReason" }
+      ]
+    },
+    "unresolvedConflicts": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["status", "conflicts"],
+          "properties": {
+            "status": { "const": "populated" },
+            "conflicts": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["description", "stakeholders"],
+                "properties": {
+                  "description": { "type": "string", "minLength": 1 },
+                  "stakeholders": {
+                    "type": "array",
+                    "minItems": 2,
+                    "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        { "$ref": "#/definitions/noneWithReason" }
+      ]
+    },
+    "concessionSequencing": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["status", "sequence"],
+          "properties": {
+            "status": { "const": "populated" },
+            "sequence": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["order", "stakeholder", "move"],
+                "properties": {
+                  "order": { "type": "integer", "minimum": 1 },
+                  "stakeholder": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+                  "move": { "type": "string", "minLength": 1 },
+                  "tests": { "type": "string", "description": "What this move tests in the deal space." }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        { "$ref": "#/definitions/noneWithReason" }
+      ]
+    },
+    "coalitionMap": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["status", "coalitions"],
+          "properties": {
+            "status": { "const": "populated" },
+            "coalitions": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["members", "alignedInterest"],
+                "properties": {
+                  "members": {
+                    "type": "array",
+                    "minItems": 2,
+                    "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+                  },
+                  "alignedInterest": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        { "$ref": "#/definitions/noneWithReason" }
+      ]
+    },
+    "deprioritized": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "description": "Optional. Stakeholder roles whose briefs were tagged steelMan=weak and therefore deprioritized in the landscape."
+    },
+    "rationale": {
+      "type": "string",
+      "maxLength": 3000,
+      "description": "Optional narrative explaining the mediator's reading of the situation. Especially used when any deprioritized paths influenced the landscape."
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "noneWithReason": {
+      "type": "object",
+      "required": ["status", "reason"],
+      "properties": {
+        "status": { "const": "none" },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Structural reason this section is empty — e.g., 'ZOPA = none with structural reason: regulator's reservation point below utility's, with no tradeable concession bridging the gap.' Required to make the absence auditable."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

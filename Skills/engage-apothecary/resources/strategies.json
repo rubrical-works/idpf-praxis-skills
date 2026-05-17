@@ -1,0 +1,36 @@
+{
+  "$schema": "strategies-schema.json",
+  "description": "Optional inspiration palette of clinical-reasoning strategies. NOT consulted by runtime routing — the primary agent picks strategies ad-hoc or selectively opens this file. Full-catalog loading is a contract violation (#205 AC7).",
+  "strategies": [
+    {
+      "id": "likelihood-ratio-thinking",
+      "name": "Likelihood-ratio thinking",
+      "description": "Reason about test results as multipliers of pre-test odds — LR+ of 10 multiplies the odds by 10; LR− of 0.1 divides by 10. The intuition transfer is: pre-test probability is load-bearing for how informative a result is."
+    },
+    {
+      "id": "rule-out-vs-rule-in",
+      "name": "Rule-out vs rule-in tests",
+      "description": "Sensitive tests are for ruling out (a negative is informative); specific tests are for ruling in (a positive is informative). Strong teaching point for cases where a sensitive-but-not-specific test is over-trusted as a confirmatory result."
+    },
+    {
+      "id": "test-cost-vs-impact",
+      "name": "Test cost vs information gain",
+      "description": "What is the cheapest test that produces the largest probability update? Cost includes financial, time, patient burden, and downstream-cascade considerations. Red-flag-advocate's ruling-out test draws on this strategy."
+    },
+    {
+      "id": "anchoring-defense",
+      "name": "Anchoring-bias defense",
+      "description": "Explicit cognitive-bias defense: what if the first plausible diagnosis is wrong? What would the clinician miss by anchoring? Pairs naturally with mnemonic-driven enumeration and must-not-miss-first structures."
+    },
+    {
+      "id": "absolute-vs-relative-risk",
+      "name": "Absolute vs relative risk framing",
+      "description": "Reason about treatment-effect literature in both absolute and relative terms. NNT (number-needed-to-treat) translates relative-risk reductions into individual-patient-scale numbers. Strong fit for cases whose teaching point is interpreting RCT effect sizes."
+    },
+    {
+      "id": "frequentist-vs-bayesian",
+      "name": "Frequentist vs Bayesian framing",
+      "description": "Contrast a p-value (frequentist) with a posterior probability (Bayesian). When the literature reports p-values, the Bayesian translation requires explicit pre-test priors. Strong fit for evidence-tier-walking paths."
+    }
+  ]
+}

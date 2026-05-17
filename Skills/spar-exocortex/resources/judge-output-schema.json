@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "judge-output-schema.json",
+  "title": "spar-exocortex judge output envelope",
+  "description": "Output of Step 5 — Judge pass. The judge reads baseline + attacker output + challenger report + execution results and produces this decision envelope. Round-two demand is forbidden on the last permitted round (orchestration validator rejects it).",
+  "type": "object",
+  "required": ["decision", "decisiveResult"],
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": ["endorse-baseline", "endorse-challenger", "demand-round-two"],
+      "description": "Final decision for this round. demand-round-two is forbidden on the last permitted round per --max-rounds."
+    },
+    "decisiveResult": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Specific execution result that settled the decision (e.g., 'challenger passed attacker-input where baseline timed out'). If reasoning-decisive, use literal string 'no execution decisive — decided on reasoning' and fill reasoningJustification."
+    },
+    "reasoningJustification": {
+      "type": "string",
+      "minLength": 30,
+      "description": "Required iff decisiveResult equals the literal 'no execution decisive — decided on reasoning'. Otherwise omitted."
+    },
+    "operationalGraft": {
+      "type": "object",
+      "required": ["applicable"],
+      "properties": {
+        "applicable": {
+          "type": "boolean",
+          "description": "True iff the problem was flagged ops-critical at domain detection."
+        },
+        "wins": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["extensibility", "simplicity", "transparency", "cost"] },
+          "description": "Required iff applicable=true. Dimensions where the LOSER wins (winner-on-architecture-but-loser-on-X). Empty array means none — explicit 'none' answer."
+        },
+        "grafts": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 10 },
+          "description": "Required iff applicable=true and wins is non-empty. Concrete grafts from loser → winner, one per wins entry."
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Required when wins is empty (the 'no graft needed' justification)."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Required iff the problem is ops-critical. Applies the operational-graft hybridization question from /engage-exocortex with attribution."
+    },
+    "roundTwoRationale": {
+      "type": "string",
+      "minLength": 30,
+      "description": "Required iff decision=demand-round-two. Explains what needs stronger pressure in the next round."
+    }
+  },
+  "additionalProperties": false
+}

@@ -2,9 +2,12 @@
 name: electron-development
 description: Patterns and solutions for Electron app development with Vite, Playwright E2E testing, and Windows platform considerations
 type: injector
+disable-model-invocation: true
+user-invocable: false
+defaultSkill: true
 version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-03-17"
+lastUpdated: "2026-05-17"
 license: Complete terms in LICENSE.txt
 category: platform
 relevantTechStack: [electron, vite, playwright, typescript, windows]

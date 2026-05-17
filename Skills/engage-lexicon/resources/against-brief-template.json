@@ -1,0 +1,108 @@
+{
+  "$schema": "against-brief-schema.json",
+  "description": "Template for the engage-lexicon against-advocate brief. Build the strongest case AGAINST the claim under {jurisdiction} using authorities the for-advocate did not use, AND respecting authority-hierarchy diversity (at least one unique controlling-authority tuple, OR a higher-rank persuasive authority used in a way the for-advocate did not engage).",
+  "preamble": "You are the AGAINST-advocate in an adversarial legal debate under the declared jurisdiction. Build the strongest case AGAINST the stated claim. Your citations MUST satisfy two diversity contracts: (a) share zero URLs with the for-advocate's citations — a mechanical contract, and (b) include at least one controlling-authority citation that the for-advocate did not cite, OR an unambiguously higher-rank persuasive authority that the for-advocate did not engage. Prefer adversarial sources (dissents, vacated opinions, withdrawn agency guidance, later statutory amendments, contrary law-review treatment, counter-case filings, ITC determinations, regulatory enforcement actions) that typically surface authority the for-advocate will not. Every non-derived claim cites a source conforming to citation-schema.json — including authorityType and authorityWeight. If you can identify which specific for-advocate citation your case most directly rebuts, record its index in targetedCitationIndex; record the authority-hierarchy point of conflict in authorityHierarchyConflict. Educational-only output: do not give legal advice.",
+  "slots": [
+    {
+      "field": "claim",
+      "label": "The Claim Under Debate",
+      "type": "string",
+      "required": true,
+      "description": "The directional legal claim you are arguing AGAINST."
+    },
+    {
+      "field": "jurisdiction",
+      "label": "Declared Jurisdiction",
+      "type": "string",
+      "required": true,
+      "description": "The controlling forum declared via --jurisdiction. Immutable input."
+    },
+    {
+      "field": "forAdvocateCitationUrls",
+      "label": "For-Advocate Citation URLs (for overlap avoidance)",
+      "type": "array",
+      "required": true,
+      "description": "URLs the for-advocate cited. Your citations MUST NOT include any of these. Primary agent enforces this AND the authority-hierarchy diversity gate after both reports return; first violation triggers one re-dispatch; second violation accepts the report tagged citationOverlap='unresolved' and/or authorityHierarchyOverlap='unresolved'."
+    },
+    {
+      "field": "forAdvocateControllingAuthorityTuples",
+      "label": "For-Advocate Controlling-Authority Tuples (for hierarchy-diversity)",
+      "type": "array",
+      "required": true,
+      "description": "Canonical tuples (jurisdiction, authorityType, primaryIdentifier) of the for-advocate's controlling-authority citations. At least one of your controlling-authority citations MUST have a tuple NOT in this set. Persuasive-authority citations are not constrained by the hierarchy-diversity gate (only by URL non-overlap)."
+    },
+    {
+      "field": "researchPlan",
+      "label": "Research Plan",
+      "type": "object",
+      "required": true,
+      "description": "Authority anchors, source classes, recency window, freshness class, authority preferences, and fetch budget from Step 0."
+    },
+    {
+      "field": "citationRequirement",
+      "label": "Citation Requirement",
+      "type": "string",
+      "required": true,
+      "description": "Every non-derived claim cites an authority conforming to resources/citation-schema.json. Zero URL overlap with forAdvocateCitationUrls AND at least one unique controlling-authority tuple."
+    },
+    {
+      "field": "fetchBudget",
+      "label": "Fetch Budget",
+      "type": "integer",
+      "required": true,
+      "description": "Maximum number of WebFetch/WebSearch calls this advocate may make.",
+      "default": 4
+    },
+    {
+      "field": "freshnessClass",
+      "label": "Freshness Class",
+      "type": "string",
+      "required": true,
+      "description": "Enum geopolitical | market | general | statutory."
+    },
+    {
+      "field": "educationalDisclaimer",
+      "label": "Educational-Only Framing",
+      "type": "string",
+      "required": true,
+      "description": "Reminder that this output is educational-only, not licensed legal advice."
+    }
+  ],
+  "taskInstructions": {
+    "description": "Instructions given to the against-advocate subagent.",
+    "sections": [
+      {
+        "order": 1,
+        "label": "Core position",
+        "instruction": "State your core position in one or two sentences — the best-supported case AGAINST the claim under {jurisdiction}."
+      },
+      {
+        "order": 2,
+        "label": "Web research",
+        "instruction": "Perform WebFetch/WebSearch within the fetch budget. Citations MUST NOT overlap with forAdvocateCitationUrls AND must include at least one controlling-authority citation whose tuple is NOT in forAdvocateControllingAuthorityTuples. Prefer adversarial / counter-authority sources. Record every source via the citation schema with authorityType and authorityWeight."
+      },
+      {
+        "order": 3,
+        "label": "Analysis",
+        "instruction": "Work through the counter-case analysis with explicit reference to fetched authorities. Every non-derived claim must cite."
+      },
+      {
+        "order": 4,
+        "label": "Targeted citation and authority-hierarchy conflict",
+        "instruction": "If your case most directly rebuts a specific for-advocate citation, record its 0-based index from forAdvocateCitationUrls in targetedCitationIndex; otherwise null. If the rebuttal turns on an authority-hierarchy point (the for-advocate's authority is out of jurisdiction, has been superseded, is dicta, is a withdrawn-guidance source, etc.), record the conflict in authorityHierarchyConflict with the appropriate conflictType."
+      },
+      {
+        "order": 5,
+        "label": "Recommendation",
+        "instruction": "Given only the against-case, what does the analysis support under {jurisdiction}? Frame in the educational-only register; do NOT direct any party to take or refrain from any action."
+      }
+    ],
+    "outputConstraint": "Return ONLY the structured report conforming to against-brief-schema.json."
+  },
+  "primaryAgentNotes": [
+    "SUBAGENT_TOOL_AVAILABILITY_DIRECTIVE — Include this directive verbatim in the against-advocate's brief: 'You have WebFetch and WebSearch available in this environment. Use them. Returning webResearch.performed=false with a bare \"sandboxed environment\" claim and no schema-conforming attemptedCalls[] is a contract breach, not an environmental degradation. Returning webResearch.performed=true with fetchCount=0 is internally inconsistent and will be rejected. The primary agent will reject either pattern and re-dispatch you once with an explicit named-URL directive; a second zero-fetch return is tagged evidence-fabrication-risk (behavioral) — distinct from degradationEvidence=\"unverified\" which is reserved for genuine environmental degradation.'",
+    "Primary agent computes URL overlap AND authority-hierarchy overlap after both reports return AND after the fabrication-risk check (diversity on fabricated URLs is meaningless). First detection on either axis -> re-dispatch against-advocate once with the dual-axis directive. Second detection -> accept with citationOverlap='unresolved' and/or authorityHierarchyOverlap='unresolved' tag.",
+    "Authority-hierarchy diversity is required even when URL non-overlap is satisfied — citing a different summary article about the same Supreme Court case as the for-advocate clears URL non-overlap but fails the hierarchy gate because the controlling-authority tuple is identical.",
+    "Same attemptedCalls[] degradation-evidence contract as the for-advocate."
+  ]
+}

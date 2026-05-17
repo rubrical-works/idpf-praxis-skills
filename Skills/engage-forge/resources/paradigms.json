@@ -1,0 +1,48 @@
+{
+  "$schema": "paradigms-schema.json",
+  "description": "Optional inspiration palette of design paradigms. NOT consulted by runtime routing — the primary agent picks paradigms ad-hoc or selectively opens this file to pull one entry into a path brief. Full-catalog routing via match-signals.js is a contract violation (#204 AC8).",
+  "paradigms": [
+    {
+      "id": "jtbd",
+      "name": "Jobs-to-be-done (JTBD)",
+      "description": "Frame design around the job the user is hiring the product to do. Decomposes user motivation into functional, emotional, and social job dimensions. Strong fit for onboarding flows and feature prioritization.",
+      "preferredArtefactTypes": ["flow", "kano-grid", "journey-map"]
+    },
+    {
+      "id": "atomic-design",
+      "name": "Atomic design",
+      "description": "Decompose UI into atoms → molecules → organisms → templates → pages. Strong fit for IA-tree artefacts and component-system thinking.",
+      "preferredArtefactTypes": ["ia-tree"]
+    },
+    {
+      "id": "nielsen-heuristic-driven-redesign",
+      "name": "Nielsen-heuristic-driven redesign",
+      "description": "Audit the existing surface against Nielsen's 10 heuristics; surface findings as a matrix; redesign to close the largest gaps. Strong fit for heuristic-matrix artefacts when the goal is a redesign rather than a from-scratch design.",
+      "preferredArtefactTypes": ["heuristic-matrix"]
+    },
+    {
+      "id": "contextual-inquiry",
+      "name": "Contextual inquiry",
+      "description": "Anchor design in observed user behavior in context. Produces journey maps and try/fail cycles grounded in field observation (or hypothesized field observation, when actual research is absent).",
+      "preferredArtefactTypes": ["journey-map", "try-fail-cycle"]
+    },
+    {
+      "id": "service-design-blueprint",
+      "name": "Service-design blueprinting",
+      "description": "Map the user-facing experience plus the backstage system-of-systems that supports it. Wider lens than UX-only; surfaces handoffs and dependencies.",
+      "preferredArtefactTypes": ["journey-map", "flow"]
+    },
+    {
+      "id": "kano-feature-prioritization",
+      "name": "Kano feature prioritization",
+      "description": "Classify features as basic / performance / delight / indifferent / reverse based on user expectation curves. Strong fit for cuts and prioritization questions.",
+      "preferredArtefactTypes": ["kano-grid"]
+    },
+    {
+      "id": "design-system-first",
+      "name": "Design-system-first",
+      "description": "Constrain new design to the existing component system; document deviations as explicit exceptions. Strong fit for redesigns in mature product surfaces.",
+      "preferredArtefactTypes": ["flow", "ia-tree"]
+    }
+  ]
+}

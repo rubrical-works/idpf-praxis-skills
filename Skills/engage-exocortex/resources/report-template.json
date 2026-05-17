@@ -124,10 +124,34 @@
           "description": "1 sentence — how well does this fit the problem's specific constraints?"
         }
       ]
+    },
+    {
+      "field": "implementation",
+      "label": "Implementation",
+      "type": "object",
+      "required": true,
+      "description": "Runnable implementation of the approach used by the execution phase. Required unless --no-execution is set; see synthesisNotes.",
+      "subfields": [
+        {
+          "field": "language",
+          "label": "Language",
+          "type": "string",
+          "required": true,
+          "description": "Target language identifier matching an available execution adapter (e.g., 'javascript', 'python'). Drives adapter selection in the execution phase."
+        },
+        {
+          "field": "code",
+          "label": "Code",
+          "type": "string",
+          "required": true,
+          "description": "Minimal runnable implementation as a string. Must define the function(s) the shared test harness expects to call; harness-stubs allowed when full code is impractical."
+        }
+      ]
     }
   ],
   "synthesisNotes": [
     "The Fit Score is the subagent's self-assessment. Treat it as a signal, not ground truth. A subagent assigned to explore an approach will naturally find reasons it works. Weight your own synthesis over the self-assessed score.",
-    "If a subagent returns a malformed or incomplete report, note the gap in your synthesis output rather than silently patching it. Missing sections are meaningful data."
+    "If a subagent returns a malformed or incomplete report, note the gap in your synthesis output rather than silently patching it. Missing sections are meaningful data.",
+    "The `implementation` field is required at the template layer but conditionally enforced at validation time: when --no-execution is set, the primary agent skips the implementation check and treats reports without it as valid. When --no-execution is NOT set (the default for algorithmic problems), a missing or empty implementation must be reported as a schema violation and the path excluded from execution-phase scoring."
   ]
 }

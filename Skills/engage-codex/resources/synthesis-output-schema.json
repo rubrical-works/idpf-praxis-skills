@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "synthesis-output-schema.json",
+  "title": "engage-codex synthesis output (comparison table, NOT merger)",
+  "description": "Synthesis output for engage-codex. The output is a comparison table across paths — narrative paradigms are structurally distinct and cannot be coherently combined, so merger is rejected at the schema level. Unlike engage-forge, there is no operational-graft escape hatch: narrative paradigms are not commensurable along a single structural axis, so cross-paradigm transplants destroy the paradigms' internal rhythms.",
+  "type": "object",
+  "required": ["outputType", "rows"],
+  "properties": {
+    "outputType": {
+      "const": "comparison-table",
+      "description": "Must literally be the string 'comparison-table'. Any other outputType — including 'merged-outline', 'merged-artefact', 'hybrid', 'fused-artefact' — fails validation with the engage-codex synthesis-is-comparison-not-merger diagnostic."
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["path", "paradigm", "artefactType", "strengths", "weaknesses", "bestServedStoryShape"],
+        "properties": {
+          "path": { "type": "integer", "minimum": 1 },
+          "paradigm": { "type": "string", "minLength": 1 },
+          "artefactType": {
+            "enum": ["beat-sheet", "scene-outline", "character-arc-grid", "thematic-resonance-map", "try-fail-cycle"]
+          },
+          "strengths": { "type": "string", "minLength": 1 },
+          "weaknesses": { "type": "string", "minLength": 1 },
+          "bestServedStoryShape": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Which kind of story this paradigm + artefact serves best (e.g., 'feature thrillers with a passive-becoming-active protagonist', 'literary short stories with a re-framing twist')."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "recommendedPath": {
+      "type": ["integer", "null"],
+      "description": "Optional. The path number recommended for the user. Null when no clear winner emerges; the user is asked to pick before reading the critique pass findings."
+    },
+    "recommendationRationale": {
+      "type": "string",
+      "description": "Required when recommendedPath is non-null."
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "recommendedPath": { "type": "integer" } }, "required": ["recommendedPath"] },
+      "then": { "required": ["recommendationRationale"] }
+    }
+  ]
+}

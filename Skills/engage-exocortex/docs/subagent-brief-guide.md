@@ -42,3 +42,23 @@ Return ONLY the structured report below. Do not add preamble or conclusion outsi
   reason against the same constraints
 - You may optionally add a "What NOT to do" hint if you're worried a subagent will
   drift toward another path's territory (e.g., "Do not use a heap in this path")
+
+## Why subagents inherit the parent model
+
+Earlier versions of this skill exposed a `--model` flag to override the subagent model
+(defaulting to `opus`). That flag was retired in #215 for three reasons:
+
+1. **Algorithmic reasoning benefits most from the strongest model.** A subagent assigned
+   to reason about complexity, edge cases, and invariants is doing exactly the kind of
+   work where downgrading the model trades quality for marginal cost. The user already
+   chose their model at session start; that choice should propagate.
+2. **Model heterogeneity inside one invocation breaks synthesis comparability.** When
+   path A is reasoned by Opus and path B by Haiku, the synthesis phase is comparing
+   reports of different baseline quality — operational scoring and complexity validation
+   become unreliable.
+3. **It was a false economy.** The dominant cost in a `/engage-exocortex` invocation is
+   the N parallel subagent reports plus the synthesis pass; the savings from one
+   downgraded subagent rarely justify the loss of signal.
+
+Subagents now inherit the parent session's model. To run the whole skill on a smaller
+model, switch the parent session's model — not a flag.

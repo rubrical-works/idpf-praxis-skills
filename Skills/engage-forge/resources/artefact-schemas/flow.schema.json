@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "flow.schema.json",
+  "title": "Markdown-table user-flow artefact",
+  "description": "An ordered sequence of user-system interaction steps. Each row is one step: user action, system response, optional notes. Used by JTBD-style and onboarding-flow paths.",
+  "type": "object",
+  "required": ["artefactType", "title", "steps"],
+  "properties": {
+    "artefactType": { "const": "flow" },
+    "title": { "type": "string", "minLength": 1 },
+    "entryCondition": { "type": "string" },
+    "exitCondition": { "type": "string" },
+    "steps": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["step", "userAction", "systemResponse"],
+        "properties": {
+          "step": { "type": "integer", "minimum": 1 },
+          "userAction": { "type": "string", "minLength": 1 },
+          "systemResponse": { "type": "string", "minLength": 1 },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

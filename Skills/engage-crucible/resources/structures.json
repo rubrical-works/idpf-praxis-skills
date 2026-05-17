@@ -1,0 +1,14 @@
+{
+  "$schema": "structures-schema.json",
+  "description": "Optional inspiration palette of experimental structures. NOT consulted by runtime routing.",
+  "structures": [
+    { "id": "rct-two-arm", "name": "Two-arm RCT", "description": "Treatment vs control, random allocation; gold standard for clinical efficacy under ethics constraints." },
+    { "id": "rct-factorial", "name": "Factorial RCT", "description": "Multiple interventions varied independently; allows interaction effects but enlarges sample size." },
+    { "id": "cohort-prospective", "name": "Prospective cohort", "description": "Define population, measure exposure, follow forward in time. Stronger than retrospective; weaker than RCT." },
+    { "id": "case-control", "name": "Case-control", "description": "Identify cases, match controls, look backward at exposure. Useful for rare outcomes." },
+    { "id": "cross-sectional", "name": "Cross-sectional", "description": "Snapshot exposure and outcome simultaneously. Cannot establish temporal precedence." },
+    { "id": "n-of-1", "name": "N-of-1 / single-subject", "description": "Repeated measures on one subject with crossover. Useful when individual response varies more than population mean." },
+    { "id": "natural-experiment", "name": "Natural-experiment / quasi-experimental", "description": "Exploits policy changes, instrumental variables, regression discontinuity. For non-randomizable interventions." },
+    { "id": "in-silico-simulation", "name": "In-silico simulation", "description": "Computational model of a system; useful when physical experiments are expensive, slow, or unethical. Mechanism must be specified." }
+  ]
+}

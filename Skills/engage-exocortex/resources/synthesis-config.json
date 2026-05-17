@@ -35,8 +35,24 @@
       ]
     },
     {
-      "id": "score",
+      "id": "execute",
       "order": 2,
+      "name": "Execute Candidates",
+      "description": "When the execution phase is on, run each subagent's implementation against a shared test set. Default-on for algorithmic problems (Step 0 skipped); default-off for architecture problems (Step 0 ran); --no-execution always skips.",
+      "executionConfig": {
+        "defaultRule": "default-on when Step 0 was skipped (algorithmic problem); default-off when Step 0 ran (architecture problem); --no-execution always skips",
+        "sharedTestSetConstruction": [
+          "Start with the standard edge cases listed in the problem statement (if any).",
+          "Add the union of all edge cases each subagent named in its report.edgeCases array.",
+          "Add 2-3 baseline cases (typical inputs, single-element, empty-input where defined) to anchor the suite."
+        ],
+        "executionRule": "Invoke the language adapter named in each path's brief.implementation.language with the path's brief.implementation.code. Run every case in the shared test set against every candidate. Record pass/fail per (candidate, case) cell.",
+        "fallbackBehavior": "If no adapter is available for a path's language, exclude that path from execution scoring and record the gap in the report. Architectural-only scoring still applies."
+      }
+    },
+    {
+      "id": "score",
+      "order": 3,
       "name": "Score Each Approach",
       "description": "Score on dimensions most relevant to the problem. Always include correctness and complexity. Add domain-specific dimensions as appropriate.",
       "scoringScale": {
@@ -123,11 +139,26 @@
           "useWhen": "Solution consumes paid resources (API calls, compute, storage) OR has user-visible latency"
         }
       ],
-      "operationalDimensionsNote": "Operational dimensions complement architectural dimensions — they don't replace them. Apply them when their `useWhen` condition matches the problem context. They participate in scoring and the hybridization check identically to other dimensions."
+      "operationalDimensionsNote": "Operational dimensions complement architectural dimensions — they don't replace them. Apply them when their `useWhen` condition matches the problem context. They participate in scoring and the hybridization check identically to other dimensions.",
+      "executionDimensions": [
+        {
+          "id": "execution-score",
+          "name": "Execution score",
+          "whatToAssess": "How does this candidate perform on the shared test set built in the Execute Candidates phase? Score by the bands below.",
+          "scoringBands": {
+            "all-pass": "All cases in the shared test set pass. Strong.",
+            "n-passes": "A strict majority but not all cases pass (partial pass). Adequate. Document which cases failed and why; surface as a synthesis note.",
+            "baseline-fails": "One or more of the baseline cases (typical inputs, single-element, empty-input where defined) fails. Weak — this approach has a correctness gap on inputs it should obviously handle.",
+            "disqualifying": "Implementation throws on construction, or the adapter cannot run it, or it fails on every case in the shared test set. Disqualifying. The architectural reasoning may still inform a hybrid but this path cannot be the primary recommendation."
+          },
+          "useWhen": "Execution phase ran (--no-execution not set AND an adapter is available for the candidate's language)"
+        }
+      ],
+      "executionDimensionsNote": "Execution scoring is the validation layer the prior architectural-only synthesis lacked. A subtly wrong complexity analysis survives validation precisely when the primary agent makes the same error — execution catches that cheaply by running the code. Treat execution-score as authoritative for correctness when it ran; treat architectural reasoning as authoritative for trade-offs."
     },
     {
       "id": "hybridize",
-      "order": 3,
+      "order": 4,
       "name": "Check for Hybridization",
       "description": "Before picking a winner, check whether combining approaches yields a genuinely better solution.",
       "questions": [
@@ -156,7 +187,7 @@
     },
     {
       "id": "output",
-      "order": 4,
+      "order": 5,
       "name": "Write the Final Output",
       "description": "Follow the output format in SKILL.md exactly.",
       "principles": [

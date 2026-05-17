@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "heuristic-matrix.schema.json",
+  "title": "Heuristic-finding matrix artefact (path-produced)",
+  "description": "A heuristic × artefact-element finding matrix used by Nielsen-heuristic-driven redesign paths. Distinct from heuristic-audit-output (which is produced by Step 4 against the recommended artefact). This artefact is the *path's* output when the assigned paradigm is heuristic-driven redesign.",
+  "type": "object",
+  "required": ["artefactType", "title", "findings"],
+  "properties": {
+    "artefactType": { "const": "heuristic-matrix" },
+    "title": { "type": "string", "minLength": 1 },
+    "subjectArtefact": { "type": "string", "description": "What artefact (or product surface) this matrix is auditing" },
+    "findings": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["heuristic", "artefactElement", "severity", "finding", "recommendation"],
+        "properties": {
+          "heuristic": { "type": "string", "minLength": 1 },
+          "artefactElement": { "type": "string", "minLength": 1 },
+          "severity": { "enum": ["pass", "minor", "major", "critical"] },
+          "finding": { "type": "string", "minLength": 1 },
+          "recommendation": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

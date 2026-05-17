@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "path-brief-template.json",
+  "title": "Subagent path-brief template (engage-codex)",
+  "description": "Slot template the primary agent fills before dispatching each path subagent. The brief carries the story brief, the assigned paradigm + artefact type, and constraints.",
+  "type": "object",
+  "required": ["storyBrief", "assignedParadigm", "assignedArtefactType", "constraints", "maxRationaleWords"],
+  "properties": {
+    "storyBrief": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The user's narrative brief: premise, genre, length target, tone, protagonist want/need, central conflict, explicit constraints."
+    },
+    "assignedParadigm": {
+      "type": "object",
+      "required": ["name", "rationale"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "paletteId": {
+          "type": "string",
+          "description": "Optional id from paradigms.json palette."
+        },
+        "rationale": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "assignedArtefactType": {
+      "enum": ["beat-sheet", "scene-outline", "character-arc-grid", "thematic-resonance-map", "try-fail-cycle"]
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "inspirationPalette": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "type": "string" }
+    },
+    "maxRationaleWords": { "type": "integer", "minimum": 50, "maximum": 500 }
+  },
+  "additionalProperties": false
+}

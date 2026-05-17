@@ -1,0 +1,58 @@
+{
+  "checklistId": "nielsen-10",
+  "name": "Nielsen's 10 usability heuristics",
+  "source": "Jakob Nielsen, 1994 / NN/g 2020 update",
+  "applicabilityNote": "General-purpose UI/UX heuristic checklist. Default for engage-forge --audit-checklist.",
+  "heuristics": [
+    {
+      "id": "visibility-of-system-status",
+      "name": "Visibility of system status",
+      "description": "The design keeps users informed about what is going on, through appropriate feedback within reasonable time."
+    },
+    {
+      "id": "match-between-system-and-real-world",
+      "name": "Match between system and the real world",
+      "description": "The design speaks the user's language, with words, phrases, and concepts familiar to the user — natural and logical order, real-world conventions."
+    },
+    {
+      "id": "user-control-and-freedom",
+      "name": "User control and freedom",
+      "description": "Users often perform actions by mistake. Provide a clearly marked 'emergency exit' to leave an unwanted action without going through extended dialogue."
+    },
+    {
+      "id": "consistency-and-standards",
+      "name": "Consistency and standards",
+      "description": "Users should not have to wonder whether different words, situations, or actions mean the same thing. Follow platform and industry conventions."
+    },
+    {
+      "id": "error-prevention",
+      "name": "Error prevention",
+      "description": "Eliminate error-prone conditions, or check for them and present users with a confirmation option before they commit to the action."
+    },
+    {
+      "id": "recognition-rather-than-recall",
+      "name": "Recognition rather than recall",
+      "description": "Minimize the user's memory load by making elements, actions, and options visible. The user should not have to remember information from one part of the interface to another."
+    },
+    {
+      "id": "flexibility-and-efficiency-of-use",
+      "name": "Flexibility and efficiency of use",
+      "description": "Shortcuts — hidden from novice users — may speed up interaction for the expert user. Allow tailoring frequent actions."
+    },
+    {
+      "id": "aesthetic-and-minimalist-design",
+      "name": "Aesthetic and minimalist design",
+      "description": "Interfaces should not contain information that is irrelevant or rarely needed. Every extra unit of information competes with relevant units."
+    },
+    {
+      "id": "help-users-recognize-diagnose-recover",
+      "name": "Help users recognize, diagnose, and recover from errors",
+      "description": "Error messages should be expressed in plain language, precisely indicate the problem, and constructively suggest a solution."
+    },
+    {
+      "id": "help-and-documentation",
+      "name": "Help and documentation",
+      "description": "It is best if the system does not need additional explanation. When help is necessary, it should be easy to search, focused on the user's task, list concrete steps, and not be too large."
+    }
+  ]
+}

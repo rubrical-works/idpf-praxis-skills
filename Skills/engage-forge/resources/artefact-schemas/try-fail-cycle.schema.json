@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "try-fail-cycle.schema.json",
+  "title": "Try/fail/retry cycle artefact",
+  "description": "A narrative-structured try/fail/retry cycle for task completion. Documents the most-likely failure mode and the recovery path. Used by failure-analysis-driven design paths.",
+  "type": "object",
+  "required": ["artefactType", "title", "task", "cycles"],
+  "properties": {
+    "artefactType": { "const": "try-fail-cycle" },
+    "title": { "type": "string", "minLength": 1 },
+    "task": { "type": "string", "minLength": 1, "description": "What the user is trying to do" },
+    "cycles": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["attempt", "userIntent", "systemBehavior", "outcome"],
+        "properties": {
+          "attempt": { "type": "integer", "minimum": 1 },
+          "userIntent": { "type": "string", "minLength": 1 },
+          "systemBehavior": { "type": "string", "minLength": 1 },
+          "outcome": { "enum": ["success", "fail-recoverable", "fail-fatal"] },
+          "recoveryPath": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "finalOutcome": { "enum": ["task-completed", "task-abandoned"] }
+  },
+  "additionalProperties": false
+}

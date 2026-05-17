@@ -1,0 +1,14 @@
+{
+  "$schema": "structures-schema.json",
+  "description": "Optional inspiration palette of structural patterns. NOT consulted by runtime routing.",
+  "structures": [
+    { "id": "linear-flow", "name": "Linear flow", "description": "Strictly sequential user-action / system-response steps without branches. Default for onboarding and checkout flows." },
+    { "id": "branched-flow", "name": "Branched flow", "description": "User-action / system-response steps with decision points and alternate paths. Used for flows where the user's input or state determines the next step." },
+    { "id": "hub-and-spoke", "name": "Hub-and-spoke IA", "description": "A primary landing point with spokes to task surfaces; users return to the hub between tasks. Common in dashboards." },
+    { "id": "wizard", "name": "Wizard structure", "description": "Multi-step task broken into discrete linear screens with progress indication. Used when the task is complex but the steps are well-bounded." },
+    { "id": "progressive-disclosure", "name": "Progressive disclosure", "description": "Reveal complexity gradually as the user demonstrates need. Defaults to the simplest surface; expert affordances surface on demand." },
+    { "id": "stage-table", "name": "Stage table (journey)", "description": "Time-ordered stages × per-stage dimensions (user state, touchpoint, emotion, opportunity). Used for journey maps." },
+    { "id": "decision-matrix", "name": "Decision matrix", "description": "Options × criteria with per-cell scores or qualitative tags. Used for trade-off-heavy decisions where the criteria are explicit." },
+    { "id": "card-grid", "name": "Card grid", "description": "Items × attributes laid out as cards; supports filtering and grouping. Used for browse-and-pick surfaces." }
+  ]
+}

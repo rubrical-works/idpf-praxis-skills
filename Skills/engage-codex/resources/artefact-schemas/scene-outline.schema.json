@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "scene-outline.schema.json",
+  "title": "Scene-by-scene outline artefact",
+  "description": "An ordered sequence of scenes. Each scene names a slugline (location/time), summary, beat-purpose (what structural beat this scene serves), characters, conflict, and outcome. Used by paradigms that work at the scene level rather than the beat level (e.g., screenplay-format paths).",
+  "type": "object",
+  "required": ["artefactType", "title", "scenes"],
+  "properties": {
+    "artefactType": { "const": "scene-outline" },
+    "title": { "type": "string", "minLength": 1 },
+    "scenes": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["sceneNumber", "slugline", "summary", "beatPurpose", "characters", "conflict", "outcome"],
+        "properties": {
+          "sceneNumber": { "type": "integer", "minimum": 1 },
+          "slugline": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Location/time marker (e.g., 'INT. APARTMENT — NIGHT')."
+          },
+          "summary": { "type": "string", "minLength": 1 },
+          "beatPurpose": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What structural beat this scene serves (e.g., 'inciting incident', 'midpoint', 'all-is-lost')."
+          },
+          "characters": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "conflict": { "type": "string", "minLength": 1 },
+          "outcome": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

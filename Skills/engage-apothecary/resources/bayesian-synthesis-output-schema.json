@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "bayesian-synthesis-output-schema.json",
+  "title": "Bayesian pre/post-test synthesis output (engage-apothecary Step 5)",
+  "description": "Mandatory synthesis step output. Records pre-test probabilities per differential (literature-cited or assumption-based with explicit assumption), the highest-impact test that updates the probability landscape (with quantitative LRs where well-published or qualitative impact otherwise), the post-test probability landscape per differential (positive and negative test results), and the educational learning objective the case is teaching.",
+  "type": "object",
+  "required": ["preTestProbabilities", "highestImpactTest", "postTestProbabilities", "educationalLearningObjective"],
+  "properties": {
+    "preTestProbabilities": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One entry per differential. Each entry must declare a basis (literature-cited or assumption-based); assumption-based entries must state the assumption.",
+      "items": {
+        "type": "object",
+        "required": ["differential", "preTestProbability", "basis"],
+        "properties": {
+          "differential": { "type": "string", "minLength": 1 },
+          "preTestProbability": { "type": "number", "minimum": 0, "maximum": 1 },
+          "basis": { "enum": ["literature-cited", "assumption-based"] },
+          "citation": { "$ref": "citation-schema.json" },
+          "assumption": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Required when basis is assumption-based. States the assumption explicitly."
+          }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": { "properties": { "basis": { "const": "assumption-based" } }, "required": ["basis"] },
+            "then": { "required": ["assumption"] }
+          }
+        ]
+      }
+    },
+    "highestImpactTest": {
+      "type": "object",
+      "required": ["test", "targetDifferentials"],
+      "properties": {
+        "test": { "type": "string", "minLength": 1 },
+        "targetDifferentials": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "likelihoodRatios": {
+          "type": "object",
+          "properties": {
+            "lrPlus": { "type": "number", "minimum": 0 },
+            "lrMinus": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": false,
+          "anyOf": [
+            { "required": ["lrPlus"] },
+            { "required": ["lrMinus"] }
+          ]
+        },
+        "qualitativeImpact": {
+          "enum": ["strong-rule-in", "moderate-rule-in", "weak-rule-in", "strong-rule-out", "moderate-rule-out", "weak-rule-out", "data-not-well-published"]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["likelihoodRatios"] },
+        { "required": ["qualitativeImpact"] }
+      ]
+    },
+    "postTestProbabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["differential", "positiveResultPostTest", "negativeResultPostTest"],
+        "properties": {
+          "differential": { "type": "string", "minLength": 1 },
+          "positiveResultPostTest": {
+            "oneOf": [
+              { "type": "number", "minimum": 0, "maximum": 1 },
+              { "type": "string", "minLength": 1, "description": "Qualitative direction when LRs unavailable (e.g., 'rises significantly')." }
+            ]
+          },
+          "negativeResultPostTest": {
+            "oneOf": [
+              { "type": "number", "minimum": 0, "maximum": 1 },
+              { "type": "string", "minLength": 1 }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "educationalLearningObjective": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The named Bayesian / test-characteristic intuition this case is teaching."
+    }
+  },
+  "additionalProperties": false
+}

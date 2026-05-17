@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "path-brief-template.json",
+  "title": "Hypothesis-path brief template (engage-crucible)",
+  "type": "object",
+  "required": ["researchQuestion", "assignedHypothesis", "domain", "assignedArtefactType"],
+  "properties": {
+    "researchQuestion": { "type": "string", "minLength": 1 },
+    "assignedHypothesis": {
+      "type": "object",
+      "required": ["id", "claim", "mechanismSketch"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "claim": { "type": "string", "minLength": 1 },
+        "mechanismSketch": { "type": "string", "minLength": 1 },
+        "falsificationSketch": { "type": "string", "description": "Initial sketch of what would falsify — the path subagent expands this into the formal falsificationCondition." }
+      },
+      "additionalProperties": false
+    },
+    "domain": {
+      "enum": ["biology-medicine", "social-science", "physical-science", "engineering-methods", "other"]
+    },
+    "evidenceTierPreferences": {
+      "type": "array",
+      "items": {
+        "enum": ["systematic-review", "RCT", "cohort", "observational", "expert", "anecdote"]
+      }
+    },
+    "offlineMode": { "type": "boolean" },
+    "assignedArtefactType": {
+      "enum": ["pico", "peco", "generic-experimental-setup"]
+    },
+    "maxRationaleWords": { "type": "integer", "minimum": 50, "maximum": 500 }
+  },
+  "additionalProperties": false
+}

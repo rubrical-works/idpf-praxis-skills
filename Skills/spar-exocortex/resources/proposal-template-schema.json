@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proposal-template-schema.json",
+  "title": "spar-exocortex proposal template envelope",
+  "description": "Final proposal document written to Proposal/SPAR-{problem-slug}.md. Schema validates the structured fields a proposal must contain; markdown rendering is template-driven from the matching proposal-template.json.",
+  "type": "object",
+  "required": [
+    "problem",
+    "rounds",
+    "finalDecision"
+  ],
+  "properties": {
+    "problem": {
+      "type": "object",
+      "required": ["slug", "summary", "targetLanguage"],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Slug used in the file path: Proposal/SPAR-{slug}.md"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 30,
+          "description": "One-paragraph problem statement."
+        },
+        "targetLanguage": {
+          "type": "string",
+          "enum": ["js", "ts", "python"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "rounds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["roundNumber", "baseline", "attacker", "challenger", "executionResults", "judge"],
+        "properties": {
+          "roundNumber": { "type": "integer", "minimum": 1 },
+          "baseline": {
+            "description": "Conforms to baseline-schema.json. Schema cross-reference enforced by orchestration validator, not flattened here."
+          },
+          "attacker": {
+            "description": "Conforms to attacker-output-schema.json."
+          },
+          "challenger": {
+            "description": "Conforms to challenger-report-schema.json."
+          },
+          "executionResults": {
+            "type": "array",
+            "items": {
+              "description": "Each item conforms to execution-result-schema.json."
+            }
+          },
+          "judge": {
+            "description": "Conforms to judge-output-schema.json."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "finalDecision": {
+      "type": "string",
+      "enum": ["baseline-wins", "challenger-wins"],
+      "description": "Winner across all rounds. Derived from the final round's judge.decision (endorse-baseline → baseline-wins; endorse-challenger → challenger-wins). demand-round-two is never the final decision."
+    },
+    "operationalGraftSummary": {
+      "type": "string",
+      "description": "Optional. Summary of the operational-graft answer if ops-critical."
+    }
+  },
+  "additionalProperties": false
+}

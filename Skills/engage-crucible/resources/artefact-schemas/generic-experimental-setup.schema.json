@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "generic-experimental-setup.schema.json",
+  "title": "Generic experimental-setup artefact",
+  "description": "For physical sciences, engineering, social science, and other domains where PICO/PECO don't fit. Captures subject, manipulation, measurement, confounders, sample-size, and an optional DAG sketch.",
+  "type": "object",
+  "required": ["artefactType", "subject", "manipulation", "measurement", "expectedEffect"],
+  "properties": {
+    "artefactType": { "const": "generic-experimental-setup" },
+    "subject": { "type": "string", "minLength": 1, "description": "What is being studied — system, material, organism, population, simulation." },
+    "manipulation": { "type": "string", "minLength": 1, "description": "What is being varied or perturbed. May be 'observation only' for naturally-occurring phenomena." },
+    "measurement": { "type": "string", "minLength": 1, "description": "How the outcome will be measured — instrument, method, units." },
+    "controlCondition": { "type": "string", "description": "What the manipulation is compared against." },
+    "expectedEffect": { "type": "string", "minLength": 1, "description": "Prediction the hypothesis makes about the measurement." },
+    "sampleSize": { "type": "string", "description": "Sample-size estimate or replicate-count plan." },
+    "confoundersToControl": { "type": "array", "items": { "type": "string" } },
+    "dagSketch": { "type": "string" }
+  },
+  "additionalProperties": false
+}

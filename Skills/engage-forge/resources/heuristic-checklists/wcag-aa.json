@@ -1,0 +1,58 @@
+{
+  "checklistId": "wcag-aa",
+  "name": "WCAG 2.1 Level AA (artefact-applicable subset)",
+  "source": "W3C Web Content Accessibility Guidelines 2.1, Level AA conformance",
+  "applicabilityNote": "Use when the artefact must support accessibility constraints. Subset filtered to checkpoints assessable from a text-based artefact (flow, IA, journey-map, etc.) — image-pixel-level WCAG criteria are out of scope.",
+  "heuristics": [
+    {
+      "id": "text-alternatives",
+      "name": "Text alternatives (1.1.1)",
+      "description": "All non-text content has a text alternative serving an equivalent purpose. For artefact-level audit: every interactive element in the flow/IA/matrix declares an accessible name."
+    },
+    {
+      "id": "info-and-relationships",
+      "name": "Info and relationships (1.3.1)",
+      "description": "Information, structure, and relationships conveyed visually are programmatically determinable. For artefact audit: relationships between elements (parent/child, before/after, group membership) are made explicit, not implied by visual position alone."
+    },
+    {
+      "id": "meaningful-sequence",
+      "name": "Meaningful sequence (1.3.2)",
+      "description": "The reading and operation order is preserved regardless of presentation. For artefact audit: the flow / journey order is sequential and does not depend on visual layout."
+    },
+    {
+      "id": "keyboard-accessible",
+      "name": "Keyboard (2.1.1)",
+      "description": "All functionality is operable through a keyboard interface. For artefact audit: every interactive step in the flow is reachable and triggerable from keyboard alone."
+    },
+    {
+      "id": "no-keyboard-trap",
+      "name": "No keyboard trap (2.1.2)",
+      "description": "Focus can be moved away from any component using only the keyboard. For artefact audit: modal/blocking steps in the flow include a documented exit path."
+    },
+    {
+      "id": "timing-adjustable",
+      "name": "Timing adjustable (2.2.1)",
+      "description": "Time limits set by the content are adjustable or can be turned off. For artefact audit: time-constrained steps (auto-logout, session timeout) include an extend/disable affordance."
+    },
+    {
+      "id": "labels-or-instructions",
+      "name": "Labels or instructions (3.3.2)",
+      "description": "Labels or instructions are provided for user input. For artefact audit: every form/input element in the flow has a documented label and instruction."
+    },
+    {
+      "id": "error-identification",
+      "name": "Error identification (3.3.1)",
+      "description": "Input errors are identified and described to the user in text. For artefact audit: error states in the flow are explicitly documented with the error message text."
+    },
+    {
+      "id": "error-suggestion",
+      "name": "Error suggestion (3.3.3)",
+      "description": "Suggestions for correction are provided when an input error is detected. For artefact audit: error states include the correction path (not just the error name)."
+    },
+    {
+      "id": "consistent-navigation",
+      "name": "Consistent navigation (3.2.3)",
+      "description": "Navigational mechanisms are presented in the same relative order each time. For artefact audit: IA navigation patterns are consistent across the structure."
+    }
+  ]
+}

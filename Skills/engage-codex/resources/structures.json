@@ -1,0 +1,36 @@
+{
+  "$schema": "structures-schema.json",
+  "description": "Optional inspiration palette of narrative structural patterns (act-break shapes, beat templates, scene-sequence rhythms). NOT consulted by runtime routing — the primary agent picks structures ad-hoc or selectively opens this file. Full-catalog loading is a contract violation (#206 AC8).",
+  "structures": [
+    {
+      "id": "act-break-25-50-75",
+      "name": "Classical three-act page positions",
+      "description": "Act I to Act II transition at ~25% of total length; midpoint reversal at ~50%; Act II to Act III transition at ~75%; climax in the final 10%. Used by three-act and Save-the-Cat paradigms."
+    },
+    {
+      "id": "kishotenketsu-25-50-75",
+      "name": "Kishōtenketsu page positions",
+      "description": "ki spans 0-25%, shō spans 25-50%, ten occupies 50-75% (the re-framing twist takes ample room to land), ketsu spans 75-100%. Note: ten is NOT the climax — it's a meaning-shift, not a confrontation peak."
+    },
+    {
+      "id": "harmon-circle-stations",
+      "name": "Harmon circle 8 stations",
+      "description": "8 stations distributed evenly around the circle: stations 1-4 (you, need, go, search) take the first half; stations 5-8 (find, take, return, change) take the second half. Strong rhythm for half-hour episodic TV."
+    },
+    {
+      "id": "try-fail-three-cycle",
+      "name": "Three-cycle try/fail rhythm",
+      "description": "Three attempts to achieve the goal: first attempt fails on a simple obstacle, second attempt fails on a more complex obstacle that escalates the stakes, third attempt either succeeds at unexpected cost or fails fatally. Commonly used in folktale structure, classic three-act second-act fun-and-games, and procedural-episode structure."
+    },
+    {
+      "id": "cold-open-act-structure",
+      "name": "TV pilot cold-open + act structure",
+      "description": "Hook scene before the title card (cold open), then 4 or 5 acts separated by commercial breaks (premium cable often drops act breaks entirely). Cold open establishes tone + hooks the audience; Act 1 introduces the central conflict; Act 4 or 5 resolves the episode's contained question while leaving the season's question open."
+    },
+    {
+      "id": "frame-story",
+      "name": "Frame story",
+      "description": "Outer narrative brackets an inner narrative — a character tells a story; a journalist investigates an event; a found-document conceit wraps the main plot. Strong fit for stories whose meaning depends on the act of recounting. Used by Heart of Darkness, The Princess Bride, Big Fish."
+    }
+  ]
+}

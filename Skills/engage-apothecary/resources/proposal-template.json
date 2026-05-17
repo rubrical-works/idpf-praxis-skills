@@ -1,0 +1,16 @@
+{
+  "$schema": "proposal-template-schema.json",
+  "templateId": "APOTHECARY-proposal-1.0.0",
+  "description": "Document structure for Proposal/APOTHECARY-{slug}.md (engage-apothecary Step 7). Educational-only disclaimer appears at top AND bottom (non-suppressible). Content sections cover the de-identified scenario, the differential briefs, the mandatory red-flag advocate, and the mandatory Bayesian pre/post-test synthesis with educational learning objective.",
+  "sections": [
+    { "id": "disclaimer", "title": "Educational-Only Disclaimer", "required": true, "description": "Verbatim text from resources/disclaimer.txt. Stamped at TOP of every proposal." },
+    { "id": "metadata", "title": "Metadata", "required": true, "fields": ["date", "skill", "pathsExplored", "recencyYears", "webResearch", "redFlagAdvocateSeverity"] },
+    { "id": "educational-scenario", "title": "Educational Scenario", "required": true, "description": "Restated de-identified hypothetical (no patient names, no specific dates/locations, no MRNs)." },
+    { "id": "differentials-explored", "title": "Differentials Explored", "required": true, "description": "Table of differentials with one-sentence rationales." },
+    { "id": "differential-briefs", "title": "Differential Briefs", "required": true, "description": "One section per differential with diagnosis, mechanism, evidence-tier-weighted citations, test characteristics, contraindication reasoning." },
+    { "id": "red-flag-advocate", "title": "Red-Flag Advocate", "required": true, "description": "Must-not-miss diagnosis with sharing-features rationale, ruling-out test, consequence-of-missing severity." },
+    { "id": "bayesian-synthesis", "title": "Bayesian Pre/Post-Test Synthesis", "required": true, "description": "Pre-test probabilities per differential, highest-impact test/finding, post-test probability landscape, educational learning objective." },
+    { "id": "learning-summary", "title": "Educational Learning Summary", "required": true, "description": "One-paragraph summary of what this case teaches." },
+    { "id": "disclaimer-footer", "title": "Educational-Only Disclaimer", "required": true, "description": "Verbatim text from resources/disclaimer.txt. Stamped at BOTTOM of every proposal." }
+  ]
+}

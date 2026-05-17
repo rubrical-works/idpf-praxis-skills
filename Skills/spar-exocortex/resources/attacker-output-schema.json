@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "attacker-output-schema.json",
+  "title": "spar-exocortex attacker output envelope",
+  "description": "Output of Step 2 — Attacker dispatch. Must contain a concrete failing input or named operational failure scenario; verbal-only criticism fails validation.",
+  "type": "object",
+  "required": [
+    "inputType",
+    "failingInput",
+    "expectedVsActual",
+    "argumentWhyBreaks"
+  ],
+  "properties": {
+    "inputType": {
+      "type": "string",
+      "enum": ["correctness", "complexity-blow-up", "operational-failure"],
+      "description": "Failure category. Correctness = wrong output; complexity-blow-up = exceeds claimed complexity on a constructed input; operational-failure = concurrency / state / resource issue."
+    },
+    "failingInput": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "description": "Executable input data (for correctness / complexity-blow-up types). Must be parseable by the harness for the target language."
+        },
+        {
+          "type": "object",
+          "required": ["scenario", "trigger"],
+          "properties": {
+            "scenario": {
+              "type": "string",
+              "minLength": 20,
+              "description": "Concrete operational scenario (e.g., 'concurrent read during eviction at cache size N')."
+            },
+            "trigger": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Specific operation sequence that triggers the failure."
+            }
+          },
+          "description": "Operational-failure scenario (for inputType=operational-failure). Verbal-only criticism without a scenario+trigger fails validation."
+        }
+      ],
+      "description": "Executable input or concrete operational scenario. Verbal-only criticism is rejected and triggers one re-dispatch."
+    },
+    "expectedVsActual": {
+      "type": "object",
+      "required": ["expected", "actual"],
+      "properties": {
+        "expected": { "type": "string", "minLength": 1 },
+        "actual": { "type": "string", "minLength": 1 }
+      },
+      "description": "What the baseline should produce vs what it produces. For complexity-blow-up: expected = claimed complexity envelope; actual = observed envelope."
+    },
+    "argumentWhyBreaks": {
+      "type": "string",
+      "minLength": 30,
+      "description": "Brief argument tying failingInput to the failure mode. One paragraph max — the input does the work, not the prose."
+    }
+  },
+  "additionalProperties": false
+}

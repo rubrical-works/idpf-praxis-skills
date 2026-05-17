@@ -1,0 +1,13 @@
+{
+  "$schema": "paradigms-schema.json",
+  "description": "Optional inspiration palette of research paradigms. NOT consulted by runtime routing — the primary agent picks paradigms ad-hoc or selectively opens this file to pull one entry into a path brief. Full-catalog routing via match-signals.js is a contract violation (#203 AC9).",
+  "paradigms": [
+    { "id": "hypothesis-driven-inquiry", "name": "Hypothesis-driven inquiry", "description": "Generate competing hypotheses, design tests, update beliefs based on outcomes. Default Popperian paradigm for engage-crucible." },
+    { "id": "mechanistic-reasoning", "name": "Mechanistic reasoning", "description": "Hypotheses explain phenomena by reference to underlying causal mechanisms. Mechanism specification is load-bearing for falsifiability." },
+    { "id": "causal-dag-modeling", "name": "Causal-DAG modeling", "description": "Hypotheses are formalized as directed acyclic graphs over variables. Confounders, mediators, and colliders are explicit nodes." },
+    { "id": "replication-first", "name": "Replication-first inquiry", "description": "Hypotheses are framed around what replications would and would not be expected to show. Strong default for low-prior-credibility findings." },
+    { "id": "prediction-first", "name": "Prediction-first inquiry", "description": "Hypotheses are framed in terms of specific quantitative predictions, pre-registered before experiment. Reduces post-hoc rationalization." },
+    { "id": "natural-experiment", "name": "Natural-experiment inquiry", "description": "Hypotheses leverage naturally-occurring exposure variation (policy changes, geographic discontinuities, instrumental variables) when controlled experiments are impossible." },
+    { "id": "comparative-effectiveness", "name": "Comparative effectiveness", "description": "Hypotheses compare two or more existing interventions against each other rather than against a null/placebo. Common in clinical and policy research." }
+  ]
+}

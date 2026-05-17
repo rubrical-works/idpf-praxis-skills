@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "synthesis-output-schema.json",
+  "title": "Bayesian prior-update synthesis output (engage-crucible Step 4)",
+  "description": "Output of the mandatory Bayesian-synthesis pass. Replaces winner-picking with a posterior-update landscape, a single crucible-experiment identification, a research roadmap, and a learning objective.",
+  "type": "object",
+  "required": [
+    "priors",
+    "posteriorLandscape",
+    "crucibleExperiment",
+    "researchRoadmap",
+    "learningObjective"
+  ],
+  "properties": {
+    "priors": {
+      "type": "object",
+      "required": ["priorSource", "values"],
+      "properties": {
+        "priorSource": {
+          "enum": ["uniform", "user-supplied"]
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Required when priorSource is 'uniform' (briefly justify that uniform is appropriate) or 'user-supplied' (pass through the user's rationale)."
+        },
+        "values": {
+          "type": "object",
+          "minProperties": 2,
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "description": "Hypothesis id → prior probability. Must sum to 1.0 ±0.01 (enforced procedurally)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "posteriorLandscape": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One entry per proposed crucial experiment. Each entry records the hypothesis-by-hypothesis posterior shift if the experiment's discriminating prediction holds.",
+      "items": {
+        "type": "object",
+        "required": ["experimentId", "ifPredictionHolds", "ifPredictionFails"],
+        "properties": {
+          "experimentId": { "type": "string", "minLength": 1, "description": "References the attacker's experiment (e.g., 'attack-for-h1'); identifies which crucial experiment this entry models." },
+          "ifPredictionHolds": {
+            "type": "object",
+            "additionalProperties": {
+              "enum": ["up", "unchanged", "down", "ruled-out"]
+            },
+            "description": "Hypothesis id → posterior direction (qualitative ranking acceptable)."
+          },
+          "ifPredictionFails": {
+            "type": "object",
+            "additionalProperties": {
+              "enum": ["up", "unchanged", "down", "ruled-out"]
+            }
+          },
+          "informationGain": {
+            "enum": ["low", "medium", "high"],
+            "description": "Aggregate information-gain ranking across both outcome branches."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "crucibleExperiment": {
+      "type": "object",
+      "required": ["experimentId", "rationale"],
+      "properties": {
+        "experimentId": { "type": "string", "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 1, "description": "Why this experiment maximizes information gain per cost across the proposed crucial experiments." }
+      },
+      "additionalProperties": false,
+      "description": "The single experiment with the highest information gain per cost. This is the experiment the user should run first."
+    },
+    "researchRoadmap": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["order", "experimentId"],
+        "properties": {
+          "order": { "type": "integer", "minimum": 1 },
+          "experimentId": { "type": "string", "minLength": 1 },
+          "conditionalOn": { "type": "string", "description": "What outcome of a prior experiment makes this experiment valuable to run next." }
+        },
+        "additionalProperties": false
+      },
+      "description": "Ordered sequence of experiments that resolves the most uncertainty soonest. First item is the crucible experiment."
+    },
+    "learningObjective": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What Bayesian intuition or research-design principle this case is teaching. Non-empty."
+    }
+  },
+  "additionalProperties": false
+}

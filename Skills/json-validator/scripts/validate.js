@@ -7,9 +7,15 @@
  *   node validate.js <file.json>          Validate a single file
  *   node validate.js --all                Scan project for all schema-referenced JSON
  *   node validate.js --dir <path>         Scan a specific directory
+ *   node validate.js --inline <file.json> Scoped fallback: parse-only + top-level type
+ *                                          check (no ajv required). For hosts without
+ *                                          ajv installed. Does NOT do schema validation.
  *
  * Output: JSON to stdout
- *   { "ok": true/false, "results": [...], "summary": { "total", "passed", "failed", "skipped" } }
+ *   { "ok": true/false, "mode": "schema"|"inline", "results": [...], "summary": { "total", "passed", "failed", "skipped" } }
+ *
+ * Preflight: in default mode, exits non-zero with a Pattern 4 diagnostic
+ * (deliverable / fallback / install path) when ajv is unavailable.
  */
 
 'use strict';
@@ -17,31 +23,20 @@
 const fs = require('fs');
 const path = require('path');
 
-// --- Ajv dependency check ---
-
-let Ajv;
-try {
-  Ajv = require('ajv');
-} catch {
-  console.log(JSON.stringify({
-    ok: false,
-    error: 'ajv not installed',
-    suggestion: 'Run: npm install ajv'
-  }));
-  process.exit(1);
-}
-
-// --- Argument parsing ---
+// --- Argument parsing (must run before ajv check so --inline can opt out of ajv requirement) ---
 
 const args = process.argv.slice(2);
 let mode = 'single';
 let target = null;
+let inlineMode = false;
 
 const schemaOverrides = new Map();
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--all') {
     mode = 'all';
+  } else if (args[i] === '--inline') {
+    inlineMode = true;
   } else if (args[i] === '--dir') {
     mode = 'dir';
     target = args[++i];
@@ -69,6 +64,26 @@ for (let i = 0; i < args.length; i++) {
 if (mode === 'single' && !target) {
   console.log(JSON.stringify({ ok: false, error: 'No file specified. Use <file.json>, --all, or --dir <path>' }));
   process.exit(1);
+}
+
+// --- Ajv preflight (Pattern 4: deliverable -> fallback -> install) ---
+// In normal mode, ajv is required for JSON Schema validation. In --inline mode,
+// ajv is not needed because we do parse-only structural checks instead.
+
+let Ajv = null;
+if (!inlineMode) {
+  try {
+    Ajv = require('ajv');
+  } catch {
+    console.log(JSON.stringify({
+      ok: false,
+      mode: 'preflight-failure',
+      deliverable: 'Validate JSON files against JSON Schema using ajv (Draft 7 / 2020-12, $ref resolution, format validators).',
+      fallback: 'Re-invoke with --inline for parse-only structural checks (valid JSON syntax + top-level type matches $schema-declared type if trivially derivable). The fallback does NOT perform schema validation.',
+      installPath: 'Or install Node 18+ and run: npm install ajv'
+    }, null, 2));
+    process.exit(1);
+  }
 }
 
 // --- File discovery ---
@@ -190,6 +205,7 @@ function validateFile(filePath, schemaPath) {
       file: filePath,
       schema: schemaPath,
       status: valid ? 'PASS' : 'FAIL',
+      mode: 'schema',
       errors: valid ? [] : validate.errors.map(e => ({
         path: e.instancePath || '/',
         message: e.message,
@@ -202,9 +218,70 @@ function validateFile(filePath, schemaPath) {
       file: filePath,
       schema: schemaPath,
       status: 'ERROR',
+      mode: 'schema',
       errors: [{ path: '/', message: err.message, keyword: 'parse', params: {} }]
     };
   }
+}
+
+// Scoped fallback (Pattern 4): parse-only structural check when ajv is unavailable.
+// Verifies the file is valid JSON. If the schema declares a top-level `type`
+// trivially derivable without $ref resolution, asserts the parsed data matches it.
+// Does NOT do constraint checking, format validation, $ref resolution, or anything
+// beyond parse + top-level type. SKILL.md is explicit about this scope gap.
+function validateFileInline(filePath, schemaPath) {
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (err) {
+    return {
+      file: filePath,
+      schema: schemaPath,
+      status: 'ERROR',
+      mode: 'inline',
+      note: 'Structural check only; schema validation not performed.',
+      errors: [{ path: '/', message: `Parse failed: ${err.message}`, keyword: 'parse', params: {} }]
+    };
+  }
+
+  // Try to load the schema's top-level type for a single trivial assertion.
+  // If schema is malformed or has no straightforward type, treat as PASS at the
+  // structural level (the file parsed) and surface the limitation.
+  let declaredType = null;
+  try {
+    const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+    if (typeof schema.type === 'string') {
+      declaredType = schema.type;
+    }
+  } catch {
+    // Schema unreadable in inline mode is non-fatal — parse-only passed.
+  }
+
+  if (declaredType) {
+    const actualType = Array.isArray(data) ? 'array' : (data === null ? 'null' : typeof data);
+    const matches = actualType === declaredType
+      || (declaredType === 'integer' && actualType === 'number' && Number.isInteger(data))
+      || (declaredType === 'object' && actualType === 'object' && !Array.isArray(data) && data !== null);
+    if (!matches) {
+      return {
+        file: filePath,
+        schema: schemaPath,
+        status: 'FAIL',
+        mode: 'inline',
+        note: 'Structural check only; schema validation not performed.',
+        errors: [{ path: '/', message: `Top-level type mismatch: schema declares "${declaredType}", file is "${actualType}"`, keyword: 'type', params: { expected: declaredType, actual: actualType } }]
+      };
+    }
+  }
+
+  return {
+    file: filePath,
+    schema: schemaPath,
+    status: 'PASS',
+    mode: 'inline',
+    note: 'Structural check only; schema validation not performed.',
+    errors: []
+  };
 }
 
 // --- Main ---
@@ -245,7 +322,9 @@ for (const filePath of files) {
     continue;
   }
 
-  const result = validateFile(filePath, schema.resolved);
+  const result = inlineMode
+    ? validateFileInline(filePath, schema.resolved)
+    : validateFile(filePath, schema.resolved);
   results.push(result);
 
   if (result.status === 'PASS') {
@@ -256,5 +335,9 @@ for (const filePath of files) {
 }
 
 const ok = summary.failed === 0;
-console.log(JSON.stringify({ ok, results, summary }, null, 2));
+const envelope = { ok, mode: inlineMode ? 'inline' : 'schema', results, summary };
+if (inlineMode) {
+  envelope.note = 'Structural check only; schema validation not performed. Install Node 18+ and ajv to enable full schema validation.';
+}
+console.log(JSON.stringify(envelope, null, 2));
 process.exit(ok ? 0 : 1);

@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "heuristic-audit-output-schema.json",
+  "title": "Heuristic audit pass output (engage-forge Step 4)",
+  "description": "Output of the mandatory heuristic audit pass. Carries the heuristic-finding matrix against the recommended artefact, the operational-graft recommendation (or null), and the most-severe finding summary.",
+  "type": "object",
+  "required": ["checklistId", "subjectArtefact", "findings", "mostSevereFinding", "graftRecommendation"],
+  "properties": {
+    "checklistId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the checklist used (e.g., 'nielsen-10', 'wcag-aa', or the checklistId from a custom checklist)."
+    },
+    "subjectArtefact": {
+      "type": "object",
+      "required": ["pathNumber", "paradigm", "artefactType"],
+      "properties": {
+        "pathNumber": { "type": "integer", "minimum": 1 },
+        "paradigm": { "type": "string", "minLength": 1 },
+        "artefactType": {
+          "enum": ["flow", "ia-tree", "heuristic-matrix", "journey-map", "try-fail-cycle", "kano-grid"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["heuristic", "artefactElement", "severity", "finding", "recommendation"],
+        "properties": {
+          "heuristic": { "type": "string", "minLength": 1 },
+          "artefactElement": { "type": "string", "minLength": 1 },
+          "severity": { "enum": ["pass", "minor", "major", "critical"] },
+          "finding": { "type": "string", "minLength": 1 },
+          "recommendation": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "mostSevereFinding": {
+      "type": "object",
+      "required": ["heuristic", "severity", "recommendation"],
+      "properties": {
+        "heuristic": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["pass", "minor", "major", "critical"] },
+        "recommendation": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "graftRecommendation": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["fromPath", "fromArtefactElement", "heuristic", "transplantTo", "instruction"],
+          "properties": {
+            "fromPath": { "type": "integer", "minimum": 1 },
+            "fromArtefactElement": { "type": "string", "minLength": 1 },
+            "heuristic": { "type": "string", "minLength": 1 },
+            "transplantTo": { "type": "string", "minLength": 1, "description": "Where in the recommended artefact the structural element should be transplanted" },
+            "instruction": { "type": "string", "minLength": 1, "description": "Specific structural-element transplant, not a merged artefact" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

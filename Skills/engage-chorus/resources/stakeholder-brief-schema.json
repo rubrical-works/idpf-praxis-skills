@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "stakeholder-brief-schema.json",
+  "title": "Stakeholder-advocate brief (engage-chorus Step 2)",
+  "description": "One brief per dispatched stakeholder path. The six required fields (interests, statedPositions, batna, reservationPoint, tradeableConcessions, coalitionSignals) are the AC3 contract — missing any of them fails validation. role uniqueness across paths is enforced procedurally (AC6).",
+  "type": "object",
+  "required": ["role", "characterization", "interests", "statedPositions", "batna", "reservationPoint", "tradeableConcessions", "coalitionSignals", "steelManTier"],
+  "properties": {
+    "role": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kebab-case stakeholder role identifier (e.g., 'the-regulator', 'the-vendor', 'the-end-user'). Across all N paths, role must be unique — enforced procedurally before dispatch (AC6)."
+    },
+    "characterization": { "type": "string", "minLength": 1, "description": "One-sentence characterization of this stakeholder in the situation." },
+    "interests": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Underlying needs / motivations — NOT stated positions. Steel-man directive: real motivations, not strawman dismissals."
+    },
+    "statedPositions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Current public stance — may diverge from interests."
+    },
+    "batna": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Best alternative to negotiated agreement — what happens if no deal is reached. Steel-man directive: BATNA must be non-trivial (not 'they have no alternative')."
+    },
+    "reservationPoint": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Walk-away threshold — the worst deal this stakeholder accepts. Must reference specific terms or conditions."
+    },
+    "tradeableConcessions": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "At least 2 concrete concessions this stakeholder can give up cheaply that are valuable to others. Steel-man directive: concrete and valuable, not generic."
+    },
+    "coalitionSignals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["alignedWith", "alignmentBasis"],
+        "properties": {
+          "alignedWith": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "Role identifier of another stakeholder whose interests align here." },
+          "alignmentBasis": { "type": "string", "minLength": 1, "description": "What interest is shared." }
+        },
+        "additionalProperties": false
+      },
+      "description": "At least one specific coalition signal naming another stakeholder and the shared interest. Steel-man directive: specific stakeholder name and basis, not vague 'others may agree'."
+    },
+    "steelManTier": {
+      "enum": ["strong", "weak", "inadequate"],
+      "description": "Classification by the primary agent. weak/inadequate triggers re-dispatch once (AC4); persistent failure tags steelMan=weak and mediator deprioritizes."
+    },
+    "rationale": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Optional ≤200-word narrative rationale explaining the advocate's framing choices."
+    }
+  },
+  "additionalProperties": false
+}

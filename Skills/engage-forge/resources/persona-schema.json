@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "persona-schema.json",
+  "title": "Optional persona JSON (engage-forge critique pass)",
+  "description": "Optional structured shape for personas supplied via --persona <path>. Free-text persona strings are accepted by the skill without this schema — the primary agent fills in plausible attributes when only a name is given.",
+  "type": "object",
+  "required": ["name", "goal"],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "shortDescriptor": { "type": "string", "description": "One-line characterization (e.g., 'smartphone-first checkout user')" },
+    "goal": { "type": "string", "minLength": 1, "description": "What the persona is trying to accomplish in the artefact being critiqued" },
+    "priorKnowledge": { "type": "string" },
+    "technicalComfort": { "enum": ["low", "medium", "high"] },
+    "accessibilityNeeds": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "context": { "type": "string", "description": "Environmental or situational context (device, time pressure, distractions)" }
+  },
+  "additionalProperties": false
+}

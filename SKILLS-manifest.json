@@ -63,7 +63,7 @@
       "path": "Skills/common-errors"
     },
     "debate-prism": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "type": "invokable",
       "category": "analysis",
       "path": "Skills/debate-prism"
@@ -92,14 +92,50 @@
       "category": "platform",
       "path": "Skills/electron-development"
     },
+    "engage-apothecary": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "clinical-education",
+      "path": "Skills/engage-apothecary"
+    },
+    "engage-chorus": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "analysis",
+      "path": "Skills/engage-chorus"
+    },
+    "engage-codex": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "narrative",
+      "path": "Skills/engage-codex"
+    },
+    "engage-crucible": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "analysis",
+      "path": "Skills/engage-crucible"
+    },
     "engage-exocortex": {
-      "version": "2.0.0",
+      "version": "2.0.1",
       "type": "invokable",
       "category": "analysis",
       "path": "Skills/engage-exocortex"
     },
-    "engage-prism": {
+    "engage-forge": {
       "version": "1.0.0",
+      "type": "invokable",
+      "category": "design",
+      "path": "Skills/engage-forge"
+    },
+    "engage-lexicon": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "analysis",
+      "path": "Skills/engage-lexicon"
+    },
+    "engage-prism": {
+      "version": "1.0.1",
       "type": "invokable",
       "category": "analysis",
       "path": "Skills/engage-prism"
@@ -129,7 +165,7 @@
       "path": "Skills/install-node"
     },
     "json-validator": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "type": "invokable",
       "category": "analysis",
       "path": "Skills/json-validator"
@@ -218,6 +254,12 @@
       "category": "platform",
       "path": "Skills/sinatra-setup"
     },
+    "spar-exocortex": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "analysis",
+      "path": "Skills/spar-exocortex"
+    },
     "sqlite-integration": {
       "version": "2.0.0",
       "type": "invokable",
@@ -249,7 +291,7 @@
       "path": "Skills/tdd-red-phase"
     },
     "tdd-refactor-coverage-audit": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "type": "reference",
       "category": "testing",
       "path": "Skills/tdd-refactor-coverage-audit"

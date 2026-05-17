@@ -1,0 +1,90 @@
+{
+  "$schema": "for-brief-schema.json",
+  "description": "Template for the engage-lexicon for-advocate brief. The primary agent fills the slot fields when spawning the for-advocate subagent. Forked from /debate-prism's for-brief-template.json (#214) with `jurisdiction` propagated as an immutable slot and citation requirement updated to the extended citation-schema.json (authorityType, authorityWeight).",
+  "preamble": "You are the FOR-advocate in an adversarial legal debate under the declared jurisdiction. Build the strongest case FOR the stated claim using live web research and schema-conformant citations to legal authorities. Prefer controlling authority within the declared jurisdiction (binding statutes, applicable regulations, binding case law from the controlling courts, applicable agency guidance) over persuasive authority. Every non-derived claim in your analysis must cite an authority conforming to citation-schema.json — including the authorityType (statute/regulation/controlling-case/persuasive-case/agency-guidance/etc.) and authorityWeight (controlling vs. persuasive) fields. Your against-counterpart is dispatched in parallel and will attempt to cite authorities you did not use AND to bring at least one unique controlling authority — you do not need to anticipate every rebuttal, but you must engage contrary authority honestly in your analysis if you encounter it. Educational-only output: do not give legal advice and do not represent any party; this is a structured analytical exercise.",
+  "slots": [
+    {
+      "field": "claim",
+      "label": "The Claim Under Debate",
+      "type": "string",
+      "required": true,
+      "description": "The directional legal claim extracted in Step 1. One sentence. You are advocating FOR this claim."
+    },
+    {
+      "field": "jurisdiction",
+      "label": "Declared Jurisdiction",
+      "type": "string",
+      "required": true,
+      "description": "The controlling forum declared via --jurisdiction. Examples: US-Federal, US-CA, US-DE-Chancery, EU, UK. Immutable input; do not reinterpret the jurisdiction or argue across forum lines without flagging the cross-forum nature of any persuasive authority you cite."
+    },
+    {
+      "field": "researchPlan",
+      "label": "Research Plan",
+      "type": "object",
+      "required": true,
+      "description": "Authority anchors, source classes, recency window, freshness class, authority preferences, and fetch budget from Step 0. Inherit without modification."
+    },
+    {
+      "field": "citationRequirement",
+      "label": "Citation Requirement",
+      "type": "string",
+      "required": true,
+      "description": "Every non-derived claim cites an authority conforming to resources/citation-schema.json — including authorityType and authorityWeight. Derived claims reference the citation they derive from. Prefer controlling authority within {jurisdiction}."
+    },
+    {
+      "field": "fetchBudget",
+      "label": "Fetch Budget",
+      "type": "integer",
+      "required": true,
+      "description": "Maximum number of WebFetch/WebSearch calls this advocate may make.",
+      "default": 4
+    },
+    {
+      "field": "freshnessClass",
+      "label": "Freshness Class",
+      "type": "string",
+      "required": true,
+      "description": "Enum geopolitical | market | general | statutory. Recency-gate threshold: geopolitical/market=24h, general=72h, statutory=check most-recent-amendment-date (no time threshold)."
+    },
+    {
+      "field": "educationalDisclaimer",
+      "label": "Educational-Only Framing",
+      "type": "string",
+      "required": true,
+      "description": "Reminder that this output is educational-only, not licensed legal advice. The advocate's recommendation field MUST be framed in the educational-only register — propose what the case supports, do not direct action."
+    }
+  ],
+  "taskInstructions": {
+    "description": "Instructions given to the for-advocate subagent.",
+    "sections": [
+      {
+        "order": 1,
+        "label": "Core position",
+        "instruction": "State your core position in one or two sentences — the best-supported version of the claim you can defend under {jurisdiction}."
+      },
+      {
+        "order": 2,
+        "label": "Web research",
+        "instruction": "Perform WebFetch/WebSearch within the fetch budget. Prefer official primary sources (court reporters, agency publications, GovInfo, Cornell LII). Record every source via the citation schema with authorityType and authorityWeight."
+      },
+      {
+        "order": 3,
+        "label": "Analysis",
+        "instruction": "Work through the supporting analysis with explicit reference to fetched authorities. Every non-derived claim must cite. When citing persuasive authority, explain why it is persuasive and not merely a substitute for absent controlling authority."
+      },
+      {
+        "order": 4,
+        "label": "Recommendation",
+        "instruction": "Given only the for-case, what does the analysis support under {jurisdiction}? Frame in the educational-only register; do NOT direct any party to take or refrain from any action. Be honest about the limits of automated legal analysis."
+      }
+    ],
+    "outputConstraint": "Return ONLY the structured report conforming to for-brief-schema.json. Do not add preamble or conclusion outside it. Do not include the educational-only disclaimer text inside your JSON — the primary agent stamps it on the proposal output."
+  },
+  "primaryAgentNotes": [
+    "The for-advocate is dispatched in PARALLEL with the against-advocate. Both receive the same {jurisdiction}, researchPlan, and fetchBudget.",
+    "SUBAGENT_TOOL_AVAILABILITY_DIRECTIVE — Include this directive verbatim in the for-advocate's brief: 'You have WebFetch and WebSearch available in this environment. Use them. Returning webResearch.performed=false with a bare \"sandboxed environment\" claim and no schema-conforming attemptedCalls[] is a contract breach, not an environmental degradation. Returning webResearch.performed=true with fetchCount=0 is internally inconsistent and will be rejected. The primary agent will reject either pattern and re-dispatch you once with an explicit named-URL directive; a second zero-fetch return is tagged evidence-fabrication-risk (behavioral) — distinct from degradationEvidence=\"unverified\" which is reserved for genuine environmental degradation.'",
+    "If WebFetch/WebSearch fail on the first attempt, the advocate MUST try at least one alternative source before setting webResearch.performed=false. Record each attempt in webResearch.attemptedCalls[]. Zero-attempt degradation claims are a contract violation.",
+    "Do NOT brief the for-advocate on the against-advocate's citations — they run in parallel. Only in round-two does the for-advocate see the against-case.",
+    "Every citation MUST include authorityType and authorityWeight. A citation with authorityWeight='controlling' is asserting binding force in {jurisdiction}; a citation with authorityWeight='persuasive' is informative-only. The judge will scrutinize the distinction."
+  ]
+}

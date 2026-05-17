@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "try-fail-cycle.schema.json",
+  "title": "Try/fail cycle artefact (narrative)",
+  "description": "Conflict-attempt-result chain. The protagonist pursues a goal through escalating attempts, each meeting an obstacle that either advances or redirects the pursuit. Used by paradigms that foreground active protagonist agency (classic three-act, hero's journey ordeal phase, Save-the-Cat fun-and-games).",
+  "type": "object",
+  "required": ["artefactType", "title", "goal", "cycles"],
+  "properties": {
+    "artefactType": { "const": "try-fail-cycle" },
+    "title": { "type": "string", "minLength": 1 },
+    "goal": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the protagonist is trying to do (the external want, typically)."
+    },
+    "cycles": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["attempt", "action", "obstacle", "result"],
+        "properties": {
+          "attempt": { "type": "integer", "minimum": 1 },
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the protagonist tries at this attempt."
+          },
+          "obstacle": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What prevents the attempt from succeeding (or, on a success cycle, what made it costly)."
+          },
+          "result": {
+            "enum": ["success", "success-pyrrhic", "fail-recoverable", "fail-fatal"],
+            "description": "Outcome class. success = goal advanced; success-pyrrhic = goal advanced at unexpected cost; fail-recoverable = setback that motivates the next attempt; fail-fatal = ends the pursuit."
+          },
+          "escalation": {
+            "type": "string",
+            "description": "Optional: how this attempt's outcome raises the stakes for the next cycle."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "finalOutcome": {
+      "enum": ["goal-achieved", "goal-abandoned", "goal-redefined", "tragic-failure"],
+      "description": "Optional: classification of the chain's terminus."
+    }
+  },
+  "additionalProperties": false
+}

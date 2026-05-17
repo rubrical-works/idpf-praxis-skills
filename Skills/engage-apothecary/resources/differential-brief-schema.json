@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "differential-brief-schema.json",
+  "title": "Differential brief schema (engage-apothecary path subagent output)",
+  "description": "Output shape of each parallel differential subagent. Mandatory: diagnosis, mechanism, ≥1 evidence-tier-weighted citation, testCharacteristics, contraindicationReasoning. Optional web-research metadata: webResearch flag, webResearchSuspect flag (set by the primary agent's subagent-fabrication check).",
+  "type": "object",
+  "required": ["diagnosis", "mechanism", "evidenceCitations", "testCharacteristics", "contraindicationReasoning"],
+  "properties": {
+    "diagnosis": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "icd": { "type": "string", "description": "Optional ICD code (e.g., 'I21.4' for NSTEMI)." }
+      },
+      "additionalProperties": false
+    },
+    "mechanism": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500,
+      "description": "Mechanistic / pathophysiologic reasoning, ≤150 words (≤1500 chars approximate)."
+    },
+    "evidenceCitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "citation-schema.json" }
+    },
+    "testCharacteristics": {
+      "type": "object",
+      "description": "Sensitivity / specificity / likelihood ratios where well-published; qualitative ranking otherwise. Explicit 'data not well-published' is valid; fabricated quantitative LRs are not.",
+      "properties": {
+        "sensitivity": { "type": ["number", "string"] },
+        "specificity": { "type": ["number", "string"] },
+        "lrPlus": { "type": ["number", "string"] },
+        "lrMinus": { "type": ["number", "string"] },
+        "qualitativeRanking": {
+          "enum": ["strong-rule-in", "moderate-rule-in", "weak-rule-in", "strong-rule-out", "moderate-rule-out", "weak-rule-out", "data-not-well-published"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "contraindicationReasoning": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What would argue against this diagnosis given the scenario."
+    },
+    "webResearch": {
+      "type": "boolean",
+      "description": "True if WebFetch/WebSearch was used for citations; false when --no-web was set (tier capped at expert-opinion)."
+    },
+    "webResearchSuspect": {
+      "type": "boolean",
+      "description": "Set by the primary agent's subagent-fabrication check when citations were returned without recorded attemptedCalls."
+    },
+    "attemptedCalls": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Record of WebFetch / WebSearch invocations the subagent claims to have made. Empty when --no-web."
+    }
+  },
+  "additionalProperties": false
+}

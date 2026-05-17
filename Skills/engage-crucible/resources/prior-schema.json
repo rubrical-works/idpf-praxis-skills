@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "prior-schema.json",
+  "title": "User-supplied prior probabilities (engage-crucible)",
+  "description": "Map of hypothesis id to prior probability. Probabilities must sum to 1.0 (±0.01 tolerance is enforced procedurally, not by JSON Schema).",
+  "type": "object",
+  "required": ["priors", "rationale"],
+  "properties": {
+    "priors": {
+      "type": "object",
+      "minProperties": 2,
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "description": "Hypothesis id → prior probability. At least 2 hypotheses required."
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why these priors were chosen (prior literature, expert elicitation, replication-budget-shaped priors)."
+    }
+  },
+  "additionalProperties": false
+}

@@ -5,6 +5,16 @@ SKILL.md. When naming paths, consult it to identify which paradigm family best d
 each candidate approach, and — critically — to find a genuinely *different* family for
 each subsequent path.
 
+> **Catalog scope (slim — 2026-05-16, per Enhancement #215 AC8):** `paradigms.json` was
+> reduced from 31 paradigms to 10 high-level families: the 8 algorithmic families
+> documented in detail below, plus two umbrella architectural families
+> (`system-architecture`, `data-and-service-design`) whose sub-variants harvest the most
+> useful patterns from the retired entries. The pre-slim catalog and the retired→slim
+> mapping table are preserved under `resources/retired/2026-05-16/` for auditability.
+> Subagents supply specifics from their own training — the catalog is a palette, not a
+> routing substrate. The architectural-paradigm sections later in this document describe
+> what was merged and remain useful as recognition anchors.
+
 Each paradigm entry covers:
 - **Core idea** — the one sentence that defines the paradigm
 - **When it applies** — the structural signals in a problem that suggest this paradigm

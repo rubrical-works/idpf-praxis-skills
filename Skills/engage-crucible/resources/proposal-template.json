@@ -1,0 +1,15 @@
+{
+  "$schema": "proposal-template-schema.json",
+  "templateId": "CRUCIBLE-proposal-1.0.0",
+  "description": "Document structure for Proposal/CRUCIBLE-{question-slug}.md (engage-crucible Step 5). Decision-focused — surfaces the crucible experiment and research roadmap where users can act on them.",
+  "sections": [
+    { "id": "metadata", "title": "Metadata", "required": true, "fields": ["date", "skill", "researchQuestion", "domain", "paths", "priorSource", "offlineMode", "crucibleExperimentId"] },
+    { "id": "research-question", "title": "Research Question", "required": true, "description": "Restated user question." },
+    { "id": "hypotheses", "title": "Hypotheses", "required": true, "description": "One section per hypothesis with the full brief, structured experimental-design artefact, and the prior probability." },
+    { "id": "falsification-attacks", "title": "Falsification Attacks", "required": true, "description": "One section per attacker with discriminating prediction, siblings ruled out, experimental setup, expected information gain, cost." },
+    { "id": "bayesian-synthesis", "title": "Bayesian Synthesis", "required": true, "description": "Prior table, posterior-landscape table, crucible-experiment call-out, roadmap list." },
+    { "id": "crucible-experiment", "title": "Crucible Experiment", "required": true, "description": "Detailed write-up of the highest-information-gain-per-cost experiment." },
+    { "id": "research-roadmap", "title": "Research Roadmap", "required": true, "description": "Ordered sequence of experiments plus conditional-next-steps decision points." },
+    { "id": "learning-objective", "title": "Learning Objective", "required": true, "description": "What Bayesian or research-design lesson this case teaches." }
+  ]
+}

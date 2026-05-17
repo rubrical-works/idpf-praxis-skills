@@ -3,7 +3,7 @@
 [![Skill CI](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml)
 [![CodeQL](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml)
 [![Latest Release](https://img.shields.io/github/v/release/rubrical-works/idpf-praxis-skills)](https://github.com/rubrical-works/idpf-praxis-skills/releases/latest)
-[![Skills](https://img.shields.io/badge/skills-46-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
+[![Skills](https://img.shields.io/badge/skills-53-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 Ready-to-use skills for [Claude Code](https://claude.ai/code). Browse skill documentation below, then install what you need.
@@ -53,29 +53,36 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, Windows considerations |
 | [electron-cross-build](Skills/electron-cross-build/) | Platform | Cross-compile Electron apps from Linux to Windows |
 
-### Invokable Skills (17)
+### Invokable Skills (24)
 
 Interactive guided workflows. Install and use as slash commands.
 
 | Skill | Category | Description |
 |-------|----------|-------------|
-| [playwright-setup](Skills/playwright-setup/) | Testing | Playwright installation and verification |
-| [playwright-explorer](Skills/playwright-explorer/) | Testing | Browser exploration and element discovery |
-| [flask-setup](Skills/flask-setup/) | Web | Flask project scaffolding |
-| [sinatra-setup](Skills/sinatra-setup/) | Web | Sinatra project scaffolding |
-| [digitalocean-app-setup](Skills/digitalocean-app-setup/) | Deployment | DigitalOcean App Platform setup |
-| [railway-project-setup](Skills/railway-project-setup/) | Deployment | Railway deployment setup |
-| [render-project-setup](Skills/render-project-setup/) | Deployment | Render deployment setup |
-| [vercel-project-setup](Skills/vercel-project-setup/) | Deployment | Vercel deployment setup |
-| [postgresql-integration](Skills/postgresql-integration/) | Database | PostgreSQL setup and integration |
-| [sqlite-integration](Skills/sqlite-integration/) | Database | SQLite setup and integration |
-| [i18n-setup](Skills/i18n-setup/) | Infrastructure | Internationalization setup |
-| [code-path-discovery](Skills/code-path-discovery/) | Analysis | Path analysis patterns |
-| [json-validator](Skills/json-validator/) | Analysis | Validate JSON files against schemas |
-| [engage-exocortex](Skills/engage-exocortex/) | Problem Solving | JSON-driven parallel solution explorer |
-| [engage-prism](Skills/engage-prism/) | Analytical Reasoning | JSON-driven parallel analytical explorer with citation-first contract |
-| [debate-prism](Skills/debate-prism/) | Analytical Reasoning | Adversarial for/against debate on a question with citation-overlap contract and structured judging |
-| [install-node](Skills/install-node/) | Setup | Safe, guided Node.js installer with dry-run default and responsibility gate |
+| [code-path-discovery](Skills/code-path-discovery/) | Analysis | Scan TypeScript/JavaScript source files for behavioral paths and return candidates |
+| [debate-prism](Skills/debate-prism/) | Analysis | Adversarial for/against/judge analyst for contested business, marketing, financial claims |
+| [digitalocean-app-setup](Skills/digitalocean-app-setup/) | Platforms & Frameworks | Configure automated preview, staging, and production deployments with DigitalOcean App Platform |
+| [engage-apothecary](Skills/engage-apothecary/) | Clinical Education | Strictly educational clinical reasoning explorer with Bayesian pre/post-test reasoning. Not for point-of-care use |
+| [engage-chorus](Skills/engage-chorus/) | Analysis | Multi-stakeholder negotiation/mediation. N-party-steel-man with mediator output schema |
+| [engage-codex](Skills/engage-codex/) | Narrative | Artefact-first narrative exploration for screenplay, short-story, novel-chapter, episodic-TV, game |
+| [engage-crucible](Skills/engage-crucible/) | Analysis | Scientific-research/hypothesis-generation with Bayesian prior-update and falsification gates |
+| [engage-exocortex](Skills/engage-exocortex/) | Analysis | JSON-driven parallel solution explorer for code/algorithm/architecture problems |
+| [engage-forge](Skills/engage-forge/) | Design | Artefact-first parallel design exploration for product and UX problems with audit + critique gates |
+| [engage-lexicon](Skills/engage-lexicon/) | Analysis | Adversarial for/against/judge analyst for contested legal, policy, compliance claims |
+| [engage-prism](Skills/engage-prism/) | Analysis | JSON-driven parallel analyst for business/marketing/finance questions with citation-first contract |
+| [flask-setup](Skills/flask-setup/) | Platforms & Frameworks | Python Flask development environment scaffolding for beginners |
+| [i18n-setup](Skills/i18n-setup/) | Platforms & Frameworks | Internationalization infrastructure scaffolding with locale/string extraction |
+| [install-node](Skills/install-node/) | DevOps | Safe, guided Node.js installer with dry-run default and responsibility gate |
+| [json-validator](Skills/json-validator/) | Analysis | Validate JSON files against companion JSON Schema definitions |
+| [playwright-explorer](Skills/playwright-explorer/) | Testing | Interactive browser exploration using Playwright with natural-language interaction |
+| [playwright-setup](Skills/playwright-setup/) | Testing | Playwright installation verification and troubleshooting |
+| [postgresql-integration](Skills/postgresql-integration/) | Database | PostgreSQL setup, connection configuration, query patterns |
+| [railway-project-setup](Skills/railway-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Railway |
+| [render-project-setup](Skills/render-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Render |
+| [sinatra-setup](Skills/sinatra-setup/) | Platforms & Frameworks | Ruby Sinatra development environment scaffolding for beginners |
+| [spar-exocortex](Skills/spar-exocortex/) | Analysis | Adversarial propose-attack-measure analyst for algorithmic problems with execution-backed validation |
+| [sqlite-integration](Skills/sqlite-integration/) | Database | SQLite database integration with beginner-friendly code examples |
+| [vercel-project-setup](Skills/vercel-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Vercel |
 
 ### Reference Skills (17)
 

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "kano-grid.schema.json",
+  "title": "Kano-classification feature grid artefact",
+  "description": "A feature × category Kano classification. Each row is one feature classified as basic, performance, delight, indifferent, or reverse. Used by feature-prioritization design paths.",
+  "type": "object",
+  "required": ["artefactType", "title", "features"],
+  "properties": {
+    "artefactType": { "const": "kano-grid" },
+    "title": { "type": "string", "minLength": 1 },
+    "userSegment": { "type": "string" },
+    "features": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["feature", "category", "rationale"],
+        "properties": {
+          "feature": { "type": "string", "minLength": 1 },
+          "category": { "enum": ["basic", "performance", "delight", "indifferent", "reverse"] },
+          "rationale": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

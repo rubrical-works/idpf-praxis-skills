@@ -1,0 +1,14 @@
+{
+  "$schema": "proposal-template-schema.json",
+  "templateId": "CODEX-proposal-1.0.0",
+  "description": "Document structure for Proposal/CODEX-{slug}.md (engage-codex Step 5). Decision-focused — the recommended outline (or 'user choice'), the comparison table, and per-path critique findings are surfaced where a user can act on them.",
+  "sections": [
+    { "id": "metadata", "title": "Metadata", "required": true, "fields": ["date", "skill", "pathsExplored", "format", "recommendedPath"] },
+    { "id": "story-brief", "title": "Story Brief", "required": true, "description": "Original user brief: premise, genre, length target, tone, protagonist want/need, central conflict, constraints." },
+    { "id": "paradigms-explored", "title": "Paradigms Explored", "required": true, "description": "One row per path: paradigm name, artefact type, one-sentence rationale." },
+    { "id": "artefacts", "title": "Artefacts", "required": true, "description": "One section per path. Full structured artefact + ≤200-word rationale narrative." },
+    { "id": "synthesis", "title": "Synthesis Comparison Table", "required": true, "description": "The comparison table from Step 3. Recommended path called out if one emerged." },
+    { "id": "narrative-critique", "title": "Narrative Critique", "required": true, "description": "One section per path with findings per category (pacing valleys, unset-up payoffs, character-motivation gaps, unsupported tonal shifts). 'Clean' categories listed explicitly." },
+    { "id": "what-would-change", "title": "What Would Change This Recommendation", "required": true, "description": "2-3 bullets naming the constraint / paradigm assumption / story-brief detail that, if updated, would flip the recommended path." }
+  ]
+}

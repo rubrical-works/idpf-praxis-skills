@@ -1,0 +1,36 @@
+{
+  "$schema": "strategies-schema.json",
+  "description": "Optional inspiration palette of narrative strategies — orthogonal choices about how the story is told (POV, time, narrator reliability, story-vs-discourse ordering). NOT consulted by runtime routing — the primary agent picks strategies ad-hoc or selectively opens this file. Full-catalog loading is a contract violation (#206 AC8).",
+  "strategies": [
+    {
+      "id": "in-medias-res",
+      "name": "In medias res opening",
+      "description": "Start in the middle of action; reveal context through flashback, dialogue, or implication. Strong fit for stories whose premise is more compelling than their setup — thriller, crime, sci-fi with strong inciting situation."
+    },
+    {
+      "id": "parallel-timelines",
+      "name": "Parallel timelines",
+      "description": "Two or more time periods interleaved (past + present, multiple presents, alternating POVs). Each timeline carries its own arc; they converge thematically (and sometimes literally) at the climax. Used by literary fiction (The Hours), thriller (Memento), TV (This Is Us)."
+    },
+    {
+      "id": "unreliable-narrator",
+      "name": "Unreliable narrator",
+      "description": "The narrator's account is biased, mistaken, or deceptive. The story's truth emerges through inference. Strong fit for character studies where the protagonist's blind spots are the subject, and for twist-driven thrillers where revelation reframes prior events."
+    },
+    {
+      "id": "ensemble-pov",
+      "name": "Ensemble POV",
+      "description": "Multiple protagonists, each with their own arc, intersecting at key moments. Each POV character carries roughly equal weight (vs. clear protagonist + supporting cast). Strong fit for community-portrait stories, heist films, war narratives."
+    },
+    {
+      "id": "epistolary",
+      "name": "Epistolary / found-document",
+      "description": "The story is told through letters, journal entries, transcripts, emails, or other documents. The reader assembles the narrative from artifacts rather than receiving it from a narrator. Strong fit for literary fiction, horror (found-footage tradition), and stories whose subject is fragmentation or reconstruction."
+    },
+    {
+      "id": "real-time",
+      "name": "Real-time / unity of time",
+      "description": "Story-time and discourse-time are equal — the events take as long to read/watch as they take to happen in-story. Used by 24 (TV), Rope (Hitchcock), and short stories that compress action into one tense duration. Strong fit for pressure-cooker scenarios."
+    }
+  ]
+}

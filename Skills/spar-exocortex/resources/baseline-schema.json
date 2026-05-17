@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "baseline-schema.json",
+  "title": "spar-exocortex baseline proposal envelope",
+  "description": "Output of Step 1 — Parse problem + draft baseline. Primary agent emits this single baseline before any attacker dispatch.",
+  "type": "object",
+  "required": [
+    "algorithmSketch",
+    "targetComplexity",
+    "invariantChoice",
+    "targetLanguage",
+    "implementation"
+  ],
+  "properties": {
+    "algorithmSketch": {
+      "type": "string",
+      "minLength": 30,
+      "description": "Concise prose describing the approach (data structures, key operations, invariants)."
+    },
+    "targetComplexity": {
+      "type": "string",
+      "pattern": "^O\\(.+\\)$",
+      "description": "Big-O complexity claim. Must use canonical O(...) notation."
+    },
+    "invariantChoice": {
+      "type": "string",
+      "minLength": 5,
+      "description": "What is precomputed vs computed online. Used by the challenger's anti-overlap check."
+    },
+    "targetLanguage": {
+      "type": "string",
+      "enum": ["js", "ts", "python"],
+      "description": "Target language for the implementation. Must match an adapter available at preflight."
+    },
+    "implementation": {
+      "type": "string",
+      "minLength": 20,
+      "description": "Self-contained executable text in targetLanguage. Must be runnable by the harness against a standard test set without modification."
+    },
+    "operationalAssumptions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional. Operational assumptions the design relies on (e.g., 'single-threaded reads', 'no concurrent eviction'). Attacker may target these."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "execution-result-schema.json",
+  "title": "spar-exocortex per-case execution result envelope",
+  "description": "Single execution result emitted by the harness for one (candidate, case) pair. Step 4 produces an array of these spanning baseline × cases + challenger × cases.",
+  "type": "object",
+  "required": ["candidate", "case", "outcome"],
+  "properties": {
+    "candidate": {
+      "type": "string",
+      "enum": ["baseline", "challenger"],
+      "description": "Which candidate produced this result."
+    },
+    "case": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Case identifier. Convention: 'standard:<n>' for shared-test-set cases, 'attacker' for the attacker's failingInput, 'edge:<name>' for subagent-named edges."
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["pass", "fail", "timeout", "error"],
+      "description": "pass = expected output; fail = wrong output; timeout = exceeded --execution-timeout-ms; error = runtime exception in candidate code."
+    },
+    "wallClockMs": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Optional. Wall-clock duration in milliseconds. Required for complexity-stress cases; optional otherwise."
+    },
+    "expected": {
+      "type": "string",
+      "description": "Optional. Expected output (for pass/fail outcomes). Useful for judge readability."
+    },
+    "actual": {
+      "type": "string",
+      "description": "Optional. Actual output produced by the candidate."
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Required when outcome=error or outcome=timeout. Captures the exception message or timeout reason."
+    }
+  },
+  "additionalProperties": false
+}

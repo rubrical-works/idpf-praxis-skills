@@ -10,41 +10,51 @@ category: database
 relevantTechStack: [sqlite, sql, flask, sinatra, python, ruby]
 copyright: "Rubrical Works (c) 2026"
 ---
-
 # SQLite Integration for Beginners
-
-Teaches beginners to add persistent SQLite storage to Flask or Sinatra apps.
-
+Teaches beginners how to add persistent data storage using SQLite to Flask or Sinatra applications.
 ## Step 0 — Re-read Config (MANDATORY)
-
-Read `resources/sqlite-integration.config.json` and validate against `resources/sqlite-integration.config.schema.json` at the start of every invocation. Config is source of truth for file-extension convention, per-language drivers (Python `sqlite3`, Ruby `sqlite3` gem, Node `better-sqlite3`) with install commands, schema conventions (primary key, timestamp), and the starter `notes` table CREATE statement. SKILL.md must not duplicate config values.
-
-## When to Use
-
-- Working app with in-memory storage (lists/arrays)
-- "How do I save data permanently?"
-- Wants persistence after server restart
-- Beginner mentions "database"
-- 3-4 features working, ready for persistence
-- File-based/embedded DB needed; better-sqlite3 or other SQLite libs
-
-## Prerequisites
-
-- Working Flask or Sinatra app
-- Understands routes and templates
-- One feature using list/array storage
-- Understands "data disappears on restart"
-- Comfortable with basic programming
-
+Read `resources/sqlite-integration.config.json` from disk and validate against `resources/sqlite-integration.config.schema.json` at start of every invocation. Config is source of truth for file-extension convention, per-language driver choices (Python `sqlite3`, Ruby `sqlite3` gem, Node `better-sqlite3`) with install commands, schema conventions (primary key, timestamp), starter `notes` table CREATE statement. SKILL.md must not duplicate values.
+## When to Use This Skill
+Invoke when:
+- User has working app with in-memory storage (lists/arrays)
+- User asks "How do I save data permanently?"
+- User wants data to persist after server restart
+- User mentions "database" but is beginner
+- User has 3-4 features working and is ready for persistence
+- File-based or embedded database solutions needed
+- Using better-sqlite3 or other SQLite libraries
+## Prerequisites Check
+Before adding database, user should:
+- ✓ Have working Flask or Sinatra app
+- ✓ Understand routes and templates
+- ✓ Have at least one feature using list/array storage
+- ✓ Understand "data disappears on restart" problem
+- ✓ Be comfortable with basic programming concepts
 ## What is SQLite?
+**Beginner explanation:**
+```
+SQLite is a database that stores data in a file.
 
-SQLite stores data in a file. List/array = whiteboard (erased on restart). SQLite = notebook (persists in `notes.db`). No server setup, built into Python, easy SQL basics, can upgrade to PostgreSQL/MySQL later.
+- List/Array: Like writing notes on a whiteboard
+  - Fast and easy
+  - Disappears when you turn off the server
 
-## Key Concepts
+- SQLite: Like writing in a notebook
+  - Data saved to a file (notes.db)
+  - Stays there even after server stops
+  - Can search, sort, and organize data easily
 
-**1. Database = Organized Storage** — TABLES (like spreadsheets) with COLUMNS (id, name, email) and ROWS (entries).
-
-**2. SQL = Language for Databases**
+Perfect for beginners because:
+✓ No server setup needed
+✓ Just a file in your project
+✓ Built into Python
+✓ Easy to learn SQL basics
+✓ Can upgrade to PostgreSQL/MySQL later
+```
+## Key Concepts to Teach
+### 1. Database = Organized Storage
+Database has TABLES (like spreadsheets). Each table has COLUMNS (kind of data: id, name, email) and ROWS (actual entries). Example "notes" table has columns: id, text, created_at.
+### 2. SQL = Language for Databases
 ```
 CREATE TABLE - Make new table
 INSERT INTO  - Add data
@@ -52,25 +62,23 @@ SELECT       - Get data
 UPDATE       - Change data
 DELETE       - Remove data
 ```
-
-**3. Connection = Open the Database File** — CONNECT → DO → COMMIT → CLOSE.
-
+### 3. Connection = Open the Database File
+```
+1. CONNECT to database file (open it)
+2. DO something (add, get, update data)
+3. COMMIT (save changes)
+4. CLOSE connection (close the file)
+```
 ## Responsibility Acknowledgement Gate
-
-Implements pattern from **`responsibility-gate`** skill. See `Skills/responsibility-gate/SKILL.md` for full contract.
-
-- **When this fires:** before modifying Flask/Sinatra app to add SQLite (editing source files, installing `sqlite3` gem for Ruby, creating `notes.db` on disk).
-- **What is asked:** acceptance of responsibility for changes to application source files, Ruby gem environment (Sinatra path), and filesystem (new `notes.db`).
-- **On decline:** exit cleanly; report "Declined — no changes made."; make no system changes.
-- **Persistence:** per-invocation. Re-fires on every subsequent invocation; acceptance never persisted.
-
-Use `AskUserQuestion` with two required options (`"I accept responsibility — proceed"`, `"Decline — exit without changes"`). See `responsibility-gate` for allowed additional options.
-
+Implements pattern in **`responsibility-gate`** skill. See `Skills/responsibility-gate/SKILL.md`.
+- **When this fires:** before modifying the Flask or Sinatra application to add SQLite (editing source files, installing `sqlite3` gem for Ruby, and creating a `notes.db` database file on disk).
+- **What is asked:** acceptance of responsibility for change to application source files, Ruby gem environment (Sinatra path), and filesystem (new `notes.db` file in project directory).
+- **On decline:** exit cleanly; report "Declined — no changes made."; no system changes.
+- **Persistence:** per-invocation; never persisted.
+Use `AskUserQuestion` with two required options (`"I accept responsibility — proceed"` and `"Decline — exit without changes"`).
 ## Implementation Steps
-
 ### Step 1: Understand the Transition
-
-Current code (using list):
+**Current code (using list):**
 ```python
 notes = []  # Data in RAM - disappears when server stops
 
@@ -83,24 +91,16 @@ def add():
     notes.append(request.form['note'])
     return redirect('/')
 ```
-
-Restart → notes disappear. After SQLite: data saved in `notes.db` → persists.
-
+**Problem:** Restart server → notes disappear
+**After adding SQLite:** Data saved in `notes.db` file → persists forever
 ### Step 2: Choose Your Framework
-
-- **Flask:** `resources/flask-sqlite-example.py`
-- **Sinatra:** `resources/sinatra-sqlite-example.rb`
-- **SQL basics:** `resources/sql-basics.md`
-
+- **Flask users:** See `resources/flask-sqlite-example.py`
+- **Sinatra users:** See `resources/sinatra-sqlite-example.rb`
+- **SQL basics:** See `resources/sql-basics.md`
 ## Flask Implementation
-
-See `resources/flask-sqlite-example.py` for complete commented code.
-
-**1. Import sqlite3:**
-```python
-import sqlite3
-```
-
+See `resources/flask-sqlite-example.py` for complete, commented code.
+**Key changes from list to SQLite:**
+**1. Import sqlite3:** `import sqlite3`
 **2. Create connection function:**
 ```python
 def get_db():
@@ -108,7 +108,6 @@ def get_db():
     conn.row_factory = sqlite3.Row  # Makes results easier to work with
     return conn
 ```
-
 **3. Initialize database (create table):**
 ```python
 def init_db():
@@ -123,7 +122,6 @@ def init_db():
     conn.commit()
     conn.close()
 ```
-
 **4. Update routes to use database:**
 ```python
 @app.route('/')
@@ -133,22 +131,14 @@ def home():
     conn.close()
     return render_template('index.html', notes=notes)
 ```
-
 ## Sinatra Implementation
-
-See `resources/sinatra-sqlite-example.rb` for complete commented code.
-
-**1. Require sqlite3:**
-```ruby
-require 'sqlite3'
-```
-
+See `resources/sinatra-sqlite-example.rb` for complete, commented code.
+**1. Require sqlite3:** `require 'sqlite3'`
 **2. Create database connection:**
 ```ruby
 DB = SQLite3::Database.new 'notes.db'
 DB.results_as_hash = true
 ```
-
 **3. Create table:**
 ```ruby
 DB.execute <<-SQL
@@ -159,7 +149,6 @@ DB.execute <<-SQL
   )
 SQL
 ```
-
 **4. Update routes:**
 ```ruby
 get '/' do
@@ -167,9 +156,8 @@ get '/' do
   erb :index
 end
 ```
-
 ## Teaching Approach
-
+### Explain Each SQL Statement
 **CREATE TABLE:**
 ```sql
 CREATE TABLE IF NOT EXISTS notes (
@@ -178,62 +166,36 @@ CREATE TABLE IF NOT EXISTS notes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 ```
-- `IF NOT EXISTS`: safe to run multiple times
-- `id INTEGER PRIMARY KEY AUTOINCREMENT`: unique auto-incremented row identifier
-- `text TEXT NOT NULL`: required text content
-- `created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`: auto-filled creation time
-
-**INSERT:**
-```sql
-INSERT INTO notes (text) VALUES (?)
-```
-`?` is a placeholder; pass actual text separately to prevent SQL injection.
-
-**SELECT:**
-```sql
-SELECT * FROM notes ORDER BY created_at DESC
-```
-`*` = all columns; `DESC` = newest first (`ASC` = oldest first).
-
+**Explanation:** `CREATE TABLE notes`: make new table; `IF NOT EXISTS`: only if doesn't exist; `id INTEGER PRIMARY KEY AUTOINCREMENT`: unique number for each note, auto-increments; `text TEXT NOT NULL`: column for note content, must have value; `created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`: automatically filled with current time.
+**INSERT:** `INSERT INTO notes (text) VALUES (?)` — `?` is placeholder (safer than putting text directly); pass actual text separately to prevent SQL injection.
+**SELECT:** `SELECT * FROM notes ORDER BY created_at DESC` — `*`: all columns; `ORDER BY created_at DESC`: sort by creation time, newest first (ASC = ascending, DESC = descending).
 ## Common Questions
-
-- **Where is the DB file?** Project folder: `notes.db`.
-- **Can I look inside?** DB Browser for SQLite, sqlite3 CLI, VS Code extensions.
-- **If I make a mistake?** Delete `notes.db`; recreates on next run (data lost).
-- **Need to install SQLite?** Python: built-in. Ruby: `gem install sqlite3`.
-- **Template changes?** Minor — see examples.
-- **SQL injection?** Always use `?` placeholders (prepared statements). Never put user input directly in SQL.
-
+**Q: Where is the database file?** In project folder: `notes.db`. You can see it after running app once.
+**Q: Can I look inside the database?** Yes! Tools: DB Browser for SQLite (free, visual); sqlite3 command line; VS Code extensions.
+**Q: What if I make a mistake?** Just delete `notes.db` file. Recreates on next run (data lost).
+**Q: Do I need to install SQLite?** Python: built-in, no installation. Ruby: `gem install sqlite3`.
+**Q: Will my HTML template need changes?** Minor changes - see examples for template adjustments.
+**Q: What about SQL injection?** Use `?` placeholders (prepared statements) - safe. Never put user input directly in SQL!
 ## Testing the Database
-
-1. **Add a note** → restart server → note still there.
-2. **Check DB file** — `notes.db` exists, grows with notes.
-3. **Multiple operations** — add notes, restart, all persist.
-4. **Delete DB file** — stop server, delete `notes.db`, start → new empty DB created.
-
+**Test 1: Add a note** - Add note through form; restart server; check if note still there ✓
+**Test 2: Check database file** - Look in project folder; `notes.db` file should exist; size grows as you add notes
+**Test 3: Multiple operations** - Add several notes; restart server; all notes should persist
+**Test 4: Delete database file** - Stop server; delete `notes.db`; start server; new empty database created
 ## Migration Path
-
-- **Phase 1:** Single table, simple queries, no relationships.
-- **Phase 2:** Multiple tables, foreign keys.
-- **Phase 3:** JOINs, indexes, complex queries.
-- **Phase 4:** PostgreSQL/MySQL — same SQL applies.
-
+**Phase 1: Basic SQLite (start here)** - Single table; simple queries; no relationships
+**Phase 2: Multiple tables (later)** - Users and notes separately; foreign keys linking them
+**Phase 3: More advanced (much later)** - Complex queries; JOIN operations; indexes for speed
+**Phase 4: Production database (way later)** - PostgreSQL or MySQL; same SQL concepts apply!
 ## Troubleshooting
-
-- **`no such table`** — run `init_db()`; check `CREATE TABLE` ran.
-- **`Database is locked`** — close DB Browser/other tools; restart server.
-- **`No such column`** — check spelling.
-- **Weird template data** — access dict/Row correctly; see examples.
-
+**"sqlite3.OperationalError: no such table"** - Table not created; run `init_db()`; check if `CREATE TABLE` ran
+**"Database is locked"** - Another program has database open; close DB Browser; restart server
+**"No such column"** - Typo in column name; check exact spelling in SQL
+**Template shows weird data format** - Need to access dict/Row correctly; see framework examples for proper syntax
 ## Complete Examples
-
-In `resources/`:
-- `flask-sqlite-example.py`
-- `sinatra-sqlite-example.rb`
-- `sql-basics.md`
-
-Include full commented code, template adjustments, run/test instructions.
-
-## Next Steps
-
-Add UPDATE/DELETE; learn foreign keys; add search/filter; explore indexes; consider PostgreSQL migration.
+Both complete, working examples with all teaching comments in resources folder:
+- `resources/flask-sqlite-example.py`
+- `resources/sinatra-sqlite-example.rb`
+- `resources/sql-basics.md`
+Include: full commented code; template adjustments needed; how to run and test; what to expect at each step.
+## Next Steps After SQLite
+Once comfortable with SQLite: add UPDATE and DELETE operations; learn about relationships (foreign keys); add search/filter functionality; explore indexes for speed; consider migration to PostgreSQL.

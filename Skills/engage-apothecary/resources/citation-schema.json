@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "citation-schema.json",
+  "title": "Evidence-tier citation schema (engage-apothecary)",
+  "description": "Citation shape with mandatory evidence tier. Tier hierarchy (highest → lowest): systematic-review > rct > cohort > case-control > case-series > expert-opinion. Synthesis weights citations by tier. Unknown tiers fail validation. Fabricated quantitative likelihood ratios are forbidden; the citation shape only records the tier and the claim — quantitative LRs are reported in the differential brief's testCharacteristics field with explicit literature backing.",
+  "type": "object",
+  "required": ["source", "tier", "claim"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "URL, DOI, or other unambiguous source identifier."
+    },
+    "tier": {
+      "enum": ["systematic-review", "rct", "cohort", "case-control", "case-series", "expert-opinion"],
+      "description": "Evidence tier (highest → lowest): systematic-review > rct > cohort > case-control > case-series > expert-opinion."
+    },
+    "claim": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What this citation supports in the context of the brief."
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 1900,
+      "description": "Publication year. Used by the recency-gate flag (does not reject; informational)."
+    },
+    "author": { "type": "string" },
+    "journal": { "type": "string" },
+    "outsideRecencyWindow": {
+      "type": "boolean",
+      "description": "Optional flag set by the differential brief when the citation's year is outside the --recency-years window."
+    }
+  },
+  "additionalProperties": false
+}

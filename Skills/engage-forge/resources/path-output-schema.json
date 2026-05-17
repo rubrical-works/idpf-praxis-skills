@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "path-output-schema.json",
+  "title": "Path subagent output envelope (engage-forge)",
+  "description": "Wraps the path's structured artefact, paradigm + artefact-type self-declaration, ≤200-word rationale, and 'what would change this' bullets. The artefact field is one of the six artefact-schema shapes; the primary agent validates it against the schema named in artefactType.",
+  "type": "object",
+  "required": ["paradigm", "artefactType", "artefact", "rationale"],
+  "properties": {
+    "paradigm": { "type": "string", "minLength": 1 },
+    "artefactType": {
+      "enum": ["flow", "ia-tree", "heuristic-matrix", "journey-map", "try-fail-cycle", "kano-grid"]
+    },
+    "artefact": {
+      "type": "object",
+      "description": "Structured artefact conforming to the schema named by artefactType. Pure-prose returns (missing artefact, or artefact with no structured payload) fail validation."
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "≤200 words of narrative rationale. Hard-cap on character count enforces the word limit approximately."
+    },
+    "whatWouldChange": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": false
+}

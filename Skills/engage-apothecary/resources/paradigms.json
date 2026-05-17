@@ -1,0 +1,36 @@
+{
+  "$schema": "paradigms-schema.json",
+  "description": "Optional inspiration palette of clinical-reasoning paradigms. NOT consulted by runtime routing — the primary agent picks paradigms ad-hoc or selectively opens this file to pull one entry into a path brief. Full-catalog routing via match-signals.js is a contract violation (#205 AC7).",
+  "paradigms": [
+    {
+      "id": "mechanistic",
+      "name": "Mechanistic / pathophysiologic reasoning",
+      "description": "Reason from physiology and pathophysiology — what cellular, anatomic, or systems-level mechanism would produce this presentation? Strong fit for differentials whose distinguishing feature is mechanism (vasculitis vs thromboembolism for ischemic stroke; demyelinating vs ischemic for neurological deficits). Pairs well with cohort and case-series citations for prevalence; pairs poorly with treatment-trial RCTs."
+    },
+    {
+      "id": "ebm-tier-walking",
+      "name": "Evidence-tier walking (EBM)",
+      "description": "Walk down the evidence-tier hierarchy systematically: what does the systematic-review literature say? RCTs? cohort studies? Each tier carries different epistemic weight. Strong fit for differentials whose distinguishing feature is published epidemiology (test characteristics, prevalence in defined populations)."
+    },
+    {
+      "id": "bayesian-pretest",
+      "name": "Bayesian pre/post-test reasoning",
+      "description": "Reason explicitly with pre-test probabilities and likelihood ratios. What is the pre-test probability of each differential given demographics + presentation? What test would produce the highest information-gain at this pre-test probability? Strong fit for any case whose teaching point is a Bayesian intuition — a high-LR+ test in a low-pre-test scenario, a sensitive test for ruling out vs ruling in, residual probability after a non-confirmatory result."
+    },
+    {
+      "id": "mnemonic-driven",
+      "name": "Mnemonic-driven enumeration (e.g., VITAMIN-CDE)",
+      "description": "Generate the differential systematically using a mnemonic (VITAMIN-CDE: Vascular / Infectious / Toxic / Autoimmune / Metabolic / Iatrogenic / Neoplastic / Congenital / Degenerative / Endocrine). Forces breadth-first generation, surfaces categories the clinician might otherwise skip. Strong fit for cases whose teaching point is the discipline of exhaustive enumeration."
+    },
+    {
+      "id": "system-anatomic-localization",
+      "name": "System / anatomic localization",
+      "description": "Reason from the anatomic site implicated by the presentation. What anatomic locations could produce this symptom? For each, what mechanism (vascular, inflammatory, neoplastic) makes sense at that site? Strong fit for neurological localization, abdominal pain by quadrant, joint-by-joint workup."
+    },
+    {
+      "id": "time-course-pattern",
+      "name": "Time-course pattern recognition",
+      "description": "Reason from the temporal pattern of symptoms — hyperacute / acute / subacute / chronic / relapsing-remitting / progressive. Different patterns map to different diagnostic categories (acute = vascular, infectious; subacute = inflammatory; chronic = degenerative, neoplastic; relapsing = autoimmune). Strong fit for cases where the temporal pattern is the most discriminating feature."
+    }
+  ]
+}

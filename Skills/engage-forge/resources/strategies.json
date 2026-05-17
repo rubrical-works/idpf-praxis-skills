@@ -1,0 +1,12 @@
+{
+  "$schema": "strategies-schema.json",
+  "description": "Optional inspiration palette of design strategies. NOT consulted by runtime routing.",
+  "strategies": [
+    { "id": "mobile-first", "name": "Mobile-first", "description": "Design constraints set by smallest viewport; desktop is an enhancement layer." },
+    { "id": "accessibility-first", "name": "Accessibility-first", "description": "Design constraints set by accessibility requirements (keyboard navigation, screen-reader compatibility, color-contrast); enhancement layers extend rather than override." },
+    { "id": "performance-budget-first", "name": "Performance-budget-first", "description": "Design constraints set by a performance budget (time-to-interactive, bundle size); interactions that exceed the budget are redesigned." },
+    { "id": "content-first", "name": "Content-first", "description": "Information architecture and layout derive from the actual content shapes, not from container templates filled with placeholders." },
+    { "id": "task-completion-first", "name": "Task-completion-first", "description": "Optimize for the user's primary task completion rate over secondary metrics (engagement, time-on-site)." },
+    { "id": "error-recovery-first", "name": "Error-recovery-first", "description": "Design constraints anchored on the failure modes and recovery paths, not just the happy path." }
+  ]
+}

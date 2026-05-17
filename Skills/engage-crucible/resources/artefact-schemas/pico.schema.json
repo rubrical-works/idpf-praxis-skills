@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "pico.schema.json",
+  "title": "PICO experimental-design artefact",
+  "description": "Population, Intervention, Comparison, Outcome — the canonical clinical/biomedical experimental design frame.",
+  "type": "object",
+  "required": ["artefactType", "population", "intervention", "comparison", "outcome", "primaryMeasurement"],
+  "properties": {
+    "artefactType": { "const": "pico" },
+    "population": {
+      "type": "object",
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "inclusionCriteria": { "type": "array", "items": { "type": "string" } },
+        "exclusionCriteria": { "type": "array", "items": { "type": "string" } },
+        "sampleSize": { "type": "string", "description": "Sample-size estimate or power-analysis summary" }
+      },
+      "additionalProperties": false
+    },
+    "intervention": { "type": "string", "minLength": 1, "description": "The exposure/treatment under test." },
+    "comparison": { "type": "string", "minLength": 1, "description": "The control or comparator." },
+    "outcome": { "type": "string", "minLength": 1 },
+    "primaryMeasurement": { "type": "string", "minLength": 1, "description": "How the outcome will be measured." },
+    "secondaryMeasurements": { "type": "array", "items": { "type": "string" } },
+    "confoundersToControl": { "type": "array", "items": { "type": "string" } },
+    "dagSketch": { "type": "string", "description": "Optional causal-DAG sketch in text form." }
+  },
+  "additionalProperties": false
+}
