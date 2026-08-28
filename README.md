@@ -60,16 +60,16 @@ Interactive guided workflows. Install and use as slash commands.
 | Skill | Category | Description |
 |-------|----------|-------------|
 | [code-path-discovery](Skills/code-path-discovery/) | Analysis | Scan TypeScript/JavaScript source files for behavioral paths and return candidates |
-| [debate-prism](Skills/debate-prism/) | Analysis | Adversarial for/against/judge analyst for contested business, marketing, financial claims |
+| [debate-prism](Skills/debate-prism/) | Analysis | Adversarial for/against/judge analyst for contested business, marketing, financial claims &mdash; [real-run case study](Docs/case-studies/debate-prism/enterprise-saas-mid-cap-buyback-vs-ai-reinvest-2026.md) |
 | [digitalocean-app-setup](Skills/digitalocean-app-setup/) | Platforms & Frameworks | Configure automated preview, staging, and production deployments with DigitalOcean App Platform |
-| [engage-apothecary](Skills/engage-apothecary/) | Clinical Education | Strictly educational clinical reasoning explorer with Bayesian pre/post-test reasoning. Not for point-of-care use |
-| [engage-chorus](Skills/engage-chorus/) | Analysis | Multi-stakeholder negotiation/mediation. N-party-steel-man with mediator output schema |
-| [engage-codex](Skills/engage-codex/) | Narrative | Artefact-first narrative exploration for screenplay, short-story, novel-chapter, episodic-TV, game |
-| [engage-crucible](Skills/engage-crucible/) | Analysis | Scientific-research/hypothesis-generation with Bayesian prior-update and falsification gates |
-| [engage-exocortex](Skills/engage-exocortex/) | Analysis | JSON-driven parallel solution explorer for code/algorithm/architecture problems |
-| [engage-forge](Skills/engage-forge/) | Design | Artefact-first parallel design exploration for product and UX problems with audit + critique gates |
-| [engage-lexicon](Skills/engage-lexicon/) | Analysis | Adversarial for/against/judge analyst for contested legal, policy, compliance claims |
-| [engage-prism](Skills/engage-prism/) | Analysis | JSON-driven parallel analyst for business/marketing/finance questions with citation-first contract |
+| [engage-apothecary](Skills/engage-apothecary/) | Clinical Education | Strictly educational clinical reasoning explorer with Bayesian pre/post-test reasoning. Not for point-of-care use &mdash; [real-run case study](Docs/case-studies/engage-apothecary/dvt-differential-young-adult-post-flight.md) |
+| [engage-chorus](Skills/engage-chorus/) | Analysis | Multi-stakeholder negotiation/mediation. N-party-steel-man with mediator output schema &mdash; [real-run case study](Docs/case-studies/engage-chorus/engineering-budget-reallocation-four-vp-mediation.md) |
+| [engage-codex](Skills/engage-codex/) | Narrative | Artefact-first narrative exploration for screenplay, short-story, novel-chapter, episodic-TV, game &mdash; [real-run case study](Docs/case-studies/engage-codex/forensic-accountant-mountain-town-act-i.md) |
+| [engage-crucible](Skills/engage-crucible/) | Analysis | Scientific-research/hypothesis-generation with Bayesian prior-update and falsification gates &mdash; [real-run case study](Docs/case-studies/engage-crucible/llm-inference-cost-plateau-2025-2026.md) |
+| [engage-exocortex](Skills/engage-exocortex/) | Analysis | JSON-driven parallel solution explorer for code/algorithm/architecture problems &mdash; [real-run case study](Docs/case-studies/engage-exocortex/ann-search-100m-embeddings-64gb-budget.md) |
+| [engage-forge](Skills/engage-forge/) | Design | Artefact-first parallel design exploration for product and UX problems with audit + critique gates &mdash; [real-run case study](Docs/case-studies/engage-forge/devtool-observability-first-session-onboarding.md) |
+| [engage-lexicon](Skills/engage-lexicon/) | Analysis | Adversarial for/against/judge analyst for contested legal, policy, compliance claims &mdash; [real-run case study](Docs/case-studies/engage-lexicon/saas-click-through-arbitration-california-mcgill-2026.md) |
+| [engage-prism](Skills/engage-prism/) | Analysis | JSON-driven parallel analyst for business/marketing/finance questions with citation-first contract &mdash; [real-run case study](Docs/case-studies/engage-prism/b2b-saas-ai-features-make-vs-buy-2026.md) |
 | [flask-setup](Skills/flask-setup/) | Platforms & Frameworks | Python Flask development environment scaffolding for beginners |
 | [i18n-setup](Skills/i18n-setup/) | Platforms & Frameworks | Internationalization infrastructure scaffolding with locale/string extraction |
 | [install-node](Skills/install-node/) | DevOps | Safe, guided Node.js installer with dry-run default and responsibility gate |
@@ -80,7 +80,7 @@ Interactive guided workflows. Install and use as slash commands.
 | [railway-project-setup](Skills/railway-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Railway |
 | [render-project-setup](Skills/render-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Render |
 | [sinatra-setup](Skills/sinatra-setup/) | Platforms & Frameworks | Ruby Sinatra development environment scaffolding for beginners |
-| [spar-exocortex](Skills/spar-exocortex/) | Analysis | Adversarial propose-attack-measure analyst for algorithmic problems with execution-backed validation |
+| [spar-exocortex](Skills/spar-exocortex/) | Analysis | Adversarial propose-attack-measure analyst for algorithmic problems with execution-backed validation &mdash; [real-run case study](Docs/case-studies/spar-exocortex/streaming-log-dedup-512mb-budget.md) |
 | [sqlite-integration](Skills/sqlite-integration/) | Database | SQLite database integration with beginner-friendly code examples |
 | [vercel-project-setup](Skills/vercel-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Vercel |
 

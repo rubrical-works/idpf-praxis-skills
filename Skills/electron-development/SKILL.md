@@ -4,7 +4,7 @@ description: Patterns and solutions for Electron app development with Vite, Play
 type: injector
 disable-model-invocation: true
 user-invocable: false
-defaultSkill: true
+defaultSkill: false
 version: "1.0.0"
 frameworkCompatibility: ">=0.60.0"
 lastUpdated: "2026-05-17"

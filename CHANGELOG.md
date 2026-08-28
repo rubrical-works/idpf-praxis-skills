@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2026-08-27
+
+### Added
+- **Real-run case studies for the engage-\* family** — worked examples under `Docs/case-studies/`, each cross-linked from its skill row in `README-DIST.md`: `engage-crucible` (LLM inference cost plateau), `engage-apothecary` (post-flight DVT differential) and `engage-forge` (observability onboarding redesign) (#262); `engage-prism` (B2B SaaS AI-features make-vs-buy) (#265); `engage-exocortex` (ANN search over 100M embeddings on a 64GB budget) (#266); `engage-chorus` (four-VP budget mediation) (#267); `engage-codex` (forensic-accountant mountain-town Act I) (#268); `engage-lexicon` (SaaS click-through arbitration under the California McGill rule) (#269); `debate-prism` (mid-cap enterprise SaaS buyback vs AI reinvestment) (#270); `spar-exocortex` (streaming-log dedup under a 512MB budget) (#271). The deploy pipeline now copies `Docs/` into the distribution repo and gates on a case-study placeholder-URL check.
+- **`effort: high` declared across the engage/spar/debate skill family**, with the governing rule added to `SKILL-DEVELOPMENT-GUIDE.md` and a regression test pinning it (#263).
+
+### Changed
+- **The `ajv`-missing contract is now loud-optional for `engage-exocortex` and `engage-prism`** — this reconciles a contract that had diverged in *opposite* directions between this repository (#252 — hard-fail, exit `1`) and `rubrical-worker/idpf-praxis-dev#2562` (loud-optional, exit `0`). When Node is present but `ajv` is unresolvable the scripts no longer halt: they emit exactly one stderr warning naming the module and the consequence, report `"validation": "unavailable"` in the result envelope, and exit `0`. A genuine schema violation still exits `1`, and a missing schema file (`ENOENT`) keeps its own distinct branch and never borrows the `ajv` diagnostic. Recorded in `Construction/Design-Decisions/2026-08-18-ajv-contract-reconciliation.md`, which supersedes #252 on the `ajv`-missing branch only and leaves the rest of the No-Runtime Fallback Pattern standing. `spar-exocortex` deliberately retains its own hard-fail contract. (#275)
+- **`codebase-analysis` 1.0.0 → 1.1.0** — new sections, backward compatible; see *Fixed* (#274).
+- **`engage-chorus` stakeholder briefs render as Markdown tables** instead of embedded JSON (#272).
+- **Electron skills dropped from the `defaultSkill` list** — `electron-cross-build` and `electron-development` are platform-category skills and no longer install by default (#264).
+- Verbatim-prompt blockquotes standardized across every case study, with a regression test (#273).
+
+### Fixed
+- **`codebase-analysis` Tech Stack Detection had no defined output for a zero-match run** (#274) — the detection table carried thirteen file-pattern rows and no null branch, while the Confidence Levels ladder bottomed out at *Low — weak signals*, which still presumes a signal. Since `## Usage` mandates a "technology summary **with confidence**", a run that found no manifest had no honest answer available to it. Surfaced by a consumer artifact asserting a Go ecosystem "detected via `go.mod`" in a repository containing no `go.mod` at any depth. The procedure now defines an explicit **Empty result** branch (separating *no manifest* from *no evidence*, so secondary evidence can be reported without ever being attributed to a manifest), a **None** confidence rung, an explicit root-only **Search depth** statement covering the monorepo case, and an **Attribution rule** requiring every named technology to cite a file that was actually opened. `resources/tech-stack-detection.md` is reconciled so that extension evidence stays admissible but is never reportable as a manifest-derived detection.
+- **Three high-severity advisories cleared in transitive dependencies** — `fast-uri` 3.1.2 → 3.1.6 (host confusion), `js-yaml` 3.14.2 → 3.15.2 (quadratic-complexity DoS), and `brace-expansion` 1.1.13 → 1.1.18. No `package.json` change was required: the advisories were published against an unchanged lockfile, and the superseded `fast-uri` pin had itself been added to patch an earlier advisory in the same package.
+
 ## [0.15.0] - 2026-05-17
 
 ### Added

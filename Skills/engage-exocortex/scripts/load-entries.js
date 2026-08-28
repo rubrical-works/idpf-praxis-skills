@@ -40,11 +40,12 @@ function main() {
 
   // Validate against colocated schema
   const schemaPath = path.join(__dirname, 'load-entries-input-schema.json');
-  const validationError = validateInput({ type, ids }, schemaPath);
-  if (validationError) {
-    outputError(validationError);
+  const validationResult = validateInput({ type, ids }, schemaPath);
+  if (validationResult.error) {
+    outputError(validationResult.error);
     process.exit(1);
   }
+  const validation = validationResult.validation;
 
   if (!TYPE_MAP[type]) {
     outputError(`Invalid type "${type}". Must be one of: paradigm, structure, strategy`);
@@ -97,6 +98,7 @@ function main() {
 
   const result = {
     ok: true,
+    validation,
     type,
     entries,
     unknownIds,
@@ -110,6 +112,26 @@ function main() {
   process.stdout.write(JSON.stringify(result, null, 2));
 }
 
+// #275 — the ajv-missing contract is loud-optional, not hard-fail.
+// A missing validator yields an observable `validation: "unavailable"` state
+// plus a single stderr warning, and the script still exits 0. A genuine schema
+// violation still hard-fails. ENOENT (schema file absent) keeps its own branch
+// and never borrows the ajv diagnostic — a missing schema and a missing
+// validator are different faults.
+const VALIDATION_PASSED = 'passed';
+const VALIDATION_UNAVAILABLE = 'unavailable';
+const SKILL_NAME = path.basename(path.join(__dirname, '..'));
+
+let validatorWarningEmitted = false;
+
+function warnValidatorUnavailable() {
+  if (validatorWarningEmitted) return;
+  validatorWarningEmitted = true;
+  process.stderr.write(
+    `${SKILL_NAME}: ajv not resolvable from this project — input validation skipped (validation: unavailable).\n`
+  );
+}
+
 function validateInput(input, schemaPath) {
   try {
     const Ajv = require('ajv');
@@ -117,19 +139,21 @@ function validateInput(input, schemaPath) {
     const ajv = new Ajv();
     const validate = ajv.compile(schema);
     if (!validate(input)) {
-      return `Input validation failed: ${validate.errors.map(e => e.message).join(', ')}`;
+      return { error: `Input validation failed: ${validate.errors.map(e => e.message).join(', ')}` };
     }
   } catch (e) {
     if (e.code === 'MODULE_NOT_FOUND') {
-      // Pattern 4 (#252): see match-signals.js for the rationale. ajv-missing
-      // on a Node-present host is now a hard-fail with the diagnostic that
-      // names both remediation paths.
-      return 'ajv module not found. Install with `npm install ajv` (in this skill directory or globally) to enable input schema validation, or invoke the no-Node fallback path (see SKILL.md "Fallback Procedure") — the fallback runs without schema validation.';
+      warnValidatorUnavailable();
+      return { validation: VALIDATION_UNAVAILABLE };
     }
-    if (e.code === 'ENOENT') return null;
+    if (e.code === 'ENOENT') {
+      // The schema file is absent, not the validator. No ajv diagnostic here.
+      // The envelope still reports that validation did not run, because it did not.
+      return { validation: VALIDATION_UNAVAILABLE };
+    }
     throw e;
   }
-  return null;
+  return { validation: VALIDATION_PASSED };
 }
 
 function outputError(message) {

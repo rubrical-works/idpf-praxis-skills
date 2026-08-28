@@ -1,5 +1,5 @@
 # Tech Stack Detection Guide
-**Version:** v0.15.0
+**Version:** v0.16.0
 **Purpose:** Patterns for detecting technology stacks from codebase analysis
 ## Language Detection
 ### By File Extension
@@ -19,6 +19,7 @@
 | `.scala` | Scala | High |
 | `.ex`, `.exs` | Elixir | High |
 | `.clj` | Clojure | High |
+Extension evidence is secondary: the Confidence column rates how reliably an extension identifies a language, not that the stack has been detected. Report extension findings as secondary evidence and never attribute them to a package-manager file that was not opened. `.go` files support "Go source present", never "Go modules detected via `go.mod`". See SKILL.md Tech Stack Detection > Empty result.
 ### By Package Manager File
 | File | Language/Runtime | Example Content |
 |------|------------------|-----------------|

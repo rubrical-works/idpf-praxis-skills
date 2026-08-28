@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-17T18:24:09.249Z",
+  "generatedAt": "2026-08-28T01:21:37.869Z",
   "version": "0.1.0",
   "skillCount": 53,
   "skills": [
@@ -10,7 +10,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "db357b2b9a7209457db3fde6a7c3e431a9cad61aeac3acad3a7aca16bbe2920f",
+      "checksum": "ef6621d7e61f8b52496e87da51ef97563e30e888eb1e25a39fd54cbc07317b55",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -33,7 +33,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "71c499e3fabe7b3a761eba7e396aafaf864de521c7683c99e782e9270bc6120c",
+      "checksum": "01343c311a00245c4f8f32ab9a0b867a015a4bef3c373ec19f07dd1990a9b8d1",
       "category": "api",
       "categoryLabel": "API",
       "relevantTechStack": [
@@ -52,7 +52,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "4879f56dd85a8de66f55a63196adae4f1345a4309503c19fb75a890bc68a5c78",
+      "checksum": "c47e820d56d17be612b651441dfb30e20529034850ea995222192cdfcee66071",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -72,7 +72,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "c2d1f31b4a341404cc5b5b19d58d4492b839dd57dd32a858336c656915b8dc03",
+      "checksum": "3a40b442dc433dade093cd890230483585f2089c1a8515609ba95e823d701d97",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -91,7 +91,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "9c363f15ea39c791d9e5b95c9c04f4ac25a48fe0a09fdcb4a1472b79a3faa118",
+      "checksum": "7d2c79c9f337e4c04247a934d0f206fa0c1a4e806f96426e6db21f024da49c29",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -110,7 +110,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "19c09ff1e1bebbb7e9d22b68c42dbd7a42bdd1dbb2681ba25abdd2e6947207a1",
+      "checksum": "455a959a576d54a5ca55417d743cc92cfd0fe07d76ba5182081e057d704927ab",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [
@@ -129,7 +129,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "2b4c75ce08671a0c07e5d48faf07c03a22c730ad1e7e470aa460e08966ca533c",
+      "checksum": "61ef0b35340ee412bef93775382e0276133e559bb5a93c45e2a91a2e05c6e149",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -143,10 +143,10 @@
       "name": "codebase-analysis",
       "description": "Analyze existing codebases to extract structure, tech stack, and patterns",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.1.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-04-02",
-      "checksum": "f80493b3e9523a02a8a7b90488b3897b13900ea88e6c40386f1d4e9b44e3b3ad",
+      "lastUpdated": "2026-08-27",
+      "checksum": "10d5eca254aca96d636307a3636233cc3ca52b35105a01eb0a758359f5167242",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -186,7 +186,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "6346067dcc13b4855f6c836d74b30ec7eca99dd8d420c2aa6923f3f9c21380db",
+      "checksum": "e9e341a0dbdba90c2d56ff0fa0e76c952654d598d8dbb980eab008c966b5b87f",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -201,10 +201,10 @@
       "name": "debate-prism",
       "description": "Adversarial for/against/judge analyst for contested business, marketing, and financial claims. Extracts the claim under debate, runs a baseline pass, dispatches a for-advocate and an against-advocate in parallel with mechanical citation diversity, then routes to a judge subagent that names the specific evidence that settled the call. Preserves the citation schema, recency gate, attempted-call evidence, and disclaimer contract from /engage-prism.",
       "triggers": [],
-      "version": "1.0.1",
+      "version": "1.0.2",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "4c728f79e2204a8fa0f23f0bc13bac91afdad52c9e1172fc83ac355876d6ad61",
+      "lastUpdated": "2026-05-18",
+      "checksum": "8dea8f24aa07f298c94b80ada9c87432fd9c31d937c47c09ef7f116707fe3dc4",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -225,7 +225,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "fb3394b27c96253f0a969fd1d37886930f2fa9c4749c8598882f34d8e82f69c3",
+      "checksum": "53445e78b75ec0973005bdc8bb5ebbf740330d079ef99f305c9c4d2c9fb6b2e1",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -243,7 +243,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "dab1f85a86cc0fe993cd4f853055aba4456076b1417ed0d85c1cf92807f8b22a",
+      "checksum": "dd84fa4b54106a9324fee4bebc44873cafed192625cbed2fd9b273b6abdb5476",
       "category": "documentation",
       "categoryLabel": "Documentation",
       "relevantTechStack": [
@@ -263,7 +263,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-05-17",
-      "checksum": "339467bc761c4ea0df381253dc8787d2c234a1e073eb1c009857127378bb7c9c",
+      "checksum": "5ba214ecb988028eaa2931375db00184cf3d8dadeb6c31d311e9c87345e19948",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -275,7 +275,7 @@
         "electron-builder",
         "electron-forge"
       ],
-      "defaultSkill": true,
+      "defaultSkill": false,
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
@@ -285,7 +285,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-05-17",
-      "checksum": "1a2693240c34031dfaa2f589e3ce88eb9eb1c20b2cc115ec982b1fb940b50fd0",
+      "checksum": "4cad748f7989036815f4f9e75dcf6d353b91fc6367de0724ed78e8f4f568d13c",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -295,17 +295,17 @@
         "typescript",
         "windows"
       ],
-      "defaultSkill": true,
+      "defaultSkill": false,
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
       "name": "engage-apothecary",
       "description": "Strictly educational clinical reasoning explorer. Walks through differential diagnoses with mechanistic pathways, evidence-tier-weighted citations, a mandatory red-flag advocate role (must-not-miss diagnosis + cheapest ruling-out test), and a mandatory Bayesian pre/post-test probability synthesis with educational learning objective. NOT a medical device. NOT for point-of-care decisions. NOT for individual patient care. Refuses dosing, prescribing, individualized-treatment, patient-identifying, and acute-symptom inputs at preflight.",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "9c94fda856657bb4ba6d8bcb00c72739bec87155a15f8b63253836022fe20459",
+      "lastUpdated": "2026-05-18",
+      "checksum": "f0d7a6010d98a82e4fe6104c2c4b798ba1e5ae88d7b37a524dff7b5b1b523590",
       "category": "clinical-education",
       "categoryLabel": "Clinical Education",
       "relevantTechStack": [
@@ -322,10 +322,10 @@
       "name": "engage-chorus",
       "description": "N-party-steel-man negotiation and mediation skill. Refracts one negotiation situation into N stakeholder-advocate paths (one per party), each producing a structured brief with interests, BATNA, reservation point, tradeable concessions, and coalition signals. A named mediator subagent then produces a negotiated-outcome landscape (ZOPA, trade frontier, settlement zones, unresolved conflicts, concession sequencing, coalition map) — not a winner.",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "a5c4d50024bd282d6560489dcc473586703292398d134828ac2e66278278a80f",
+      "lastUpdated": "2026-05-18",
+      "checksum": "22c7cb57c4ada30a1d960a986931dce8cd30d875d45399921ec617733b45b12e",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -344,10 +344,10 @@
       "name": "engage-codex",
       "description": "Artefact-first parallel narrative exploration for screenplay, short-story, novel-chapter, episodic-TV, and game-narrative work. Refracts one story brief into N paradigm-paired structural artefacts (beat-sheets, scene outlines, character-arc grids, thematic-resonance maps, try/fail cycles), then applies a mandatory narrative critique pass covering four categories — pacing valleys, unset-up payoffs, character-motivation gaps, unsupported tonal shifts — across every path.",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "5377eace35fdc498f3c661973ffc12013f0ac685101ce3620f1a037a8a681450",
+      "lastUpdated": "2026-05-18",
+      "checksum": "6a2e7f38e6045c5d6b96e9080f3916e8d76f6ce5508a2868ad6c36d4914fcf7e",
       "category": "narrative",
       "categoryLabel": "Narrative",
       "relevantTechStack": [
@@ -370,10 +370,10 @@
       "name": "engage-crucible",
       "description": "Hybrid scientific-research / hypothesis-generation skill. Refracts one research question into N competing hypotheses (each with a mandatory falsification condition and a structured experimental-design artefact), spawns a paired falsification-attack subagent per hypothesis to propose the cheapest discriminating experiment, and synthesizes a Bayesian prior-update landscape that identifies the highest-information-gain-per-cost crucible experiment plus a research roadmap.",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "8ea6a5edb54f73dd9f1b3c97a34196f514c437461d235f49a019ddb977e530c3",
+      "lastUpdated": "2026-05-18",
+      "checksum": "f850a6d8f97efd77b3991888c43fa67da0590dbbe5512e14f584921c45111759",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -391,10 +391,10 @@
       "name": "engage-exocortex",
       "description": "JSON-driven parallel solution explorer with schema-validated references, deterministic path selection via structured signal matching, and selective loading for minimal token usage.",
       "triggers": [],
-      "version": "2.0.1",
+      "version": "2.0.2",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "96cb9dfa6a410f6525a770c885663c8f4fa823995cff532769989d734b8abdfe",
+      "lastUpdated": "2026-05-18",
+      "checksum": "34b57839ced254c4a8a25874e0fe85e89d0150286aa0d97798e7bbfb0b57b593",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -409,10 +409,10 @@
       "name": "engage-forge",
       "description": "Artefact-first parallel design exploration for product and UX problems. Refracts one design problem into N paradigm-paired structured artefacts (user flows, IA trees, heuristic-finding matrices, journey maps, try/fail cycles, Kano grids), then applies a mandatory heuristic audit pass and a mandatory persona-driven critique pass to the recommended artefact.",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "810d40615863872199fe2198b42416f602891a1041b63193c111b0d578a6f591",
+      "lastUpdated": "2026-05-18",
+      "checksum": "7dac70b3a38950d465f2962fdd95c65f5729feafbdcddc6aaab516a524ee3c87",
       "category": "design",
       "categoryLabel": "Design",
       "relevantTechStack": [
@@ -432,10 +432,10 @@
       "name": "engage-lexicon",
       "description": "Adversarial for/against/judge analyst for contested legal, policy, and compliance claims. Forks the /debate-prism scaffold with legal-domain extensions — mandatory jurisdiction-declared gate, citation schema enriched for legal authorities (court level, pin-cite, statute/regulation), authority hierarchy enforcement on the citation-diversity check, judge output requiring controlling-vs-persuasive distinction, statutory recency gate, and an educational-only disclaimer stamped on every output.",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "39fc372ed618001cb38a37a15df1a8b60d42b1438e33164dbccf030b9827b7fa",
+      "lastUpdated": "2026-05-18",
+      "checksum": "68e48d1ef0e25cd57b9fb32b399edb241a3c39ff3c5c82060f9fcfdbdd054db8",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -454,10 +454,10 @@
       "name": "engage-prism",
       "description": "JSON-driven parallel analyst for business, marketing, and financial questions. Refracts one question into multiple analytical spectra, mandates live web research with schema-conformant citations, and synthesizes structured subagent reports into a single recommendation.",
       "triggers": [],
-      "version": "1.0.1",
+      "version": "1.0.2",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-17",
-      "checksum": "9c5c46b969a54c9a5b86e3b112e78bb9d422a97e90b216ea60cde4a1a6af339c",
+      "lastUpdated": "2026-05-18",
+      "checksum": "ac50c6577fc68def549495f3369cd90df63dfd5bbb0f21bca6a3202736af9031",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -477,7 +477,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "61d1128a0944fdcc93a052d8e5b31bd389fc95edf61ae04ba877c197779c9c26",
+      "checksum": "88bf86e28e9085e18d9f3aea27b867e67bda805e65dfd9974333f98b4c73574f",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -500,7 +500,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "a8171cd109ec371a572199bb82ca1ae6863ba8341a6c952521272696a5e60276",
+      "checksum": "36a0325f1de746ff98747a158bfcd1890cdc2b003dacc8cdc7919619b41a5c56",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -518,7 +518,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "9e44b617d119f30a76a437b80ad0a129405b9c239875120cdc89d9eb580d30d3",
+      "checksum": "26679e5964d005ea25a80b9a50ecba60a9eeac7f96e77ac9eeda0a8bb8c0241f",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -537,7 +537,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "bf60cccfc43626442c0d7619a0c3621e1e27c4c808f157f23bc734aab1fde61d",
+      "checksum": "8d58d6241c0a35dbb27936b7ea3fa3bd9f15e366107b4b693311f890984ccc7d",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [
@@ -560,7 +560,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-05-15",
-      "checksum": "ef79e5a25b652434115b9c305ad8e2179a4a48a3c4f2dc218d68fb8c35a720b9",
+      "checksum": "7215566aab8cbb8de7aa4338ab99e4a21a6376b2d090dbff4747839c4434f251",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -578,7 +578,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "73da5ff1ad6a18ba34f9a24a537189d28131c15f5551f828938b2dc49e619b40",
+      "checksum": "b78e6dbd03ee7a8dd6cef8ce1e87055919671dfdac0067289526ba4aaafb7193",
       "category": "database",
       "categoryLabel": "Database",
       "relevantTechStack": [
@@ -598,7 +598,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "a37faa551934c23f2a65aaf78969182bde17313e1acd1591b19befba6d6cb7e8",
+      "checksum": "d4e2bf1257f908a211848da59f20753dac5d9c8cf2008c12a417a7f2a047e7d3",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -636,7 +636,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "8a1a1de0a6822af1ccb325a2a73f7bf91540372b4438ec7652231440c82da37b",
+      "checksum": "49c98ff6a8842c611571ca8b292263bdee744a1dd32c4512cfbfe011d7607f5a",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -655,7 +655,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "f0e25ae6e2c593042d107c4ec7bdd5a573f9289982d5592411703ca5eae914dc",
+      "checksum": "293d4156d629f5aae43d04cf2b25470a0682e3b81e43df1cd381b7b024842849",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -673,7 +673,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "e03a04d6cf5b8668e466af0813e1fe3e8397c0a635f8e7fd7282302ee99599d9",
+      "checksum": "3c4549d1b8f4fa9d915f11e6f33307dd01f90d5c352b90ea623b172f1ed8672f",
       "category": "database",
       "categoryLabel": "Database",
       "relevantTechStack": [
@@ -692,7 +692,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "833676a1c9c7f30bae81585ae55c6491388b89623e5761d3fd1744f1117cabb2",
+      "checksum": "6fd5100e75e26819693a6a50f4c8ff7f8fb23a00821d3bfd8c6f4a7c0680fe6b",
       "category": "compliance",
       "categoryLabel": "Compliance",
       "relevantTechStack": [
@@ -711,7 +711,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "fb712a741eccfeb669ad681023c3e47c4055d848e4986c3b78ffd15d1b26d8a9",
+      "checksum": "aad1d7d31e0204db038b2c093b7c9085a2dc2a9044a9abe0ac521566a7e27a7f",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -730,7 +730,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "ea74b0f6913b8def8d8897b6f571afc10dd736672e5ab03daf0eedd44f3b3522",
+      "checksum": "68a99585c718d35610247f27013db95a816b8b4b0458ca19d5904069fb520f10",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -749,7 +749,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "ba3e8b949718072fefea41c2ead83b07f33d2ed9d961c794cd99bce9f6be3570",
+      "checksum": "0106863922c722a21acf899e5d96233ce3eff0f281079f6caa9f966e6645cb98",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -768,7 +768,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "7b88535726cae4359b78b7bce0e078af15eb0a018c6d18e550a9076978a4a7ba",
+      "checksum": "2770daecb489fd0351b73aac06ae86f4ea525017ffc22179052c6543f13c9a7c",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -790,7 +790,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-17",
-      "checksum": "41a70e14bc83e61f34acf7472dd8f7bf6ac8cd403eec062e1108e94b26ae888c",
+      "checksum": "bf6dd09be5bcfd1ae460ed922d8d4648570d9149166ff59bd76f1cf98bf97493",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [
@@ -808,7 +808,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "8217277c2747de820df4016b9901e098d7622d5de148ad5685098257a3708966",
+      "checksum": "4c27266feb96d15c1498e6ecb929739cf5fbdc74c79b9cfe5db72e9b3d1be945",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -827,7 +827,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "93e9b8a74ceb5bac9541da1dc302698920a5b5c6d96ac251145ba08d1025c0c5",
+      "checksum": "532541cf1a53ce845a631299fb7ea6bd5bceb55ed2791567e1a5059f48feef64",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -842,10 +842,10 @@
       "name": "spar-exocortex",
       "description": "Adversarial propose-attack-measure analyst for algorithmic and code-design problems. Baseline proposal → attacker subagent produces concrete breaking input → challenger proposes a different approach that survives the attack → both candidates execute against a shared test harness → judge subagent decides or demands round two. Execution-backed validation by design.",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-16",
-      "checksum": "ce4f51ec65366d457752c770c3ea79b5026e6a6c2d7d710866f54d95be71c2ea",
+      "lastUpdated": "2026-05-18",
+      "checksum": "f202dafafeb8d5fb7261f1293bbecbd50f3883dc1665f41341d4a5fa5a9de654",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -864,7 +864,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "4e50dedfa89365260eed132771705db372c09f757da9de820909ef551011005b",
+      "checksum": "3710ca8aecd2a6840631e8a0d2b590cb89cda5f20d196263a43ec8b108de9513",
       "category": "database",
       "categoryLabel": "Database",
       "relevantTechStack": [
@@ -884,7 +884,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "5df3e1754303825abaa38fa7d335c174fd0374f2d29e6e9826e6b8bbd4db4f48",
+      "checksum": "7913c6926ebdcd116cdbb4bb2c91c71c93899653112c40e34eef1e23362ef571",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -907,7 +907,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "733c6f71e37cc18be314b4bea563a0392128371171b658fdf4f56f699a841865",
+      "checksum": "5a4b6332c96268756860f939081d390fc43aaf0860b28c397c8db32743ebd0a5",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -924,7 +924,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "a65ef4b9c15c8e234a5714c9701b7fc0637f8f68a4802b9c6107b81f7f30e162",
+      "checksum": "095a7179053e431fc694464773548bba44b66ce249776b8c296114ced55783dd",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -941,7 +941,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "ffbace20fe4dda152b4790122d1125bc6cd191ab761ad66a1f490207e3849b26",
+      "checksum": "aeda0a81fca78be7589951a1c16492850b525e4d400ddcd342fa6b36424f8082",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -958,7 +958,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-05-15",
-      "checksum": "e0a6156bfb9b7a74104b73a7b9237370a3c8a1c52f345e54dcc4382389d4b51b",
+      "checksum": "6bae44d81ae3be974f2e11eda7301412b068d3fe70cc326c4bac0f3d1e76b255",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -975,7 +975,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "776aa494823d559ddbf30ac04305e1b083034b7a51695ae314163262dbdf9822",
+      "checksum": "3bc0bf14c3f104bbdfe0c9b306a4bb1190779f76ae0bf8f7c8719d9ad3aec309",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -992,7 +992,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "094097fd8debbe153aa3eaf0594487092d74d73ed0c52ad49cafa774f409741b",
+      "checksum": "d98e7c1c0e302facfbea0508fc5e26cb0c1020936c76948c99f125b57d24a0e2",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -1018,7 +1018,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "e9fa8ea4bebd94589643cd1fe8ef57839da55bea1d2f4872ebce2a0fb8d38247",
+      "checksum": "8e34a020d057eadafa8be7228fb7a63339ee2784a5030de4a66d248015accb70",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -1042,7 +1042,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "b1acf74ea302fe661d3cb5ed8d4fac1f0fed920306ab3595972872e1757a2863",
+      "checksum": "20e5722f7caeb34af7601b390a17e1661d83e2d86be75f538387697fb31032bb",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [

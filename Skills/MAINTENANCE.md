@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.15.0
+**Version:** v0.16.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -21,22 +21,22 @@
 | beginner-testing | 1.0.0 | 2026-03-17 | Active |
 | ci-cd-pipeline-design | 1.0.0 | 2026-03-17 | Active |
 | code-path-discovery | 1.0.0 | 2026-03-17 | Active |
-| codebase-analysis | 1.0.0 | 2026-04-02 | Active |
+| codebase-analysis | 1.1.0 | 2026-08-27 | Active |
 | command-spec-audit | 1.0.0 | 2026-04-02 | Active |
 | common-errors | 1.0.0 | 2026-03-17 | Active |
-| debate-prism | 1.0.1 | 2026-05-16 | Active |
+| debate-prism | 1.0.2 | 2026-05-18 | Active |
 | digitalocean-app-setup | 2.0.0 | 2026-04-25 | Active |
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
 | electron-cross-build | 1.0.0 | 2026-05-17 | Active |
 | electron-development | 1.0.0 | 2026-05-17 | Active |
-| engage-apothecary | 1.0.0 | 2026-05-16 | Active |
-| engage-chorus | 1.0.0 | 2026-05-16 | Active |
-| engage-codex | 1.0.0 | 2026-05-16 | Active |
-| engage-crucible | 1.0.0 | 2026-05-16 | Active |
-| engage-exocortex | 2.0.1 | 2026-05-16 | Active |
-| engage-forge | 1.0.0 | 2026-05-16 | Active |
-| engage-lexicon | 1.0.0 | 2026-05-16 | Active |
-| engage-prism | 1.0.1 | 2026-05-17 | Active |
+| engage-apothecary | 1.0.1 | 2026-05-18 | Active |
+| engage-chorus | 1.0.1 | 2026-05-18 | Active |
+| engage-codex | 1.0.1 | 2026-05-18 | Active |
+| engage-crucible | 1.0.1 | 2026-05-18 | Active |
+| engage-exocortex | 2.0.2 | 2026-05-18 | Active |
+| engage-forge | 1.0.1 | 2026-05-18 | Active |
+| engage-lexicon | 1.0.1 | 2026-05-18 | Active |
+| engage-prism | 1.0.2 | 2026-05-18 | Active |
 | error-handling-patterns | 1.0.0 | 2026-03-17 | Active |
 | flask-setup | 2.0.0 | 2026-04-25 | Active |
 | i18n-setup | 2.0.0 | 2026-04-25 | Active |
@@ -56,7 +56,7 @@
 | responsibility-gate | 1.0.0 | 2026-05-17 | Active |
 | seo-optimization | 1.0.0 | 2026-04-01 | Active |
 | sinatra-setup | 2.0.0 | 2026-04-25 | Active |
-| spar-exocortex | 1.0.0 | 2026-05-16 | Active |
+| spar-exocortex | 1.0.1 | 2026-05-18 | Active |
 | sqlite-integration | 2.0.0 | 2026-04-25 | Active |
 | tdd-failure-recovery | 1.0.0 | 2026-04-02 | Active |
 | tdd-green-phase | 1.0.0 | 2026-04-01 | Active |
@@ -275,7 +275,11 @@ post-v0.90 hub upgrade).
 # Bump version: 1.0.x → 1.1.0
 # Update lastUpdated date
 # Update registry in MAINTENANCE.md
-# Re-package skill
+# Re-minimize into .min-mirror/ (packages build from there, not from Skills/)
+# Re-package skill  -- build-skill-packages.js <skill>
+# THEN regenerate skill-registry.json -- its checksum is a sha256 OF the zip,
+#   so regenerating the registry before the package records the previous
+#   zip hash and nothing fails loudly (#274)
 ```
 
 ### 3. Major Updates (x.0.0)
@@ -288,7 +292,11 @@ post-v0.90 hub upgrade).
 # Bump version: 1.x.x → 2.0.0
 # Update lastUpdated date and frameworkCompatibility if needed
 # Update registry in MAINTENANCE.md
-# Re-package skill
+# Re-minimize into .min-mirror/ (packages build from there, not from Skills/)
+# Re-package skill  -- build-skill-packages.js <skill>
+# THEN regenerate skill-registry.json -- its checksum is a sha256 OF the zip,
+#   so regenerating the registry before the package records the previous
+#   zip hash and nothing fails loudly (#274)
 ```
 
 ---
