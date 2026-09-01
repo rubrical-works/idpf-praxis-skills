@@ -42,7 +42,7 @@ The 4 existing TDD phase skills (tdd-red-phase, tdd-green-phase, tdd-refactor-ph
 
 The refactor phase includes a `required[]` checklist item that invokes the `tdd-refactor-coverage-audit` companion skill. The audit mechanically checks whether source files added during the current TDD cycle have paired tests, using JSON-driven language conventions.
 
-**Advisory only.** Warnings are surfaced inline; the audit never blocks the refactor gate (`gate` remains "Do not proceed to next AC until commit made for this TDD cycle"). The audit returns JSON `{ ok, newSources, missingTests, coverage }` to stdout — `/work` reports the warnings and continues.
+**Advisory only.** Warnings are surfaced inline; the audit never blocks the refactor gate (`gate` remains "Do not proceed to next AC until commit made for this TDD cycle"). The audit returns JSON `{ ok, newSources, pairedSources, missingTests, undetermined, undeterminedCount, coverage }` to stdout — `undetermined[]` names sources whose layout the conventions cannot express, and `coverage` excludes them from its denominator, so a `1.0` beside a non-empty `undetermined[]` means the audit did not understand the layout — `/work` reports the warnings and continues.
 
 **Invocation:**
 

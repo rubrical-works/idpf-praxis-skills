@@ -70,7 +70,14 @@ function usage() {
 // ---------- minimal JSON Schema validator ----------
 // Supports the subset used by test-coverage-conventions-schema.json:
 // type, required, properties, additionalProperties, items, minItems,
-// minProperties, minimum, maximum, pattern, $ref (#/$defs/...), $defs.
+// minProperties, minimum, maximum, pattern, $ref (#/$defs/...), $defs,
+// allOf.
+//
+// $ref is an early return: keywords sitting alongside a $ref are NOT
+// applied. That is why the strict/lenient split (#286) composes with
+// allOf rather than a $ref carrying a sibling `required` -- the sibling
+// would be silently dropped and the strict entry point would stop
+// requiring anything.
 
 function loadJson(filePath) {
   const text = fs.readFileSync(filePath, 'utf8');
@@ -89,6 +96,9 @@ function validate(schema, data, root, pathStr, errors) {
   if (!schema) return;
   if (schema.$ref) {
     return validate(resolveRef(root, schema.$ref), data, root, pathStr, errors);
+  }
+  if (Array.isArray(schema.allOf)) {
+    for (const sub of schema.allOf) validate(sub, data, root, pathStr, errors);
   }
   if (schema.type) {
     const t = schema.type;
@@ -151,9 +161,13 @@ function validate(schema, data, root, pathStr, errors) {
   }
 }
 
-function validateSchema(schema, data) {
+// `root` is where $ref resolves from. It defaults to `schema` so whole-schema
+// callers are unchanged, and is passed explicitly when validating against a
+// sub-schema entry point such as #/$defs/override, whose own object carries
+// no $defs to resolve against (#286).
+function validateSchema(schema, data, root) {
   const errors = [];
-  validate(schema, data, schema, '', errors);
+  validate(schema, data, root || schema, '', errors);
   return errors;
 }
 
@@ -254,6 +268,65 @@ function expandTestPatterns(file, patterns) {
   });
 }
 
+// ---------- self-exclusion ----------
+
+// True when `file` is itself a test under one of its language's patterns.
+//
+// Compared as a glob with {stem} left open, NOT by equality against an
+// expanded candidate. expandTestPatterns substitutes the file's own stem,
+// and path.basename('foo.test.js', '.js') is 'foo.test' -- so the candidate
+// it builds is 'foo.test.test.js', which can never equal the file being
+// tested. The old equality guard was therefore unreachable for every file
+// carrying a compound test suffix (#284).
+//
+// Deliberately narrow: this changes the guard only. expandTestPatterns is
+// shared with the pairing path, so altering its stem derivation would also
+// change the expected test path of every dotted source filename in every
+// language (src/app.config.ts would expect src/app.test.ts).
+function looksLikeTest(file, testPatterns) {
+  if (!Array.isArray(testPatterns)) return false;
+  const dir = path.dirname(file);
+  const dirNorm = dir === '.' ? '' : dir;
+  return testPatterns.some((p) => {
+    const glob = p
+      .replaceAll('{dir}', dirNorm)
+      .replaceAll('{stem}', '*')
+      .replace(/^\/+/, '');
+    return globToRegex(glob).test(file);
+  });
+}
+
+// ---------- layout recognition ----------
+
+// The language's test patterns with BOTH placeholders opened up: {stem} to a
+// filename wildcard and {dir} to any directory. Used to ask whether a project
+// contains any test at all in this language's convention.
+function testShapeGlobs(testPatterns) {
+  return (testPatterns || []).map((p) =>
+    p.replaceAll('{dir}', '**').replaceAll('{stem}', '*').replace(/^\/+/, '')
+  );
+}
+
+// True when the project contains at least one file matching the language's
+// test-shape globs anywhere. Cached per language: the walk is a filesystem
+// scan, and without the cache it would run once per source file (#285).
+//
+// This is what separates "no test was written" from "the tool does not
+// understand this layout". The naive alternative -- treat a source as
+// undetermined when no expanded candidate has an existing parent directory --
+// is deliberately NOT used: nine of the ten bundled languages carry at least
+// one {dir}/-rooted pattern, and a source file's own directory always exists,
+// so that rule could never fire for them. It would have shipped as dead code,
+// which is the defect class this audit already had once (#284).
+function projectUsesLanguageConvention(projectRoot, lang, cache) {
+  if (cache.has(lang.name)) return cache.get(lang.name);
+  const found = testShapeGlobs(lang.def.testPatterns).some((g) =>
+    walkAndMatch(projectRoot, globToRegex(g))
+  );
+  cache.set(lang.name, found);
+  return found;
+}
+
 // ---------- inline test detection (Rust) ----------
 
 function hasInlineTests(absPath) {
@@ -351,7 +424,7 @@ function audit(args) {
   const projectRoot = getProjectRoot(args.projectRoot);
   const override = loadProjectOverride(projectRoot);
   if (override) {
-    errors = validateSchema(schema, override);
+    errors = validateSchema(schema.$defs.override, override, schema);
     if (errors.length) {
       return {
         ok: false,
@@ -378,6 +451,8 @@ function audit(args) {
   }
 
   const missingTests = [];
+  const undetermined = [];
+  const layoutCache = new Map();
   let totalSources = 0;
   let pairedSources = 0;
 
@@ -385,11 +460,8 @@ function audit(args) {
     if (matchAny(file, merged.ignoredSourcePatterns)) continue;
     const lang = detectLanguage(file, merged.languages);
     if (!lang) continue;
-    // Skip files that look like tests themselves (matched as sources only by extension)
-    if (lang.def.testPatterns.some((p) => {
-      const expanded = expandTestPatterns(file, [p]);
-      return expanded[0] === file;
-    })) {
+    // Skip files that are themselves tests (matched as sources only by extension)
+    if (looksLikeTest(file, lang.def.testPatterns)) {
       continue;
     }
     totalSources += 1;
@@ -404,6 +476,12 @@ function audit(args) {
 
     if (paired) {
       pairedSources += 1;
+    } else if (!projectUsesLanguageConvention(projectRoot, lang, layoutCache)) {
+      undetermined.push({
+        file,
+        language: lang.name,
+        checked: expandTestPatterns(file, lang.def.testPatterns)
+      });
     } else {
       missingTests.push({
         file,
@@ -413,12 +491,20 @@ function audit(args) {
     }
   }
 
-  const coverage = totalSources === 0 ? 1 : pairedSources / totalSources;
+  // Undetermined sources leave the denominator: coverage describes only the
+  // files the audit actually understood. A project whose layout is unreadable
+  // therefore reports coverage 1 alongside a non-empty undetermined[], which
+  // is the honest reading -- see SKILL.md, this changes what coverage means
+  // for any caller comparing it to a floor (#285).
+  const determinedSources = pairedSources + missingTests.length;
+  const coverage = determinedSources === 0 ? 1 : pairedSources / determinedSources;
   return {
     ok: true,
     newSources: totalSources,
     pairedSources,
     missingTests,
+    undetermined,
+    undeterminedCount: undetermined.length,
     coverage: Number(coverage.toFixed(4)),
     minTestCoverageRatio: merged.minTestCoverageRatio || 0
   };
@@ -449,6 +535,8 @@ module.exports = {
   matchAny,
   detectLanguage,
   expandTestPatterns,
+  looksLikeTest,
+  testShapeGlobs,
   hasInlineTests,
   audit,
   // exposed for tests

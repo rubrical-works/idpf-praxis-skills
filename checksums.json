@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
-  "frameworkVersion": "0.16.0",
-  "generatedAt": "2026-08-28T01:21:38.046Z",
+  "frameworkVersion": "0.17.0",
+  "generatedAt": "2026-09-01T20:11:13.550Z",
   "fileCount": 18,
   "files": [
     {
@@ -91,8 +91,8 @@
     },
     {
       "relativePath": "Skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js",
-      "sha256": "c6cdf3e239191f25f341c2cd98ae7d555fd2dc8c51bdaad32a26856c0feff518",
-      "sizeBytes": 13995
+      "sha256": "3b6de761ca9e99a2a1e998cf3fa692e35ca87ab4137d8487c6d02a469c565154",
+      "sizeBytes": 18133
     }
   ]
 }

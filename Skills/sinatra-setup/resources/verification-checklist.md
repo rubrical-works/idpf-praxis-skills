@@ -1,5 +1,5 @@
 # Sinatra Setup Verification Checklist
-**Version:** v0.16.0
+**Version:** v0.17.0
 ## Visual Verification
 ### 1. Project Folder Structure
 ```
