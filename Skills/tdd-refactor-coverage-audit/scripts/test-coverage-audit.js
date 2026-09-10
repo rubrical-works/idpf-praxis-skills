@@ -184,17 +184,39 @@ function loadProjectOverride(projectRoot) {
   }
 }
 
+// Override-declared languages are consulted BEFORE bundled ones (#301).
+//
+// detectLanguage returns the first entry claiming a matching extension, and
+// this map's insertion order is that precedence order. Appending override keys
+// after the bundled map -- the previous behaviour -- put any entry declaring a
+// claimed extension (.js, .ts, .py, ...) behind the bundled entry that already
+// claimed it, so it was never consulted. The entry validated, merged, and had
+// no observable effect of any kind.
+//
+// A single spread cannot express this. `{ ...overrideLangs, ...bundledLangs }`
+// gives override keys their position but lets bundled VALUES win on collision,
+// which is the opposite of the documented same-key behaviour. The map is
+// therefore built explicitly: override entries first with their own
+// definitions, then the bundled entries no same-key override replaced.
 function mergeConfig(conventions, override) {
   const merged = {
-    languages: { ...conventions.languages },
+    languages: {},
     ignoredSourcePatterns: [...(conventions.ignoredSourcePatterns || [])],
     minTestCoverageRatio: 0
   };
-  if (!override) return merged;
+  if (!override) {
+    merged.languages = { ...conventions.languages };
+    return merged;
+  }
   if (override.additionalLanguages) {
     for (const [name, def] of Object.entries(override.additionalLanguages)) {
       merged.languages[name] = def;
     }
+  }
+  // Same-key overrides already occupy their key above, so skipping them here
+  // preserves wholesale replacement rather than restoring the bundled entry.
+  for (const [name, def] of Object.entries(conventions.languages)) {
+    if (!(name in merged.languages)) merged.languages[name] = def;
   }
   if (Array.isArray(override.ignoredSourcePatterns)) {
     merged.ignoredSourcePatterns.push(...override.ignoredSourcePatterns);
@@ -203,6 +225,37 @@ function mergeConfig(conventions, override) {
     merged.minTestCoverageRatio = override.minTestCoverageRatio;
   }
   return merged;
+}
+
+// Entries that can never match, in the merged map's own precedence order (#301).
+//
+// An entry is unreachable when EVERY one of its sourceExtensions is already
+// claimed by an entry ahead of it: detectLanguage returns on the first match,
+// so no file can ever reach it. Partial shadowing is not reported -- an entry
+// keeping even one unclaimed extension still matches files carrying it.
+//
+// Deliberately stated as a property of position, not of origin: it makes no
+// bundled-versus-override distinction, so two override entries colliding with
+// each other are caught by the same check, as is a bundled entry a broad
+// override has fully shadowed. Precedence alone fixes today's instance; this
+// is what stops the next one being silent (#301).
+function findUnreachableLanguages(languages) {
+  const unreachable = [];
+  const claimedBy = new Map(); // extension -> name of the first entry claiming it
+  for (const [name, def] of Object.entries(languages)) {
+    const exts = (def && def.sourceExtensions) || [];
+    // Resolved up front rather than inside the predicate: .every()
+    // short-circuits, so accumulating the shadower from within it would depend
+    // on where it stopped.
+    const owners = exts.map((ext) => claimedBy.get(ext) || null);
+    if (exts.length > 0 && owners.every(Boolean)) {
+      unreachable.push({ name, shadowedBy: owners[0] });
+    }
+    for (const ext of exts) {
+      if (!claimedBy.has(ext)) claimedBy.set(ext, name);
+    }
+  }
+  return unreachable;
 }
 
 // ---------- glob matching (minimal: **, *, literal) ----------
@@ -240,6 +293,34 @@ function matchAny(file, patterns) {
 }
 
 // ---------- language detection ----------
+
+// True when SOME language entry claims this file's extension, regardless of
+// whether that language's excludePatterns then reject the file.
+//
+// detectLanguage returns null for two unrelated reasons -- no language claims
+// the extension, or one does and excludePatterns rejected the file -- and the
+// unrecognized-extension diagnostic must separate them. A .d.ts file is
+// rejected by typescript's excludePatterns, but '.ts' IS a recognized
+// extension; reporting it as unrecognized would say the audit has no entry for
+// TypeScript. Same for **/*_test.go under go (#299).
+function extensionIsClaimed(file, languages) {
+  for (const def of Object.values(languages)) {
+    for (const ext of def.sourceExtensions) {
+      if (file.endsWith(ext)) return true;
+    }
+  }
+  return false;
+}
+
+// The map key for a file the audit could not classify: its extension, or the
+// explicit '(none)' sentinel. Makefile, LICENSE and extensionless scripts take
+// the same !lang path as a .vue file and would otherwise have nowhere to go in
+// an extension-keyed map. '(none)' cannot collide with a real extension, which
+// a pseudo-extension like '.none' could (#299).
+function unrecognizedKey(file) {
+  const ext = path.extname(file);
+  return ext === '' ? '(none)' : ext;
+}
 
 function detectLanguage(file, languages) {
   for (const [name, def] of Object.entries(languages)) {
@@ -452,14 +533,31 @@ function audit(args) {
 
   const missingTests = [];
   const undetermined = [];
+  const unrecognizedExtensions = {};
   const layoutCache = new Map();
+  // Unpaired sources are DEFERRED, not classified in place (#295). The
+  // missing-versus-undetermined decision needs to know whether this language
+  // paired anywhere in the project, and that is unknowable until the loop ends.
+  // Deferring re-partitions an array already in memory; deciding in place would
+  // need a second filesystem walk.
+  const pending = [];
+  const pairedByLanguage = new Map();
   let totalSources = 0;
   let pairedSources = 0;
 
   for (const file of newFiles) {
     if (matchAny(file, merged.ignoredSourcePatterns)) continue;
     const lang = detectLanguage(file, merged.languages);
-    if (!lang) continue;
+    if (!lang) {
+      // Only a genuinely unclaimed extension is a gap. An excludePatterns
+      // rejection is a recorded decision, like ignoredSourcePatterns above,
+      // and both stay out of this map.
+      if (!extensionIsClaimed(file, merged.languages)) {
+        const key = unrecognizedKey(file);
+        unrecognizedExtensions[key] = (unrecognizedExtensions[key] || 0) + 1;
+      }
+      continue;
+    }
     // Skip files that are themselves tests (matched as sources only by extension)
     if (looksLikeTest(file, lang.def.testPatterns)) {
       continue;
@@ -476,18 +574,40 @@ function audit(args) {
 
     if (paired) {
       pairedSources += 1;
-    } else if (!projectUsesLanguageConvention(projectRoot, lang, layoutCache)) {
-      undetermined.push({
-        file,
-        language: lang.name,
-        checked: expandTestPatterns(file, lang.def.testPatterns)
-      });
+      pairedByLanguage.set(lang.name, (pairedByLanguage.get(lang.name) || 0) + 1);
     } else {
-      missingTests.push({
-        file,
-        language: lang.name,
-        expected: expandTestPatterns(file, lang.def.testPatterns)
-      });
+      pending.push({ file, lang });
+    }
+  }
+
+  // Second pass: classify the deferred sources now that project-wide pairing
+  // counts are known (#295).
+  //
+  // The #285 mechanism asked only "does this project contain a file shaped like
+  // this language's tests?". Shape and location are independent axes and it
+  // measured only the first: testShapeGlobs opens {dir} to **, so any language
+  // carrying a {dir}-anchored pattern produces a location-blind glob such as
+  // **/*.test.js. A project whose tests are correctly named but filed where the
+  // patterns cannot reach therefore SATISFIED the check, and every one of its
+  // sources was reported as missing a test -- coverage 0 for a well-tested
+  // project, while a project with no tests at all got coverage 1. The two
+  // populations received each other's verdicts.
+  //
+  // The location axis is "tests of this language exist AND none of this
+  // language's sources paired anywhere". Deliberately project-wide, not
+  // per-file: a project that pairs somewhere understands its own layout, so an
+  // unpaired source there is genuinely missing a test (partial credit rather
+  // than all-or-nothing). A monorepo pairing in one package and not another
+  // still reports missingTests for the unreachable package; improving that
+  // needs per-subtree classification.
+  for (const { file, lang } of pending) {
+    const candidates = expandTestPatterns(file, lang.def.testPatterns);
+    const testsExist = projectUsesLanguageConvention(projectRoot, lang, layoutCache);
+    const pairedAnywhere = (pairedByLanguage.get(lang.name) || 0) > 0;
+    if (!testsExist || !pairedAnywhere) {
+      undetermined.push({ file, language: lang.name, checked: candidates });
+    } else {
+      missingTests.push({ file, language: lang.name, expected: candidates });
     }
   }
 
@@ -506,7 +626,15 @@ function audit(args) {
     undetermined,
     undeterminedCount: undetermined.length,
     coverage: Number(coverage.toFixed(4)),
-    minTestCoverageRatio: merged.minTestCoverageRatio || 0
+    minTestCoverageRatio: merged.minTestCoverageRatio || 0,
+    // Always present, even when empty, so a consumer can read it
+    // unconditionally rather than testing for the field first (#299). A
+    // container rather than a top-level field: #301 adds its own entry kind
+    // here instead of a second field meaning "something the audit ignored".
+    diagnostics: {
+      unrecognizedExtensions,
+      unreachableLanguageEntries: findUnreachableLanguages(merged.languages)
+    }
   };
 }
 
@@ -531,9 +659,12 @@ module.exports = {
   parseArgs,
   validateSchema,
   mergeConfig,
+  findUnreachableLanguages,
   globToRegex,
   matchAny,
   detectLanguage,
+  extensionIsClaimed,
+  unrecognizedKey,
   expandTestPatterns,
   looksLikeTest,
   testShapeGlobs,

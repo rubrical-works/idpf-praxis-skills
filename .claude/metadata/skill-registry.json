@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T20:11:13.409Z",
+  "generatedAt": "2026-09-10T02:10:37.621Z",
   "version": "0.1.0",
   "skillCount": 53,
   "skills": [
@@ -10,7 +10,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "ffacc8c3158c51b61735dcd966ec004462ec30945a92b51ec492e3039b40a6ee",
+      "checksum": "b84db8060b60e6e64554230b9244835a345d4f461670ac8b90560c33908b7bf7",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -33,7 +33,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "a83890eff9b184322d9b24e448a579bf657fb00572932ff60b74f96b7b35fc7f",
+      "checksum": "150d29fdf609f945908e650e7b3956df03f1d0ad9fe506f3e779c3475bd5feab",
       "category": "api",
       "categoryLabel": "API",
       "relevantTechStack": [
@@ -52,7 +52,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "82228ae4c67b7775437b18c9ae7752b1ba22bfbdb1c67bd78c9cc6711dcf8479",
+      "checksum": "c0d5f51122ed2e411f1f94fc01700db8a27bc7dfb5aa1e29ff85ccd26d206d57",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -72,7 +72,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "61500c6ca55b7aec06c80fe335e54b781219a37ad2cba4edbe976aa230461e15",
+      "checksum": "7ba54b593daa82df5cee970bd9e8c69c4ee456725da878652a33c3de4d2420cf",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -91,7 +91,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "a8c74aea4253af19c92b544fe6a9ba081cb4b1fda0d75697684aac4812d71850",
+      "checksum": "cb81ecba4cf564ab76efb544e4959dd8f334a7d38e7b580ce4c320a363e9b10f",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -110,7 +110,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "c89ee7779aaabb8ab3e8d58275ff6dba9c43049a9b0e1dee44d593106390172e",
+      "checksum": "511a58886f0d486a89703f56927c583496c287722c0801fe34a2e5de247ffc65",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [
@@ -129,7 +129,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "fe8d8170965643276792bb041929fe752d486aa2433e3e85c42042bd15f4af49",
+      "checksum": "a33f4f4eab064c6e7ca06afaaca172fe02964fca2eb976a324c4b8f4e302512e",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -146,7 +146,7 @@
       "version": "1.1.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-08-27",
-      "checksum": "293930e6504b87fa9a08ea211c6ed89978379f887812b12b49dace3f1e889599",
+      "checksum": "f16378c25c40be2c65e65bd0f7098e2a09c0df4ebd95a3016f73a671ddafe326",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -186,7 +186,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "840eac845ae127696bb555b576e855b8d76f0d4c37090fd2ac9f0db7ff48f4e2",
+      "checksum": "c6230e16e5e89f4ef1d88f44714b0db5dd9dadf2e8b6fca5ba1e4e678e75e9fc",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -204,7 +204,7 @@
       "version": "1.0.2",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "846c0b23602d6452d98867f54a84e6c211832a45b587905518c29d2a807c5c84",
+      "checksum": "e420096dffaf7ac3dcb252ad057c139de439b8b03ac59ccf3b4ede4b3b399d23",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -225,7 +225,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "6cbcc184bdabf9ab7507d72a9f198e379055cf4c4c8cde36603237c9b085e57f",
+      "checksum": "448fad2a46df7fecfe39ac1a57420ee04e91eb1a51e53c82b28d6fdc49d9c6f3",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -243,7 +243,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "ff29fc15ab3b0277609bc7882fb8556fdb42b99d68677713e0820338feabe2f8",
+      "checksum": "ac255e696f9e56ca24ecf29f8dd1c2ec13d395977b62eb9be7a4ebb8d36d0ba3",
       "category": "documentation",
       "categoryLabel": "Documentation",
       "relevantTechStack": [
@@ -263,7 +263,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-05-17",
-      "checksum": "570897a24b740e18425b5064f40ecb234580f6da3d39c4e9656fd93ad8df1c30",
+      "checksum": "7b551de3ac858c26ea59b15e8831e5833a94bc859c160317199e27e7ebe7f374",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -285,7 +285,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-05-17",
-      "checksum": "cb3e5ecc1e9df8240ac51eaf600f44a4eb1a35ecf630110d008dd2f5bc6f1b11",
+      "checksum": "d47f4266fe943c9427c9a57a2b6493eb44492a559758394c1d793e2752ef656c",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -305,7 +305,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "1afff8cb4f8fc329402d7038063231ba4964d96c9af9dc5f7af12831b910c881",
+      "checksum": "efd0de205b33e81aed9379a6d2099ca53c102a5a305a6035c065367fdddc2a22",
       "category": "clinical-education",
       "categoryLabel": "Clinical Education",
       "relevantTechStack": [
@@ -325,7 +325,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "a82e37fa9315a4e3315df16c806beb7384c79275630823b4576abebb916ab752",
+      "checksum": "12a44f600e8dc471e2e7fb2f9a666b9ae30c67b1d13ba3638679a831131d96b1",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -347,7 +347,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "5883e82a46e1a42fa32d7454806ef03a7bc861067deeef098beea73d0004a0e0",
+      "checksum": "5a00e12392b8aa6c1ca2d737ad77543fe3d933c789f0f4c391c6194b1b2afea9",
       "category": "narrative",
       "categoryLabel": "Narrative",
       "relevantTechStack": [
@@ -373,7 +373,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "d87cd76eef5cfa4568f24c1fdc21dd4e92b06cdb9d1dd4e0bbe546f196326233",
+      "checksum": "60f0f9e7bf95b88a792aafa2d7f8f6e449e7e89d76181981b1a79b0936b6847d",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -394,7 +394,7 @@
       "version": "2.0.2",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "ac578954a562dca7f3e4db6e758b49d3ef2a302011fd27b141bddd08844498e4",
+      "checksum": "4ce53212f936ce613ed5c5f3ed163f69f2684c55f2c4c181a4c020eb347c1062",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -412,7 +412,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "5ae700447b5a2e2f352ea56008f692fd841d774addeca4c42425b32ff7d090e0",
+      "checksum": "595e06ba7b1bc8504c636ea7a6ae0f1a350a77f0c1dd100fdcd8149b50b6b591",
       "category": "design",
       "categoryLabel": "Design",
       "relevantTechStack": [
@@ -435,7 +435,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "955a359db7b7534c5cdb9737448e8241cc68789adcdb4f462d50d1e6b275d3cf",
+      "checksum": "35f8f635deebedd86bf0c980e83ed0362828b634ef038dc0864a777ec046fa69",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -457,7 +457,7 @@
       "version": "1.0.2",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "fa365d560aa3edc16f325d0b09c6c777926f6d23335d127ca014f27f03b28bc4",
+      "checksum": "454b811f7b7f71c5d93fc0fa49824d56ea02fc47af4d688d0e10d91ac61d0a97",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -477,7 +477,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "449c146e2c5969834920cc8b67508b2e2bb3bd155db8a27a95fba072624f3be6",
+      "checksum": "01d038a48f4630ecb1c02e0cac51c0e2bcfd60e11569314b4dd99c76a3e7128c",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -500,7 +500,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "895a6cc3082586fbd978609682593e70548afa49072eedf85322f7503be07069",
+      "checksum": "5117926bc8692865a2bf9f40d82a15290786987bc9dd6da37e4f5aa3b9d4cfad",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -518,7 +518,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "950597b5a3e0c6e6dfa9760b0de3f634c4ee021fd93d85d9ac91cad9b2b0abf7",
+      "checksum": "42cd9742c775261b35b4bc7a6e21727f1d21c4066cf146ee5432e0a9b322a77e",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -537,7 +537,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "df0a6f0fcce48bd4c1db4aa12f0b5c7fefa08c4a4f5ce3475763785fb7e17ec3",
+      "checksum": "5c88d5f618981745fb01ad77af25b9a484f5eb867bee44bd239c9bc1073670a7",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [
@@ -560,7 +560,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-05-15",
-      "checksum": "6bbbccfa8edd8e964695b22b4d5766abae6cdf319c1777064525c0bbb4623d55",
+      "checksum": "02f7419ff1cd4d336cc99748c31f63fdc0fc44bcd98cc66b791eccbdf58f627e",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -578,7 +578,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "4c511e0ef132aa2432a3a8471b9fed99a56130e2243e0946b5638f1aceb76d3c",
+      "checksum": "e2f4f5fa62c02ebe2a0a2070b1b75559837f1479d236ae26e9bb32cdac886cd5",
       "category": "database",
       "categoryLabel": "Database",
       "relevantTechStack": [
@@ -598,7 +598,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "24d318fd07c88393a500e1418277a5f70aff02eb9d0988a8a3582b73d34119b6",
+      "checksum": "026b16fab56c428c2964fc6722067925560986bd1bccea62c23c774aea18f720",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -636,7 +636,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "4708e9cd796ebdb6989619a4fc7183de3596680676ae996a0768415e599c17d9",
+      "checksum": "78c1ae649add090796486592d2d9f446f3eabe4758c0c52dd02397466b3e4e84",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -655,7 +655,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "ef4a16bc65af3c7ecff5328548ff4275f5e58b5166e9719fc01b77b989126814",
+      "checksum": "901d621d4606d3d53d2bb3209dbf720155a788a903c2c79b39a8c5e83ce739e9",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -673,7 +673,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "7bb95587e4d7a900e6263222dab083314abda4373b183d5386d4adc62a2040ab",
+      "checksum": "74159df08399ce4f202d0f6ebc4c0ba2efc69ec057ac256cf00c50b6f0d7771f",
       "category": "database",
       "categoryLabel": "Database",
       "relevantTechStack": [
@@ -692,7 +692,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "4e22c909d1ac923c5501fd4b709b949bfca242e444a1e4833fb60b87cc7466a0",
+      "checksum": "7549af405704c00ce3a5f6defeb305724013071ec5271ff5acfa2f104ae7fd1a",
       "category": "compliance",
       "categoryLabel": "Compliance",
       "relevantTechStack": [
@@ -711,7 +711,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "4d26938bc31dfb52a2e7a8e14e2042e45db3e054fee2d303e2ad27837af072bf",
+      "checksum": "8402eff5f95339a686af671cfc9bcd69ed8333860494ad944b16d3871926ac03",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -730,7 +730,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "9ad36ee546263b9cbe7d1e33b72601e08cd2ab645f6c8ce413f1e28151ab1fdd",
+      "checksum": "cea7d8863cc86a7f48a0ce990f8874dcdb241c0e079e8ee1eb9ab34fdbe59d18",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -749,7 +749,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "3fa796af0d3acbb83817860abcb09380846d28c6ebd0454495b7b450e2db0f82",
+      "checksum": "0096a9ae1a3b1cfe2fae2d42c2b7fb2b196b160a33a6eeafe919dcab5c4c2bbc",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -768,7 +768,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "6e3674b1dc8c18cb63df8db1d5e7f011b3c0e214d24fb5cf9322c56be71ba678",
+      "checksum": "083ccce0bb774e268ab0eb0972fd84455a04a7ecb4ad4c0d856c71b1d377b097",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [
@@ -808,7 +808,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "0469beedeed0ef4d2128eda810bcca573f115307bacd02499bf97d28d24a5ec2",
+      "checksum": "572a65a6043a12a0a19e345bada47c87779c179af106a1085e999396075728be",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -827,7 +827,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "858f231c7f0ae69939937c30e8e743edef5b76880320f69fb5d6bcde9456480d",
+      "checksum": "dec6ad0b1e4457aa629e0f36196fd549157c79678dba2e222113a87e122eb842",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -845,7 +845,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-05-18",
-      "checksum": "786ab6aa7ccbaf7dc91c7fba0a36ce0e0d00d0566ef34bf20f2e1612e028170c",
+      "checksum": "f744bb673aa3144eb7b05254fc35d47c28bf824ca5523bc2f510cfc324833dd0",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -864,7 +864,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "9dad774f1dead10df741b6320909a7df3b5e429b9a1823f380cce3b189cd3862",
+      "checksum": "7d73e7f836599ff170da63b06beab74fa2212d2eecdd8fc5560b2ad2c98797d1",
       "category": "database",
       "categoryLabel": "Database",
       "relevantTechStack": [
@@ -884,7 +884,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-02",
-      "checksum": "26ca81beda8d26ddd65095e2a2405e9c007de501fbab96b77ee7d44ac6043abf",
+      "checksum": "f287ad0f804be89348f8d743939bf77d12a4641e511157836139ee95a712f132",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -907,7 +907,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "adbd59679d04ad6f275a0b620e40b0a4cf5f3294210204344aac1dc35e0d1fc4",
+      "checksum": "06c01b668228b8ea942c93846e97f016fcce332343906853319a0f911fcdcc64",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -924,7 +924,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "0b83e4179c9a53ae3d6aaa6bc93d7ca51b090b254ed3a5e16e0c1e1eff7b7886",
+      "checksum": "710ec3a802ce5edfd8ecbcb747b8219137df57e88d5db25f0175bf3de913b2b1",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -941,7 +941,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "58a1312d37ca3f26bdd4422a38fd6269320e28258e066e3c8d16738afd12ef1b",
+      "checksum": "b7e761581b35bcae7bcdb354b168d3747f82bb870afa816f5039443772ec18c7",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -955,10 +955,10 @@
       "name": "tdd-refactor-coverage-audit",
       "description": "Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Python, Go, Rust, Ruby, Elixir, Java, C#) with optional project overrides. Advisory only — never blocks the TDD gate.",
       "triggers": [],
-      "version": "1.0.1",
+      "version": "1.1.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-05-15",
-      "checksum": "caed87c12fb1fc0bc88422e4dd9d97ca807fe6c636f2c215ad8494bb2063a49b",
+      "lastUpdated": "2026-09-09",
+      "checksum": "7433effb139028786a57afa03dc2953e226dae79019dc9ea981a83d8a2face7a",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -975,7 +975,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "1ea52984bc5e981e65f496db43042a44944567f9f4953cdc63979ad000a3f07c",
+      "checksum": "e65bb45a12a439f9efa6f271940043ab51024d805562d3f2fcc51cd83cbc5331",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -992,7 +992,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "49381db6d890b022afbfd9c945e6ccdb84a932e3f10ec399248e65687117660d",
+      "checksum": "46bbfdd925304302d5997fba31a73b2fcdc12fe3fcdce061c45d396c1026f048",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -1018,7 +1018,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-01",
-      "checksum": "d05d72fff30ae376f1a8f9c68f57d2824e0490c2aaaef4b10c8b33a0c6fd2045",
+      "checksum": "6225e478b4e8d19954abd143feb6fe5d3c57560a38db69a33b5389d0757c64a4",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
@@ -1042,7 +1042,7 @@
       "version": "2.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-04-25",
-      "checksum": "3d2ce48feb0be595aceb09cb9125c908e7b479ee5199776496c3b1d691f10ffa",
+      "checksum": "bf7cebdfdf84e176356fe8baab44517dc853ba49e4797bdcfcc4822a20cd5dae",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [

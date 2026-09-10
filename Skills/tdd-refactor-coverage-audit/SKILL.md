@@ -3,9 +3,9 @@ name: tdd-refactor-coverage-audit
 description: Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Python, Go, Rust, Ruby, Elixir, Java, C#) with optional project overrides. Advisory only — never blocks the TDD gate.
 type: reference
 disable-model-invocation: true
-version: "1.0.1"
+version: "1.1.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-05-15"
+lastUpdated: "2026-09-09"
 license: Complete terms in LICENSE.txt
 category: testing
 relevantTechStack: [tdd, testing]
@@ -20,7 +20,7 @@ Applies the **No-Runtime Fallback Pattern** (`SKILL-DEVELOPMENT-GUIDE.md`):
 |---|---|---|
 | **Primary (default)** | Node 18+ on `PATH` | Invokes `scripts/test-coverage-audit.js` — deterministic, convention-JSON-driven pairing check. |
 | **Fallback** | None (Claude inline) | Reads `resources/test-coverage-conventions.json`, runs `git diff --name-status --diff-filter=A <sha>..HEAD` via Bash, applies the same rules, emits equivalent warnings. |
-Both preserve the **advisory-output contract**. Structural fields (`newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `coverage`) and advisory-only semantics are identical; only prose formatting may differ.
+Both preserve the **advisory-output contract**. Structural fields (`newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `coverage`, `diagnostics.unrecognizedExtensions`) and advisory-only semantics are identical; only prose formatting may differ.
 ### Preflight
 1. `node --version` available?
 2. **Yes (primary):** invoke per "Invocation". Done.
@@ -37,7 +37,7 @@ Both preserve the **advisory-output contract**. Structural fields (`newSources`,
    - Substitute `{stem}` (filename without extension) and `{dir}` (relative directory) into each `testPatterns` entry; check whether any expanded path exists (Bash `test -f` or Read).
    - For `inlineTests: true` (Rust), also read the source and check for an inline `#[cfg(test)]` block; if present, count as paired.
    - If nothing pairs, choose between two findings. Search the project for any file matching the language's test-shape globs — `testPatterns` with `{dir}` replaced by any directory and `{stem}` by any filename. None anywhere → the layout is not expressible by these conventions: append to `undetermined[]` with file, language, and the candidates `checked`. Otherwise the convention is in use and this source simply lacks a test: append to `missingTests[]` with file, language, and the `expected` patterns. Search once per language, not once per file.
-5. **Emit output:** `newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `coverage` (`pairedSources / (pairedSources + missingTests.length)`, or `1.0` when that denominator is `0` — undetermined excluded), `minTestCoverageRatio`. JSON or prose; advisory only — do not halt the workflow.
+5. **Emit output:** `newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `diagnostics.unrecognizedExtensions` (extension → count for files no language entry claimed, `"(none)"` for extensionless, `{}` when none), `coverage` (`pairedSources / (pairedSources + missingTests.length)`, or `1.0` when that denominator is `0` — undetermined excluded), `minTestCoverageRatio`. JSON or prose; advisory only — do not halt the workflow.
 ## When to Use
 - REFACTOR phase of a TDD cycle, after the GREEN gate
 - A deterministic check for "did this cycle add source files without tests?"
@@ -90,7 +90,10 @@ node .claude/skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js \
   ],
   "undeterminedCount": 1,
   "coverage": 0.75,
-  "minTestCoverageRatio": 0
+  "minTestCoverageRatio": 0,
+  "diagnostics": {
+    "unrecognizedExtensions": { ".vue": 82, "(none)": 3 }
+  }
 }
 ```
 | Field | Meaning |
@@ -103,7 +106,13 @@ node .claude/skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js \
 | `undeterminedCount` | Length of `undetermined[]`. |
 | `coverage` | `pairedSources / (pairedSources + missingTests.length)` — 1.0 when that denominator is 0. Undetermined sources are excluded, so the ratio describes only files the audit understood. |
 | `minTestCoverageRatio` | Optional project floor (advisory). |
+| `diagnostics` | Container for what the audit could **not** account for. Always present. |
+| `diagnostics.unrecognizedExtensions` | Extension → count for changed files whose extension matched no language entry. Extensionless files count under `"(none)"`. Always present; `{}` when all recognized. |
+| `diagnostics.unreachableLanguageEntries` | `{ name, shadowedBy }` per language entry no file can reach, every extension being claimed ahead of it. Always present; `[]` when none. See **Which entry claims a file**. |
+> **What decides `undetermined` (#295).** Judged on **location**, not test naming. Rule: files shaped like this language's tests exist **and** no source of this language paired anywhere in the project. Both halves matter — a project pairing somewhere understands its own layout, so an unpaired source there is genuinely missing a test. Previously the check asked only whether a test-shaped file existed anywhere; `{dir}` opens to `**`, so nine of ten bundled languages yield a location-blind glob (`**/*.test.js`) and a mirror-layout project reported `coverage: 0.0` while a project with no tests reported `1.0` — each population got the other's verdict. Only `elixir`, carrying no `{dir}`, was unaffected. Known imprecision: a monorepo pairing in one package and not another reports `missingTests` for the unreachable package; sharpening needs per-subtree classification.
 > **`coverage` changed meaning (#285).** Formerly `pairedSources / newSources`. A project whose layout the bundled patterns cannot express now reports `1.0` alongside a non-empty `undetermined[]` instead of a depressed figure and impossible expected paths. Callers comparing `coverage` to a floor must also read `undeterminedCount`: a perfect score beside a non-empty `undetermined[]` means the layout was not understood, not that the project is fully tested.
+> **`unrecognizedExtensions` is the other half of reading `coverage` honestly (#299).** `undeterminedCount` guards a falsely *low* score; this guards a falsely *high* one. A file whose extension matches no language entry never enters `newSources`, `pairedSources` or the `coverage` denominator, so a Vue project with 80 untested components and 2 tested utilities reports `coverage: 1.0`. **Callers comparing `coverage` to a floor must read both** — a perfect score means "of the files I understood". It is also the language backlog ordered by evidence: `".vue": 82` says what to add next.
+> **Everything unrecognized is reported; nothing suppressed (#299 AC7).** A suppression list for known-non-source extensions (`.md`, `.json`, `.lock`, `.png`) was considered and **rejected** — it goes stale and can only hide a row someone wanted. Two skips are **not** reported, both recorded decisions rather than gaps: `ignoredSourcePatterns` matches, and files a language claims but whose `excludePatterns` reject. Reporting `src/types.d.ts` as an unrecognized `.ts` would claim the audit has no TypeScript entry.
 Never exits non-zero for missing tests. Exit `2` is reserved for schema validation failures and usage errors.
 ## How It Works
 1. Loads the conventions JSON and validates it against the bundled schema.
@@ -147,9 +156,34 @@ Optional `testCoverageAudit` block in `framework-config.json`:
 ```
 | Field | Behavior |
 |-------|----------|
-| `additionalLanguages` | Merged into bundled `languages` (same key overrides). |
+| `additionalLanguages` | Merged into bundled `languages`. Same key overrides, **replacing wholesale** — every pattern you still want must be restated. |
+| `additionalLanguages` — extension collision | A project entry is consulted **before** any bundled entry claiming the same extension (#301). A new key declaring `.js` takes effect without touching bundled `javascript`, which keeps its other extensions. |
 | `ignoredSourcePatterns` | Concatenated with bundled patterns. |
 | `minTestCoverageRatio` | Reported for downstream callers; not enforced here. |
+### Worked example: sources under a dot-directory
+The `myDsl` case is easy — a new extension, test root derived from the source's directory. The awkward case is a **dot-directory** source root with a test root that does **not** mirror the source path (`.claude/project-scripts/` → `tests/project-scripts/`):
+```json
+{
+  "testCoverageAudit": {
+    "additionalLanguages": {
+      "projectScripts": {
+        "sourceExtensions": [".js"],
+        "testPatterns": ["tests/project-scripts/{stem}.test.js"]
+      }
+    }
+  }
+}
+```
+Two things this shows that `myDsl` does not:
+- **The test root is fixed, not derived from `{dir}`.** `.claude/project-scripts/foo.js` is expected at `tests/project-scripts/foo.test.js`. **Any pattern omitting `{dir}` is anchored at the repository root.**
+- **`{stem}` and `{dir}` substitute inside override `testPatterns` exactly as in the bundled conventions** — same tokens, same meanings. `{stem}` is the filename without extension (`foo`), `{dir}` the source's relative directory (`.claude/project-scripts`).
+It declares `.js`, which bundled `javascript` already claims. Deliberate and it works: project entries are consulted first, so `projectScripts` wins for every `.js` file. Before 1.1.0 it did not — the entry validated, merged and was never reached (#301).
+> **You may not need this example.** Since 1.1.0 bundled `javascript` carries `tests/**/{stem}.test.js` (#291), reaching `tests/project-scripts/foo.test.js` on its own. Reach for an override when your test root is somewhere the bundled patterns do not go, or to pin pairing to one root rather than anywhere under `tests/`. The example shows the mechanism, not a requirement.
+### Which entry claims a file
+Entries are consulted in order; the **first** claiming the file's extension wins, so order is precedence. Override-declared entries come first, then bundled. Two consequences:
+- **You do not have to replace a bundled language to extend it.** Before #301, reaching a `.js` layout meant overriding the `javascript` key itself and restating every bundled pattern by hand — the staleness trap the table warns about. A new key declaring `.js` now works instead.
+- **An entry nothing can reach is reported, not silently ignored.** When every extension of an entry is claimed ahead of it, it appears in `diagnostics.unreachableLanguageEntries` as `{ name, shadowedBy }`. A property of **position, not origin**: it catches two project entries colliding, and a bundled entry a broad project entry has fully shadowed. An entry keeping even one unclaimed extension is still reachable and is not reported.
+> **Upgrading to 1.1.0 can change your `coverage` with nothing in your diff to explain it (#301).** A project carrying an `additionalLanguages` entry whose extension a bundled entry claimed has been running with it **inert**. This release makes it live, so `coverage` can move either direction on the first run after upgrade. Called out rather than shipped silently because the discontinuity is otherwise unattributable: run `--config-only` for the resolved language order and read `diagnostics.unreachableLanguageEntries`. Leaving precedence broken to avoid the jump preserves a state where the documented mechanism does not work at all.
 Validated against the **lenient** schema entry point (`#/$defs/override`), which shares the conventions file's property shapes but requires no fields; the conventions file uses the strict root, which still requires `languages`. Separate because `mergeConfig` reads only the three keys above — requiring `languages` on an override would mandate a field the consumer discards.
 ## Interpreting Warnings
 A `missingTests[]` entry is **not a failure** — it prompts a decision on whether the file is intentionally untested (config, types, glue, generated code):

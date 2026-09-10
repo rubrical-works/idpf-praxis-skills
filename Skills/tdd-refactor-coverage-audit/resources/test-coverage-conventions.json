@@ -1,7 +1,7 @@
 {
   "$schema": "./test-coverage-conventions-schema.json",
   "_meta": {
-    "description": "Language conventions for pairing source files with their tests. Consumed by ../scripts/test-coverage-audit.js. Project-specific overrides go in framework-config.json under testCoverageAudit.",
+    "description": "Language conventions for pairing source files with their tests. Consumed by ../scripts/test-coverage-audit.js. Project-specific overrides go in framework-config.json under testCoverageAudit -- see the Project Override section of ../SKILL.md for worked examples, including a dot-directory source root with a non-mirroring test root, and for how {dir} and {stem} substitute inside override testPatterns.",
     "version": 1
   },
   "languages": {
@@ -14,7 +14,14 @@
         "{dir}/{stem}.spec.tsx",
         "{dir}/__tests__/{stem}.ts",
         "{dir}/__tests__/{stem}.tsx",
-        "{dir}/__tests__/{stem}.test.ts"
+        "{dir}/__tests__/{stem}.test.ts",
+        "tests/**/{stem}.test.ts",
+        "tests/**/{stem}.test.tsx",
+        "tests/**/{stem}.spec.ts",
+        "tests/**/{stem}.spec.tsx",
+        "test/**/{stem}.test.ts",
+        "test/**/{stem}.spec.ts",
+        "__tests__/**/{stem}.test.ts"
       ],
       "excludePatterns": ["**/*.d.ts", "**/node_modules/**"]
     },
@@ -26,7 +33,14 @@
         "{dir}/{stem}.spec.js",
         "{dir}/{stem}.spec.jsx",
         "{dir}/__tests__/{stem}.js",
-        "{dir}/__tests__/{stem}.test.js"
+        "{dir}/__tests__/{stem}.test.js",
+        "tests/**/{stem}.test.js",
+        "tests/**/{stem}.test.jsx",
+        "tests/**/{stem}.spec.js",
+        "tests/**/{stem}.spec.jsx",
+        "test/**/{stem}.test.js",
+        "test/**/{stem}.spec.js",
+        "__tests__/**/{stem}.test.js"
       ],
       "excludePatterns": ["**/node_modules/**"]
     },
@@ -36,7 +50,14 @@
         "{dir}/{stem}.test.ts",
         "{dir}/{stem}.test.js",
         "{dir}/{stem}.spec.ts",
-        "{dir}/{stem}.spec.js"
+        "{dir}/{stem}.spec.js",
+        "tests/**/{stem}.test.ts",
+        "tests/**/{stem}.test.js",
+        "tests/**/{stem}.spec.ts",
+        "tests/**/{stem}.spec.js",
+        "test/**/{stem}.test.ts",
+        "test/**/{stem}.test.js",
+        "__tests__/**/{stem}.test.ts"
       ]
     },
     "python": {

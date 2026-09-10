@@ -291,7 +291,7 @@
       "path": "Skills/tdd-red-phase"
     },
     "tdd-refactor-coverage-audit": {
-      "version": "1.0.1",
+      "version": "1.1.0",
       "type": "reference",
       "category": "testing",
       "path": "Skills/tdd-refactor-coverage-audit"
