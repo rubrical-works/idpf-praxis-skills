@@ -1,19 +1,12 @@
 # electron-store Settings Persistence
-
 ## Overview
-
 Use `electron-store` for cross-platform settings persistence in Electron apps.
-
 ## Installation
-
 ```bash
 npm install electron-store
 ```
-
 ## Basic Usage
-
 ### Main Process
-
 ```typescript
 // src/main/settings.ts
 import Store from 'electron-store';
@@ -53,9 +46,7 @@ export function isFirstRun(): boolean {
   return !store.get('setupCompleted');
 }
 ```
-
 ### IPC Integration
-
 ```typescript
 // main.ts
 import { ipcMain } from 'electron';
@@ -73,9 +64,7 @@ if (process.env.CLEAR_CONFIG === 'true') {
   clearSettings();
 }
 ```
-
 ### Preload
-
 ```typescript
 // preload.ts
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -84,19 +73,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
   isFirstRun: () => ipcRenderer.invoke('settings:isFirstRun'),
 });
 ```
-
 ## Storage Locations
-
 | Platform | Path |
 |----------|------|
 | Windows | `%APPDATA%/{productName}/app-settings.json` |
 | macOS | `~/Library/Application Support/{productName}/app-settings.json` |
 | Linux | `~/.config/{productName}/app-settings.json` |
-
 The `productName` comes from package.json.
-
 ## Schema Validation (Optional)
-
 ```typescript
 const store = new Store<Settings>({
   schema: {
@@ -112,9 +96,7 @@ const store = new Store<Settings>({
   },
 });
 ```
-
 ## Migration Support
-
 ```typescript
 const store = new Store<Settings>({
   migrations: {
@@ -128,16 +110,12 @@ const store = new Store<Settings>({
   },
 });
 ```
-
 ## Best Practices
-
 1. **Type your store:** Use TypeScript interface for settings
 2. **Provide defaults:** All settings should have sensible defaults
 3. **Use getters/setters:** Wrap store access in functions
 4. **Expose via IPC:** Never import electron-store in renderer
-
 ## Consequences
-
 - Settings persist across app restarts
 - No database needed for simple settings
 - JSON format readable by users

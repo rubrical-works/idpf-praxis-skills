@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.18.0
+**Version:** v0.19.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -27,8 +27,8 @@
 | debate-prism | 1.0.2 | 2026-05-18 | Active |
 | digitalocean-app-setup | 2.0.0 | 2026-04-25 | Active |
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
-| electron-cross-build | 1.0.0 | 2026-05-17 | Active |
-| electron-development | 1.0.0 | 2026-05-17 | Active |
+| electron-cross-build | 1.1.0 | 2026-09-10 | Active |
+| electron-development | 1.1.0 | 2026-09-10 | Active |
 | engage-apothecary | 1.0.1 | 2026-05-18 | Active |
 | engage-chorus | 1.0.1 | 2026-05-18 | Active |
 | engage-codex | 1.0.1 | 2026-05-18 | Active |
@@ -62,7 +62,7 @@
 | tdd-green-phase | 1.0.0 | 2026-04-01 | Active |
 | tdd-process | 1.0.0 | 2026-04-01 | Active |
 | tdd-red-phase | 1.0.0 | 2026-04-01 | Active |
-| tdd-refactor-coverage-audit | 1.1.0 | 2026-09-09 | Active |
+| tdd-refactor-coverage-audit | 1.2.0 | 2026-09-10 | Active |
 | tdd-refactor-phase | 1.0.0 | 2026-04-01 | Active |
 | test-scaffold | 1.0.0 | 2026-04-01 | Active |
 | test-writing-patterns | 1.0.0 | 2026-04-01 | Active |

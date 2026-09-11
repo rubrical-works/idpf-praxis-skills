@@ -1,17 +1,10 @@
 # GitHub API Update Checking Pattern
-
 ## Problem
-
 Electron apps need to check for updates without bundling a full auto-update framework.
-
 ## Solution
-
 Use Electron's `net` module with GitHub Releases API for update checking, with graceful error handling.
-
 ## Pattern
-
 ### Version Comparison
-
 ```typescript
 export function compareVersions(local: string, remote: string): number {
   const localParts = local.replace(/^v/, '').split('.').map(Number);
@@ -29,9 +22,7 @@ export function compareVersions(local: string, remote: string): number {
   return 0;
 }
 ```
-
 ### Using Electron's net Module
-
 ```typescript
 import { net } from 'electron';
 
@@ -57,25 +48,19 @@ async function fetchWithElectron(url: string) {
   });
 }
 ```
-
 ## Rationale
-
 - **Electron net module:** Respects system proxy settings (unlike Node's fetch)
 - **GitHub Releases API:** Standard endpoint, no auth required for public repos
 - **Semantic versioning:** Handles major.minor.patch with variable lengths
 - **Graceful degradation:** App works offline, just shows "check failed"
-
 ## Update Status States
-
 | State | Badge Color | When |
 |-------|-------------|------|
 | `checking` | Blue | Request in progress |
 | `update-available` | Orange | Remote > local version |
 | `up-to-date` | Green | Remote == local version |
 | `error` | Red | Network failure, API error, invalid URL |
-
 ## Error Handling
-
 ```typescript
 const result = await checkForUpdates(version, repoUrl);
 
@@ -91,28 +76,20 @@ switch (result.status) {
     break;
 }
 ```
-
 ## API Response Parsing
-
 GitHub releases API returns:
-
 ```json
 {
   "tag_name": "v0.30.0",
   "html_url": "https://github.com/owner/repo/releases/tag/v0.30.0"
 }
 ```
-
 Strip `v` prefix for comparison, store download URL for update action.
-
 ## Rate Limiting
-
 - Unauthenticated: 60 requests/hour
 - Consider caching results for session
 - Only check on app launch or user action
-
 ## Consequences
-
 - Requires network access for update checking
 - Rate limited by GitHub (60 requests/hour unauthenticated)
 - Only checks latest release (not pre-releases)

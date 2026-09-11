@@ -377,6 +377,47 @@ function looksLikeTest(file, testPatterns) {
   });
 }
 
+// ---------- pairing scope (#293) ----------
+
+// The test-shape globs for one source file's OWN directory: {dir} bound to
+// that directory and {stem} left open. This is the sayable form of "some test
+// in this package covers this file", which no testPatterns entry can express —
+// expandTestPatterns substitutes {stem} from the source, so a literal * in the
+// stem position would be abusing the placeholder rather than declaring intent.
+function directoryTestGlobs(file, testPatterns) {
+  const dir = path.dirname(file);
+  const dirNorm = dir === '.' ? '' : dir;
+  return (testPatterns || []).map((p) =>
+    p.replaceAll('{dir}', dirNorm).replaceAll('{stem}', '*').replace(/^\/+/, '')
+  );
+}
+
+// True when the source file's own directory contains any file matching the
+// language's test shape. Reads one directory, never recurses: the scope is the
+// package, which is also the unit `go test -cover` reports in.
+function directoryHasTest(projectRoot, file, testPatterns) {
+  const dir = path.dirname(file);
+  const abs = path.join(projectRoot, dir === '.' ? '' : dir);
+  let entries;
+  try {
+    entries = fs.readdirSync(abs, { withFileTypes: true });
+  } catch (_) {
+    return false;
+  }
+  for (const e of entries) {
+    if (!e.isFile()) continue;
+    const rel = dir === '.' ? e.name : `${dir}/${e.name}`;
+    if (looksLikeTest(rel, testPatterns)) return true;
+  }
+  return false;
+}
+
+// A language pairs per source file unless it declares otherwise. Absence of
+// the key is the current behaviour, so every language but `go` is untouched.
+function pairsByDirectory(langDef) {
+  return langDef && langDef.pairingScope === 'directory';
+}
+
 // ---------- layout recognition ----------
 
 // The language's test patterns with BOTH placeholders opened up: {stem} to a
@@ -399,10 +440,10 @@ function testShapeGlobs(testPatterns) {
 // one {dir}/-rooted pattern, and a source file's own directory always exists,
 // so that rule could never fire for them. It would have shipped as dead code,
 // which is the defect class this audit already had once (#284).
-function projectUsesLanguageConvention(projectRoot, lang, cache) {
+function projectUsesLanguageConvention(projectRoot, lang, cache, dirCache = null) {
   if (cache.has(lang.name)) return cache.get(lang.name);
   const found = testShapeGlobs(lang.def.testPatterns).some((g) =>
-    walkAndMatch(projectRoot, globToRegex(g))
+    walkAndMatch(projectRoot, globToRegex(g), '', 0, dirCache)
   );
   cache.set(lang.name, found);
   return found;
@@ -447,7 +488,7 @@ function getNewFiles(projectRoot, sinceCommit) {
 
 // ---------- file existence ----------
 
-function testFileExists(projectRoot, expanded) {
+function testFileExists(projectRoot, expanded, dirCache = null) {
   for (const candidate of expanded) {
     if (candidate.includes('*')) {
       // Glob candidate — walk projectRoot and match. Limited usage; do a
@@ -455,8 +496,8 @@ function testFileExists(projectRoot, expanded) {
       const re = globToRegex(candidate);
       // Cheap version: check if any file under projectRoot matches.
       // For audit purposes, pattern matching against actual file list is fine.
-      // Use a bounded walker.
-      if (walkAndMatch(projectRoot, re)) return true;
+      // Use a bounded walker, sharing one run's directory listings (#296).
+      if (walkAndMatch(projectRoot, re, '', 0, dirCache)) return true;
     } else {
       const abs = path.join(projectRoot, candidate);
       if (fs.existsSync(abs)) return true;
@@ -465,19 +506,35 @@ function testFileExists(projectRoot, expanded) {
   return false;
 }
 
-function walkAndMatch(root, re, current = '', depth = 0) {
-  if (depth > 8) return false;
+// Directory listings are memoized for the life of one audit run (#296). A glob
+// candidate is expanded per source file -- tests/**/test_mod0.py,
+// tests/**/test_mod1.py -- so the candidate STRINGS differ and caching match
+// results buys nothing; what repeats is the readdirSync of the same
+// directories, once per candidate per source. #285's guard measures exactly
+// that, and adding the first glob-bearing patterns to python is what made it
+// bite. The tree does not change during a run, so one listing per directory is
+// sufficient and strictly cheaper than before.
+function cachedReaddir(abs, dirCache) {
+  if (dirCache && dirCache.has(abs)) return dirCache.get(abs);
   let entries;
   try {
-    entries = fs.readdirSync(path.join(root, current), { withFileTypes: true });
+    entries = fs.readdirSync(abs, { withFileTypes: true });
   } catch (_) {
-    return false;
+    entries = [];
   }
+  if (dirCache) dirCache.set(abs, entries);
+  return entries;
+}
+
+function walkAndMatch(root, re, current = '', depth = 0, dirCache = null) {
+  if (depth > 8) return false;
+  const entries = cachedReaddir(path.join(root, current), dirCache);
+  if (entries.length === 0) return false;
   for (const e of entries) {
     if (e.name === 'node_modules' || e.name === '.git' || e.name === 'dist' || e.name === 'build') continue;
     const rel = current ? `${current}/${e.name}` : e.name;
     if (e.isDirectory()) {
-      if (walkAndMatch(root, re, rel, depth + 1)) return true;
+      if (walkAndMatch(root, re, rel, depth + 1, dirCache)) return true;
     } else if (re.test(rel)) {
       return true;
     }
@@ -535,6 +592,8 @@ function audit(args) {
   const undetermined = [];
   const unrecognizedExtensions = {};
   const layoutCache = new Map();
+  // One directory-listing cache for the whole run (#296).
+  const dirCache = new Map();
   // Unpaired sources are DEFERRED, not classified in place (#295). The
   // missing-versus-undetermined decision needs to know whether this language
   // paired anywhere in the project, and that is unknowable until the loop ends.
@@ -567,9 +626,13 @@ function audit(args) {
     let paired = false;
     if (lang.def.inlineTests && hasInlineTests(path.join(projectRoot, file))) {
       paired = true;
+    } else if (pairsByDirectory(lang.def)) {
+      // Directory scope subsumes the per-file case: an eponymous
+      // {stem}_test.go also matches the directory's test shape.
+      if (directoryHasTest(projectRoot, file, lang.def.testPatterns)) paired = true;
     } else {
       const expanded = expandTestPatterns(file, lang.def.testPatterns);
-      if (testFileExists(projectRoot, expanded)) paired = true;
+      if (testFileExists(projectRoot, expanded, dirCache)) paired = true;
     }
 
     if (paired) {
@@ -601,8 +664,14 @@ function audit(args) {
   // still reports missingTests for the unreachable package; improving that
   // needs per-subtree classification.
   for (const { file, lang } of pending) {
-    const candidates = expandTestPatterns(file, lang.def.testPatterns);
-    const testsExist = projectUsesLanguageConvention(projectRoot, lang, layoutCache);
+    // Report the expectation the scope actually used. Under directory scope
+    // an expanded per-file candidate would name a file the audit never
+    // required, which reads as a demand for one test file per source — the
+    // assumption #293 removed.
+    const candidates = pairsByDirectory(lang.def)
+      ? directoryTestGlobs(file, lang.def.testPatterns)
+      : expandTestPatterns(file, lang.def.testPatterns);
+    const testsExist = projectUsesLanguageConvention(projectRoot, lang, layoutCache, dirCache);
     const pairedAnywhere = (pairedByLanguage.get(lang.name) || 0) > 0;
     if (!testsExist || !pairedAnywhere) {
       undetermined.push({ file, language: lang.name, checked: candidates });
@@ -668,6 +737,9 @@ module.exports = {
   expandTestPatterns,
   looksLikeTest,
   testShapeGlobs,
+  directoryTestGlobs,
+  directoryHasTest,
+  pairsByDirectory,
   hasInlineTests,
   audit,
   // exposed for tests

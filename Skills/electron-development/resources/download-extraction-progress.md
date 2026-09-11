@@ -1,17 +1,10 @@
 # Framework Download and Extraction Pattern
-
 ## Problem
-
 Downloading files in Electron needs progress tracking and reliable extraction.
-
 ## Solution
-
 Use Electron's `net` module for downloading with `adm-zip` for extraction, with progress tracking via IPC events.
-
 ## Pattern
-
 ### Download with Progress Tracking
-
 ```typescript
 import { net } from 'electron';
 import * as fs from 'fs';
@@ -57,9 +50,7 @@ export async function downloadFile(
   });
 }
 ```
-
 ### Progress via IPC Events
-
 ```typescript
 // Main process
 ipcMain.handle('download:file', async (event, url, targetDir) => {
@@ -83,9 +74,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 });
 ```
-
 ### Zip Extraction with adm-zip
-
 ```typescript
 import AdmZip from 'adm-zip';
 
@@ -97,16 +86,12 @@ export async function extractZip(zipPath: string, targetDir: string): Promise<vo
   zip.extractAllTo(targetDir, true); // true = overwrite
 }
 ```
-
 ## Rationale
-
 - **Electron net module:** Respects system proxy, handles HTTPS, built-in to Electron
 - **IPC events for progress:** Non-blocking, allows UI updates during download
 - **adm-zip:** Pure JavaScript, no native dependencies, works cross-platform
 - **Redirect handling:** GitHub releases use S3 redirects (302) for asset downloads
-
 ## GitHub Release Asset Pattern
-
 ```typescript
 // Fetch release info
 const release = await fetchLatestRelease(owner, repo);
@@ -117,18 +102,14 @@ const downloadUrl = zipAsset.browser_download_url;
 
 // Download follows redirect chain: GitHub -> S3
 ```
-
 ## Error Handling
-
 | Error | Handling |
 |-------|----------|
 | Network failure | Return error result, log to console |
 | No zip asset | Return "No zip asset found" error |
 | Invalid URL | Return "Invalid GitHub URL" error |
 | Extraction failure | Return error, clean up temp files |
-
 ## Console Logging Pattern
-
 ```typescript
 function logToConsole(message: string, level: 'info' | 'success' | 'error' | 'warning'): void {
   const timestamp = new Date().toLocaleTimeString();
@@ -139,9 +120,7 @@ function logToConsole(message: string, level: 'info' | 'success' | 'error' | 'wa
   consoleContent.parentElement?.scrollTo(0, consoleContent.parentElement.scrollHeight);
 }
 ```
-
 ## Consequences
-
 - Requires `adm-zip` dependency (adds ~100KB)
 - Download happens in main process (not renderer)
 - Progress updates limited by chunk size from network

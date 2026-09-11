@@ -1,28 +1,19 @@
 # E2E Testing Packaged Electron Apps
-
 ## Problem
-
 Testing Electron apps with Playwright has two approaches:
 1. **Dev mode**: Launch with `args: ['.']` - starts dev server
 2. **Packaged mode**: Launch with `executablePath` - tests production build
-
 Dev mode is unreliable because:
 - Vite dev server may not start correctly
 - Timing issues with server startup
 - Different behavior from production
-
 ## Solution
-
 Test against the **packaged executable** for reliable E2E tests.
-
 ## Prerequisites
-
 1. Run `npm run package` before E2E tests
 2. Enable `EnableNodeCliInspectArguments` fuse (see electron-fuses-playwright.md)
 3. Use no-space executable name (see electron-app-naming.md)
-
 ## Test Structure
-
 ```typescript
 import { _electron as electron, ElectronApplication, Page } from 'playwright';
 import * as path from 'path';
@@ -75,31 +66,22 @@ test.describe('App Tests', () => {
   // Tests use `window` to interact with the app
 });
 ```
-
 ## Test Categories
-
 ### 1. File-Based Tests (No App Launch)
-
 Fast tests that don't need Electron:
-
 ```typescript
 test('icon files exist', () => {
   expect(fs.existsSync('build/icon.ico')).toBe(true);
 });
 ```
-
 ### 2. Window Tests (App Launch Required)
-
 Tests that need the running app:
-
 ```typescript
 test('window title correct', async () => {
   expect(await window.title()).toBe('My App Name');
 });
 ```
-
 ## Playwright Configuration
-
 ```typescript
 // playwright.config.ts
 export default defineConfig({
@@ -110,20 +92,15 @@ export default defineConfig({
   },
 });
 ```
-
 ## CI Considerations
-
 CI workflow must package before E2E:
-
 ```yaml
 steps:
   - run: npm ci
   - run: npm run package  # Build first
   - run: npm run test:e2e  # Then test
 ```
-
 ## Common Issues
-
 | Issue | Solution |
 |-------|----------|
 | `firstWindow()` hangs | Check fuses, DevTools not opening |

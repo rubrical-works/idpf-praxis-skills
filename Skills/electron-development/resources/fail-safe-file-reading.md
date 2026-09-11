@@ -1,17 +1,10 @@
 # Fail-Safe File Reading Pattern
-
 ## Problem
-
 Reading configuration files can fail in many ways (missing file, invalid JSON, wrong permissions). Apps need a defensive pattern that never throws.
-
 ## Solution
-
 Use synchronous file reading with fail-safe null returns for file access. Return typed objects with `found` boolean.
-
 ## Pattern
-
 ### Module Structure
-
 ```typescript
 // src/main/config.ts
 import * as fs from 'fs';
@@ -50,18 +43,14 @@ export function getConfigInfo(configPath: string): ConfigInfo {
   }
 }
 ```
-
 ### IPC Integration
-
 ```typescript
 // main.ts
 ipcMain.handle('config:getInfo', (_event, configPath: string) => {
   return getConfigInfo(configPath);
 });
 ```
-
 ## Error Handling Strategy
-
 | Condition | Return |
 |-----------|--------|
 | Empty path | `{ found: false }` |
@@ -69,16 +58,12 @@ ipcMain.handle('config:getInfo', (_event, configPath: string) => {
 | Config file doesn't exist | `{ found: false }` |
 | Invalid JSON | `{ found: false }` |
 | Valid config | `{ found: true, version: "x.y.z" }` |
-
 ## Rationale
-
 - **Synchronous:** Config files are small; sync read is simpler and fast enough
 - **Fail-safe:** Always returns a valid object, never throws
 - **Defensive:** Checks for empty paths, missing files, invalid JSON
 - **Typed:** Returns structured object with `found` boolean for UI logic
-
 ## UI Display Logic
-
 ```typescript
 const info = await window.electronAPI.getConfigInfo(path);
 
@@ -90,9 +75,7 @@ if (info.found && info.version) {
   display.classList.add('not-found');
 }
 ```
-
 ## Generic Version
-
 ```typescript
 export function readJsonFile<T>(filePath: string): { found: boolean; data?: T } {
   try {
@@ -107,9 +90,7 @@ export function readJsonFile<T>(filePath: string): { found: boolean; data?: T } 
   }
 }
 ```
-
 ## Consequences
-
 - Renderer must handle "Not Found" state gracefully
 - Updates require re-fetching (no file watching)
 - All errors are silent (logged to console if needed)

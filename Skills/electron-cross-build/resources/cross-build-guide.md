@@ -1,77 +1,41 @@
 # Cross-Build Guide: Linux to Windows Electron Builds
-
-This guide covers the complete workflow for building Windows Electron executables from a Linux host.
-
----
-
 ## 1. Toolchain Setup
-
 ### Wine Installation
-
-Wine is required for NSIS installer generation and code signing on Linux.
-
+Required for NSIS installer generation and code signing on Linux.
 ```bash
 # Ubuntu/Debian
 sudo dpkg --add-architecture i386
 sudo apt update
 sudo apt install -y wine wine32 wine64
-
 # Initialize Wine prefix
 wineboot --init
-```
-
-Verify installation:
-```bash
+# Verify
 wine --version
 ```
-
 ### Docker-Based Builds
-
 Docker eliminates host dependency management. Use the official `electronuserland/builder` images:
-
 ```bash
-# Basic build with Wine support
 docker run --rm \
   -v "$(pwd):/project" \
   -w /project \
   electronuserland/builder:wine \
   bash -c "npm ci && npx electron-builder --win --x64"
-
-# Multi-platform build
-docker run --rm \
-  -v "$(pwd):/project" \
-  -w /project \
-  electronuserland/builder:wine \
-  bash -c "npm ci && npx electron-builder --linux --win"
 ```
-
-Available Docker images:
+Multi-platform: replace the final flags with `--linux --win`.
 | Image | Use Case |
 |-------|----------|
 | `electronuserland/builder:wine` | Windows builds from Linux |
 | `electronuserland/builder:wine-mono` | Windows builds with .NET support |
 | `electronuserland/builder:wine-chrome` | Includes Chrome for testing |
-
 ### NSIS Installation
-
-NSIS (Nullsoft Scriptable Install System) is needed for generating `.exe` installers:
-
+Needed for generating `.exe` installers:
 ```bash
-# Ubuntu/Debian
 sudo apt install -y nsis
-
-# Verify
 makensis -VERSION
 ```
-
-electron-builder can also auto-download NSIS, but a system installation is more reliable for CI environments.
-
----
-
+electron-builder can auto-download NSIS, but a system installation is more reliable for CI.
 ## 2. electron-builder Configuration
-
 ### Basic Cross-Platform Config
-
 ```yaml
 # electron-builder.yml
 appId: com.example.myapp
@@ -98,24 +62,17 @@ nsis:
   createDesktopShortcut: true
   createStartMenuShortcut: true
 ```
-
 ### Build Commands
-
 ```bash
-# Build only Windows from Linux
+# Windows only from Linux
 npx electron-builder --win --x64
-
-# Build both Linux and Windows
+# Both Linux and Windows
 npx electron-builder --linux --win
-
-# Build with specific config
+# With specific config
 npx electron-builder --win --x64 --config electron-builder.yml
 ```
-
 ### Platform-Specific Files
-
-Place platform-specific resources in the `build/` directory:
-
+Place platform-specific resources in `build/`:
 ```
 build/
   icon.icns          # macOS
@@ -124,13 +81,8 @@ build/
   background.png     # DMG background
   installerSidebar.bmp  # NSIS sidebar (164x314)
 ```
-
----
-
 ## 3. Electron Forge Configuration
-
 ### Makers for Windows from Linux
-
 ```javascript
 // forge.config.js
 module.exports = {
@@ -155,54 +107,23 @@ module.exports = {
   ],
 };
 ```
-
 ### Build Commands
-
 ```bash
-# Package for Windows
 npx electron-forge package --platform=win32 --arch=x64
-
-# Make distributables for Windows
 npx electron-forge make --platform=win32 --arch=x64
 ```
-
-**Limitation:** Electron Forge's Squirrel.Windows maker has limited Linux support. For full installer generation from Linux, electron-builder with NSIS is more reliable.
-
----
-
+**Limitation:** Forge's Squirrel.Windows maker has limited Linux support. For full installer generation from Linux, electron-builder with NSIS is more reliable.
 ## 4. Native Module Handling
-
-### The Problem
-
-Native Node.js modules compiled with node-gyp are platform-specific. A module compiled on Linux will not work on Windows.
-
+Native Node.js modules compiled with node-gyp are platform-specific: a module compiled on Linux will not work on Windows.
 ### Solution: prebuild-install
-
-Modules that ship prebuilt binaries (via `prebuild` or `prebuild-install`) are downloaded for the target platform automatically during packaging.
-
-```json
-{
-  "dependencies": {
-    "better-sqlite3": "^9.0.0"
-  }
-}
-```
-
-electron-builder and Electron Forge handle downloading the correct prebuilt binary for the target platform.
-
+Modules shipping prebuilt binaries (via `prebuild`/`prebuild-install`) are downloaded for the target platform automatically during packaging; electron-builder and Forge select the correct binary.
 ### Solution: Rebuild for Target
-
-If prebuilds are not available, use electron-rebuild with target platform flags:
-
+If prebuilds are unavailable, use electron-rebuild with target platform flags:
 ```bash
-# Rebuild native modules for Windows x64
 npx electron-rebuild --platform=win32 --arch=x64
 ```
-
-For electron-builder, native module rebuilding is automatic when the `electronVersion` is specified.
-
+For electron-builder, native module rebuilding is automatic when `electronVersion` is specified.
 ### Common Native Modules
-
 | Module | Prebuilds Available? | Notes |
 |--------|---------------------|-------|
 | `better-sqlite3` | Yes | Works cross-platform |
@@ -211,19 +132,11 @@ For electron-builder, native module rebuilding is automatic when the `electronVe
 | `sharp` | Yes | Image processing |
 | `serialport` | Yes | Serial port access |
 | Custom C++ addons | No | Must cross-compile or use Docker |
-
----
-
 ## 5. Windows Installer Generation (NSIS)
-
-### NSIS from Linux
-
-electron-builder uses NSIS to create Windows installers. On Linux, this requires:
+electron-builder uses NSIS for Windows installers. On Linux this requires:
 1. The `nsis` system package (or electron-builder's bundled NSIS)
 2. Wine (for some NSIS plugins)
-
 ### Configuration
-
 ```yaml
 # electron-builder.yml
 nsis:
@@ -239,16 +152,12 @@ nsis:
   installerSidebar: build/installerSidebar.bmp
   license: LICENSE
 ```
-
 ### Custom NSIS Script
-
 For advanced installer behavior, provide a custom NSIS include script:
-
 ```yaml
 nsis:
   include: build/installer.nsh
 ```
-
 ```nsis
 ; build/installer.nsh
 !macro customInstall
@@ -256,27 +165,16 @@ nsis:
   WriteRegStr HKCU "Software\MyApp" "InstallPath" "$INSTDIR"
 !macroend
 ```
-
----
-
 ## 6. Code Signing
-
-### The Challenge
-
-Windows code signing typically requires `signtool.exe`, a Windows-only tool. From Linux, there are several approaches.
-
+Windows code signing typically requires `signtool.exe`, a Windows-only tool. From Linux there are three approaches.
 ### Option A: signtool via Wine
-
 ```bash
 # Install signtool in Wine prefix
 winetricks dotnet48
-
 # Sign with PFX certificate
 wine signtool.exe sign /f certificate.pfx /p password /t http://timestamp.digicert.com /fd sha256 "path/to/app.exe"
 ```
-
 electron-builder supports this natively:
-
 ```yaml
 # electron-builder.yml
 win:
@@ -285,25 +183,19 @@ win:
   certificateFile: certificate.pfx
   certificatePassword: ${WIN_CSC_KEY_PASSWORD}
 ```
-
 ```bash
-# Set environment variables
 export CSC_LINK=certificate.pfx
 export CSC_KEY_PASSWORD=your-password
 npx electron-builder --win
 ```
-
 ### Option B: Cloud Signing Services
-
-Cloud-based signing avoids Wine entirely and keeps private keys secure.
-
+Avoids Wine entirely and keeps private keys secure.
 **SSL.com eSigner:**
 ```yaml
 # electron-builder.yml
 win:
   sign: ./sign.js  # Custom sign script
 ```
-
 ```javascript
 // sign.js
 exports.default = async function (configuration) {
@@ -316,13 +208,9 @@ exports.default = async function (configuration) {
     -input_file_path="${configuration.path}"`, { stdio: 'inherit' });
 };
 ```
-
-**Azure SignTool (azuresigntool):**
+**Azure SignTool:**
 ```bash
-# Install .NET tool
 dotnet tool install --global AzureSignTool
-
-# Sign
 azuresigntool sign \
   --azure-key-vault-url https://your-vault.vault.azure.net \
   --azure-key-vault-client-id $AZURE_CLIENT_ID \
@@ -333,16 +221,10 @@ azuresigntool sign \
   --file-digest sha256 \
   "path/to/app.exe"
 ```
-
 ### Option C: osslsigncode (Linux-native)
-
-`osslsigncode` is a Linux-native tool for Authenticode signing:
-
+Linux-native Authenticode signing:
 ```bash
-# Install
 sudo apt install -y osslsigncode
-
-# Sign with PFX
 osslsigncode sign \
   -pkcs12 certificate.pfx \
   -pass "password" \
@@ -351,13 +233,8 @@ osslsigncode sign \
   -in app-unsigned.exe \
   -out app.exe
 ```
-
----
-
 ## 7. CI/CD Pipeline Example
-
 ### GitHub Actions: Linux to Windows Build
-
 ```yaml
 name: Build Windows from Linux
 
@@ -400,17 +277,9 @@ jobs:
           name: windows-installer
           path: dist/*.exe
 ```
-
 ### Docker-Based CI Pipeline
-
+Same triggers; runs in a container, so no host toolchain install step:
 ```yaml
-name: Build with Docker
-
-on:
-  push:
-    tags:
-      - 'v*'
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -434,29 +303,11 @@ jobs:
         with:
           name: windows-build
           path: dist/*.exe
-
-      - name: Upload Linux artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-build
-          path: |
-            dist/*.AppImage
-            dist/*.deb
 ```
-
----
-
 ## 8. Testing Strategies
-
 ### Wine-Based Smoke Testing
-
-Run the built Windows executable under Wine for basic smoke tests:
-
 ```bash
-# Run the portable executable
 wine ./dist/MyApp-1.0.0.exe --smoke-test
-
-# Check exit code
 if [ $? -eq 0 ]; then
   echo "Smoke test passed"
 else
@@ -464,32 +315,22 @@ else
   exit 1
 fi
 ```
-
 **Limitations:**
 - Wine does not perfectly emulate Windows; some APIs behave differently
 - GPU-accelerated rendering may not work
 - Windows-specific system calls may fail
 - Suitable for startup verification, not full functional testing
-
 ### VM-Based Testing
-
-For thorough testing, use Windows VMs:
-
 ```bash
-# Using QEMU
 qemu-system-x86_64 \
   -m 4096 \
   -drive file=windows.qcow2,format=qcow2 \
   -cdrom virtio-win.iso \
   -net nic -net user,hostfwd=tcp::5985-:5985
-
 # Copy installer to VM and run tests via WinRM
 ```
-
 ### CI with Windows Runners
-
 For full integration testing, use a separate Windows job:
-
 ```yaml
 test-windows:
   needs: build-windows
@@ -511,11 +352,7 @@ test-windows:
         & "C:\Program Files\MyApp\MyApp.exe" --smoke-test
       shell: powershell
 ```
-
----
-
 ## Troubleshooting
-
 | Issue | Diagnosis | Fix |
 |-------|-----------|-----|
 | `Cannot find module 'node-gyp'` | Native module rebuild failed | Install build tools: `apt install build-essential` |
@@ -526,7 +363,3 @@ test-windows:
 | Code signing fails with "certificate not found" | PFX path or password incorrect | Verify `CSC_LINK` and `CSC_KEY_PASSWORD` env vars |
 | Build succeeds but exe crashes on Windows | Native module platform mismatch | Verify `prebuild-install` downloads correct binary |
 | ASAR integrity check fails | Files modified after packaging | Ensure no post-processing modifies ASAR contents |
-
----
-
-**End of Cross-Build Guide**

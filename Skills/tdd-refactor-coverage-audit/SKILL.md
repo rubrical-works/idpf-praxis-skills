@@ -1,11 +1,11 @@
 ---
 name: tdd-refactor-coverage-audit
-description: Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Python, Go, Rust, Ruby, Elixir, Java, C#) with optional project overrides. Advisory only — never blocks the TDD gate.
+description: Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, C#) with optional project overrides. Advisory only — never blocks the TDD gate.
 type: reference
 disable-model-invocation: true
-version: "1.1.0"
+version: "1.2.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-09-09"
+lastUpdated: "2026-09-10"
 license: Complete terms in LICENSE.txt
 category: testing
 relevantTechStack: [tdd, testing]
@@ -126,6 +126,14 @@ Never exits non-zero for missing tests. Exit `2` is reserved for schema validati
 | `{stem}` | filename without extension | `foo` |
 | `{dir}` | relative directory of source file | `src/lib` |
 `{dir}/__tests__/{stem}.ts` → `src/lib/__tests__/foo.ts`.
+## Pairing Scope
+A language entry may declare `pairingScope`.
+| Value | Meaning |
+|---|---|
+| `file` (default; also when the key is absent) | Source pairs only if a test matching its own expanded `testPatterns` exists. |
+| `directory` | Source pairs if **any** file matching the language test shape exists in the source's own directory. |
+For languages whose idiom is one test file per package. Go requires only the `_test.go` suffix, so `internal/http/handlers_test.go` conventionally exercises `routes.go` and `middleware.go`; under `file` scope both reported untested however thoroughly covered. No `testPatterns` entry expresses this — `expandTestPatterns` substitutes `{stem}` from the source, so "any test in this package" is not sayable as a glob.
+Coarser by design: one test file marks every source in its package paired. Deliberate — the audit is advisory, the prior behaviour was a false negative on *every* non-eponymous source in an idiomatic Go project, and the imprecision is bounded by the package, the unit `go test -cover` reports in. Under `directory` scope the reported `expected`/`checked` list is the directory test-shape globs, not a per-file candidate, so the output does not appear to demand one test per source.
 ## Adding a Language
 Add an entry under `languages` in `resources/test-coverage-conventions.json`:
 ```json
@@ -197,6 +205,21 @@ Invoked from the refactor phase as a `required[]` checklist item; warnings surfa
 node .claude/skills/tdd-refactor-coverage-audit/tests/test-coverage-audit.test.js
 ```
 Covers arg parsing, glob translation, language detection with excludes, `{stem}`/`{dir}` substitution, override merging, Rust inline-test detection, and schema validation against valid + invalid fixtures.
+## Recorded Convention Decisions
+Decisions about what the bundled conventions cover, recorded so intent is not inferred from the pattern list.
+| Decision | Outcome | Reason |
+|---|---|---|
+| Java `{stem}IT.java` (Failsafe) | **Added** (#292) | An integration test is evidence the source is exercised; the audit is advisory, so under-reporting a test that exists is the larger error. Unreachable in any layout before. |
+| Java `{stem}TestCase.java` (JUnit 3) | **Added** (#292) | Common in long-lived codebases; `FooTestCase.java` is unambiguously a test. |
+| `App.vue` excluded? | **No** (#300) | `**/index.ts` is excluded as a pure re-export barrel; `App.vue` carries layout, `router-view` and providers. Same answer as `cmd/**/main.go` (#294): report an entry point that sometimes holds logic. |
+| Ruby engine / multi-gem `spec/` | **Not supported, deliberately** (#297) | Root-anchored `spec/`/`test/` hit the #292 problem, but the layout is rarer in Ruby and `**/spec/**/` would widen cross-package matching for every Ruby project to serve a minority. |
+| Python generated-code globs | **Not added by #296** | Pattern-anchoring vs extension-coverage. Home now settled by #294: the `python` entry's own `excludePatterns`. |
+| `pairingScope: directory` beyond `go` | **No other language adopts it** (#293) | The trade is only justified where the toolchain *enforces* colocated tests AND the idiom is one test file per package. Go alone meets both — `_test.go` must sit beside its package, and `go test -cover` reports per package. Python/Ruby/Elixir use mirror trees where a source's directory holds no tests at all. Rust has `inlineTests`. Absence of the key is per-file. |
+| Home for generated-code globs | **Per-language `excludePatterns`** (#294) | Needed no new mechanism: `excludePatterns` is already per-language, already in the schema, and applied *in addition to* the global list. `test-coverage-audit.js` treats the two as equivalent, so neither pollutes `diagnostics.unrecognizedExtensions`. **A later language's generated-code globs belong on that language's entry** — `*_pb2.py` on `python`, `*.g.cs` on `csharp` — not in the global list, which would grow one shared list with per-language content. |
+| Go `doc.go` | **Excluded** (#294) | Carries a package comment and nothing executable. |
+| Go `cmd/**/main.go` | **NOT excluded** (#294) | Regularly carries wiring worth testing, and no convention guarantees it is inert. Advisory audit: a reported gap costs nothing, a hidden one is the risk. |
+| Go `mock_*.go`, `*_mock.go`, `*_string.go` | **Excluded, known risk** (#294) | `mockgen`/`stringer` default names, but no marker separates them from a hand-written fake. Guard is the test asserting an ordinary `.go` source is still counted. |
+| `kotlin` entry | **Deferred to #299** (#292) | Extension-coverage, not pattern-anchoring: `.kt` matches no `sourceExtensions`, so such files are skipped before being counted. #299 makes the priority evidence-based. Whenever written, the entry must carry `**/src/test/kotlin/**/` variants from the start — Gradle and Maven use the same module-relative layout #292 fixed for Java. |
 ## Limitations
 - File-pairing only — no line, branch, or statement coverage.
 - Only **newly added** files since `<sha>`; modifications are out of scope.

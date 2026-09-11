@@ -81,14 +81,14 @@
       "path": "Skills/drawio-generation"
     },
     "electron-cross-build": {
-      "version": "1.0.0",
-      "type": "injector",
+      "version": "1.1.0",
+      "type": "reference",
       "category": "platform",
       "path": "Skills/electron-cross-build"
     },
     "electron-development": {
-      "version": "1.0.0",
-      "type": "injector",
+      "version": "1.1.0",
+      "type": "reference",
       "category": "platform",
       "path": "Skills/electron-development"
     },
@@ -291,7 +291,7 @@
       "path": "Skills/tdd-red-phase"
     },
     "tdd-refactor-coverage-audit": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "type": "reference",
       "category": "testing",
       "path": "Skills/tdd-refactor-coverage-audit"

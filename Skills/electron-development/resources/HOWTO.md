@@ -1,9 +1,6 @@
 # Using electron-development Without IDPF Framework
-
 Patterns and solutions for Electron app development with Vite, Playwright E2E testing, and Windows platform considerations — organized as a problem/solution reference library.
-
 ## What's Included
-
 | File | Purpose |
 |------|---------|
 | `SKILL.md` | Quick reference table, prerequisites, and workflow guidance |
@@ -20,14 +17,10 @@ Patterns and solutions for Electron app development with Vite, Playwright E2E te
 | `resources/multi-screen-navigation.md` | Multi-screen navigation patterns |
 | `resources/cross-platform-deb-build.md` | Linux .deb package building |
 | `resources/fail-safe-file-reading.md` | Fail-safe file I/O patterns |
-
 ## Quick Start
-
 > This is one approach. Adapt it to your project's structure.
-
 1. Install the skill into your project (e.g., via Praxis Hub Manager or by placing it in `.claude/skills/electron-development/`)
 2. Add a rule in `.claude/rules/` or `CLAUDE.md` that references it:
-
 ```
 When working on Electron development, read .claude/skills/electron-development/SKILL.md for the quick reference table.
 Load specific resources from .claude/skills/electron-development/resources/ as needed:
@@ -38,15 +31,10 @@ Load specific resources from .claude/skills/electron-development/resources/ as n
 - Vite config: vite-renderer-output-path.md
 - Load other resources matching the current problem from the quick reference table
 ```
-
 ## Customization
-
 The resources are self-contained markdown files. You can:
-
 - **Load selectively** — reference only the resources relevant to your current problem
 - **Add patterns** — create new resource files for project-specific Electron patterns
 - **Adjust for your stack** — if not using Vite or Playwright, omit those resources from your rule
-
 ## How IDPF Projects Use This
-
 In IDPF projects, framework commands automatically load this skill's resources from `.claude/skills/electron-development/` when Electron development work is detected. The approach above replicates that behavior for any Claude Code project.

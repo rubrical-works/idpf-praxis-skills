@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T02:10:37.621Z",
+  "generatedAt": "2026-09-11T02:14:20.746Z",
   "version": "0.1.0",
   "skillCount": 53,
   "skills": [
@@ -260,10 +260,10 @@
       "name": "electron-cross-build",
       "description": "Cross-compile Electron apps from Linux to produce Windows executables",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.1.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-05-17",
-      "checksum": "7b551de3ac858c26ea59b15e8831e5833a94bc859c160317199e27e7ebe7f374",
+      "lastUpdated": "2026-09-10",
+      "checksum": "c4c14d4cca9aa226155e50ccc79864210dbbe63227c89d9ec91bc09ffcf9198b",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -282,10 +282,10 @@
       "name": "electron-development",
       "description": "Patterns and solutions for Electron app development with Vite, Playwright E2E testing, and Windows platform considerations",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.1.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-05-17",
-      "checksum": "d47f4266fe943c9427c9a57a2b6493eb44492a559758394c1d793e2752ef656c",
+      "lastUpdated": "2026-09-10",
+      "checksum": "c89d245bf411590c38cfba018654142e5f003d301c5a3b943aa199d94268ba9e",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -953,12 +953,12 @@
     },
     {
       "name": "tdd-refactor-coverage-audit",
-      "description": "Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Python, Go, Rust, Ruby, Elixir, Java, C#) with optional project overrides. Advisory only — never blocks the TDD gate.",
+      "description": "Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, C#) with optional project overrides. Advisory only — never blocks the TDD gate.",
       "triggers": [],
-      "version": "1.1.0",
+      "version": "1.2.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-09-09",
-      "checksum": "7433effb139028786a57afa03dc2953e226dae79019dc9ea981a83d8a2face7a",
+      "lastUpdated": "2026-09-10",
+      "checksum": "f5e48966faaf25ebea5e5c2826be3816302b5ae38ffa5fdf36bd9515e66413d5",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [

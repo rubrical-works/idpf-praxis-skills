@@ -60,6 +60,24 @@
         "__tests__/**/{stem}.test.ts"
       ]
     },
+    "vue": {
+      "sourceExtensions": [".vue"],
+      "testPatterns": [
+        "{dir}/{stem}.test.ts",
+        "{dir}/{stem}.test.js",
+        "{dir}/{stem}.spec.ts",
+        "{dir}/{stem}.spec.js",
+        "{dir}/__tests__/{stem}.spec.ts",
+        "{dir}/__tests__/{stem}.spec.js",
+        "tests/**/{stem}.spec.ts",
+        "tests/**/{stem}.spec.js",
+        "tests/**/{stem}.test.ts",
+        "tests/**/{stem}.test.js",
+        "test/**/{stem}.spec.ts",
+        "test/**/{stem}.test.ts"
+      ],
+      "_note": "Vue tests are .ts/.js files, never .vue — this entry maps a .vue source to a TypeScript or JavaScript test, as svelte already does. Mirror patterns carry ** from the first commit so the entry does not ship with the #291 anchoring defect built in."
+    },
     "python": {
       "sourceExtensions": [".py"],
       "testPatterns": [
@@ -67,14 +85,29 @@
         "{dir}/{stem}_test.py",
         "tests/test_{stem}.py",
         "tests/{stem}_test.py",
-        "test/test_{stem}.py"
+        "test/test_{stem}.py",
+        "tests/**/test_{stem}.py",
+        "tests/**/{stem}_test.py",
+        "test/**/test_{stem}.py",
+        "test/**/{stem}_test.py"
       ],
       "excludePatterns": ["**/__init__.py", "**/conftest.py", "**/setup.py"]
     },
     "go": {
       "sourceExtensions": [".go"],
+      "pairingScope": "directory",
       "testPatterns": ["{dir}/{stem}_test.go"],
-      "excludePatterns": ["**/*_test.go", "**/vendor/**"]
+      "excludePatterns": [
+        "**/*_test.go",
+        "**/vendor/**",
+        "**/*.pb.go",
+        "**/*_grpc.pb.go",
+        "**/zz_generated*.go",
+        "**/mock_*.go",
+        "**/*_mock.go",
+        "**/*_string.go",
+        "**/doc.go"
+      ]
     },
     "rust": {
       "sourceExtensions": [".rs"],
@@ -88,9 +121,11 @@
         "{dir}/{stem}_spec.rb",
         "spec/{stem}_spec.rb",
         "spec/**/{stem}_spec.rb",
+        "{dir}/{stem}_test.rb",
         "test/{stem}_test.rb",
         "test/**/{stem}_test.rb"
-      ]
+      ],
+      "excludePatterns": ["**/db/migrate/**"]
     },
     "elixir": {
       "sourceExtensions": [".ex"],
@@ -101,8 +136,32 @@
       "testPatterns": [
         "{dir}/{stem}Test.java",
         "src/test/java/**/{stem}Test.java",
-        "src/test/java/**/{stem}Tests.java"
+        "src/test/java/**/{stem}Tests.java",
+        "src/test/java/**/{stem}IT.java",
+        "src/test/java/**/{stem}TestCase.java",
+        "**/src/test/java/**/{stem}Test.java",
+        "**/src/test/java/**/{stem}Tests.java",
+        "**/src/test/java/**/{stem}IT.java",
+        "**/src/test/java/**/{stem}TestCase.java"
       ]
+    },
+    "dart": {
+      "sourceExtensions": [".dart"],
+      "testPatterns": [
+        "test/**/{stem}_test.dart",
+        "test/{stem}_test.dart",
+        "{dir}/{stem}_test.dart"
+      ],
+      "excludePatterns": [
+        "**/*.g.dart",
+        "**/*.freezed.dart",
+        "**/*.mocks.dart",
+        "**/*.gr.dart",
+        "**/*.config.dart",
+        "**/generated_plugin_registrant.dart",
+        "**/.dart_tool/**"
+      ],
+      "_note": "flutter test and dart test require test files to end in _test.dart and live under test/, and the community mirrors the lib/ tree exactly — so the mirror pattern carries ** from the first commit rather than acquiring it in a later repair (#291/#292/#296). Exclusions are build_runner and Flutter tooling output, which in a real Flutter app routinely outnumber hand-written files in lib/; they sit on this entry per #294's placement decision. The colocated form is legal though uncommon."
     },
     "csharp": {
       "sourceExtensions": [".cs"],

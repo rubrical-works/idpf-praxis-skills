@@ -76,6 +76,12 @@
           "type": "boolean",
           "description": "If true, the audit checks the source file itself for an inline test block (e.g. Rust 'mod tests') before reporting missing tests."
         },
+        "pairingScope": {
+          "type": "string",
+          "enum": ["file", "directory"],
+          "default": "file",
+          "description": "Granularity of the pairing check. 'file' (default) requires a test matching testPatterns for this specific source file. 'directory' pairs a source when ANY file matching the language's test shape exists in the source's own directory — for languages whose idiom is one test file per package (Go). Coarser by design: one test file marks every source in its package paired."
+        },
         "_note": { "type": "string" }
       }
     }

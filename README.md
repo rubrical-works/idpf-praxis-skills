@@ -41,7 +41,7 @@ Each skill directory in [Skills/](Skills/) contains the full documentation. Clic
 
 ## Available Skills
 
-### Injector Skills (5)
+### Injector Skills (3)
 
 These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf-praxis-dev). Framework commands read their config at runtime. Each includes a `resources/HOWTO.md` explaining how to use the skill without the framework.
 
@@ -50,8 +50,6 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [tdd-process](Skills/tdd-process/) | Testing | TDD phase enforcement checklists (RED/GREEN/REFACTOR + failure recovery) |
 | [anti-pattern-analysis](Skills/anti-pattern-analysis/) | Code Quality | Anti-pattern detection checklist |
 | [error-handling-patterns](Skills/error-handling-patterns/) | Development | Error handling hierarchy and API error responses |
-| [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, Windows considerations |
-| [electron-cross-build](Skills/electron-cross-build/) | Platform | Cross-compile Electron apps from Linux to Windows |
 
 ### Invokable Skills (24)
 
@@ -84,13 +82,15 @@ Interactive guided workflows. Install and use as slash commands.
 | [sqlite-integration](Skills/sqlite-integration/) | Database | SQLite database integration with beginner-friendly code examples |
 | [vercel-project-setup](Skills/vercel-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Vercel |
 
-### Reference Skills (17)
+### Reference Skills (19)
 
 Domain knowledge loaded on demand during relevant work.
 
 | Skill | Category | Description |
 |-------|----------|-------------|
 | [drawio-generation](Skills/drawio-generation/) | Documentation | Diagram styles and structure |
+| [electron-cross-build](Skills/electron-cross-build/) | Platform | Cross-compile Electron apps from Linux to Windows |
+| [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, Windows considerations |
 | [test-scaffold](Skills/test-scaffold/) | Testing | Domain-specific test patterns |
 | [api-versioning](Skills/api-versioning/) | API | Compatibility and deprecation workflows |
 | [astro-development](Skills/astro-development/) | Web | Islands architecture and content collections |

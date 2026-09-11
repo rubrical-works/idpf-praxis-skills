@@ -1,5 +1,5 @@
 # Flask Setup Verification Checklist
-**Version:** v0.18.0
+**Version:** v0.19.0
 ## Visual Verification
 ### 1. Terminal Shows (venv)
 ```
