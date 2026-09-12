@@ -455,11 +455,27 @@ function parseFlowAnnotations(content, grammar) {
       .replace(/^\/\//, '')
       .replace(/^#/, '')
       .trim();
-    const m = text.match(/(@[A-Za-z][\w-]*)(?:\s+(\S.*))?$/);
-    if (!m) continue;
-    const tag = m[1];
+    // Two expressions rather than one (#314). The previous combined form
+    // matched the tag and an optional whitespace-separated value in a single
+    // end-anchored expression, which put `+` and `*` inside a
+    // `?`-quantified group — star height 2, which safe-regex reports and which
+    // therefore failed `security/detect-unsafe-regex` in any consumer running
+    // that rule as an error. Measured linear beforehand (20k to 40k characters
+    // roughly doubled the time, 0.35ms worst case), so the verdict was a
+    // structural false positive; removing the shape beats suppressing the rule,
+    // which would only silence one linter and would have to ship inside the
+    // minimized mirror and the packaged zip to do even that.
+    //
+    // Deliberately NOT anchored with `^`. The original searched for the tag
+    // anywhere in the stripped line, and `text` is already trimmed, so taking
+    // the remainder by offset and trimming it reproduces the previous outcomes
+    // exactly — including a tag preceded by prose, which no test pins and which
+    // anchoring would silently stop recognising.
+    const tagMatch = text.match(/@[A-Za-z][\w-]*/);
+    if (!tagMatch) continue;
+    const tag = tagMatch[0];
     if (!recognised.has(tag)) continue;
-    const value = (m[2] || '').trim();
+    const value = text.slice(tagMatch.index + tag.length).trim();
     if (!value) {
       malformed.push(tag);
       continue;
