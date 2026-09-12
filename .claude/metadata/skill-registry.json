@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-11T02:14:20.746Z",
+  "generatedAt": "2026-09-12T16:08:26.494Z",
   "version": "0.1.0",
   "skillCount": 53,
   "skills": [
@@ -33,7 +33,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "150d29fdf609f945908e650e7b3956df03f1d0ad9fe506f3e779c3475bd5feab",
+      "checksum": "e4fdf281acb95f8fdb2110276236e896e24d34c982cc9730a7b860be930aee0d",
       "category": "api",
       "categoryLabel": "API",
       "relevantTechStack": [
@@ -953,12 +953,12 @@
     },
     {
       "name": "tdd-refactor-coverage-audit",
-      "description": "Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, C#) with optional project overrides. Advisory only — never blocks the TDD gate.",
+      "description": "Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, GDScript, C#) with optional project overrides. Advisory only — never blocks the TDD gate.",
       "triggers": [],
-      "version": "1.2.0",
+      "version": "1.3.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-09-10",
-      "checksum": "f5e48966faaf25ebea5e5c2826be3816302b5ae38ffa5fdf36bd9515e66413d5",
+      "lastUpdated": "2026-09-12",
+      "checksum": "86e5a9b7cc82bbc566117fbe49a955516073923a873be48f4ed8e0ac246768a4",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [

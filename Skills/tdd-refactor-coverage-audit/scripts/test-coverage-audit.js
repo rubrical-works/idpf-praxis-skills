@@ -202,6 +202,10 @@ function mergeConfig(conventions, override) {
   const merged = {
     languages: {},
     ignoredSourcePatterns: [...(conventions.ignoredSourcePatterns || [])],
+    excludePaths: [...(conventions.excludePaths || [])],
+    // The annotation grammar the flow reader consults (#311). Bundled only: the
+    // grammar is an upstream definition, not a per-project knob.
+    flowAnnotation: conventions.flowAnnotation || null,
     minTestCoverageRatio: 0
   };
   if (!override) {
@@ -220,6 +224,11 @@ function mergeConfig(conventions, override) {
   }
   if (Array.isArray(override.ignoredSourcePatterns)) {
     merged.ignoredSourcePatterns.push(...override.ignoredSourcePatterns);
+  }
+  // Concatenated, not replaced — same treatment as ignoredSourcePatterns, so a
+  // project adds to the bundled list rather than silently dropping it (#309).
+  if (Array.isArray(override.excludePaths)) {
+    merged.excludePaths.push(...override.excludePaths);
   }
   if (typeof override.minTestCoverageRatio === 'number') {
     merged.minTestCoverageRatio = override.minTestCoverageRatio;
@@ -384,6 +393,128 @@ function looksLikeTest(file, testPatterns) {
 // in this package covers this file", which no testPatterns entry can express —
 // expandTestPatterns substitutes {stem} from the source, so a literal * in the
 // stem position would be abusing the placeholder rather than declaring intent.
+// Globs marking where this language's flow specs live, or [] when the language
+// declares no flow class. A flow spec pairs by annotation, never by filename, so
+// these locations are excluded from module pairing (#310).
+function flowLocations(langDef) {
+  const flow = langDef && langDef.classes && langDef.classes.flow;
+  return (flow && Array.isArray(flow.locations)) ? flow.locations : [];
+}
+
+// Read the flow declaration out of a spec's LEADING comment block (#311).
+//
+// Only the leading block is read, per the grammar's readFrom. A tag deeper in
+// the file is prose — a fixture string, a comment inside a test case — and
+// reading further would let it silently pair a spec. The block ends at the
+// first line that is neither blank nor a comment, at the close of a `/* */`
+// comment, or at a blank line once the block has started.
+//
+// A recognised tag carrying no value is MALFORMED: it is collected and
+// reported, never thrown, and well-formed tags beside it still read. An
+// unrecognised @tag is not malformed — it is simply prose.
+function parseFlowAnnotations(content, grammar) {
+  const empty = { covers: [], flow: null, malformed: [], declared: false };
+  if (typeof content !== 'string') return empty;
+  const recognised = new Set(((grammar && grammar.tags) || []).map((t) => t.tag));
+  if (recognised.size === 0) return empty;
+
+  const block = [];
+  let inBlockComment = false;
+  for (const line of content.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (inBlockComment) {
+      block.push(trimmed);
+      if (trimmed.includes('*/')) break;
+      continue;
+    }
+    if (trimmed === '') {
+      if (block.length) break;
+      continue;
+    }
+    if (trimmed.startsWith('/*')) {
+      block.push(trimmed);
+      if (trimmed.includes('*/')) break;
+      inBlockComment = true;
+      continue;
+    }
+    if (trimmed.startsWith('//') || trimmed.startsWith('#')) {
+      block.push(trimmed);
+      continue;
+    }
+    break;
+  }
+
+  const covers = [];
+  let flow = null;
+  const malformed = [];
+  for (const raw of block) {
+    const text = raw
+      .replace(/^\/\*+/, '')
+      .replace(/\*+\/\s*$/, '')
+      .replace(/^\*+/, '')
+      .replace(/^\/\//, '')
+      .replace(/^#/, '')
+      .trim();
+    const m = text.match(/(@[A-Za-z][\w-]*)(?:\s+(\S.*))?$/);
+    if (!m) continue;
+    const tag = m[1];
+    if (!recognised.has(tag)) continue;
+    const value = (m[2] || '').trim();
+    if (!value) {
+      malformed.push(tag);
+      continue;
+    }
+    if (tag === '@covers') covers.push(value);
+    else if (tag === '@flow') flow = value;
+  }
+  return { covers, flow, malformed, declared: covers.length > 0 || flow !== null };
+}
+
+// One-line hint naming the recognised tags, attached to every undeclared flow
+// spec so the report says what to do rather than only what is missing (#311).
+function flowDeclarationHint(grammar) {
+  const tags = ((grammar && grammar.tags) || []).map((t) => `${t.tag} <${t.value}>`);
+  return tags.length
+    ? `Declare what this spec covers in its leading comment block: ${tags.join(' or ')}.`
+    : 'Declare what this spec covers in its leading comment block.';
+}
+
+function readFlowDeclaration(projectRoot, file, grammar) {
+  try {
+    return parseFlowAnnotations(fs.readFileSync(path.join(projectRoot, file), 'utf8'), grammar);
+  } catch {
+    // Unreadable spec is undeclared, never fatal — the audit is advisory.
+    return { covers: [], flow: null, malformed: [], declared: false };
+  }
+}
+
+// Classify a test file into module / flow / contract (#310).
+//
+// Runs BEFORE detectLanguage, deliberately: since #308 a language's own
+// excludePatterns reject its test shapes, so a test file returns null from
+// detectLanguage and never reaches the looksLikeTest branch further down. A
+// classifier placed there would see nothing.
+//
+// Matching is by location-blind test shape (testShapeGlobs), so a spec counts
+// as a test wherever it sits. Flow is checked before contract, and both before
+// module, because the classes narrow: a spec in a flow location is a flow spec
+// even when its filename also stem-matches a source, which is the whole point
+// of the flow class.
+function classifyTestFile(file, languages) {
+  for (const [name, def] of Object.entries(languages || {})) {
+    if (!matchAny(file, testShapeGlobs(def.testPatterns))) continue;
+    const classes = def.classes || {};
+    if (classes.flow && matchAny(file, flowLocations(def))) {
+      return { language: name, klass: 'flow' };
+    }
+    if (classes.contract && matchAny(file, classes.contract.exempt)) {
+      return { language: name, klass: 'contract' };
+    }
+    return { language: name, klass: 'module' };
+  }
+  return null;
+}
+
 function directoryTestGlobs(file, testPatterns) {
   const dir = path.dirname(file);
   const dirNorm = dir === '.' ? '' : dir;
@@ -488,8 +619,13 @@ function getNewFiles(projectRoot, sinceCommit) {
 
 // ---------- file existence ----------
 
-function testFileExists(projectRoot, expanded, dirCache = null) {
+// `excludeGlobs` drops candidate matches that sit in one of the language's flow
+// locations (#310). Applied where globs resolve to real paths, not to the
+// candidate strings: a candidate such as tests/**/{stem}.test.ts is itself a
+// glob, so comparing it against tests/flows/** as text would never match.
+function testFileExists(projectRoot, expanded, dirCache = null, excludeGlobs = []) {
   for (const candidate of expanded) {
+    if (!candidate.includes('*') && matchAny(candidate, excludeGlobs)) continue;
     if (candidate.includes('*')) {
       // Glob candidate — walk projectRoot and match. Limited usage; do a
       // shallow check via fs walk under the first non-glob ancestor.
@@ -497,7 +633,7 @@ function testFileExists(projectRoot, expanded, dirCache = null) {
       // Cheap version: check if any file under projectRoot matches.
       // For audit purposes, pattern matching against actual file list is fine.
       // Use a bounded walker, sharing one run's directory listings (#296).
-      if (walkAndMatch(projectRoot, re, '', 0, dirCache)) return true;
+      if (walkAndMatch(projectRoot, re, '', 0, dirCache, excludeGlobs)) return true;
     } else {
       const abs = path.join(projectRoot, candidate);
       if (fs.existsSync(abs)) return true;
@@ -526,7 +662,7 @@ function cachedReaddir(abs, dirCache) {
   return entries;
 }
 
-function walkAndMatch(root, re, current = '', depth = 0, dirCache = null) {
+function walkAndMatch(root, re, current = '', depth = 0, dirCache = null, excludeGlobs = []) {
   if (depth > 8) return false;
   const entries = cachedReaddir(path.join(root, current), dirCache);
   if (entries.length === 0) return false;
@@ -534,8 +670,8 @@ function walkAndMatch(root, re, current = '', depth = 0, dirCache = null) {
     if (e.name === 'node_modules' || e.name === '.git' || e.name === 'dist' || e.name === 'build') continue;
     const rel = current ? `${current}/${e.name}` : e.name;
     if (e.isDirectory()) {
-      if (walkAndMatch(root, re, rel, depth + 1, dirCache)) return true;
-    } else if (re.test(rel)) {
+      if (walkAndMatch(root, re, rel, depth + 1, dirCache, excludeGlobs)) return true;
+    } else if (re.test(rel) && !matchAny(rel, excludeGlobs)) {
       return true;
     }
   }
@@ -603,9 +739,43 @@ function audit(args) {
   const pairedByLanguage = new Map();
   let totalSources = 0;
   let pairedSources = 0;
+  // Per-class tallies (#310). Flow declarations are read by the annotation
+  // reader (#311); until that ships no spec can be declared, so every flow spec
+  // counts as undeclared — reported plainly rather than presented as a zero
+  // that might be mistaken for "none found".
+  const classTally = { flowDeclared: 0, flowUndeclared: 0, contractDeclared: 0 };
+  const flowDeclarations = [];
+  const flowUndeclaredSpecs = [];
+  const malformedAnnotations = [];
 
   for (const file of newFiles) {
     if (matchAny(file, merged.ignoredSourcePatterns)) continue;
+    // The project's own "not expected to have tests" list (#309): golden files,
+    // fixture trees, generated sources, scratch directories. Applied here, beside
+    // ignoredSourcePatterns and before language detection, so a matching path is
+    // neither counted as a source nor reported as unpaired. Deliberately NOT a
+    // per-language switch: every non-matching source in the same language still
+    // pairs, and still reports as unpaired when it has no test.
+    if (matchAny(file, merged.excludePaths)) continue;
+    // Classify test files before source detection (#310) — see classifyTestFile
+    // for why this cannot live in the looksLikeTest branch below.
+    const testClass = classifyTestFile(file, merged.languages);
+    if (testClass) {
+      if (testClass.klass === 'flow') {
+        const parsed = readFlowDeclaration(projectRoot, file, merged.flowAnnotation);
+        for (const text of parsed.malformed) malformedAnnotations.push({ file, text });
+        if (parsed.declared) {
+          classTally.flowDeclared += 1;
+          flowDeclarations.push({ file, covers: parsed.covers, flow: parsed.flow });
+        } else {
+          classTally.flowUndeclared += 1;
+          flowUndeclaredSpecs.push({ file, hint: flowDeclarationHint(merged.flowAnnotation) });
+        }
+      } else if (testClass.klass === 'contract') {
+        classTally.contractDeclared += 1;
+      }
+      continue;
+    }
     const lang = detectLanguage(file, merged.languages);
     if (!lang) {
       // Only a genuinely unclaimed extension is a gap. An excludePatterns
@@ -632,7 +802,9 @@ function audit(args) {
       if (directoryHasTest(projectRoot, file, lang.def.testPatterns)) paired = true;
     } else {
       const expanded = expandTestPatterns(file, lang.def.testPatterns);
-      if (testFileExists(projectRoot, expanded, dirCache)) paired = true;
+      // A spec in a flow location pairs by annotation, not by stem, so it must
+      // not pair its stem-mate as a module test either (#310 AC3).
+      if (testFileExists(projectRoot, expanded, dirCache, flowLocations(lang.def))) paired = true;
     }
 
     if (paired) {
@@ -694,6 +866,36 @@ function audit(args) {
     missingTests,
     undetermined,
     undeterminedCount: undetermined.length,
+    // Three classes, each with its own denominator (#310). The top-level fields
+    // above are unchanged and carry the MODULE class, so a consumer reading only
+    // them is unaffected by this release.
+    //
+    // module.coverage is present only when module.sources > 0: a language with
+    // no module sources has nothing to divide, and reporting 0% there would say
+    // "nothing is tested" about a project that was never meant to have module
+    // tests. Absence is the honest report; the top-level coverage keeps its own
+    // long-standing 1.0-on-empty behaviour for compatibility.
+    classes: {
+      module: totalSources === 0
+        ? { sources: 0, paired: 0, unpaired: missingTests.length }
+        : {
+          sources: totalSources,
+          paired: pairedSources,
+          unpaired: missingTests.length,
+          coverage: Number(coverage.toFixed(4))
+        },
+      // declarations/undeclaredSpecs are per-path detail beside the counts
+      // (#311). The counts keep the shape #310 shipped; an undeclared spec is
+      // reported by path with a hint naming the tags, in its own bucket rather
+      // than among module orphans — a different problem with a different fix.
+      flow: {
+        declared: classTally.flowDeclared,
+        undeclared: classTally.flowUndeclared,
+        declarations: flowDeclarations,
+        undeclaredSpecs: flowUndeclaredSpecs
+      },
+      contract: { declared: classTally.contractDeclared }
+    },
     coverage: Number(coverage.toFixed(4)),
     minTestCoverageRatio: merged.minTestCoverageRatio || 0,
     // Always present, even when empty, so a consumer can read it
@@ -702,7 +904,10 @@ function audit(args) {
     // here instead of a second field meaning "something the audit ignored".
     diagnostics: {
       unrecognizedExtensions,
-      unreachableLanguageEntries: findUnreachableLanguages(merged.languages)
+      unreachableLanguageEntries: findUnreachableLanguages(merged.languages),
+      // A malformed annotation is reported, never thrown (#311): the audit
+      // completes and names the file and the offending text. Always present.
+      malformedAnnotations
     }
   };
 }
@@ -736,6 +941,9 @@ module.exports = {
   unrecognizedKey,
   expandTestPatterns,
   looksLikeTest,
+  parseFlowAnnotations,
+  flowDeclarationHint,
+  classifyTestFile,
   testShapeGlobs,
   directoryTestGlobs,
   directoryHasTest,

@@ -1,5 +1,5 @@
 # CI/CD Security Checklist
-**Version:** v0.19.0
+**Version:** v0.20.0
 ## Pipeline Security
 ### Authentication & Authorization
 - [ ] **Pipeline triggers secured** - Branch protection rules enabled, required reviewers configured, status checks required before merge

@@ -26,6 +26,31 @@
           "minProperties": 1,
           "additionalProperties": { "$ref": "#/$defs/language" }
         },
+        "flowAnnotation": {
+          "type": "object",
+          "required": ["readFrom", "tags"],
+          "additionalProperties": true,
+          "description": "Top-level grammar for the tags a flow spec uses to declare what it covers. Top-level rather than per-language because the tags are the same wherever they appear; only the comment syntax around them differs.",
+          "properties": {
+            "readFrom": {
+              "type": "string",
+              "pattern": "^leading-comment-block$",
+              "description": "Where the reader looks. Only the leading comment block is recognised, so a tag deeper in the file is prose rather than a declaration."
+            },
+            "tags": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/flowTag" }
+            },
+            "_note": { "type": "string" }
+          }
+        },
+        "excludePaths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Project-declared globs for paths that are not expected to have tests — golden files, fixture trees, generated sources, scratch directories. A matching source is neither counted nor reported as unpaired. Distinct from a language's excludePatterns, which says a file is not a source of THAT language; this says a path is not expected to be tested at all, whatever language claims it. Per-language pairing is untouched: a non-matching source in the same language still pairs and still reports as unpaired when it has no test.",
+          "default": []
+        },
         "ignoredSourcePatterns": {
           "type": "array",
           "items": { "type": "string" }
@@ -47,11 +72,52 @@
       "type": "object",
       "additionalProperties": true
     },
+    "flowTag": {
+      "description": "One recognised annotation tag. Constrained by pattern rather than enum for the same reason as testClass.pairing: the bundled validator implements pattern and not enum.",
+      "type": "object",
+      "required": ["tag", "value"],
+      "additionalProperties": true,
+      "properties": {
+        "tag": { "type": "string", "pattern": "^@(covers|flow)$" },
+        "value": { "type": "string" },
+        "repeatable": { "type": "boolean" },
+        "description": { "type": "string" }
+      }
+    },
+    "testClass": {
+      "description": "One test class within a language entry. `pairing` says how a test of this class is matched to what it exercises: 'stem' is filename-stem matching (today's behaviour, the module class), 'annotation' means the spec declares its subject in a leading-comment tag and filename is irrelevant, 'declared-subject' means the test names its subject and may instead match an `exempt` glob.",
+      "type": "object",
+      "required": ["pairing"],
+      "additionalProperties": true,
+      "properties": {
+        "pairing": {
+          "type": "string",
+          "pattern": "^(stem|annotation|declared-subject)$",
+          "description": "How this class pairs. Constrained by pattern rather than enum: the bundled validator in test-coverage-audit.js implements pattern and does not implement enum, so an enum here would validate nothing."
+        },
+        "locations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Globs marking where tests of this class live. For the flow class this is what makes a spec eligible for annotation reading; it never pairs the spec by itself."
+        },
+        "exempt": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Globs whose members satisfy this class without a declared subject."
+        },
+        "_note": { "type": "string" }
+      }
+    },
     "language": {
       "type": "object",
       "required": ["sourceExtensions", "testPatterns"],
       "additionalProperties": true,
       "properties": {
+        "classes": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/testClass" },
+          "description": "Optional per-language test classes (module, flow, contract). A language declaring no classes block resolves to module-only behaviour, so existing entries are unaffected."
+        },
         "sourceExtensions": {
           "type": "array",
           "minItems": 1,

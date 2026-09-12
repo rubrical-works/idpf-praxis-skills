@@ -1,7 +1,7 @@
 {
   "$schema": "./test-coverage-conventions-schema.json",
   "_meta": {
-    "description": "Language conventions for pairing source files with their tests. Consumed by ../scripts/test-coverage-audit.js. Project-specific overrides go in framework-config.json under testCoverageAudit -- see the Project Override section of ../SKILL.md for worked examples, including a dot-directory source root with a non-mirroring test root, and for how {dir} and {stem} substitute inside override testPatterns.",
+    "description": "Language conventions for pairing source files with their tests. A language entry may declare test classes (module, flow, contract), each with its own pairing rule, and the audit reports each class with its own denominator — module by filename stem, flow by leading-comment annotation, contract by declared subject or an exempt glob. Consumed by ../scripts/test-coverage-audit.js. Project-specific overrides go in framework-config.json under testCoverageAudit -- see the Project Override section of ../SKILL.md for worked examples, including a dot-directory source root with a non-mirroring test root, and for how {dir} and {stem} substitute inside override testPatterns.",
     "version": 1
   },
   "languages": {
@@ -23,7 +23,25 @@
         "test/**/{stem}.spec.ts",
         "__tests__/**/{stem}.test.ts"
       ],
-      "excludePatterns": ["**/*.d.ts", "**/node_modules/**"]
+      "excludePatterns": [
+        "**/*.d.ts",
+        "**/node_modules/**",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
+      "classes": {
+        "module": { "pairing": "stem" },
+        "flow": {
+          "pairing": "annotation",
+          "locations": ["e2e/**", "**/e2e/**", "tests/flows/**"]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": ["**/fixtures/**", "**/*.golden.*"]
+        }
+      }
     },
     "javascript": {
       "sourceExtensions": [".js", ".jsx", ".mjs", ".cjs"],
@@ -42,7 +60,24 @@
         "test/**/{stem}.spec.js",
         "__tests__/**/{stem}.test.js"
       ],
-      "excludePatterns": ["**/node_modules/**"]
+      "excludePatterns": [
+        "**/node_modules/**",
+        "**/*.test.js",
+        "**/*.test.jsx",
+        "**/*.spec.js",
+        "**/*.spec.jsx"
+      ],
+      "classes": {
+        "module": { "pairing": "stem" },
+        "flow": {
+          "pairing": "annotation",
+          "locations": ["e2e/**", "**/e2e/**", "tests/flows/**"]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": ["**/fixtures/**", "**/*.golden.*"]
+        }
+      }
     },
     "svelte": {
       "sourceExtensions": [".svelte"],
@@ -163,16 +198,51 @@
       ],
       "_note": "flutter test and dart test require test files to end in _test.dart and live under test/, and the community mirrors the lib/ tree exactly — so the mirror pattern carries ** from the first commit rather than acquiring it in a later repair (#291/#292/#296). Exclusions are build_runner and Flutter tooling output, which in a real Flutter app routinely outnumber hand-written files in lib/; they sit on this entry per #294's placement decision. The colocated form is legal though uncommon."
     },
+    "gdscript": {
+      "sourceExtensions": [".gd"],
+      "testPatterns": [
+        "{dir}/test_{stem}.gd",
+        "{dir}/{stem}Test.gd",
+        "test/**/test_{stem}.gd",
+        "test/**/{stem}Test.gd",
+        "tests/**/test_{stem}.gd",
+        "tests/**/{stem}Test.gd"
+      ],
+      "excludePatterns": ["**/test_*.gd", "**/*Test.gd"],
+      "_note": "GDScript has two mainstream harnesses with incompatible file conventions, and a Godot project may use either: GUT names tests test_{stem}.gd, gdUnit4 names them {stem}Test.gd. Both are listed because the entry cannot know which the project uses, and recognising only one reports every source in the other kind of project as untested. Colocated and mirror forms are both legal; the mirror patterns carry ** from the first commit rather than acquiring it in a later repair (#291/#292/#296), following the dart precedent. The excludePatterns keep both test shapes out of the source set, as the go entry does for **/*_test.go."
+    },
     "csharp": {
       "sourceExtensions": [".cs"],
       "testPatterns": [
         "{dir}/{stem}Tests.cs",
         "{dir}/{stem}.Tests.cs",
+        "{dir}/{stem}Test.cs",
         "**/{stem}Tests.cs",
-        "**/{stem}.Tests.cs"
-      ]
+        "**/{stem}.Tests.cs",
+        "**/{stem}Test.cs"
+      ],
+      "_note": "The singular {stem}Test.cs form was added for Godot Mono (#309): it is the predominant naming in the gdUnit4Net repositories (ExampleProject.Test/test/CalculatorTest.cs, Api.Test/src/asserts/BoolAssertTest.cs), while the plural {stem}Tests.cs form the xUnit/NUnit idiom uses was already covered. The separate-test-project layout a Godot Mono solution uses needs no new pattern: the location-blind **/ forms already reach a sibling <Project>.Test/ directory, which {dir}-anchored patterns never could."
     }
   },
+  "flowAnnotation": {
+    "readFrom": "leading-comment-block",
+    "_note": "Read only the leading comment block of a spec. A tag appearing later in the body is prose, not a declaration — reading further would let a string inside a test case silently pair a spec.",
+    "tags": [
+      {
+        "tag": "@covers",
+        "value": "issue-or-ac-ref",
+        "repeatable": true,
+        "description": "What this spec exercises, as an issue reference (#1114) or an acceptance-criterion reference. Repeatable: a flow spec commonly covers several."
+      },
+      {
+        "tag": "@flow",
+        "value": "name",
+        "repeatable": false,
+        "description": "The journey this spec walks, as a stable name (fork-keyboard). Names the flow, not a source file — filename and stem are irrelevant to flow pairing."
+      }
+    ]
+  },
+  "excludePaths": [],
   "ignoredSourcePatterns": [
     "**/index.ts",
     "**/index.js",
@@ -184,6 +254,7 @@
     "**/*.config.js",
     "**/*.config.mjs",
     "**/migrations/**",
+    "Archive/**",
     "**/node_modules/**",
     "**/vendor/**",
     "**/dist/**",

@@ -1,11 +1,11 @@
 ---
 name: tdd-refactor-coverage-audit
-description: Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, C#) with optional project overrides. Advisory only — never blocks the TDD gate.
+description: Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, GDScript, C#) with optional project overrides. Advisory only — never blocks the TDD gate.
 type: reference
 disable-model-invocation: true
-version: "1.2.0"
+version: "1.3.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-09-10"
+lastUpdated: "2026-09-12"
 license: Complete terms in LICENSE.txt
 category: testing
 relevantTechStack: [tdd, testing]
@@ -20,7 +20,7 @@ Applies the **No-Runtime Fallback Pattern** (`SKILL-DEVELOPMENT-GUIDE.md`):
 |---|---|---|
 | **Primary (default)** | Node 18+ on `PATH` | Invokes `scripts/test-coverage-audit.js` — deterministic, convention-JSON-driven pairing check. |
 | **Fallback** | None (Claude inline) | Reads `resources/test-coverage-conventions.json`, runs `git diff --name-status --diff-filter=A <sha>..HEAD` via Bash, applies the same rules, emits equivalent warnings. |
-Both preserve the **advisory-output contract**. Structural fields (`newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `coverage`, `diagnostics.unrecognizedExtensions`) and advisory-only semantics are identical; only prose formatting may differ.
+Both preserve the **advisory-output contract**. Structural fields (`newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `classes`, `coverage`, `diagnostics.unrecognizedExtensions`) and advisory-only semantics are identical; only prose formatting may differ.
 ### Preflight
 1. `node --version` available?
 2. **Yes (primary):** invoke per "Invocation". Done.
@@ -37,7 +37,8 @@ Both preserve the **advisory-output contract**. Structural fields (`newSources`,
    - Substitute `{stem}` (filename without extension) and `{dir}` (relative directory) into each `testPatterns` entry; check whether any expanded path exists (Bash `test -f` or Read).
    - For `inlineTests: true` (Rust), also read the source and check for an inline `#[cfg(test)]` block; if present, count as paired.
    - If nothing pairs, choose between two findings. Search the project for any file matching the language's test-shape globs — `testPatterns` with `{dir}` replaced by any directory and `{stem}` by any filename. None anywhere → the layout is not expressible by these conventions: append to `undetermined[]` with file, language, and the candidates `checked`. Otherwise the convention is in use and this source simply lacks a test: append to `missingTests[]` with file, language, and the `expected` patterns. Search once per language, not once per file.
-5. **Emit output:** `newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `diagnostics.unrecognizedExtensions` (extension → count for files no language entry claimed, `"(none)"` for extensionless, `{}` when none), `coverage` (`pairedSources / (pairedSources + missingTests.length)`, or `1.0` when that denominator is `0` — undetermined excluded), `minTestCoverageRatio`. JSON or prose; advisory only — do not halt the workflow.
+4b. **Read flow declarations.** For each test file in a `classes.flow` location, read its **leading comment block only** and collect the grammar's tags — `@covers <issue-or-ac-ref>` (repeatable) and `@flow <name>`. A spec with at least one tag is declared and pairs to what it names; one with none is undeclared and is reported by path with a hint; a recognised tag carrying no value is malformed and is reported without halting.
+5. **Emit output:** `newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `classes` (`module` with `sources`/`paired`/`unpaired` and `coverage` only when `sources` is above 0; `flow` with `declared`/`undeclared`; `contract` with `declared`) — classify each test file **before** source detection, since a language's `excludePatterns` reject its own test shapes, and treat a spec in a `classes.flow` location as a flow spec pairing nothing by stem — `diagnostics.unrecognizedExtensions` (extension → count for files no language entry claimed, `"(none)"` for extensionless, `{}` when none), `coverage` (`pairedSources / (pairedSources + missingTests.length)`, or `1.0` when that denominator is `0` — undetermined excluded), `minTestCoverageRatio`. JSON or prose; advisory only — do not halt the workflow.
 ## When to Use
 - REFACTOR phase of a TDD cycle, after the GREEN gate
 - A deterministic check for "did this cycle add source files without tests?"
@@ -89,6 +90,11 @@ node .claude/skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js \
     }
   ],
   "undeterminedCount": 1,
+  "classes": {
+    "module": { "sources": 5, "paired": 3, "unpaired": 1, "coverage": 0.75 },
+    "flow": { "declared": 0, "undeclared": 2 },
+    "contract": { "declared": 1 }
+  },
   "coverage": 0.75,
   "minTestCoverageRatio": 0,
   "diagnostics": {
@@ -109,6 +115,11 @@ node .claude/skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js \
 | `diagnostics` | Container for what the audit could **not** account for. Always present. |
 | `diagnostics.unrecognizedExtensions` | Extension → count for changed files whose extension matched no language entry. Extensionless files count under `"(none)"`. Always present; `{}` when all recognized. |
 | `diagnostics.unreachableLanguageEntries` | `{ name, shadowedBy }` per language entry no file can reach, every extension being claimed ahead of it. Always present; `[]` when none. See **Which entry claims a file**. |
+| `classes` | The three test classes, each with its **own** denominator. Always present. |
+| `classes.module` | `sources` / `paired` / `unpaired` for stem-paired tests; same numbers as the legacy top-level fields. **`coverage` appears only when `module.sources` is above 0** — a language with no module sources has nothing to divide, so no division is performed rather than reporting a misleading `0%`. |
+| `classes.flow` | `declared` / `undeclared` for specs in a `classes.flow` location. |
+| `classes.contract` | `declared` for tests matching the contract class's `exempt` globs. A contract test is never listed as an orphan. |
+**The legacy top-level fields carry the module class and are unchanged.** A consumer reading only `newSources`, `pairedSources`, `coverage` and `missingTests[]` sees exactly what it saw before — which is what makes the three-class output a minor release rather than a migration.
 > **What decides `undetermined` (#295).** Judged on **location**, not test naming. Rule: files shaped like this language's tests exist **and** no source of this language paired anywhere in the project. Both halves matter — a project pairing somewhere understands its own layout, so an unpaired source there is genuinely missing a test. Previously the check asked only whether a test-shaped file existed anywhere; `{dir}` opens to `**`, so nine of ten bundled languages yield a location-blind glob (`**/*.test.js`) and a mirror-layout project reported `coverage: 0.0` while a project with no tests reported `1.0` — each population got the other's verdict. Only `elixir`, carrying no `{dir}`, was unaffected. Known imprecision: a monorepo pairing in one package and not another reports `missingTests` for the unreachable package; sharpening needs per-subtree classification.
 > **`coverage` changed meaning (#285).** Formerly `pairedSources / newSources`. A project whose layout the bundled patterns cannot express now reports `1.0` alongside a non-empty `undetermined[]` instead of a depressed figure and impossible expected paths. Callers comparing `coverage` to a floor must also read `undeterminedCount`: a perfect score beside a non-empty `undetermined[]` means the layout was not understood, not that the project is fully tested.
 > **`unrecognizedExtensions` is the other half of reading `coverage` honestly (#299).** `undeterminedCount` guards a falsely *low* score; this guards a falsely *high* one. A file whose extension matches no language entry never enters `newSources`, `pairedSources` or the `coverage` denominator, so a Vue project with 80 untested components and 2 tested utilities reports `coverage: 1.0`. **Callers comparing `coverage` to a floor must read both** — a perfect score means "of the files I understood". It is also the language backlog ordered by evidence: `".vue": 82` says what to add next.
@@ -134,6 +145,58 @@ A language entry may declare `pairingScope`.
 | `directory` | Source pairs if **any** file matching the language test shape exists in the source's own directory. |
 For languages whose idiom is one test file per package. Go requires only the `_test.go` suffix, so `internal/http/handlers_test.go` conventionally exercises `routes.go` and `middleware.go`; under `file` scope both reported untested however thoroughly covered. No `testPatterns` entry expresses this — `expandTestPatterns` substitutes `{stem}` from the source, so "any test in this package" is not sayable as a glob.
 Coarser by design: one test file marks every source in its package paired. Deliberate — the audit is advisory, the prior behaviour was a false negative on *every* non-eponymous source in an idiomatic Go project, and the imprecision is bounded by the package, the unit `go test -cover` reports in. Under `directory` scope the reported `expected`/`checked` list is the directory test-shape globs, not a per-file candidate, so the output does not appear to demand one test per source.
+## Excluding Paths
+`excludePaths` is a top-level glob list naming paths **not expected to have tests** — golden files, fixture trees, generated sources, scratch directories. A matching source is skipped before language detection, so it is **neither counted nor reported** as unpaired.
+```json
+"excludePaths": ["golden/**", "**/__fixtures__/**", "generated/**"]
+```
+**Per-language pairing is untouched** — the difference that matters. Silencing an assurance-ladder tree previously meant disabling pairing for the whole language, hiding genuine gaps to suppress known non-gaps. A non-matching source in the same language still pairs, and still reports as unpaired when it has no test.
+| Key | Says |
+|---|---|
+| `excludePaths` (top-level) | this **path** is not expected to be tested, whatever language claims it |
+| `excludePatterns` (per language) | this file is not a source **of that language** — a `.d.ts`, a generated `.pb.go`, a test file |
+| `ignoredSourcePatterns` (top-level) | this file is structurally untestable anywhere — a barrel `index.ts`, a migration |
+A project adds its own list through the override block; it is **concatenated** with the bundled list, not replaced, so declaring one never silently drops the shipped entries.
+## Test Classes
+A language entry may declare `classes`, naming the kinds of test it recognises and how each pairs. Stem matching is correct for unit tests and wrong for everything else: an end-to-end spec is named for the journey it walks, so no source shares its stem, and it is reported as an orphan while the source it exercises is reported as untested.
+| Class | `pairing` | How it pairs |
+|---|---|---|
+| `module` | `stem` | Filename-stem matching against the language's `testPatterns` — today's behaviour, unchanged. |
+| `flow` | `annotation` | The spec declares what it covers in a leading-comment tag. Filename is irrelevant; `locations` globs say where such specs live, but never pair one on their own. |
+| `contract` | `declared-subject` | The test names its subject, or matches one of the class's `exempt` globs. |
+```json
+"classes": {
+  "module": { "pairing": "stem" },
+  "flow": { "pairing": "annotation", "locations": ["e2e/**", "tests/flows/**"] },
+  "contract": { "pairing": "declared-subject", "exempt": ["**/fixtures/**"] }
+}
+```
+**`classes` is optional, and its absence is not a gap.** A language declaring no `classes` block resolves to module-only behaviour — exactly what every entry did before the key existed — so no existing entry changes verdict. Bundled `python`, `go`, `rust` and `java` declare none.
+`pairing` is constrained by a JSON Schema `pattern` rather than an `enum` deliberately: the bundled validator in `scripts/test-coverage-audit.js` implements `pattern` and not `enum`, so an `enum` here would be decorative and admit any string.
+## Flow Annotation Grammar
+The top-level `flowAnnotation` key defines the tags a flow spec uses to declare what it covers. Top-level rather than per-language because the tags are identical everywhere; only the comment syntax around them differs.
+| Tag | Value | Repeatable |
+|---|---|---|
+| `@covers` | an issue or acceptance-criterion reference | yes — a flow spec commonly covers several |
+| `@flow` | a stable journey name | no |
+```js
+/**
+ * @covers #1114
+ * @flow fork-keyboard
+ */
+```
+**Tags are read from the leading comment block only.** A `@covers` string appearing later is prose — a fixture, a comment inside a test case — and reading further would let it silently pair a spec. Declaring the boundary in the grammar makes that rule checkable rather than an implementation detail of whichever reader runs.
+## Flow Annotation Reader
+The audit reads the tags defined by **Flow Annotation Grammar** out of each spec sitting in a `classes.flow` location, and pairs the spec to what the tags name.
+**Only the leading comment block is read.** The block runs from the top of the file to the first line that is neither blank nor a comment — or to the close of a `/* */` comment, or to a blank line once the block has started.
+| Outcome | Where it appears |
+|---|---|
+| At least one recognised tag | `classes.flow.declared`, with `{ file, covers[], flow }` in `classes.flow.declarations`. **Every `@covers` is recorded**, not just the first. |
+| No recognised tag | `classes.flow.undeclared`, with `{ file, hint }` in `classes.flow.undeclaredSpecs` — the hint names the tags to add. |
+| A recognised tag with no value | `diagnostics.malformedAnnotations` as `{ file, text }`. |
+**An undeclared flow spec is not a module orphan**, and is deliberately kept out of that bucket: an orphan means "this source has no test", an undeclared spec means "this test does not say what it covers". Different problems, different fixes, reported separately.
+**A malformed tag is reported, never thrown.** The audit completes and names the file and offending text; well-formed tags beside it still read. Follows the exit contract — non-zero exit is reserved for schema and usage errors, never findings. An unrecognised `@tag` is not malformed; it is prose the reader ignores.
+**Pairing here is filename-independent.** Renaming an annotated spec to match a source stem changes nothing: it remains a flow spec and adds nothing to `classes.module`. That is the property the flow class exists to provide — existing end-to-end suites pair without renaming a single file.
 ## Adding a Language
 Add an entry under `languages` in `resources/test-coverage-conventions.json`:
 ```json
@@ -167,6 +230,7 @@ Optional `testCoverageAudit` block in `framework-config.json`:
 | `additionalLanguages` | Merged into bundled `languages`. Same key overrides, **replacing wholesale** — every pattern you still want must be restated. |
 | `additionalLanguages` — extension collision | A project entry is consulted **before** any bundled entry claiming the same extension (#301). A new key declaring `.js` takes effect without touching bundled `javascript`, which keeps its other extensions. |
 | `ignoredSourcePatterns` | Concatenated with bundled patterns. |
+| `excludePaths` | Concatenated with bundled patterns. Paths not expected to have tests; a match is neither counted as a source nor reported as unpaired. See **Excluding Paths**. |
 | `minTestCoverageRatio` | Reported for downstream callers; not enforced here. |
 ### Worked example: sources under a dot-directory
 The `myDsl` case is easy — a new extension, test root derived from the source's directory. The awkward case is a **dot-directory** source root with a test root that does **not** mirror the source path (`.claude/project-scripts/` → `tests/project-scripts/`):
@@ -219,6 +283,8 @@ Decisions about what the bundled conventions cover, recorded so intent is not in
 | Go `doc.go` | **Excluded** (#294) | Carries a package comment and nothing executable. |
 | Go `cmd/**/main.go` | **NOT excluded** (#294) | Regularly carries wiring worth testing, and no convention guarantees it is inert. Advisory audit: a reported gap costs nothing, a hidden one is the risk. |
 | Go `mock_*.go`, `*_mock.go`, `*_string.go` | **Excluded, known risk** (#294) | `mockgen`/`stringer` default names, but no marker separates them from a hand-written fake. Guard is the test asserting an ordinary `.go` source is still counted. |
+| `gdscript` recognises two harnesses | **Both listed** (#309) | Incompatible file naming: **GUT** uses `test_{stem}.gd`, **gdUnit4** uses `{stem}Test.gd`. The entry cannot know which a project uses, and recognising only one reports every source in the other kind of project as untested — the all-or-nothing failure `undetermined` exists to avoid. Colocated and mirror forms are both legal in Godot; the mirror patterns carry `**` from the first commit rather than acquiring it in a later repair, following the `dart` precedent. |
+| `csharp` reviewed against Godot Mono layouts | **Extended** (#309) | Checked in the gdUnit4 repositories themselves: `ExampleProject.Test/test/CalculatorTest.cs` and `Api.Test/src/asserts/BoolAssertTest.cs` (singular, separate test project) and `Examples/.../CSharpArrayTests.cs` (plural). Plural `{stem}Tests.cs` / `{stem}.Tests.cs` were already covered; the **singular `{stem}Test.cs`** — predominant in gdUnit4Net — matched nothing and was added in both colocated and `**/` forms. The separate-test-project *location* needed no change: location-blind `**/` patterns already reach a sibling `<Project>.Test/`, which `{dir}`-anchored patterns never could. gdUnit4 documents no C# naming convention, so the entry was reviewed against observed layouts rather than a published rule. |
 | `kotlin` entry | **Deferred to #299** (#292) | Extension-coverage, not pattern-anchoring: `.kt` matches no `sourceExtensions`, so such files are skipped before being counted. #299 makes the priority evidence-based. Whenever written, the entry must carry `**/src/test/kotlin/**/` variants from the start — Gradle and Maven use the same module-relative layout #292 fixed for Java. |
 ## Limitations
 - File-pairing only — no line, branch, or statement coverage.
