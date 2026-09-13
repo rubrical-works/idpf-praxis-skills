@@ -3,7 +3,7 @@
 [![Skill CI](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml)
 [![CodeQL](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml)
 [![Latest Release](https://img.shields.io/github/v/release/rubrical-works/idpf-praxis-skills)](https://github.com/rubrical-works/idpf-praxis-skills/releases/latest)
-[![Skills](https://img.shields.io/badge/skills-53-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
+[![Skills](https://img.shields.io/badge/skills-54-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 Ready-to-use skills for [Claude Code](https://claude.ai/code). Browse skill documentation below, then install what you need.
@@ -51,7 +51,7 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [anti-pattern-analysis](Skills/anti-pattern-analysis/) | Code Quality | Anti-pattern detection checklist |
 | [error-handling-patterns](Skills/error-handling-patterns/) | Development | Error handling hierarchy and API error responses |
 
-### Invokable Skills (24)
+### Invokable Skills (25)
 
 Interactive guided workflows. Install and use as slash commands.
 
@@ -60,6 +60,7 @@ Interactive guided workflows. Install and use as slash commands.
 | [code-path-discovery](Skills/code-path-discovery/) | Analysis | Scan TypeScript/JavaScript source files for behavioral paths and return candidates |
 | [debate-prism](Skills/debate-prism/) | Analysis | Adversarial for/against/judge analyst for contested business, marketing, financial claims &mdash; [real-run case study](Docs/case-studies/debate-prism/enterprise-saas-mid-cap-buyback-vs-ai-reinvest-2026.md) |
 | [digitalocean-app-setup](Skills/digitalocean-app-setup/) | Platforms & Frameworks | Configure automated preview, staging, and production deployments with DigitalOcean App Platform |
+| [electron-error-capture](Skills/electron-error-capture/) | Testing | Headed Playwright capture session for Electron — records page errors, console errors, renderer crashes and main-process stderr while you drive the app by hand, then writes a report with screenshots |
 | [engage-apothecary](Skills/engage-apothecary/) | Clinical Education | Strictly educational clinical reasoning explorer with Bayesian pre/post-test reasoning. Not for point-of-care use &mdash; [real-run case study](Docs/case-studies/engage-apothecary/dvt-differential-young-adult-post-flight.md) |
 | [engage-chorus](Skills/engage-chorus/) | Analysis | Multi-stakeholder negotiation/mediation. N-party-steel-man with mediator output schema &mdash; [real-run case study](Docs/case-studies/engage-chorus/engineering-budget-reallocation-four-vp-mediation.md) |
 | [engage-codex](Skills/engage-codex/) | Narrative | Artefact-first narrative exploration for screenplay, short-story, novel-chapter, episodic-TV, game &mdash; [real-run case study](Docs/case-studies/engage-codex/forensic-accountant-mountain-town-act-i.md) |

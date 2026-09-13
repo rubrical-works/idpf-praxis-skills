@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.20.1
+**Version:** v0.21.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -28,7 +28,8 @@
 | digitalocean-app-setup | 2.0.0 | 2026-04-25 | Active |
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
 | electron-cross-build | 1.1.0 | 2026-09-10 | Active |
-| electron-development | 1.1.0 | 2026-09-10 | Active |
+| electron-development | 1.1.1 | 2026-09-12 | Active |
+| electron-error-capture | 1.0.0 | 2026-09-12 | Active |
 | engage-apothecary | 1.0.1 | 2026-05-18 | Active |
 | engage-chorus | 1.0.1 | 2026-05-18 | Active |
 | engage-codex | 1.0.1 | 2026-05-18 | Active |
@@ -62,7 +63,7 @@
 | tdd-green-phase | 1.0.0 | 2026-04-01 | Active |
 | tdd-process | 1.0.0 | 2026-04-01 | Active |
 | tdd-red-phase | 1.0.0 | 2026-04-01 | Active |
-| tdd-refactor-coverage-audit | 1.3.1 | 2026-09-12 | Active |
+| tdd-refactor-coverage-audit | 1.5.1 | 2026-09-12 | Active |
 | tdd-refactor-phase | 1.0.0 | 2026-04-01 | Active |
 | test-scaffold | 1.0.0 | 2026-04-01 | Active |
 | test-writing-patterns | 1.0.0 | 2026-04-01 | Active |
@@ -105,6 +106,7 @@ Skills use independent semantic versioning, decoupled from the framework version
 - codebase-analysis - Analyze codebases for structure, tech stack, and patterns
 - electron-cross-build - Cross-platform Electron builds for Windows, macOS, and Linux
 - electron-development - Electron app development with Vite, Playwright, Windows considerations
+- electron-error-capture - Interactive Electron error capture session with report generation
 - error-handling-patterns - Error hierarchy and API error responses
 - i18n-setup - Internationalization setup and locale management
 - migration-patterns - Database schema versioning and rollback procedures

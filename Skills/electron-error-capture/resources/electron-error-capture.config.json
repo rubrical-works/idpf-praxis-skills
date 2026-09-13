@@ -1,0 +1,91 @@
+{
+  "$schema": "./electron-error-capture.config.schema.json",
+  "configVersion": "1.0.0",
+  "output": {
+    "defaultDir": "capture-session",
+    "reportMarkdown": "report.md",
+    "reportJson": "report.json",
+    "sessionLog": "session.log",
+    "screenshotPattern": "error-{n}.png"
+  },
+  "launch": {
+    "defaultTimeoutMs": 120000,
+    "entryCandidates": [
+      "electron/main.js",
+      "dist-electron/main.js",
+      "main.js",
+      "src/main/index.js"
+    ]
+  },
+  "binaryResolution": {
+    "strategy": "require-electron",
+    "note": "Primary path is require('electron') from the target project, which exports the absolute binary path. relativeToPackage is the fallback used when that export is missing.",
+    "relativeToPackage": {
+      "win32": "dist/electron.exe",
+      "darwin": "dist/Electron.app/Contents/MacOS/Electron",
+      "linux": "dist/electron"
+    }
+  },
+  "listeners": [
+    {
+      "id": "page-error",
+      "label": "Page Error",
+      "hook": "window.on('pageerror')",
+      "isError": true
+    },
+    {
+      "id": "console-error",
+      "label": "Console Error",
+      "hook": "window.on('console') where msg.type() === 'error'",
+      "isError": true
+    },
+    {
+      "id": "console-warning",
+      "label": "Console Warning",
+      "hook": "window.on('console') where msg.type() === 'warning'",
+      "isError": false
+    },
+    {
+      "id": "crash",
+      "label": "Renderer Crash",
+      "hook": "window.on('crash')",
+      "isError": true
+    },
+    {
+      "id": "main-stderr",
+      "label": "Main Process",
+      "hook": "app.process().stderr",
+      "isError": true
+    }
+  ],
+  "derivedClassifications": [
+    {
+      "id": "unhandled-rejection",
+      "label": "Unhandled Rejection",
+      "appliesTo": ["page-error", "console-error"],
+      "patterns": [
+        "^Unhandled promise rejection",
+        "^Uncaught \\(in promise\\)",
+        "UnhandledPromiseRejection"
+      ]
+    },
+    {
+      "id": "ipc-failure",
+      "label": "IPC Failure",
+      "appliesTo": ["main-stderr", "console-error"],
+      "patterns": [
+        "^Error occurred in handler for '",
+        "^Error invoking remote method '"
+      ]
+    },
+    {
+      "id": "csp-violation",
+      "label": "CSP Violation",
+      "appliesTo": ["console-error", "console-warning"],
+      "patterns": [
+        "^Refused to ",
+        "Content Security Policy"
+      ]
+    }
+  ]
+}

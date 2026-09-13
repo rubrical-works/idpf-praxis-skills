@@ -206,6 +206,11 @@ function mergeConfig(conventions, override) {
     // The annotation grammar the flow reader consults (#311). Bundled only: the
     // grammar is an upstream definition, not a per-project knob.
     flowAnnotation: conventions.flowAnnotation || null,
+    // The grammar the contract reader consults (#329). Bundled only, for the
+    // same reason as flowAnnotation: the tag is the user-facing surface, and a
+    // per-project name would mean a declaration that classifies in one
+    // repository and reads as prose in the next.
+    contractAnnotation: conventions.contractAnnotation || null,
     minTestCoverageRatio: 0
   };
   if (!override) {
@@ -276,9 +281,29 @@ function globToRegex(glob) {
   while (i < glob.length) {
     const c = glob[i];
     if (c === '*' && glob[i + 1] === '*') {
-      re += '.*';
       i += 2;
-      if (glob[i] === '/') i++;
+      if (glob[i] === '/') {
+        // `**/` spans WHOLE SEGMENTS (#330). The previous form emitted `.*` and
+        // swallowed the separator without putting a boundary back, so
+        // `**/version.rb` compiled to `^.*version\.rb$` and matched
+        // `lib/app/conversion.rb`. `(?:.*/)?` is optional, so the zero-directory
+        // case `**/foo.ts` vs `foo.ts` still matches — that property is what
+        // made the naive `.*` look correct.
+        //
+        // The consumer that made this worth fixing is source PAIRING, not
+        // exclusion: `tests/**/{stem}.test.ts` expands per source, so
+        // `tests/**/render.test.ts` also matched
+        // `tests/unit/main/services/launcher-render.test.ts` and reported an
+        // untested source as tested. Measured on px-manager: 20 sources, about
+        // seven points of module coverage, in the direction that hides untested
+        // code.
+        re += '(?:.*/)?';
+        i++;
+      } else {
+        // A trailing `**` still crosses everything — `Archive/**` must keep
+        // matching at any depth, so the narrowing is scoped to the separator.
+        re += '.*';
+      }
     } else if (c === '*') {
       re += '[^/]*';
       i++;
@@ -412,12 +437,15 @@ function flowLocations(langDef) {
 // A recognised tag carrying no value is MALFORMED: it is collected and
 // reported, never thrown, and well-formed tags beside it still read. An
 // unrecognised @tag is not malformed — it is simply prose.
-function parseFlowAnnotations(content, grammar) {
-  const empty = { covers: [], flow: null, malformed: [], declared: false };
-  if (typeof content !== 'string') return empty;
-  const recognised = new Set(((grammar && grammar.tags) || []).map((t) => t.tag));
-  if (recognised.size === 0) return empty;
-
+// The leading comment block of a file, as lines with their comment markers
+// stripped (#311, factored out for reuse by the contract reader in #329).
+//
+// FACTORED RATHER THAN COPIED, deliberately. This scanner carries #314's
+// star-height split and the deliberate non-anchoring of the tag match below,
+// both with reasoning that is not reconstructible from the code. A second copy
+// is exactly where those diverge silently, and a test pins that the tag
+// expression appears once in this file.
+function leadingCommentBlock(content) {
   const block = [];
   let inBlockComment = false;
   for (const line of content.split(/\r?\n/)) {
@@ -444,17 +472,32 @@ function parseFlowAnnotations(content, grammar) {
     break;
   }
 
-  const covers = [];
-  let flow = null;
-  const malformed = [];
-  for (const raw of block) {
-    const text = raw
+  return block.map((raw) =>
+    raw
       .replace(/^\/\*+/, '')
       .replace(/\*+\/\s*$/, '')
       .replace(/^\*+/, '')
       .replace(/^\/\//, '')
       .replace(/^#/, '')
-      .trim();
+      .trim()
+  );
+}
+
+// Recognised tags from a file's leading comment block, with their values.
+//
+// Shared by the flow reader (#311) and the contract reader (#329); each maps
+// the returned tags onto its own shape. A recognised tag carrying no value is
+// MALFORMED — collected and reported, never thrown, and well-formed tags beside
+// it still read. An unrecognised @tag is not malformed; it is simply prose.
+function readLeadingTags(content, grammar) {
+  const recognised = new Set(((grammar && grammar.tags) || []).map((t) => t.tag));
+  if (typeof content !== 'string' || recognised.size === 0) {
+    return { tags: [], malformed: [] };
+  }
+
+  const tags = [];
+  const malformed = [];
+  for (const text of leadingCommentBlock(content)) {
     // Two expressions rather than one (#314). The previous combined form
     // matched the tag and an optional whitespace-separated value in a single
     // end-anchored expression, which put `+` and `*` inside a
@@ -480,10 +523,61 @@ function parseFlowAnnotations(content, grammar) {
       malformed.push(tag);
       continue;
     }
+    tags.push({ tag, value });
+  }
+  return { tags, malformed };
+}
+
+// Read the flow declaration out of a spec's LEADING comment block (#311).
+function parseFlowAnnotations(content, grammar) {
+  const { tags, malformed } = readLeadingTags(content, grammar);
+  const covers = [];
+  let flow = null;
+  for (const { tag, value } of tags) {
     if (tag === '@covers') covers.push(value);
     else if (tag === '@flow') flow = value;
   }
   return { covers, flow, malformed, declared: covers.length > 0 || flow !== null };
+}
+
+// Read the contract declaration out of a test's LEADING comment block (#329).
+//
+// `@subject` is repeatable: a contract test commonly asserts against several
+// artifacts. The tag names what the test asserts against when that subject is
+// not a source file the test stem pairs with — a schema, a metadata registry, a
+// generated artifact, a document.
+function parseContractAnnotations(content, grammar) {
+  const { tags, malformed } = readLeadingTags(content, grammar);
+  const subjects = [];
+  for (const { tag, value } of tags) {
+    if (tag === '@subject') subjects.push(value);
+  }
+  return { subjects, malformed, declared: subjects.length > 0 };
+}
+
+// A `@subject` value is checked against the tree only when it looks like a
+// path: it contains a separator, or it ends in an extension. Anything else is a
+// name — "the release manifest contract" — and checking it would report every
+// prose subject as missing.
+//
+// This asymmetry is worth exploiting rather than smoothing over: `@covers`
+// values are issue references and inherently unverifiable, but a path-shaped
+// `@subject` CAN be checked, so a declaration that has rotted is detectable in
+// a way a flow declaration never is.
+function subjectIsPathShaped(subject) {
+  return subject.includes('/') || /\.[A-Za-z]+$/.test(subject);
+}
+
+function readContractDeclaration(projectRoot, file, grammar) {
+  try {
+    return parseContractAnnotations(
+      fs.readFileSync(path.join(projectRoot, file), 'utf8'),
+      grammar
+    );
+  } catch {
+    // Unreadable test is undeclared, never fatal — the audit is advisory.
+    return { subjects: [], malformed: [], declared: false };
+  }
 }
 
 // One-line hint naming the recognised tags, attached to every undeclared flow
@@ -516,15 +610,34 @@ function readFlowDeclaration(projectRoot, file, grammar) {
 // module, because the classes narrow: a spec in a flow location is a flow spec
 // even when its filename also stem-matches a source, which is the whole point
 // of the flow class.
-function classifyTestFile(file, languages) {
+// `options.readContractDeclaration` is an injected reader (#329): `declared-subject`
+// makes the CLASS contingent on file contents, unlike `flow`, where location
+// decides and the annotation is read afterwards over an already-small subset.
+// Injected rather than called directly so the glob logic stays pure and the I/O
+// stays testable; omitting it leaves the pre-#329 glob-only behaviour exactly.
+function classifyTestFile(file, languages, options) {
+  const readContract = options && options.readContractDeclaration;
   for (const [name, def] of Object.entries(languages || {})) {
     if (!matchAny(file, testShapeGlobs(def.testPatterns))) continue;
     const classes = def.classes || {};
+    // Flow wins over a declaration — the order is unchanged and locations still
+    // narrow first. A spec in a flow location that also names a subject is a
+    // flow spec: it was placed there deliberately.
     if (classes.flow && matchAny(file, flowLocations(def))) {
       return { language: name, klass: 'flow' };
     }
-    if (classes.contract && matchAny(file, classes.contract.exempt)) {
-      return { language: name, klass: 'contract' };
+    if (classes.contract) {
+      // Both branches are non-gaps, for different reasons: a declared test
+      // names its subject, an exempt test is deliberately unpaired by location.
+      if (readContract) {
+        const parsed = readContract(file);
+        if (parsed && parsed.declared) {
+          return { language: name, klass: 'contract', via: 'tag', subjects: parsed.subjects };
+        }
+      }
+      if (matchAny(file, classes.contract.exempt)) {
+        return { language: name, klass: 'contract', via: 'exempt', subjects: [] };
+      }
     }
     return { language: name, klass: 'module' };
   }
@@ -759,7 +872,26 @@ function audit(args) {
   // reader (#311); until that ships no spec can be declared, so every flow spec
   // counts as undeclared — reported plainly rather than presented as a zero
   // that might be mistaken for "none found".
-  const classTally = { flowDeclared: 0, flowUndeclared: 0, contractDeclared: 0 };
+  const classTally = {
+    flowDeclared: 0,
+    flowUndeclared: 0,
+    contractDeclared: 0,
+    contractByTag: 0,
+    contractByExempt: 0,
+  };
+  const contractDeclarations = [];
+  const contractMissingSubjects = [];
+
+  // Bound once per run. Malformed contract tags are collected here rather than
+  // inside classifyTestFile, which stays a pure classifier; a file reaches this
+  // reader at most once, since the classifier returns on its first match.
+  const readContract = merged.contractAnnotation
+    ? (f) => {
+      const parsed = readContractDeclaration(projectRoot, f, merged.contractAnnotation);
+      for (const text of parsed.malformed) malformedAnnotations.push({ file: f, text });
+      return parsed;
+    }
+    : null;
   const flowDeclarations = [];
   const flowUndeclaredSpecs = [];
   const malformedAnnotations = [];
@@ -775,7 +907,9 @@ function audit(args) {
     if (matchAny(file, merged.excludePaths)) continue;
     // Classify test files before source detection (#310) — see classifyTestFile
     // for why this cannot live in the looksLikeTest branch below.
-    const testClass = classifyTestFile(file, merged.languages);
+    const testClass = classifyTestFile(file, merged.languages, {
+      readContractDeclaration: readContract,
+    });
     if (testClass) {
       if (testClass.klass === 'flow') {
         const parsed = readFlowDeclaration(projectRoot, file, merged.flowAnnotation);
@@ -788,7 +922,25 @@ function audit(args) {
           flowUndeclaredSpecs.push({ file, hint: flowDeclarationHint(merged.flowAnnotation) });
         }
       } else if (testClass.klass === 'contract') {
+        // `declared` stays the TOTAL — tag-declared plus exempt-matched — so
+        // existing consumers and assertions keep their meaning. The split is
+        // additive.
         classTally.contractDeclared += 1;
+        if (testClass.via === 'tag') {
+          classTally.contractByTag += 1;
+          const subjects = testClass.subjects || [];
+          contractDeclarations.push({ file, subjects });
+          for (const subject of subjects) {
+            if (!subjectIsPathShaped(subject)) continue;
+            if (!fs.existsSync(path.join(projectRoot, subject))) {
+              // Advisory, never fatal — matching the audit's posture
+              // everywhere else. A rotted declaration is reported, not enforced.
+              contractMissingSubjects.push({ file, subject });
+            }
+          }
+        } else {
+          classTally.contractByExempt += 1;
+        }
       }
       continue;
     }
@@ -910,7 +1062,13 @@ function audit(args) {
         declarations: flowDeclarations,
         undeclaredSpecs: flowUndeclaredSpecs
       },
-      contract: { declared: classTally.contractDeclared }
+      contract: {
+        declared: classTally.contractDeclared,
+        byTag: classTally.contractByTag,
+        byExempt: classTally.contractByExempt,
+        declarations: contractDeclarations,
+        missingSubjects: contractMissingSubjects
+      }
     },
     coverage: Number(coverage.toFixed(4)),
     minTestCoverageRatio: merged.minTestCoverageRatio || 0,
@@ -958,6 +1116,9 @@ module.exports = {
   expandTestPatterns,
   looksLikeTest,
   parseFlowAnnotations,
+  parseContractAnnotations,
+  readContractDeclaration,
+  subjectIsPathShaped,
   flowDeclarationHint,
   classifyTestFile,
   testShapeGlobs,

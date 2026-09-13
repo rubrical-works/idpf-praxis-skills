@@ -6,7 +6,10 @@
   },
   "languages": {
     "typescript": {
-      "sourceExtensions": [".ts", ".tsx"],
+      "sourceExtensions": [
+        ".ts",
+        ".tsx"
+      ],
       "testPatterns": [
         "{dir}/{stem}.test.ts",
         "{dir}/{stem}.test.tsx",
@@ -32,19 +35,33 @@
         "**/*.spec.tsx"
       ],
       "classes": {
-        "module": { "pairing": "stem" },
+        "module": {
+          "pairing": "stem"
+        },
         "flow": {
           "pairing": "annotation",
-          "locations": ["e2e/**", "**/e2e/**", "tests/flows/**"]
+          "locations": [
+            "e2e/**",
+            "**/e2e/**",
+            "tests/flows/**"
+          ]
         },
         "contract": {
           "pairing": "declared-subject",
-          "exempt": ["**/fixtures/**", "**/*.golden.*"]
+          "exempt": [
+            "**/fixtures/**",
+            "**/*.golden.*"
+          ]
         }
       }
     },
     "javascript": {
-      "sourceExtensions": [".js", ".jsx", ".mjs", ".cjs"],
+      "sourceExtensions": [
+        ".js",
+        ".jsx",
+        ".mjs",
+        ".cjs"
+      ],
       "testPatterns": [
         "{dir}/{stem}.test.js",
         "{dir}/{stem}.test.jsx",
@@ -68,19 +85,30 @@
         "**/*.spec.jsx"
       ],
       "classes": {
-        "module": { "pairing": "stem" },
+        "module": {
+          "pairing": "stem"
+        },
         "flow": {
           "pairing": "annotation",
-          "locations": ["e2e/**", "**/e2e/**", "tests/flows/**"]
+          "locations": [
+            "e2e/**",
+            "**/e2e/**",
+            "tests/flows/**"
+          ]
         },
         "contract": {
           "pairing": "declared-subject",
-          "exempt": ["**/fixtures/**", "**/*.golden.*"]
+          "exempt": [
+            "**/fixtures/**",
+            "**/*.golden.*"
+          ]
         }
       }
     },
     "svelte": {
-      "sourceExtensions": [".svelte"],
+      "sourceExtensions": [
+        ".svelte"
+      ],
       "testPatterns": [
         "{dir}/{stem}.test.ts",
         "{dir}/{stem}.test.js",
@@ -93,10 +121,33 @@
         "test/**/{stem}.test.ts",
         "test/**/{stem}.test.js",
         "__tests__/**/{stem}.test.ts"
-      ]
+      ],
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "e2e/**",
+            "**/e2e/**",
+            "tests/flows/**"
+          ]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/fixtures/**",
+            "**/*.golden.*"
+          ]
+        }
+      },
+      "_note": "No support-file ignores, deliberately. A .svelte file is a component with markup, logic and styles; there is no barrel-file or declaration-only idiom to exclude, and App.svelte carries layout and global providers exactly as App.vue does — which #300 decided against excluding. Reported rather than hidden (#326)."
     },
     "vue": {
-      "sourceExtensions": [".vue"],
+      "sourceExtensions": [
+        ".vue"
+      ],
       "testPatterns": [
         "{dir}/{stem}.test.ts",
         "{dir}/{stem}.test.js",
@@ -111,10 +162,32 @@
         "test/**/{stem}.spec.ts",
         "test/**/{stem}.test.ts"
       ],
-      "_note": "Vue tests are .ts/.js files, never .vue — this entry maps a .vue source to a TypeScript or JavaScript test, as svelte already does. Mirror patterns carry ** from the first commit so the entry does not ship with the #291 anchoring defect built in."
+      "_note": "Vue tests are .ts/.js files, never .vue — this entry maps a .vue source to a TypeScript or JavaScript test, as svelte already does. Mirror patterns carry ** from the first commit so the entry does not ship with the #291 anchoring defect built in. No support-file ignores, deliberately: App.vue was considered and declined in #300, since it regularly carries layout, router-view and global providers, so the barrel-file analogy does not hold (#326).",
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "e2e/**",
+            "**/e2e/**",
+            "tests/flows/**"
+          ]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/fixtures/**",
+            "**/*.golden.*"
+          ]
+        }
+      }
     },
     "python": {
-      "sourceExtensions": [".py"],
+      "sourceExtensions": [
+        ".py"
+      ],
       "testPatterns": [
         "{dir}/test_{stem}.py",
         "{dir}/{stem}_test.py",
@@ -126,12 +199,40 @@
         "test/**/test_{stem}.py",
         "test/**/{stem}_test.py"
       ],
-      "excludePatterns": ["**/__init__.py", "**/conftest.py", "**/setup.py"]
+      "excludePatterns": [
+        "**/__init__.py",
+        "**/conftest.py",
+        "**/setup.py"
+      ],
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "tests/e2e/**",
+            "e2e/**",
+            "**/e2e/**"
+          ]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/fixtures/**",
+            "**/*.golden.*"
+          ]
+        }
+      }
     },
     "go": {
-      "sourceExtensions": [".go"],
+      "sourceExtensions": [
+        ".go"
+      ],
       "pairingScope": "directory",
-      "testPatterns": ["{dir}/{stem}_test.go"],
+      "testPatterns": [
+        "{dir}/{stem}_test.go"
+      ],
       "excludePatterns": [
         "**/*_test.go",
         "**/vendor/**",
@@ -142,16 +243,58 @@
         "**/*_mock.go",
         "**/*_string.go",
         "**/doc.go"
-      ]
+      ],
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "test/e2e/**",
+            "e2e/**",
+            "**/e2e/**"
+          ]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/testdata/**"
+          ]
+        }
+      }
     },
     "rust": {
-      "sourceExtensions": [".rs"],
-      "testPatterns": ["tests/{stem}.rs", "{dir}/tests/{stem}.rs"],
+      "sourceExtensions": [
+        ".rs"
+      ],
+      "testPatterns": [
+        "tests/{stem}.rs",
+        "{dir}/tests/{stem}.rs"
+      ],
       "inlineTests": true,
-      "_note": "Rust commonly uses #[cfg(test)] inline modules; inlineTests:true means audit checks for a 'mod tests' block in the same file before reporting missing tests."
+      "_note": "Rust commonly uses #[cfg(test)] inline modules; inlineTests:true means audit checks for a 'mod tests' block in the same file before reporting missing tests. No support-file ignores, deliberately: lib.rs, main.rs and mod.rs are the candidates, and all three regularly carry implementations rather than being declaration-only. Following cmd/**/main.go (#294), an entry point that usually has no logic but sometimes does is reported (#326).",
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [],
+          "_note": "UNDECIDED, deliberately empty rather than omitted (#326 AC4). Rust's integration-test convention is `tests/`, but that is also this entry's stem-pairing location (`tests/{stem}.rs`), so declaring it here would reclassify every integration test as a flow spec and unpair the source it was written for. Rust has no second convention that separates end-to-end from integration, so there is nothing narrower to name. Revisit if a community idiom emerges; until then the class exists and answers \"none identified\" rather than staying silent."
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/fixtures/**"
+          ]
+        }
+      }
     },
     "ruby": {
-      "sourceExtensions": [".rb"],
+      "sourceExtensions": [
+        ".rb"
+      ],
       "testPatterns": [
         "{dir}/{stem}_spec.rb",
         "spec/{stem}_spec.rb",
@@ -160,14 +303,68 @@
         "test/{stem}_test.rb",
         "test/**/{stem}_test.rb"
       ],
-      "excludePatterns": ["**/db/migrate/**"]
+      "excludePatterns": [
+        "**/db/migrate/**",
+        "spec/spec_helper.rb",
+        "spec/rails_helper.rb",
+        "**/version.rb"
+      ],
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "spec/features/**",
+            "spec/system/**",
+            "e2e/**",
+            "**/e2e/**"
+          ]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/fixtures/**",
+            "**/*.golden.*"
+          ]
+        }
+      }
     },
     "elixir": {
-      "sourceExtensions": [".ex"],
-      "testPatterns": ["test/{stem}_test.exs", "test/**/{stem}_test.exs"]
+      "sourceExtensions": [
+        ".ex"
+      ],
+      "testPatterns": [
+        "test/{stem}_test.exs",
+        "test/**/{stem}_test.exs"
+      ],
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "test/features/**",
+            "e2e/**",
+            "**/e2e/**"
+          ],
+          "_note": "A `*_integration_test.exs` filename suffix is deliberately NOT a flow location, the same collision as java's `*IT.java` and csharp's `*.IntegrationTests/`: it lives inside `test/`, which is this entry's own stem-pairing tree, so a suffix there reclassifies a test that pairs with a source. `test/features/**` is Wallaby's dedicated directory and carries no such overlap. The rule this follows: a flow location must be a directory a language reserves for end-to-end tests, never a naming convention inside the shared test tree."
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/fixtures/**"
+          ]
+        }
+      },
+      "_note": "No support-file ignores are needed: sourceExtensions is .ex alone, so test/test_helper.exs — the ExUnit analogue of spec/spec_helper.rb — is never detected as a source in the first place. Recorded rather than left blank, so the absence reads as a decision (#326)."
     },
     "java": {
-      "sourceExtensions": [".java"],
+      "sourceExtensions": [
+        ".java"
+      ],
       "testPatterns": [
         "{dir}/{stem}Test.java",
         "src/test/java/**/{stem}Test.java",
@@ -178,10 +375,36 @@
         "**/src/test/java/**/{stem}Tests.java",
         "**/src/test/java/**/{stem}IT.java",
         "**/src/test/java/**/{stem}TestCase.java"
-      ]
+      ],
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "e2e/**",
+            "**/e2e/**"
+          ],
+          "_note": "Failsafe's `*IT.java` suffix is deliberately NOT a flow location, despite being the JVM's integration-test convention: `src/test/java/**/{stem}IT.java` is one of this entry's own stem-pairing patterns (#292), so declaring it here reclassifies the test as a flow spec and reports the source it pairs with as untested. Measured — it unpaired `Payment.java` in the #292 multi-module fixture. A dedicated `e2e/` directory carries no such collision."
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/resources/**"
+          ]
+        }
+      },
+      "excludePatterns": [
+        "**/package-info.java",
+        "**/module-info.java"
+      ],
+      "_note": "Support-file ignores are limited to package-info.java and module-info.java, the direct analogue of go's doc.go (#294): by convention both carry a declaration or a comment and nothing executable. Entry points are deliberately NOT excluded, following the cmd/**/main.go decision — a Main class regularly carries wiring worth testing (#326)."
     },
     "dart": {
-      "sourceExtensions": [".dart"],
+      "sourceExtensions": [
+        ".dart"
+      ],
       "testPatterns": [
         "test/**/{stem}_test.dart",
         "test/{stem}_test.dart",
@@ -196,10 +419,29 @@
         "**/generated_plugin_registrant.dart",
         "**/.dart_tool/**"
       ],
-      "_note": "flutter test and dart test require test files to end in _test.dart and live under test/, and the community mirrors the lib/ tree exactly — so the mirror pattern carries ** from the first commit rather than acquiring it in a later repair (#291/#292/#296). Exclusions are build_runner and Flutter tooling output, which in a real Flutter app routinely outnumber hand-written files in lib/; they sit on this entry per #294's placement decision. The colocated form is legal though uncommon."
+      "_note": "flutter test and dart test require test files to end in _test.dart and live under test/, and the community mirrors the lib/ tree exactly — so the mirror pattern carries ** from the first commit rather than acquiring it in a later repair (#291/#292/#296). Exclusions are build_runner and Flutter tooling output, which in a real Flutter app routinely outnumber hand-written files in lib/; they sit on this entry per #294's placement decision. The colocated form is legal though uncommon.",
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "integration_test/**"
+          ]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/fixtures/**"
+          ]
+        }
+      }
     },
     "gdscript": {
-      "sourceExtensions": [".gd"],
+      "sourceExtensions": [
+        ".gd"
+      ],
       "testPatterns": [
         "{dir}/test_{stem}.gd",
         "{dir}/{stem}Test.gd",
@@ -208,11 +450,34 @@
         "tests/**/test_{stem}.gd",
         "tests/**/{stem}Test.gd"
       ],
-      "excludePatterns": ["**/test_*.gd", "**/*Test.gd"],
-      "_note": "GDScript has two mainstream harnesses with incompatible file conventions, and a Godot project may use either: GUT names tests test_{stem}.gd, gdUnit4 names them {stem}Test.gd. Both are listed because the entry cannot know which the project uses, and recognising only one reports every source in the other kind of project as untested. Colocated and mirror forms are both legal; the mirror patterns carry ** from the first commit rather than acquiring it in a later repair (#291/#292/#296), following the dart precedent. The excludePatterns keep both test shapes out of the source set, as the go entry does for **/*_test.go."
+      "excludePatterns": [
+        "**/test_*.gd",
+        "**/*Test.gd"
+      ],
+      "_note": "GDScript has two mainstream harnesses with incompatible file conventions, and a Godot project may use either: GUT names tests test_{stem}.gd, gdUnit4 names them {stem}Test.gd. Both are listed because the entry cannot know which the project uses, and recognising only one reports every source in the other kind of project as untested. Colocated and mirror forms are both legal; the mirror patterns carry ** from the first commit rather than acquiring it in a later repair (#291/#292/#296), following the dart precedent. The excludePatterns keep both test shapes out of the source set, as the go entry does for **/*_test.go.",
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "**/e2e/**",
+            "e2e/**"
+          ]
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/fixtures/**"
+          ]
+        }
+      }
     },
     "csharp": {
-      "sourceExtensions": [".cs"],
+      "sourceExtensions": [
+        ".cs"
+      ],
       "testPatterns": [
         "{dir}/{stem}Tests.cs",
         "{dir}/{stem}.Tests.cs",
@@ -221,7 +486,33 @@
         "**/{stem}.Tests.cs",
         "**/{stem}Test.cs"
       ],
-      "_note": "The singular {stem}Test.cs form was added for Godot Mono (#309): it is the predominant naming in the gdUnit4Net repositories (ExampleProject.Test/test/CalculatorTest.cs, Api.Test/src/asserts/BoolAssertTest.cs), while the plural {stem}Tests.cs form the xUnit/NUnit idiom uses was already covered. The separate-test-project layout a Godot Mono solution uses needs no new pattern: the location-blind **/ forms already reach a sibling <Project>.Test/ directory, which {dir}-anchored patterns never could."
+      "_note": "The singular {stem}Test.cs form was added for Godot Mono (#309): it is the predominant naming in the gdUnit4Net repositories (ExampleProject.Test/test/CalculatorTest.cs, Api.Test/src/asserts/BoolAssertTest.cs), while the plural {stem}Tests.cs form the xUnit/NUnit idiom uses was already covered. The separate-test-project layout a Godot Mono solution uses needs no new pattern: the location-blind **/ forms already reach a sibling <Project>.Test/ directory, which {dir}-anchored patterns never could. Support-file ignores cover designer/generated output and the assembly-level declaration files, the home #294 named for per-language generated-code globs. Entry points are not excluded, following cmd/**/main.go (#326).",
+      "classes": {
+        "module": {
+          "pairing": "stem"
+        },
+        "flow": {
+          "pairing": "annotation",
+          "locations": [
+            "e2e/**",
+            "**/e2e/**"
+          ],
+          "_note": "A `*.IntegrationTests/` project is deliberately NOT a flow location. The location-blind `**/{stem}Tests.cs` patterns exist precisely so a sibling test project pairs with the sources it tests (#309), so declaring the directory as flow would unpair exactly the layout that support was added for. Same collision as java's `*IT.java`."
+        },
+        "contract": {
+          "pairing": "declared-subject",
+          "exempt": [
+            "**/TestData/**"
+          ]
+        }
+      },
+      "excludePatterns": [
+        "**/*.Designer.cs",
+        "**/*.g.cs",
+        "**/*.generated.cs",
+        "**/AssemblyInfo.cs",
+        "**/GlobalUsings.cs"
+      ]
     }
   },
   "flowAnnotation": {
@@ -239,6 +530,18 @@
         "value": "name",
         "repeatable": false,
         "description": "The journey this spec walks, as a stable name (fork-keyboard). Names the flow, not a source file — filename and stem are irrelevant to flow pairing."
+      }
+    ]
+  },
+  "contractAnnotation": {
+    "readFrom": "leading-comment-block",
+    "_note": "Read only the leading comment block. A tag appearing later in the body is prose, not a declaration — a fixture string, or a comment inside a test case — and reading further would let it silently classify the file.",
+    "tags": [
+      {
+        "tag": "@subject",
+        "value": "path-or-name",
+        "repeatable": true,
+        "description": "What this test asserts against, when that subject is not a source file the test stem pairs with — a schema, a metadata registry, a generated artifact, a document. Repeatable: a contract test commonly asserts against several. A value containing a separator or ending in an extension is checked against the tree and reported under missingSubjects when absent; any other value is a name and is never checked."
       }
     ]
   },

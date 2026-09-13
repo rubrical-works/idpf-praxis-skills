@@ -1,5 +1,5 @@
 # General Anti-Patterns
-**Version:** v0.20.1
+**Version:** v0.21.0
 
 Design and code smell patterns that apply across languages and frameworks.
 

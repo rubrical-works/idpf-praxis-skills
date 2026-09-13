@@ -3,7 +3,7 @@ name: tdd-refactor-coverage-audit
 description: Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, GDScript, C#) with optional project overrides. Advisory only — never blocks the TDD gate.
 type: reference
 disable-model-invocation: true
-version: "1.3.1"
+version: "1.5.1"
 frameworkCompatibility: ">=0.60.0"
 lastUpdated: "2026-09-12"
 license: Complete terms in LICENSE.txt
@@ -38,7 +38,8 @@ Both preserve the **advisory-output contract**. Structural fields (`newSources`,
    - For `inlineTests: true` (Rust), also read the source and check for an inline `#[cfg(test)]` block; if present, count as paired.
    - If nothing pairs, choose between two findings. Search the project for any file matching the language's test-shape globs — `testPatterns` with `{dir}` replaced by any directory and `{stem}` by any filename. None anywhere → the layout is not expressible by these conventions: append to `undetermined[]` with file, language, and the candidates `checked`. Otherwise the convention is in use and this source simply lacks a test: append to `missingTests[]` with file, language, and the `expected` patterns. Search once per language, not once per file.
 4b. **Read flow declarations.** For each test file in a `classes.flow` location, read its **leading comment block only** and collect the grammar's tags — `@covers <issue-or-ac-ref>` (repeatable) and `@flow <name>`. A spec with at least one tag is declared and pairs to what it names; one with none is undeclared and is reported by path with a hint; a recognised tag carrying no value is malformed and is reported without halting.
-5. **Emit output:** `newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `classes` (`module` with `sources`/`paired`/`unpaired` and `coverage` only when `sources` is above 0; `flow` with `declared`/`undeclared`; `contract` with `declared`) — classify each test file **before** source detection, since a language's `excludePatterns` reject its own test shapes, and treat a spec in a `classes.flow` location as a flow spec pairing nothing by stem — `diagnostics.unrecognizedExtensions` (extension → count for files no language entry claimed, `"(none)"` for extensionless, `{}` when none), `coverage` (`pairedSources / (pairedSources + missingTests.length)`, or `1.0` when that denominator is `0` — undetermined excluded), `minTestCoverageRatio`. JSON or prose; advisory only — do not halt the workflow.
+4c. **Read contract declarations.** For each test file in a language declaring `classes.contract`, read the same leading comment block and collect `@subject <path-or-name>` (repeatable). A test with at least one `@subject` is a contract test — this decides the class, unlike the flow tags, which only pair a spec whose location already decided it. Flow wins where both apply. A `@subject` containing a separator or ending in an extension is resolved against the project root and listed under `missingSubjects` when absent; any other value is a name and is never checked.
+5. **Emit output:** `newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `classes` (`module` with `sources`/`paired`/`unpaired` and `coverage` only when `sources` is above 0; `flow` with `declared`/`undeclared`; `contract` with `declared` — the total — plus `byTag`, `byExempt`, `declarations: [{ file, subjects[] }]` and `missingSubjects: [{ file, subject }]`) — classify each test file **before** source detection, since a language's `excludePatterns` reject its own test shapes, and treat a spec in a `classes.flow` location as a flow spec pairing nothing by stem — `diagnostics.unrecognizedExtensions` (extension → count for files no language entry claimed, `"(none)"` for extensionless, `{}` when none), `coverage` (`pairedSources / (pairedSources + missingTests.length)`, or `1.0` when that denominator is `0` — undetermined excluded), `minTestCoverageRatio`. JSON or prose; advisory only — do not halt the workflow.
 ## When to Use
 - REFACTOR phase of a TDD cycle, after the GREEN gate
 - A deterministic check for "did this cycle add source files without tests?"
@@ -157,13 +158,23 @@ Coarser by design: one test file marks every source in its package paired. Delib
 | `excludePatterns` (per language) | this file is not a source **of that language** — a `.d.ts`, a generated `.pb.go`, a test file |
 | `ignoredSourcePatterns` (top-level) | this file is structurally untestable anywhere — a barrel `index.ts`, a migration |
 A project adds its own list through the override block; it is **concatenated** with the bundled list, not replaced, so declaring one never silently drops the shipped entries.
+
+### Worked case: a Ruby gem entry file (#326)
+
+A gem's entry file `lib/<gemname>.rb` is pure `require` wiring — the Ruby barrel file. It is **not** bundled-excluded, deliberately: no fixed glob names it without also matching real sources, and `lib/*.rb` would silently drop every lib-root source in a non-gem project. Declare it per project:
+
+```json
+"testCoverageAudit": { "excludePaths": ["lib/ruby_spriter.rb"] }
+```
+
+Its other support files need no override — `**/version.rb`, `spec/spec_helper.rb`, `spec/rails_helper.rb` sit in the bundled `ruby` entry's own `excludePatterns` (#294's per-language mechanism). Measured on `ruby-spriter` beforehand: 25 sources, 4 reported missing, three of them conventions artifacts — 0.84 reported against roughly 0.95 real.
 ## Test Classes
 A language entry may declare `classes`, naming the kinds of test it recognises and how each pairs. Stem matching is correct for unit tests and wrong for everything else: an end-to-end spec is named for the journey it walks, so no source shares its stem, and it is reported as an orphan while the source it exercises is reported as untested.
 | Class | `pairing` | How it pairs |
 |---|---|---|
 | `module` | `stem` | Filename-stem matching against the language's `testPatterns` — today's behaviour, unchanged. |
 | `flow` | `annotation` | The spec declares what it covers in a leading-comment tag. Filename is irrelevant; `locations` globs say where such specs live, but never pair one on their own. |
-| `contract` | `declared-subject` | The test names its subject, or matches one of the class's `exempt` globs. |
+| `contract` | `declared-subject` | The test names its subject with `@subject` in its leading comment block, or matches one of the class's `exempt` globs. |
 ```json
 "classes": {
   "module": { "pairing": "stem" },
@@ -171,7 +182,15 @@ A language entry may declare `classes`, naming the kinds of test it recognises a
   "contract": { "pairing": "declared-subject", "exempt": ["**/fixtures/**"] }
 }
 ```
-**`classes` is optional, and its absence is not a gap.** A language declaring no `classes` block resolves to module-only behaviour — exactly what every entry did before the key existed — so no existing entry changes verdict. Bundled `python`, `go`, `rust` and `java` declare none.
+**`classes` stays optional in the schema, but every bundled language now answers the question (#326).** A language declaring no `classes` block resolves to module-only behaviour — exactly what every entry did before the key existed — so the key is additive, and a project adding its own language via `additionalLanguages` may omit it.
+
+**For a bundled entry, silence is not an acceptable answer: it is indistinguishable from a real verdict.** `classifyTestFile` reads `def.classes || {}` and falls through to `module`, so a classless language reports `flow: 0` whether it has no flows or was never asked. Measured on `gh-pmu`: 75 Go tests, a real e2e suite in `test/e2e/` matching the flow globs, all classified `module` — while identical paths with a TypeScript extension classified `flow`. The discriminator was not the path, which is what `flow.locations` exists to express, but whether the language carried the key.
+
+Each bundled entry declares `classes`, or carries a `_note` saying why not. Where an ecosystem has no convention separating end-to-end from ordinary integration tests, the entry declares `flow.locations: []` **with a `_note` naming what is undecided** — an explicit *none identified*, not an omission. `rust` is the case: its integration-test directory is also its stem-pairing location, so declaring it would unpair every test written against a source.
+
+**A flow location must be a directory reserved for end-to-end tests, never a naming convention inside the shared test tree.** Java's `*IT.java`, C#'s `*.IntegrationTests/` and Elixir's `*_integration_test.exs` are all rejected on that rule: each is also a stem-pairing location, so declaring it reclassifies a test and reports its source untested. Each entry records the rejection in a `_note`.
+
+Every `contract` declares `pairing: "declared-subject"`. The grammar and reader implementing it are #329; until they land it is a true claim not yet implemented, not a retired one.
 `pairing` is constrained by a JSON Schema `pattern` rather than an `enum` deliberately: the bundled validator in `scripts/test-coverage-audit.js` implements `pattern` and not `enum`, so an `enum` here would be decorative and admit any string.
 ## Flow Annotation Grammar
 The top-level `flowAnnotation` key defines the tags a flow spec uses to declare what it covers. Top-level rather than per-language because the tags are identical everywhere; only the comment syntax around them differs.
@@ -197,6 +216,48 @@ The audit reads the tags defined by **Flow Annotation Grammar** out of each spec
 **An undeclared flow spec is not a module orphan**, and is deliberately kept out of that bucket: an orphan means "this source has no test", an undeclared spec means "this test does not say what it covers". Different problems, different fixes, reported separately.
 **A malformed tag is reported, never thrown.** The audit completes and names the file and offending text; well-formed tags beside it still read. Follows the exit contract — non-zero exit is reserved for schema and usage errors, never findings. An unrecognised `@tag` is not malformed; it is prose the reader ignores.
 **Pairing here is filename-independent.** Renaming an annotated spec to match a source stem changes nothing: it remains a flow spec and adds nothing to `classes.module`. That is the property the flow class exists to provide — existing end-to-end suites pair without renaming a single file.
+## Contract Annotation Grammar
+
+The top-level `contractAnnotation` key defines the tag a contract test uses to declare what it asserts against. Top-level for the same reason as `flowAnnotation`: the tag is identical everywhere, only the comment syntax differs.
+
+| Tag | Value | Repeatable |
+|---|---|---|
+| `@subject` | `path-or-name` | yes |
+
+`readFrom` is `leading-comment-block`: only the leading comment block is read, and that boundary is part of the grammar — a `@subject` later in the file is prose (a fixture value, a comment inside a test case) and reading further would silently classify the file.
+
+`@subject` names what the test asserts against **when that subject is not a source file the test stem pairs with** — a schema, a metadata registry, a generated artifact, a document. Repeatable: a contract test commonly asserts against several. **Bundled-only**, deliberately: a declaration that classified in one repository and read as prose in the next would be worse than none.
+
+## Contract Annotation Reader
+
+The audit reads `@subject` from the leading comment block of every test file in a language declaring `classes.contract`; a test that declares one **is** a contract test.
+
+```js
+/**
+ * @subject .claude/metadata/review-criteria.json
+ * @subject .claude/metadata/review-mode-criteria.json
+ */
+```
+
+**This differs from the flow reader in what the declaration decides.** For `flow`, location decides the class and the annotation is read afterwards over a small subset. For `contract`, the declaration is what makes a test a contract test, so the class is contingent on file contents and every module-classified test in such a language is read. The scanner stops at the first non-comment line, so the parse is cheap.
+
+| Case | Result |
+|---|---|
+| In a `classes.flow` location **and** declares a subject | **flow** — order unchanged, locations still narrow first |
+| Declares a subject **and** stem-pairs with a source | **contract** for the test; its stem-mate source **stays paired** under `module` |
+
+Classification and pairing are separate passes, so a declared test is counted under `contract` while its source stays paired — the declaration does not pull the source out of the module ratio. Releasing it would need a declaration-aware exclusion inside the pairing check, a file read per candidate, for a case where the test usually does exercise its stem-mate. Decided against; the reported declaration keeps the double count visible.
+
+| Outcome | Where it appears |
+|---|---|
+| At least one `@subject` | `classes.contract.byTag`, with `{ file, subjects[] }` in `declarations` |
+| Matches an `exempt` glob, no tag | `classes.contract.byExempt` |
+| Either | `classes.contract.declared` — the **total**, which is what that field always meant |
+| A path-shaped `@subject` naming something absent | `classes.contract.missingSubjects` as `{ file, subject }` |
+| `@subject` with no value | `diagnostics.malformedAnnotations` as `{ file, text }` |
+
+**A subject is checked against the tree only when it looks like a path** — contains a separator, or ends in an extension — resolved from the project root. Anything else is a name and is never checked. That asymmetry is worth exploiting: `@covers` values are issue references and inherently unverifiable, but a path-shaped `@subject` can be checked, so a rotted declaration is detectable in a way a flow declaration never is. Advisory, never fatal.
+
 ## Adding a Language
 Add an entry under `languages` in `resources/test-coverage-conventions.json`:
 ```json

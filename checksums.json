@@ -1,9 +1,14 @@
 {
   "manifestVersion": "1.0.0",
-  "frameworkVersion": "0.20.1",
-  "generatedAt": "2026-09-12T17:37:20.549Z",
-  "fileCount": 18,
+  "frameworkVersion": "0.21.0",
+  "generatedAt": "2026-09-13T01:57:20.773Z",
+  "fileCount": 19,
   "files": [
+    {
+      "relativePath": "Skills/electron-error-capture/lib/capture-core.js",
+      "sha256": "e8265c8522f2b530cf7a4134c5d1b2ad9be07925344d49aa0f4533cde8055fe7",
+      "sizeBytes": 9629
+    },
     {
       "relativePath": "Skills/engage-exocortex/scripts/load-entries.js",
       "sha256": "b273e439a20698016aee44bf0f94818ed3fd55ccb6238be52c88a30c9ccd34db",
@@ -91,8 +96,8 @@
     },
     {
       "relativePath": "Skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js",
-      "sha256": "ec222cc36d93d7cf9a6f82ab8264bd45dd5ae983a32cbb60bc080aabdaf1fe5b",
-      "sizeBytes": 39018
+      "sha256": "8fe708ae7d9ffc10748ccdbbe76fa120e0c7d99af65ff8b38e33c3fe837c9141",
+      "sizeBytes": 46316
     }
   ]
 }

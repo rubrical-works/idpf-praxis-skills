@@ -4,9 +4,9 @@ description: Patterns and solutions for Electron app development with Vite, Play
 type: reference
 disable-model-invocation: true
 defaultSkill: false
-version: "1.1.0"
+version: "1.1.1"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-09-10"
+lastUpdated: "2026-09-12"
 license: Complete terms in LICENSE.txt
 category: platform
 relevantTechStack: [electron, vite, playwright, typescript, windows]
@@ -44,6 +44,9 @@ copyright: "Rubrical Works (c) 2026"
 | GitHub update checking | Electron net module | [github-api-update-checking.md](resources/github-api-update-checking.md) |
 | Download with progress | IPC events pattern | [download-extraction-progress.md](resources/download-extraction-progress.md) |
 | Linux .deb build from Windows | Docker + MSYS_NO_PATHCONV | [cross-platform-deb-build.md](resources/cross-platform-deb-build.md) |
+| Errors scroll past in DevTools | Record them in a headed capture session | `electron-error-capture` skill |
+
+**Related skill — `electron-error-capture`.** The `_electron.launch` snippets below are for *scripted* E2E. To drive the app by hand and keep every error that arrives — page errors, console errors, renderer crashes, main-process stderr — with screenshots and a report, use that skill rather than rebuilding it here.
 ## Setup & Build
 ### Vite Renderer Configuration
 When using Electron Forge with Vite and setting `root` to a subdirectory in `vite.renderer.config.ts`, explicitly set `build.outDir` to an absolute path.

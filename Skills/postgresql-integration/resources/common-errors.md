@@ -1,5 +1,5 @@
 # PostgreSQL Common Errors
-**Version:** v0.20.1
+**Version:** v0.21.0
 ## Connection Errors
 ### ECONNREFUSED
 ```

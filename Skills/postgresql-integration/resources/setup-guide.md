@@ -1,5 +1,5 @@
 # PostgreSQL Setup Guide
-**Version:** v0.20.1
+**Version:** v0.21.0
 ## Environment Setup
 ### 1. Install PostgreSQL Client Library
 **Python:**

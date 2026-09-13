@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-12T17:37:20.432Z",
+  "generatedAt": "2020-01-01T00:00:00.000Z",
   "version": "1.0.0",
   "description": "Keyword-to-skill mappings for automatic skill suggestions in /create-backlog and /add-story",
   "defaultSkills": [
@@ -97,6 +97,16 @@
       "electron-development",
       "electron",
       "development"
+    ],
+    "electron-error-capture": [
+      "error capture",
+      "capture session",
+      "pageerror",
+      "debug session",
+      "renderer crash",
+      "unhandled rejection",
+      "csp violation",
+      "ipc failure"
     ],
     "engage-apothecary": [
       "engage-apothecary",
@@ -320,6 +330,7 @@
     "drawio-generation": "documentation",
     "electron-cross-build": "platform",
     "electron-development": "platform",
+    "electron-error-capture": "testing",
     "engage-apothecary": "clinical-education",
     "engage-chorus": "analysis",
     "engage-codex": "narrative",
