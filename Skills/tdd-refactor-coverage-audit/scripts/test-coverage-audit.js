@@ -895,16 +895,26 @@ function audit(args) {
   const flowDeclarations = [];
   const flowUndeclaredSpecs = [];
   const malformedAnnotations = [];
+  const skippedTestFiles = [];
 
   for (const file of newFiles) {
-    if (matchAny(file, merged.ignoredSourcePatterns)) continue;
     // The project's own "not expected to have tests" list (#309): golden files,
-    // fixture trees, generated sources, scratch directories. Applied here, beside
-    // ignoredSourcePatterns and before language detection, so a matching path is
-    // neither counted as a source nor reported as unpaired. Deliberately NOT a
-    // per-language switch: every non-matching source in the same language still
-    // pairs, and still reports as unpaired when it has no test.
-    if (matchAny(file, merged.excludePaths)) continue;
+    // fixture trees, generated sources, scratch directories. Applied before
+    // language detection, so a matching path is neither counted as a source nor
+    // reported as unpaired. Deliberately NOT a per-language switch: every
+    // non-matching source in the same language still pairs, and still reports
+    // as unpaired when it has no test.
+    //
+    // It is also the ONE rule that skips a test file (#335). A test-shaped file
+    // it skips is named in diagnostics, so a 0 class count cannot silently mean
+    // "never looked". The shape check passes no contract reader: it decides only
+    // whether the file is a test, and must not read a file that is being skipped.
+    if (matchAny(file, merged.excludePaths)) {
+      if (classifyTestFile(file, merged.languages)) {
+        skippedTestFiles.push({ file, rule: 'excludePaths' });
+      }
+      continue;
+    }
     // Classify test files before source detection (#310) — see classifyTestFile
     // for why this cannot live in the looksLikeTest branch below.
     const testClass = classifyTestFile(file, merged.languages, {
@@ -944,6 +954,11 @@ function audit(args) {
       }
       continue;
     }
+    // A SOURCE list (#335): structurally untestable files. Checked after
+    // classification, so it can drop a file from the source set but never stop
+    // a test file being classified — tests/** here once zeroed every contract
+    // count in a consumer while its declarations were valid.
+    if (matchAny(file, merged.ignoredSourcePatterns)) continue;
     const lang = detectLanguage(file, merged.languages);
     if (!lang) {
       // Only a genuinely unclaimed extension is a gap. An excludePatterns
@@ -1081,7 +1096,10 @@ function audit(args) {
       unreachableLanguageEntries: findUnreachableLanguages(merged.languages),
       // A malformed annotation is reported, never thrown (#311): the audit
       // completes and names the file and the offending text. Always present.
-      malformedAnnotations
+      malformedAnnotations,
+      // Test files skipped before classification, each with the rule that
+      // skipped it (#335). Always present; [] when none.
+      skippedTestFiles
     }
   };
 }

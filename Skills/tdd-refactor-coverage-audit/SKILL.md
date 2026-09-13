@@ -3,9 +3,9 @@ name: tdd-refactor-coverage-audit
 description: Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, GDScript, C#) with optional project overrides. Advisory only — never blocks the TDD gate.
 type: reference
 disable-model-invocation: true
-version: "1.5.1"
+version: "1.6.0"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-09-12"
+lastUpdated: "2026-09-13"
 license: Complete terms in LICENSE.txt
 category: testing
 relevantTechStack: [tdd, testing]
@@ -26,10 +26,12 @@ Both preserve the **advisory-output contract**. Structural fields (`newSources`,
 2. **Yes (primary):** invoke per "Invocation". Done.
 3. **No (fallback):** surface the Pattern 4 diagnostic — *"This audit pairs newly added source files with their expected test files using language conventions. The Node script is the primary path; without Node, Claude can perform the same pairing inline by reading the convention JSON + running `git diff` via the Bash tool. The result is structurally equivalent and remains advisory. Or install Node 18+ for the deterministic primary path."* Then run the **Fallback Procedure**.
 ### Fallback Procedure
-1. **Read the convention JSON:** `Skills/tdd-refactor-coverage-audit/resources/test-coverage-conventions.json`. Defines `languages` (→ `sourceExtensions[]`, `testPatterns[]`, optional `excludePatterns`, `inlineTests`), `ignoredSourcePatterns[]`, `minTestCoverageRatio` (default 0).
-2. **Read the project override:** `framework-config.json` at project root. If a `testCoverageAudit` block exists, merge over the bundled convention — `additionalLanguages` added to `languages`, `ignoredSourcePatterns` unioned, `minTestCoverageRatio` overridden when present.
+1. **Read the convention JSON:** `Skills/tdd-refactor-coverage-audit/resources/test-coverage-conventions.json`. Defines `languages` (→ `sourceExtensions[]`, `testPatterns[]`, optional `excludePatterns`, `inlineTests`), `excludePaths[]`, `ignoredSourcePatterns[]`, `minTestCoverageRatio` (default 0).
+2. **Read the project override:** `framework-config.json` at project root. If a `testCoverageAudit` block exists, merge over the bundled convention — `additionalLanguages` added to `languages`, `ignoredSourcePatterns` unioned, `excludePaths` is concatenated, `minTestCoverageRatio` overridden when present.
 3. **Enumerate added files:** `git diff --name-status --diff-filter=A <since-commit>..HEAD` via Bash. Leading `A\t` marks added files.
 4. **For each added file:**
+   - Skip if it matches any `excludePaths` glob. If the skipped file is **test-shaped** (matches some language's test-shape globs — `testPatterns` with `{dir}` and `{stem}` opened), append `{ file, rule: "excludePaths" }` to `skippedTestFiles[]`. The only rule that skips a test file.
+   - If test-shaped, it is a test: classify it (4b, 4c) and go to the next file. `ignoredSourcePatterns` does not apply to it.
    - Skip if it matches any `ignoredSourcePatterns` glob.
    - Detect language by extension against `sourceExtensions`. Skip if no match.
    - Skip if it matches the language's `excludePatterns`.
@@ -39,7 +41,7 @@ Both preserve the **advisory-output contract**. Structural fields (`newSources`,
    - If nothing pairs, choose between two findings. Search the project for any file matching the language's test-shape globs — `testPatterns` with `{dir}` replaced by any directory and `{stem}` by any filename. None anywhere → the layout is not expressible by these conventions: append to `undetermined[]` with file, language, and the candidates `checked`. Otherwise the convention is in use and this source simply lacks a test: append to `missingTests[]` with file, language, and the `expected` patterns. Search once per language, not once per file.
 4b. **Read flow declarations.** For each test file in a `classes.flow` location, read its **leading comment block only** and collect the grammar's tags — `@covers <issue-or-ac-ref>` (repeatable) and `@flow <name>`. A spec with at least one tag is declared and pairs to what it names; one with none is undeclared and is reported by path with a hint; a recognised tag carrying no value is malformed and is reported without halting.
 4c. **Read contract declarations.** For each test file in a language declaring `classes.contract`, read the same leading comment block and collect `@subject <path-or-name>` (repeatable). A test with at least one `@subject` is a contract test — this decides the class, unlike the flow tags, which only pair a spec whose location already decided it. Flow wins where both apply. A `@subject` containing a separator or ending in an extension is resolved against the project root and listed under `missingSubjects` when absent; any other value is a name and is never checked.
-5. **Emit output:** `newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `classes` (`module` with `sources`/`paired`/`unpaired` and `coverage` only when `sources` is above 0; `flow` with `declared`/`undeclared`; `contract` with `declared` — the total — plus `byTag`, `byExempt`, `declarations: [{ file, subjects[] }]` and `missingSubjects: [{ file, subject }]`) — classify each test file **before** source detection, since a language's `excludePatterns` reject its own test shapes, and treat a spec in a `classes.flow` location as a flow spec pairing nothing by stem — `diagnostics.unrecognizedExtensions` (extension → count for files no language entry claimed, `"(none)"` for extensionless, `{}` when none), `coverage` (`pairedSources / (pairedSources + missingTests.length)`, or `1.0` when that denominator is `0` — undetermined excluded), `minTestCoverageRatio`. JSON or prose; advisory only — do not halt the workflow.
+5. **Emit output:** `newSources`, `pairedSources`, `missingTests[]`, `undetermined[]`, `undeterminedCount`, `classes` (`module` with `sources`/`paired`/`unpaired` and `coverage` only when `sources` is above 0; `flow` with `declared`/`undeclared`; `contract` with `declared` — the total — plus `byTag`, `byExempt`, `declarations: [{ file, subjects[] }]` and `missingSubjects: [{ file, subject }]`) — classify each test file **before** source detection, since a language's `excludePatterns` reject its own test shapes, and treat a spec in a `classes.flow` location as a flow spec pairing nothing by stem — `diagnostics.unrecognizedExtensions` (extension → count for files no language entry claimed, `"(none)"` for extensionless, `{}` when none), `diagnostics.skippedTestFiles` (`[{ file, rule }]` for test files skipped before classification, `[]` when none), `coverage` (`pairedSources / (pairedSources + missingTests.length)`, or `1.0` when that denominator is `0` — undetermined excluded), `minTestCoverageRatio`. JSON or prose; advisory only — do not halt the workflow.
 ## When to Use
 - REFACTOR phase of a TDD cycle, after the GREEN gate
 - A deterministic check for "did this cycle add source files without tests?"
@@ -116,6 +118,7 @@ node .claude/skills/tdd-refactor-coverage-audit/scripts/test-coverage-audit.js \
 | `diagnostics` | Container for what the audit could **not** account for. Always present. |
 | `diagnostics.unrecognizedExtensions` | Extension → count for changed files whose extension matched no language entry. Extensionless files count under `"(none)"`. Always present; `{}` when all recognized. |
 | `diagnostics.unreachableLanguageEntries` | `{ name, shadowedBy }` per language entry no file can reach, every extension being claimed ahead of it. Always present; `[]` when none. See **Which entry claims a file**. |
+| `diagnostics.skippedTestFiles` | `{ file, rule }` per test file skipped before classification. `rule` is always `excludePaths`, the one rule that skips a test file; skipped sources are not listed. Always present; `[]` when none. See **Skip lists and test classification**. |
 | `classes` | The three test classes, each with its **own** denominator. Always present. |
 | `classes.module` | `sources` / `paired` / `unpaired` for stem-paired tests; same numbers as the legacy top-level fields. **`coverage` appears only when `module.sources` is above 0** — a language with no module sources has nothing to divide, so no division is performed rather than reporting a misleading `0%`. |
 | `classes.flow` | `declared` / `undeclared` for specs in a `classes.flow` location. |
@@ -130,7 +133,7 @@ Never exits non-zero for missing tests. Exit `2` is reserved for schema validati
 1. Loads the conventions JSON and validates it against the bundled schema.
 2. Resolves project root (`git rev-parse --show-toplevel`); optionally reads `framework-config.json` → `testCoverageAudit`, which is schema-validated and merged over the bundled conventions.
 3. Runs `git diff --name-status --diff-filter=A <sha>..HEAD`.
-4. Per new file: skips `ignoredSourcePatterns`; detects language by extension and skips `excludePatterns`; skips any file **itself a test** (matched by substituting `{stem}` with `*` and glob-matching — deliberately separate from `expandTestPatterns`, which the pairing path shares); substitutes `{stem}`/`{dir}` into `testPatterns` and checks for an existing file; for `inlineTests: true` (Rust) checks for an inline `#[cfg(test)]` block. When nothing pairs, reports **undetermined** rather than missing if the project contains no file anywhere matching that language's test-shape globs — scanned once per language, not once per file.
+4. Per new file: skips `excludePaths` (a skipped test-shaped file is listed in `diagnostics.skippedTestFiles`); classifies test files (module / flow / contract) before any source handling — see **Test Classes**; skips `ignoredSourcePatterns`, a source list applied after classification; detects language by extension and skips `excludePatterns`; skips any file **itself a test** (matched by substituting `{stem}` with `*` and glob-matching — deliberately separate from `expandTestPatterns`, which the pairing path shares); substitutes `{stem}`/`{dir}` into `testPatterns` and checks for an existing file; for `inlineTests: true` (Rust) checks for an inline `#[cfg(test)]` block. When nothing pairs, reports **undetermined** rather than missing if the project contains no file anywhere matching that language's test-shape globs — scanned once per language, not once per file.
 5. Emits the JSON above; the caller (e.g. `tdd-process`) surfaces warnings.
 ## Pattern Substitution
 | Token | Meaning | Example for `src/lib/foo.ts` |
@@ -158,6 +161,14 @@ Coarser by design: one test file marks every source in its package paired. Delib
 | `excludePatterns` (per language) | this file is not a source **of that language** — a `.d.ts`, a generated `.pb.go`, a test file |
 | `ignoredSourcePatterns` (top-level) | this file is structurally untestable anywhere — a barrel `index.ts`, a migration |
 A project adds its own list through the override block; it is **concatenated** with the bundled list, not replaced, so declaring one never silently drops the shipped entries.
+### Skip lists and test classification
+Both lists govern **sources**; they meet test files differently, deliberately (#335):
+| List | Effect on a test file |
+|---|---|
+| `ignoredSourcePatterns` | None. It never stops a test file being classified: a test under `tests/**` or `**/dist/**` is still tallied as flow or contract, its `@covers` / `@flow` / `@subject` tags still read. |
+| `excludePaths` | Skips it. The only rule that skips a test file; each is listed in `diagnostics.skippedTestFiles`. |
+**Why the order matters.** Both lists used to run ahead of classification, so a test under either was never classified and its class counts read `0` — indistinguishable from no flow or contract tests. Measured in a consumer with `tests/**` in `ignoredSourcePatterns`: `contract.byTag` `0` against 153 valid `@subject` declarations.
+**Vendored and built tests are classified by default.** `**/vendor/**`, `**/node_modules/**`, `**/dist/**`, `**/build/**` ship in `ignoredSourcePatterns`: their sources are skipped, their test files classified. Only newly added files are audited and third-party tests rarely sit in a flow location or carry `@subject`, so the effect is usually nil. To skip them, add the paths to `excludePaths`, where every skipped test is reported.
 
 ### Worked case: a Ruby gem entry file (#326)
 
@@ -291,7 +302,7 @@ Optional `testCoverageAudit` block in `framework-config.json`:
 | `additionalLanguages` | Merged into bundled `languages`. Same key overrides, **replacing wholesale** — every pattern you still want must be restated. |
 | `additionalLanguages` — extension collision | A project entry is consulted **before** any bundled entry claiming the same extension (#301). A new key declaring `.js` takes effect without touching bundled `javascript`, which keeps its other extensions. |
 | `ignoredSourcePatterns` | Concatenated with bundled patterns. |
-| `excludePaths` | Concatenated with bundled patterns. Paths not expected to have tests; a match is neither counted as a source nor reported as unpaired. See **Excluding Paths**. |
+| `excludePaths` | Concatenated with bundled patterns. Paths not expected to have tests; a match is neither counted as a source nor reported as unpaired, and a matching test file is skipped and listed in `diagnostics.skippedTestFiles`. See **Excluding Paths**. |
 | `minTestCoverageRatio` | Reported for downstream callers; not enforced here. |
 ### Worked example: sources under a dot-directory
 The `myDsl` case is easy — a new extension, test root derived from the source's directory. The awkward case is a **dot-directory** source root with a test root that does **not** mirror the source path (`.claude/project-scripts/` → `tests/project-scripts/`):

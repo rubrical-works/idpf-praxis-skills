@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.21.1] - 2026-09-13
+
+`tdd-refactor-coverage-audit` 1.6.0 counts flow and contract tests wherever they live. A test file under a path listed in `ignoredSourcePatterns` is now classified like any other, so projects that kept their test directories in that list see their real flow and contract counts. `excludePaths` is the one list that skips a test file, and every file it skips is now named in a new `diagnostics.skippedTestFiles` field, so a zero count always means none were found. Re-import the skill to pick it up.
+
+**Upgrade notes:**
+- **The skill version moved 1.5.1 → 1.6.0, so re-import to pick this up.** `/fw-import-skills` replaces imported skills wholesale; a project still on 1.5.1 keeps the old behaviour.
+- **Flow and contract counts can rise with no config change.** Any test file under an `ignoredSourcePatterns` entry — your own override or a bundled one such as `**/dist/**` or `**/vendor/**` — is now tallied. Module coverage, `newSources`, `pairedSources` and `missingTests[]` are unchanged.
+- **To keep a test tree out of the classes, move it to `excludePaths`.** That is now the documented rule for skipping a test file, and each skip is reported rather than silent.
+- **`diagnostics.skippedTestFiles` is additive** — always present, `[]` when nothing was skipped. Consumers reading the existing fields need change nothing.
+
+### Fixed
+- **Test files under a source skip list were never classified (#335).** Both skip lists ran ahead of test classification, so flow and contract declarations under an ignored or excluded path were never read and their counts read `0`. `ignoredSourcePatterns` now applies only to sources; `excludePaths` skips a test file and reports it. The trade-offs between this rule and the alternatives considered are recorded in `Construction/Design-Decisions/2026-09-13-exclude-paths-is-the-one-test-skip-rule.md`.
+
+### Changed
+- **`tdd-refactor-coverage-audit` 1.5.1 → 1.6.0.** Minor rather than patch because the output gains a field and SKILL.md gains a section, per the versioning policy in `Skills/MAINTENANCE.md`. The fallback procedure documents the same order and field, so the no-Node path stays in parity with the script.
+
 ## [0.21.0] - 2026-09-12
 
 A new `electron-error-capture` skill records what happens while you drive an Electron app by hand — page errors, console errors and warnings, renderer crashes and main-process stderr — and writes a timestamped markdown and JSON report with screenshots you can paste straight into a bug. `tdd-refactor-coverage-audit` extends the three-class coverage model from TypeScript and JavaScript to every bundled language, and contract pairing stops being a declaration with no implementation: a contract test can now name the subject it covers in a leading-comment tag instead of depending on its filename. Skill packages are built deterministically from this release on, so regenerating metadata no longer churns checksums for content that did not change. The published skill surface is linted under a consumer-representative ruleset for the first time.

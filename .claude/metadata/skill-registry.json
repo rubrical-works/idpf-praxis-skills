@@ -982,10 +982,10 @@
       "name": "tdd-refactor-coverage-audit",
       "description": "Audit newly added source files for paired tests during the TDD refactor phase. JSON-driven language conventions (TypeScript, JavaScript, Svelte, Vue, Python, Go, Rust, Ruby, Elixir, Java, Dart, GDScript, C#) with optional project overrides. Advisory only — never blocks the TDD gate.",
       "triggers": [],
-      "version": "1.5.1",
+      "version": "1.6.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-09-12",
-      "checksum": "37d1e30359c192f2d99160b4fcbe2844eb9bae06f7432d593a011c1924463dfc",
+      "lastUpdated": "2026-09-13",
+      "checksum": "a55e7d7a7780ea28436efb97cb16937fd0a677bd329e316047241308174ba413",
       "category": "testing",
       "categoryLabel": "Testing",
       "relevantTechStack": [
