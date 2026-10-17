@@ -230,6 +230,12 @@
       "category": "platform",
       "path": "Skills/railway-project-setup"
     },
+    "react-native-android-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "devops",
+      "path": "Skills/react-native-android-setup"
+    },
     "render-project-setup": {
       "version": "2.0.0",
       "type": "invokable",
@@ -243,7 +249,7 @@
       "path": "Skills/resilience-patterns"
     },
     "responsibility-gate": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "type": "reference",
       "category": "devops",
       "path": "Skills/responsibility-gate"

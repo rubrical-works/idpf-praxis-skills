@@ -3,7 +3,7 @@
 [![Skill CI](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml)
 [![CodeQL](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml)
 [![Latest Release](https://img.shields.io/github/v/release/rubrical-works/idpf-praxis-skills)](https://github.com/rubrical-works/idpf-praxis-skills/releases/latest)
-[![Skills](https://img.shields.io/badge/skills-54-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
+[![Skills](https://img.shields.io/badge/skills-55-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 Ready-to-use skills for [Claude Code](https://claude.ai/code). Browse skill documentation below, then install what you need.
@@ -51,7 +51,7 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [anti-pattern-analysis](Skills/anti-pattern-analysis/) | Code Quality | Anti-pattern detection checklist |
 | [error-handling-patterns](Skills/error-handling-patterns/) | Development | Error handling hierarchy and API error responses |
 
-### Invokable Skills (25)
+### Invokable Skills (26)
 
 Interactive guided workflows. Install and use as slash commands.
 
@@ -76,6 +76,7 @@ Interactive guided workflows. Install and use as slash commands.
 | [playwright-explorer](Skills/playwright-explorer/) | Testing | Interactive browser exploration using Playwright with natural-language interaction |
 | [playwright-setup](Skills/playwright-setup/) | Testing | Playwright installation verification and troubleshooting |
 | [postgresql-integration](Skills/postgresql-integration/) | Database | PostgreSQL setup, connection configuration, query patterns |
+| [react-native-android-setup](Skills/react-native-android-setup/) | DevOps | Guided host toolchain setup for React Native + Android + Maestro (JDK 17, Android SDK/emulators, env vars, OS settings) with per-step consent, a responsibility gate, and a reboot-surviving admin phase |
 | [railway-project-setup](Skills/railway-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Railway |
 | [render-project-setup](Skills/render-project-setup/) | Platforms & Frameworks | Automated preview/staging/production deployments with Render |
 | [sinatra-setup](Skills/sinatra-setup/) | Platforms & Frameworks | Ruby Sinatra development environment scaffolding for beginners |

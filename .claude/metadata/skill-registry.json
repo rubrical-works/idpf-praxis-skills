@@ -1,7 +1,7 @@
 {
   "generatedAt": "2020-01-01T00:00:00.000Z",
-  "version": "0.1.0",
-  "skillCount": 54,
+  "version": "0.22.0",
+  "skillCount": 55,
   "skills": [
     {
       "name": "anti-pattern-analysis",
@@ -770,6 +770,39 @@
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
+      "name": "react-native-android-setup",
+      "description": "Check and set up the host toolchain a React Native + Android + Maestro project needs (JDK 17, Android SDK and emulators, Maestro, user environment variables, tool folders, OS settings), with a tool root the user chooses, per-step consent, and a separate admin phase that survives a reboot. Use when preparing a machine for React Native Android work, or when a build or Maestro run fails with a JDK, SDK, emulator, port or temp-folder symptom.",
+      "triggers": [
+        "react native android setup",
+        "android sdk setup",
+        "android emulator setup",
+        "jdk 17 toolchain",
+        "maestro setup",
+        "maestro temp folder",
+        "avd relocation",
+        "metro port 8081",
+        "gradlew.bat not found",
+        "host environment profile"
+      ],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.80.0",
+      "lastUpdated": "2026-10-17",
+      "checksum": "2912048cf518e0e8dcfc9b0e8ee4bcfaa0538e969fa826f00aca5fe2bad76adf",
+      "category": "devops",
+      "categoryLabel": "DevOps",
+      "relevantTechStack": [
+        "react-native",
+        "android",
+        "android-sdk",
+        "android-emulator",
+        "maestro",
+        "jdk",
+        "gradle",
+        "windows"
+      ],
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
       "name": "render-project-setup",
       "description": "Configure automated preview, staging, and production deployments with Render",
       "triggers": [],
@@ -814,10 +847,10 @@
       "name": "responsibility-gate",
       "description": "Shared specification for the per-invocation responsibility-acknowledgement gate that every install-capable or modify-capable skill must present before executing any install, modify, or uninstall path. Defines when the gate fires, what it asks, decline behavior, and the per-invocation (never persisted) requirement.",
       "triggers": [],
-      "version": "1.0.0",
+      "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-05-17",
-      "checksum": "dbaa98f203dfa8b7434a73e6910eb58a9bfc004476bf6731a3e664136a979f94",
+      "lastUpdated": "2026-10-17",
+      "checksum": "4537d656cf537e51434180a44e71bc4f5f99a82324464b84d52a28d01aa2147f",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [

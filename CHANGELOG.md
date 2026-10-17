@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.0] - 2026-10-17
+
+A new `react-native-android-setup` skill checks and sets up the host toolchain a React Native + Android + Maestro project needs: JDK 17, the Android SDK and emulators, Maestro, user environment variables and the OS settings that commonly break builds. It asks before every step, installs under a tool root you choose, and runs administrator changes as a separate phase that survives a reboot. `responsibility-gate` now lists it among the skills that must implement the gate. The rest of this release keeps the repository's own release tooling and dependencies healthy.
+
+**Upgrade notes:**
+- **`react-native-android-setup` is new at 1.0.0** and is not installed anywhere until you import it. It is `category: devops`, `type: invokable`, and implements the responsibility gate, so declining at the gate exits with no system changes.
+- **`responsibility-gate` moved 1.0.0 → 1.0.1 for its catalogue only.** It gained the new skill in its list of install-capable skills; the gate itself is unchanged.
+
+### Added
+- **A new `react-native-android-setup` skill (#343).** Detects what is already present before offering anything, applies each missing item only with per-step consent, and keeps admin-only changes (networking, hypervisor settings) in their own phase that resumes after a reboot. A user-phase item that depends on an admin item still pending is deferred rather than failed, and is applied once its dependency checks present.
+
+### Changed
+- **`/prepare-release` sets `package.json`'s version to the release (#347).** `package.json` had read `0.1.0` since the repository was created, so anything detecting the version from it — `/bug` among them — offered a number that never meant anything here. The bump lives in the `pre-commit` extension block so it survives hub upgrades.
+
+### Fixed
+- **`npm audit` failed on `brace-expansion` and `braces` DoS advisories (#346).** Cleared by moving to Jest 30, a patched `brace-expansion`, and a `js-yaml` override for the copy Jest still pulls in. Development dependencies only; nothing shipped in a skill changes.
+- **`ci-gate-exit-contract` asserted a count of repo-owned `wait-for-ci` sites (#345).** A hub upgrade left two where the test expected three. The test now names the sites it requires, so a hub-side change to the count no longer fails it.
+- **A hub upgrade reverted two local fixes (#339).** Hub v0.103.0 untracked the release-notes script that `deploy-dist.yml` runs, and unscoped the `/prepare-beta` CI wait. Both are restored, so release bodies are populated from the changelog again and the beta gate waits on its own branch.
+
+### Repository
+- **Hub upgraded from v0.103.0 to v0.107.1**, and the charter refreshed with declared `testing.suites[]` and `px-manager` registered as a companion repository.
+
 ## [0.21.1] - 2026-09-13
 
 `tdd-refactor-coverage-audit` 1.6.0 counts flow and contract tests wherever they live. A test file under a path listed in `ignoredSourcePatterns` is now classified like any other, so projects that kept their test directories in that list see their real flow and contract counts. `excludePaths` is the one list that skips a test file, and every file it skips is now named in a new `diagnostics.skippedTestFiles` field, so a zero count always means none were found. Re-import the skill to pick it up.

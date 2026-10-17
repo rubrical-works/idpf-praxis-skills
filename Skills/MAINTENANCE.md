@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.21.1
+**Version:** v0.22.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -52,9 +52,10 @@
 | privacy-compliance | 1.0.0 | 2026-03-17 | Active |
 | property-based-testing | 1.0.0 | 2026-03-17 | Active |
 | railway-project-setup | 2.0.0 | 2026-04-25 | Active |
+| react-native-android-setup | 1.0.0 | 2026-10-17 | Active |
 | render-project-setup | 2.0.0 | 2026-04-25 | Active |
 | resilience-patterns | 1.0.0 | 2026-04-01 | Active |
-| responsibility-gate | 1.0.0 | 2026-05-17 | Active |
+| responsibility-gate | 1.0.1 | 2026-10-17 | Active |
 | seo-optimization | 1.0.0 | 2026-04-01 | Active |
 | sinatra-setup | 2.0.0 | 2026-04-25 | Active |
 | spar-exocortex | 1.0.1 | 2026-05-18 | Active |

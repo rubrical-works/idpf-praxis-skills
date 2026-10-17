@@ -3,9 +3,9 @@ name: responsibility-gate
 description: Shared specification for the per-invocation responsibility-acknowledgement gate that every install-capable or modify-capable skill must present before executing any install, modify, or uninstall path. Defines when the gate fires, what it asks, decline behavior, and the per-invocation (never persisted) requirement.
 type: reference
 disable-model-invocation: true
-version: "1.0.0"
+version: "1.0.1"
 frameworkCompatibility: ">=0.80.0"
-lastUpdated: "2026-05-17"
+lastUpdated: "2026-10-17"
 license: Complete terms in LICENSE.txt
 category: devops
 relevantTechStack: [skill-authoring, safety, installation, user-consent]
@@ -61,7 +61,7 @@ Do NOT fall back to "proceed without the gate" for any reason. Silent execution 
 Add a step structured: heading `Step N — Responsibility Acknowledgement Gate`; opening line "This step implements the pattern defined in the `responsibility-gate` skill. See `Skills/responsibility-gate/SKILL.md` for the full contract."; bullets for **When this fires** (action), **What is asked** (changes), **On decline** ("exit cleanly; report 'Declined — no changes made.'; no system changes"), **Persistence** ("per-invocation; gate re-fires on every subsequent run").
 SKILL.md does not need to reproduce contract prose. Linking to `Skills/responsibility-gate/SKILL.md` is the compliant reference.
 ## Audit — in-scope skills (2026-04-19)
-These install/configure/modify software and MUST implement the gate: `install-node` (Node via winget/brew/nvm; PATH); `flask-setup` (`pip install flask`; virtualenv); `sinatra-setup` (`gem install sinatra`; `bundle install`); `sqlite-integration` (sqlite client via gem/pip); `playwright-setup` (`npm install @playwright/test`; browser binaries); `vercel-project-setup` (Vercel CLI); `render-project-setup` (Render CLI); `railway-project-setup` (Railway CLI); `digitalocean-app-setup` (`doctl`); `i18n-setup` (i18next, react-intl); `postgresql-integration` (PG client); `observability-setup` (OpenTelemetry SDK).
+These install/configure/modify software and MUST implement the gate: `install-node` (Node via winget/brew/nvm; PATH); `flask-setup` (`pip install flask`; virtualenv); `sinatra-setup` (`gem install sinatra`; `bundle install`); `sqlite-integration` (sqlite client via gem/pip); `playwright-setup` (`npm install @playwright/test`; browser binaries); `vercel-project-setup` (Vercel CLI); `render-project-setup` (Render CLI); `railway-project-setup` (Railway CLI); `digitalocean-app-setup` (`doctl`); `i18n-setup` (i18next, react-intl); `postgresql-integration` (PG client); `observability-setup` (OpenTelemetry SDK); `react-native-android-setup` (JDK 17, Android cmdline-tools/SDK packages, Maestro; user env vars, PATH; moves AVDs; admin phase OS networking/hypervisor settings + reboot; added 2026-10-17, #343).
 ### Borderline — reclassified (#180)
 | Skill | Final | Reason |
 |---|---|---|

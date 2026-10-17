@@ -223,6 +223,18 @@
       "project",
       "setup"
     ],
+    "react-native-android-setup": [
+      "react native android setup",
+      "android sdk setup",
+      "android emulator setup",
+      "jdk 17 toolchain",
+      "maestro setup",
+      "maestro temp folder",
+      "avd relocation",
+      "metro port 8081",
+      "gradlew.bat not found",
+      "host environment profile"
+    ],
     "render-project-setup": [
       "render-project-setup",
       "render",
@@ -353,6 +365,7 @@
     "privacy-compliance": "compliance",
     "property-based-testing": "testing",
     "railway-project-setup": "platform",
+    "react-native-android-setup": "devops",
     "render-project-setup": "platform",
     "resilience-patterns": "code-quality",
     "responsibility-gate": "devops",

@@ -1,0 +1,674 @@
+{
+  "$schema": "react-native-android-setup.config.schema.json",
+  "_description": "Host environment profile for react-native-android-setup. Re-read and validated at every invocation by SKILL.md Step 0. Every pinned version, URL, package ID and command the skill uses lives here; SKILL.md names fields, never values.",
+  "version": "1.0.0",
+  "source": {
+    "evidence": "rubrical-works/idpf-phm-project-templates#3 (Proposal: Host Environment Profiles), lessons 1-12, observed 2026-10-13 to 2026-10-16",
+    "pilotStack": {
+      "reactNative": "0.84.1",
+      "maestro": "2.11.0",
+      "hostOs": "windows"
+    },
+    "_statusNote": "status 'verified' means the lesson was observed and its fix confirmed on a Windows host during the pilot. All pilot evidence is Windows-only, so every macOS and Linux entry is 'declared-but-untested' until a run on that OS confirms it."
+  },
+  "toolRoot": {
+    "question": "Where should the Android SDK, emulator (AVD) images, Maestro and tool temp folders live? Give an absolute folder path on a drive with room for them (the pilot used about 51 GB for the SDK and AVD images).",
+    "default": null,
+    "_noDefault": "No default, by decision of the pilot: the default location is what filled the system drive (lessons 5-6). Ask on every invocation that has no recorded answer.",
+    "pathSeparator": "/",
+    "normalize": "Replace every backslash in the user's answer with a forward slash and strip a trailing slash before deriving paths (lesson 7)."
+  },
+  "paths": {
+    "sdk": "{toolRoot}/Android/Sdk",
+    "avd": "{toolRoot}/Android/avd",
+    "maestro": "{toolRoot}/maestro",
+    "maestroTemp": "{toolRoot}/MaestroTemp"
+  },
+  "resume": {
+    "stateFile": "{home}/.react-native-android-setup/state.json",
+    "records": ["toolRoot", "platform", "pendingAdminItems", "rebootRequired", "completedItems"],
+    "_note": "Written before the admin phase asks for a reboot. A later invocation that finds it offers to continue with the recorded tool root (the user's own earlier answer, confirmed, not a default) and re-checks every item."
+  },
+  "sdkPackages": {
+    "resolveFrom": {
+      "file": "android/build.gradle",
+      "fields": ["compileSdkVersion", "buildToolsVersion"],
+      "_note": "React Native projects declare these in the ext block of android/build.gradle. No pinned fallback: when the project file is absent or silent, ask the user rather than guess."
+    },
+    "always": ["platform-tools", "emulator"],
+    "templates": {
+      "platform": "platforms/android-{compileSdkVersion}",
+      "buildTools": "build-tools/{buildToolsVersion}",
+      "systemImage": "system-images/android-{apiLevel}/{tag}/{abi}"
+    },
+    "systemImageDefaults": {
+      "tag": "google_apis",
+      "abi": "x86_64",
+      "_note": "apiLevel is asked per AVD; the pilot used Android 7 (API 24) and Android 13+ images."
+    }
+  },
+  "cliSyntax": {
+    "sdkmanager": {
+      "packageSeparator": "/",
+      "_lesson": 3,
+      "_note": "sdkmanager is given slash package paths (platforms/android-35)."
+    },
+    "avdmanager": {
+      "packageSeparator": ";",
+      "powershellStopParsing": "--%",
+      "_lesson": 3,
+      "_note": "avdmanager wants semicolon package paths (system-images;android-35;google_apis;x86_64); from PowerShell the semicolons end the statement unless the arguments follow the stop-parsing token."
+    }
+  },
+  "downloads": {
+    "cmdlineTools": {
+      "repositoryIndex": "https://dl.google.com/android/repository/repository2-3.xml",
+      "archives": {
+        "windows": "https://dl.google.com/android/repository/commandlinetools-win-16111833_latest.zip",
+        "macos": "https://dl.google.com/android/repository/commandlinetools-mac-15641748_latest.zip",
+        "linux": "https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip"
+      },
+      "installLayout": "{paths.sdk}/cmdline-tools/latest",
+      "_note": "Build numbers are the highest listed in repositoryIndex on 2026-10-17. The archive unpacks to a cmdline-tools folder whose contents belong in installLayout."
+    },
+    "maestro": {
+      "version": "2.11.0",
+      "archive": "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-2.11.0/maestro.zip",
+      "checksums": "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-2.11.0/checksums_sha256.txt",
+      "flatten": "The zip holds a top-level maestro folder; its contents go directly in {paths.maestro} so the launcher sits at {paths.maestro}/bin."
+    }
+  },
+  "metro": {
+    "defaultPort": 8081,
+    "alternativePort": 8088
+  },
+  "items": [
+    {
+      "id": "jdk-17",
+      "kind": "tool",
+      "lessons": [1],
+      "summary": "JDK 17 toolchain. React Native 0.84's Gradle plugin needs a 17 toolchain; JDK 25 alone triggers foojay resolver 0.5.0's JvmVendorSpec.IBM_SEMERU crash under Gradle 9.",
+      "requiredVersion": "17",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "& \"$env:JAVA_HOME/bin/java.exe\" -version  # expect a version string starting 17",
+          "apply": "winget install --id EclipseAdoptium.Temurin.17.JDK --exact",
+          "requiresAdmin": true,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "\"$JAVA_HOME/bin/java\" -version  # expect a version string starting 17",
+          "apply": "brew install --cask temurin@17",
+          "requiresAdmin": true,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "\"$JAVA_HOME/bin/java\" -version  # expect a version string starting 17",
+          "apply": "sudo apt-get install -y openjdk-17-jdk",
+          "requiresAdmin": true,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "env-java-home",
+      "kind": "envVar",
+      "lessons": [1, 2, 4],
+      "summary": "JAVA_HOME as a user variable pointing at the JDK 17 home. Gradle and Maestro both read it.",
+      "variable": "JAVA_HOME",
+      "value": "{jdk17Home}",
+      "valueFrom": "The home folder of the JDK 17 that jdk-17 installed or found (the folder containing bin/java), written with forward slashes.",
+      "dependsOn": ["jdk-17"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "[Environment]::GetEnvironmentVariable('JAVA_HOME','User')",
+          "apply": "[Environment]::SetEnvironmentVariable('JAVA_HOME','{value}','User')",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export JAVA_HOME=' ~/.zshrc",
+          "apply": "echo 'export JAVA_HOME=\"{value}\"' >> ~/.zshrc",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export JAVA_HOME=' ~/.profile",
+          "apply": "echo 'export JAVA_HOME=\"{value}\"' >> ~/.profile",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "sdk-folder",
+      "kind": "folder",
+      "lessons": [5],
+      "summary": "The Android SDK folder under the tool root, off the system drive.",
+      "path": "{paths.sdk}",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "Test-Path '{paths.sdk}'",
+          "apply": "New-Item -ItemType Directory -Force '{paths.sdk}'",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "test -d '{paths.sdk}'",
+          "apply": "mkdir -p '{paths.sdk}'",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "test -d '{paths.sdk}'",
+          "apply": "mkdir -p '{paths.sdk}'",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "cmdline-tools",
+      "kind": "tool",
+      "lessons": [3],
+      "summary": "Android command-line tools (sdkmanager, avdmanager) unpacked into the SDK's cmdline-tools/latest folder.",
+      "dependsOn": ["sdk-folder", "env-java-home"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --version",
+          "apply": [
+            "Download downloads.cmdlineTools.archives.windows",
+            "Expand-Archive <downloaded zip> -DestinationPath '{paths.sdk}/cmdline-tools-unpack'",
+            "Move-Item '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --version",
+          "apply": [
+            "Download downloads.cmdlineTools.archives.macos",
+            "unzip <downloaded zip> -d '{paths.sdk}/cmdline-tools-unpack'",
+            "mkdir -p '{paths.sdk}/cmdline-tools' && mv '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --version",
+          "apply": [
+            "Download downloads.cmdlineTools.archives.linux",
+            "unzip <downloaded zip> -d '{paths.sdk}/cmdline-tools-unpack'",
+            "mkdir -p '{paths.sdk}/cmdline-tools' && mv '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "sdk-packages",
+      "kind": "tool",
+      "lessons": [3],
+      "summary": "platform-tools, emulator, the platform and build-tools the project declares, and each AVD's system image, installed with sdkmanager using slash package paths.",
+      "packagesFrom": "sdkPackages",
+      "dependsOn": ["cmdline-tools"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --list_installed",
+          "apply": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --sdk_root='{paths.sdk}' {packages}",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --list_installed",
+          "apply": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' {packages}",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --list_installed",
+          "apply": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' {packages}",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "env-android-home",
+      "kind": "envVar",
+      "lessons": [2],
+      "summary": "ANDROID_HOME as a user variable. Once it is set, android/local.properties is not needed.",
+      "variable": "ANDROID_HOME",
+      "value": "{paths.sdk}",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "[Environment]::GetEnvironmentVariable('ANDROID_HOME','User')",
+          "apply": "[Environment]::SetEnvironmentVariable('ANDROID_HOME','{paths.sdk}','User')",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export ANDROID_HOME=' ~/.zshrc",
+          "apply": "echo 'export ANDROID_HOME=\"{paths.sdk}\"' >> ~/.zshrc",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export ANDROID_HOME=' ~/.profile",
+          "apply": "echo 'export ANDROID_HOME=\"{paths.sdk}\"' >> ~/.profile",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "env-android-avd-home",
+      "kind": "envVar",
+      "lessons": [2, 5],
+      "summary": "ANDROID_AVD_HOME as a user variable, so emulator images live under the tool root instead of the user profile.",
+      "variable": "ANDROID_AVD_HOME",
+      "value": "{paths.avd}",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "[Environment]::GetEnvironmentVariable('ANDROID_AVD_HOME','User')",
+          "apply": "[Environment]::SetEnvironmentVariable('ANDROID_AVD_HOME','{paths.avd}','User')",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export ANDROID_AVD_HOME=' ~/.zshrc",
+          "apply": "echo 'export ANDROID_AVD_HOME=\"{paths.avd}\"' >> ~/.zshrc",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export ANDROID_AVD_HOME=' ~/.profile",
+          "apply": "echo 'export ANDROID_AVD_HOME=\"{paths.avd}\"' >> ~/.profile",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "avd-relocation",
+      "kind": "folder",
+      "lessons": [5],
+      "summary": "Existing AVDs moved under the tool root: move each .avd folder and its .ini, then rewrite the .ini path= line. Quick-boot snapshots survive the move.",
+      "path": "{paths.avd}",
+      "dependsOn": ["env-android-avd-home"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "Get-ChildItem \"$env:USERPROFILE/.android/avd\" -Filter *.ini -ErrorAction SilentlyContinue  # any result means AVDs remain outside the tool root",
+          "apply": [
+            "New-Item -ItemType Directory -Force '{paths.avd}'",
+            "Move-Item \"$env:USERPROFILE/.android/avd/*\" '{paths.avd}'",
+            "Get-ChildItem '{paths.avd}' -Filter *.ini | ForEach-Object { (Get-Content $_.FullName) -replace '^path=.*', ('path={paths.avd}/' + $_.BaseName + '.avd') | Set-Content $_.FullName }"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "ls ~/.android/avd/*.ini 2>/dev/null  # any result means AVDs remain outside the tool root",
+          "apply": [
+            "mkdir -p '{paths.avd}'",
+            "mv ~/.android/avd/* '{paths.avd}/'",
+            "for f in '{paths.avd}'/*.ini; do n=$(basename \"$f\" .ini); sed -i '' \"s|^path=.*|path={paths.avd}/$n.avd|\" \"$f\"; done"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "ls ~/.android/avd/*.ini 2>/dev/null  # any result means AVDs remain outside the tool root",
+          "apply": [
+            "mkdir -p '{paths.avd}'",
+            "mv ~/.android/avd/* '{paths.avd}/'",
+            "for f in '{paths.avd}'/*.ini; do n=$(basename \"$f\" .ini); sed -i \"s|^path=.*|path={paths.avd}/$n.avd|\" \"$f\"; done"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "maestro-cli",
+      "kind": "tool",
+      "lessons": [4],
+      "summary": "Maestro CLI from its release zip, flattened so the launcher sits in {paths.maestro}/bin. Needs JAVA_HOME.",
+      "requiredVersion": "2.11.0",
+      "dependsOn": ["env-java-home"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "& '{paths.maestro}/bin/maestro.bat' --version",
+          "apply": [
+            "Download downloads.maestro.archive and verify it against downloads.maestro.checksums",
+            "Expand-Archive <downloaded zip> -DestinationPath '{toolRoot}/maestro-unpack'",
+            "Move-Item '{toolRoot}/maestro-unpack/maestro' '{paths.maestro}'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "'{paths.maestro}/bin/maestro' --version",
+          "apply": [
+            "Download downloads.maestro.archive and verify it against downloads.maestro.checksums",
+            "unzip <downloaded zip> -d '{toolRoot}/maestro-unpack'",
+            "mv '{toolRoot}/maestro-unpack/maestro' '{paths.maestro}'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "'{paths.maestro}/bin/maestro' --version",
+          "apply": [
+            "Download downloads.maestro.archive and verify it against downloads.maestro.checksums",
+            "unzip <downloaded zip> -d '{toolRoot}/maestro-unpack'",
+            "mv '{toolRoot}/maestro-unpack/maestro' '{paths.maestro}'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "maestro-temp-folder",
+      "kind": "folder",
+      "lessons": [6],
+      "summary": "The folder MAESTRO_OPTS points Java's temp dir at. It must exist before Maestro runs.",
+      "path": "{paths.maestroTemp}",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "Test-Path '{paths.maestroTemp}'",
+          "apply": "New-Item -ItemType Directory -Force '{paths.maestroTemp}'",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "test -d '{paths.maestroTemp}'",
+          "apply": "mkdir -p '{paths.maestroTemp}'",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "test -d '{paths.maestroTemp}'",
+          "apply": "mkdir -p '{paths.maestroTemp}'",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "env-maestro-opts",
+      "kind": "envVar",
+      "lessons": [6, 7],
+      "summary": "MAESTRO_OPTS moves Java's temp dir under the tool root. Without it Maestro leaves about 160 MB of driver APKs in the system temp folder per run (29.6 GB in three days). The path must use forward slashes: a backslash path reached Java from Git Bash with the separator stripped and wrote into the project tree.",
+      "variable": "MAESTRO_OPTS",
+      "value": "-Djava.io.tmpdir={paths.maestroTemp}",
+      "dependsOn": ["maestro-temp-folder"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "[Environment]::GetEnvironmentVariable('MAESTRO_OPTS','User')  # expect the value with forward slashes",
+          "apply": "[Environment]::SetEnvironmentVariable('MAESTRO_OPTS','-Djava.io.tmpdir={paths.maestroTemp}','User')",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export MAESTRO_OPTS=' ~/.zshrc",
+          "apply": "echo 'export MAESTRO_OPTS=\"-Djava.io.tmpdir={paths.maestroTemp}\"' >> ~/.zshrc",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export MAESTRO_OPTS=' ~/.profile",
+          "apply": "echo 'export MAESTRO_OPTS=\"-Djava.io.tmpdir={paths.maestroTemp}\"' >> ~/.profile",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "path-entries",
+      "kind": "envVar",
+      "lessons": [4],
+      "summary": "PATH entries for platform-tools (adb), emulator, and the Maestro launcher.",
+      "variable": "PATH",
+      "entries": ["{paths.sdk}/platform-tools", "{paths.sdk}/emulator", "{paths.maestro}/bin"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "[Environment]::GetEnvironmentVariable('Path','User') -split ';'  # expect each entry",
+          "apply": "$p = [Environment]::GetEnvironmentVariable('Path','User'); [Environment]::SetEnvironmentVariable('Path', ($p.TrimEnd(';') + ';{entry}'), 'User')  # once per missing entry",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "echo \"$PATH\" | tr ':' '\\n'  # expect each entry",
+          "apply": "echo 'export PATH=\"$PATH:{entry}\"' >> ~/.zshrc  # once per missing entry",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "echo \"$PATH\" | tr ':' '\\n'  # expect each entry",
+          "apply": "echo 'export PATH=\"$PATH:{entry}\"' >> ~/.profile  # once per missing entry",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "metro-port-exclusion",
+      "kind": "osSetting",
+      "lessons": [8],
+      "summary": "Hyper-V can reserve an excluded TCP port range that covers Metro's default port. The admin fix moves the dynamic port range and needs a reboot; metro-alternative-port is the non-admin route.",
+      "alternative": "metro-alternative-port",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "netsh int ipv4 show excludedportrange protocol=tcp  # does any range include metro.defaultPort?",
+          "apply": "netsh int ipv4 set dynamicport tcp start=49152 num=16384",
+          "requiresAdmin": true,
+          "requiresReboot": true
+        }
+      }
+    },
+    {
+      "id": "metro-alternative-port",
+      "kind": "osSetting",
+      "lessons": [8],
+      "summary": "Non-admin alternative when metro.defaultPort is reserved or taken: run Metro on metro.alternativePort and pass the same port to run-android.",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "Get-NetTCPConnection -LocalPort {port} -ErrorAction SilentlyContinue  # empty means free",
+          "apply": ["npx react-native start --port {port}", "npx react-native run-android --port {port}"],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "lsof -nP -iTCP:{port} -sTCP:LISTEN  # empty means free",
+          "apply": ["npx react-native start --port {port}", "npx react-native run-android --port {port}"],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "ss -ltn 'sport = :{port}'  # only the header line means free",
+          "apply": ["npx react-native start --port {port}", "npx react-native run-android --port {port}"],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "no-default-current-directory",
+      "kind": "osSetting",
+      "lessons": [9],
+      "summary": "NoDefaultCurrentDirectoryInExePath=1 stops Windows finding a bare gradlew.bat in the current folder, which breaks run-android's spawn. Detect it and clear it for the shell that runs run-android; do not change it machine-wide.",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "'Process','User','Machine' | ForEach-Object { [Environment]::GetEnvironmentVariable('NoDefaultCurrentDirectoryInExePath', $_) }  # any non-empty result means it is set",
+          "apply": "Remove-Item Env:NoDefaultCurrentDirectoryInExePath -ErrorAction SilentlyContinue  # in the shell that will run run-android",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "hardware-acceleration",
+      "kind": "osSetting",
+      "lessons": [11],
+      "summary": "Emulator hardware acceleration: Windows Hypervisor Platform (WHPX) on Windows, Hypervisor.framework on macOS, KVM on Linux. The emulator's own accel check reports the result on every OS.",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "& '{paths.sdk}/emulator/emulator.exe' -accel-check",
+          "apply": "Enable-WindowsOptionalFeature -Online -FeatureName HypervisorPlatform -All",
+          "requiresAdmin": true,
+          "requiresReboot": true
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/emulator/emulator' -accel-check",
+          "apply": "Nothing to install: Hypervisor.framework ships with macOS. If the check fails, report its output.",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/emulator/emulator' -accel-check",
+          "apply": ["sudo apt-get install -y qemu-kvm", "sudo usermod -aG kvm \"$USER\"  # takes effect at next login"],
+          "requiresAdmin": true,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "avd-gpu-acceleration",
+      "kind": "osSetting",
+      "lessons": [11],
+      "summary": "GPU acceleration set in each AVD's config.ini.",
+      "settings": { "hw.gpu.enabled": "yes", "hw.gpu.mode": "host" },
+      "dependsOn": ["avd-relocation"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "Select-String -Path '{paths.avd}/*.avd/config.ini' -Pattern '^hw\\.gpu\\.(enabled|mode)='",
+          "apply": "For each {paths.avd}/<name>.avd/config.ini, set every key in settings, adding lines that are missing.",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "grep -H -E '^hw\\.gpu\\.(enabled|mode)=' '{paths.avd}'/*.avd/config.ini",
+          "apply": "For each {paths.avd}/<name>.avd/config.ini, set every key in settings, adding lines that are missing.",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "grep -H -E '^hw\\.gpu\\.(enabled|mode)=' '{paths.avd}'/*.avd/config.ini",
+          "apply": "For each {paths.avd}/<name>.avd/config.ini, set every key in settings, adding lines that are missing.",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    }
+  ],
+  "practices": [
+    {
+      "id": "metro-detached",
+      "kind": "practice",
+      "lessons": [10],
+      "summary": "Start Metro detached so it survives the shell that launched it.",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "Get-NetTCPConnection -LocalPort {port} -State Listen -ErrorAction SilentlyContinue  # Metro listening",
+          "apply": "Start-Process -WindowStyle Minimized cmd.exe -ArgumentList '/c','npx react-native start --port {port}'",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "lsof -nP -iTCP:{port} -sTCP:LISTEN",
+          "apply": "nohup npx react-native start --port {port} > metro.log 2>&1 &",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "ss -ltn 'sport = :{port}'",
+          "apply": "nohup npx react-native start --port {port} > metro.log 2>&1 &",
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "wake-avd",
+      "kind": "practice",
+      "lessons": [12],
+      "summary": "Wake a snapshot-restored AVD and dismiss the keyguard before taking screenshots.",
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "adb shell dumpsys power | Select-String 'mWakefulness='  # expect Awake",
+          "apply": ["adb shell input keyevent KEYCODE_WAKEUP", "adb shell wm dismiss-keyguard"],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "adb shell dumpsys power | grep 'mWakefulness='  # expect Awake",
+          "apply": ["adb shell input keyevent KEYCODE_WAKEUP", "adb shell wm dismiss-keyguard"],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "adb shell dumpsys power | grep 'mWakefulness='  # expect Awake",
+          "apply": ["adb shell input keyevent KEYCODE_WAKEUP", "adb shell wm dismiss-keyguard"],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    }
+  ]
+}
