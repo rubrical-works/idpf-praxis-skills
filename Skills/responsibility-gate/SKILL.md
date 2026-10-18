@@ -12,22 +12,25 @@ relevantTechStack: [skill-authoring, safety, installation, user-consent]
 copyright: "Rubrical Works (c) 2026"
 ---
 # Responsibility-Acknowledgement Gate (Shared Pattern)
-Defines the **responsibility-acknowledgement gate** — a mandatory, per-invocation user consent step every install-capable or modify-capable skill in this repository must present before executing any install, modify, or uninstall action on the user's system.
-This document is the **single source of truth** for the pattern. Install-capable skills do not re-describe the gate in their own SKILL.md files; they reference this document by name (`see responsibility-gate skill for the pattern`) and cite the relevant section.
+Defines the **responsibility-acknowledgement gate** — a mandatory, per-invocation user consent step every install-capable or modify-capable skill must present before any install, modify, or uninstall action on the user's system.
+**Single source of truth.** Install-capable skills do not re-describe the gate; they reference this document by name (`see responsibility-gate skill for the pattern`) and cite the relevant section.
 ## When this skill is relevant
-**Reference** skill — never auto-invoked, no user-facing workflow. Relevant when: authoring a new skill that installs/configures/modifies software on user's system; reviewing existing skill for gate compliance; updating any in-scope skill.
+Reference skill — never auto-invoked, no user-facing workflow. Relevant when:
+- Authoring a skill that installs, configures, or modifies software on the user's system
+- Reviewing an existing skill for gate compliance
+- Updating `install-node`, `flask-setup`, `playwright-setup`, or any skill on the in-scope list (see Audit)
 ## The Gate — Contract
-Every install-capable skill MUST implement the following, without exception:
+Every install-capable skill MUST implement all of the following:
 ### 1. When the gate fires
 **Before any execution path** that:
 - installs software (package manager invocations, script downloads-and-runs, binary downloads)
 - modifies system state (PATH edits, shell rc files, system services, daemons)
 - uninstalls software the skill previously installed
 - applies non-reversible configuration changes (cloud-CLI authentication, credential writes, registry edits)
-Gate fires once per **execution path**, not once per skill invocation. A skill proposing both `install` and `configure` actions must gate both.
-**The gate MUST NOT fire for read-only operations** (status checks, version probes, file reads) — overusing the gate trains users to dismiss it.
+Fires once per **execution path**, not once per invocation — a skill proposing both `install` and `configure` gates both.
+**MUST NOT fire for read-only operations** (status checks, version probes, file reads) — overuse trains users to dismiss it.
 ### 2. What the gate asks
-Use `AskUserQuestion` with wording structurally equivalent to:
+`AskUserQuestion` with wording structurally equivalent to:
 ```
 I'm about to {action description} on your system. This skill does not persist your acknowledgement — you will see this prompt every time the skill proposes an execution path.
 
@@ -37,54 +40,76 @@ Options:
   - "I accept responsibility — proceed"
   - "Decline — exit without changes"
 ```
-Skills MAY add more options (e.g., "Preview the command first") but MUST include the two above. The accept option MUST require explicit selection — no pre-selected default.
+Skills MAY add options (e.g., "Preview the command first") but MUST include the two above. The accept option MUST require explicit selection — no pre-selected default.
 ### 3. Decline behavior
-When user declines:
-- Skill exits cleanly with **zero system changes**.
-- Skill reports `"Declined — no changes made."` (or functionally equivalent).
-- Skill does not retry, does not offer "are you sure?", does not route to alternative execution path without re-firing the gate.
+- Exit cleanly with **zero system changes**
+- Report `"Declined — no changes made."` (or equivalent)
+- No retry, no "are you sure?", no routing to an alternative execution path without re-firing the gate
 ### 4. Per-invocation, never persisted
-Acknowledgement MUST be **per-invocation**. Specifically:
-- Acceptance state must not be persisted to disk, environment, session storage, or any cache.
-- Every subsequent invocation that proposes an execution path MUST present the gate again.
-- A skill passing the gate in one invocation MUST NOT skip it on the next invocation, even if the next invocation proposes the same action on the same system.
-Rationale: gate transfers responsibility at exact moment of action. Persisted acknowledgement weakens that transfer by allowing stale consent to authorize later actions user has not explicitly approved.
+- Acceptance state must not be persisted to disk, environment, session storage, or any cache
+- Every subsequent invocation proposing an execution path MUST present the gate again
+- Passing the gate once MUST NOT skip it on the next invocation, even for the same action on the same system
+Rationale: the gate transfers responsibility at the moment of action; persisted acknowledgement lets stale consent authorize actions the user has not explicitly approved.
 ### 5. Independence from command-confirmation
-Responsibility gate is **independent** of any command-confirmation step. A skill that also needs user to confirm an exact command (e.g., `install-node`'s Step 7) must present **two separate prompts**: responsibility first, then command. A single prompt that bundles both is NOT compliant — bundling obscures what user is agreeing to.
+Independent of any command-confirmation step. A skill that also needs an exact command confirmed (e.g., `install-node` Step 7) presents **two separate prompts**: responsibility first, then command. Bundling both in one prompt is NOT compliant.
 ### 6. Degradation when `AskUserQuestion` is unavailable
-If skill cannot present `AskUserQuestion` (tool not permitted, sandboxed environment, non-interactive shell):
-- Skill MUST NOT execute gated action.
-- Skill SHOULD report recommended command and fact that gate could not fire.
-- Skill SHOULD exit cleanly.
-Do NOT fall back to "proceed without the gate" for any reason. Silent execution defeats the pattern.
+If the gate cannot be presented (tool not permitted, sandbox, non-interactive shell):
+- MUST NOT execute the gated action
+- SHOULD report the recommended command and that the gate could not fire
+- SHOULD exit cleanly
+Never fall back to "proceed without the gate" — silent execution defeats the pattern.
 ## How to reference this skill from another SKILL.md
-Add a step structured: heading `Step N — Responsibility Acknowledgement Gate`; opening line "This step implements the pattern defined in the `responsibility-gate` skill. See `Skills/responsibility-gate/SKILL.md` for the full contract."; bullets for **When this fires** (action), **What is asked** (changes), **On decline** ("exit cleanly; report 'Declined — no changes made.'; no system changes"), **Persistence** ("per-invocation; gate re-fires on every subsequent run").
-SKILL.md does not need to reproduce contract prose. Linking to `Skills/responsibility-gate/SKILL.md` is the compliant reference.
+```markdown
+### Step N — Responsibility Acknowledgement Gate
+
+This step implements the pattern defined in the `responsibility-gate` skill. See `Skills/responsibility-gate/SKILL.md` for the full contract.
+
+- **When this fires:** before {action description}.
+- **What is asked:** acceptance of responsibility for {what the skill changes}.
+- **On decline:** exit cleanly; report "Declined — no changes made."; make no system changes.
+- **Persistence:** per-invocation; the gate re-fires on every subsequent run.
+```
+Do not reproduce the contract prose; linking to `Skills/responsibility-gate/SKILL.md` is the compliant reference.
 ## Audit — in-scope skills (2026-04-19)
-These install/configure/modify software and MUST implement the gate: `install-node` (Node via winget/brew/nvm; PATH); `flask-setup` (`pip install flask`; virtualenv); `sinatra-setup` (`gem install sinatra`; `bundle install`); `sqlite-integration` (sqlite client via gem/pip); `playwright-setup` (`npm install @playwright/test`; browser binaries); `vercel-project-setup` (Vercel CLI); `render-project-setup` (Render CLI); `railway-project-setup` (Railway CLI); `digitalocean-app-setup` (`doctl`); `i18n-setup` (i18next, react-intl); `postgresql-integration` (PG client); `observability-setup` (OpenTelemetry SDK); `react-native-android-setup` (JDK 17, Android cmdline-tools/SDK packages, Maestro; user env vars, PATH; moves AVDs; admin phase OS networking/hypervisor settings + reboot; added 2026-10-17, #343).
-### Borderline — reclassified (#180)
-| Skill | Final | Reason |
-|---|---|---|
-| `electron-cross-build` | **in-scope** | Toolchain setup (Wine, NSIS, signing certs). |
-| `electron-development` | **out of scope** | Injector skill with reference JSON; no install commands. |
-| `mutation-testing` | **out of scope** | Reference; install commands in prose examples only. |
-| `common-errors` | **out of scope** | Educational; install commands in error examples only. |
-| `beginner-testing` | **out of scope** | Educational; install commands in tutorial prose only. |
+These install, configure, or modify software and MUST implement the gate:
+| Skill | Action |
+|---|---|
+| `install-node` | Installs Node.js via winget / brew / nvm; modifies PATH. |
+| `flask-setup` | `pip install flask`; creates virtualenv. |
+| `sinatra-setup` | `gem install sinatra`; runs `bundle install`. |
+| `sqlite-integration` | Installs sqlite client library via gem/pip. |
+| `playwright-setup` | `npm install @playwright/test`; downloads browser binaries via `playwright install`. |
+| `vercel-project-setup` | Installs Vercel CLI. |
+| `render-project-setup` | Installs Render CLI. |
+| `railway-project-setup` | Installs Railway CLI. |
+| `digitalocean-app-setup` | Installs `doctl`. |
+| `i18n-setup` | Installs i18n libraries (`i18next`, `react-intl`, etc.). |
+| `postgresql-integration` | Installs PostgreSQL client library. |
+| `observability-setup` | Installs OpenTelemetry SDK packages. |
+| `react-native-android-setup` | Installs JDK 17, Android command-line tools, SDK packages and Maestro; sets user environment variables and PATH; moves AVDs; admin phase changes OS networking and hypervisor settings and needs a reboot. Added 2026-10-17 (#343). |
+### Borderline — reclassified in this audit
+| Skill | Original flag | Final classification | Reason |
+|---|---|---|---|
+| `electron-cross-build` | borderline | **in-scope** | Toolchain setup (Wine, NSIS, signing certs) — real system changes. |
+| `electron-development` | borderline | **out of scope** | Injector skill carrying reference JSON; does not drive install commands. |
+| `mutation-testing` | borderline | **out of scope** | Reference skill — install commands appear only in prose examples. |
+| `common-errors` | borderline | **out of scope** | Educational — install commands appear in error examples only. |
+| `beginner-testing` | borderline | **out of scope** | Educational — install commands appear in tutorial prose only. |
 ## Authoring guidance
-When creating a new skill, ask: **"does this skill execute any command that changes the user's system state?"** If yes, the skill is in-scope for the gate.
-- Add `Step N — Responsibility Acknowledgement Gate` section before first execution step.
-- Link to `Skills/responsibility-gate/SKILL.md`.
-- Add acceptance criterion at end of SKILL.md: "Decline at the responsibility gate exits cleanly with no system changes."
-- Do NOT reproduce full contract inline — single-source-of-truth rule enforced by convention and review.
-New install-capable skills without gate reference MUST fail review.
+Ask: **"does this skill execute any command that changes the user's system state?"** If yes, it is in scope.
+- Add a `Step N — Responsibility Acknowledgement Gate` section before the first execution step
+- Link to `Skills/responsibility-gate/SKILL.md`
+- Add a behavior note at the end of SKILL.md: "Decline at the responsibility gate exits cleanly with no system changes."
+- Do NOT reproduce the full contract inline — single source of truth is enforced by convention and review
+New install-capable skills without a gate reference MUST fail review.
 ## Why this is a separate skill, not a doc
-- **Discoverability.** Skills enumerated by `/skill-validate` and `build-skill-registry.js`. Reference skill visible in registry; buried docs fragment is not.
-- **Versioning.** Skills carry semver. When gate contract evolves, version bump is explicit and auditable.
-- **Distribution.** Ships inside same distribution pipeline as install-capable skills, so consumers always have contract in hand when they have any in-scope skill.
-- **Single source of truth.** Install-capable skills link to this skill by path — duplication prohibited.
+- **Discoverability:** skills are enumerated by `/skill-validate` and `build-skill-registry.js`; a docs fragment is not
+- **Versioning:** skills carry semver, so contract changes are explicit and auditable
+- **Distribution:** ships in the same pipeline as install-capable skills, so consumers always hold the contract
+- **Single source of truth:** install-capable skills link by path; duplicating the prose is prohibited
 ## Reference files
 | File | Purpose |
 |---|---|
 | `SKILL.md` | This file — the complete gate contract. |
 | `LICENSE.txt` | MIT license. |
-This skill intentionally ships with no data or script files.
+Ships with no data or script files.

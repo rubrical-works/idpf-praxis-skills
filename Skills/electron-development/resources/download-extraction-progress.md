@@ -2,7 +2,7 @@
 ## Problem
 Downloading files in Electron needs progress tracking and reliable extraction.
 ## Solution
-Use Electron's `net` module for downloading with `adm-zip` for extraction, with progress tracking via IPC events.
+Electron's `net` module for downloading, `adm-zip` for extraction, progress via IPC events.
 ## Pattern
 ### Download with Progress Tracking
 ```typescript
@@ -18,11 +18,11 @@ export async function downloadFile(
     const request = net.request({ url, method: 'GET' });
     const chunks: Buffer[] = [];
 
+    // net.request defaults to redirect: 'follow', so GitHub's 302 for a
+    // release asset is followed automatically and `response` is the final one.
     request.on('response', (response) => {
-      // Handle GitHub redirects (302 to S3)
-      if (response.statusCode >= 300 && response.statusCode < 400) {
-        const redirectUrl = response.headers.location as string;
-        downloadFile(redirectUrl, destPath, onProgress).then(resolve).catch(reject);
+      if (response.statusCode >= 400) {
+        reject(new Error(`Download failed: HTTP ${response.statusCode}`));
         return;
       }
 
@@ -87,10 +87,10 @@ export async function extractZip(zipPath: string, targetDir: string): Promise<vo
 }
 ```
 ## Rationale
-- **Electron net module:** Respects system proxy, handles HTTPS, built-in to Electron
-- **IPC events for progress:** Non-blocking, allows UI updates during download
-- **adm-zip:** Pure JavaScript, no native dependencies, works cross-platform
-- **Redirect handling:** GitHub releases use S3 redirects (302) for asset downloads
+- **Electron net module:** respects system proxy, handles HTTPS, built in
+- **IPC events for progress:** non-blocking, UI updates during download
+- **adm-zip:** pure JavaScript, no native dependencies, cross-platform
+- **Redirect handling:** GitHub may answer an asset download with a 302 to its asset host. `net.request` has `redirect: 'follow'` by default, so no manual handling is needed; pass `redirect: 'manual'` and listen for the `redirect` event only to inspect or veto the target
 ## GitHub Release Asset Pattern
 ```typescript
 // Fetch release info
@@ -100,7 +100,7 @@ const release = await fetchLatestRelease(owner, repo);
 const zipAsset = release.assets.find(a => a.name.endsWith('.zip'));
 const downloadUrl = zipAsset.browser_download_url;
 
-// Download follows redirect chain: GitHub -> S3
+// net.request follows the redirect to GitHub's asset host automatically
 ```
 ## Error Handling
 | Error | Handling |
@@ -121,8 +121,8 @@ function logToConsole(message: string, level: 'info' | 'success' | 'error' | 'wa
 }
 ```
 ## Consequences
-- Requires `adm-zip` dependency (adds ~100KB)
-- Download happens in main process (not renderer)
-- Progress updates limited by chunk size from network
+- Requires `adm-zip` dependency (~100KB)
+- Download happens in the main process, not the renderer
+- Progress granularity limited by network chunk size
 - Extraction is synchronous (blocks for large zips)
-- Temp files cleaned up on success, may remain on crash
+- Temp files cleaned up on success; may remain on crash

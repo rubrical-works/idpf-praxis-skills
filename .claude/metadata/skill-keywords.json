@@ -6,6 +6,7 @@
     "anti-pattern-analysis",
     "codebase-analysis",
     "command-spec-audit",
+    "diff-review",
     "error-handling-patterns",
     "tdd-failure-recovery",
     "tdd-green-phase",
@@ -75,6 +76,14 @@
       "debate-prism",
       "debate",
       "prism"
+    ],
+    "diff-review": [
+      "diff-review",
+      "code-review",
+      "merge-back",
+      "per-diff",
+      "review-gate",
+      "findings"
     ],
     "digitalocean-app-setup": [
       "digitalocean-app-setup",
@@ -338,6 +347,7 @@
     "command-spec-audit": "code-quality",
     "common-errors": "code-quality",
     "debate-prism": "analysis",
+    "diff-review": "code-quality",
     "digitalocean-app-setup": "platform",
     "drawio-generation": "documentation",
     "electron-cross-build": "platform",

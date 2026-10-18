@@ -1,15 +1,12 @@
 # Electron App Naming Conventions
 ## Problem
-Electron app names with spaces cause issues on Windows when:
-- Playwright tries to launch the packaged executable
-- Git Bash commands reference the path
-- CI scripts parse paths
+App names with spaces cause issues on Windows when Playwright launches the packaged executable, Git Bash commands reference the path, or CI scripts parse paths.
 ## Symptoms
 - Playwright `electron.launch()` hangs or fails silently
 - Git Bash commands fail with path parsing errors
-- Deprecation warning: `DEP0190: Passing args to a child process with shell option true`
+**Not a naming symptom:** `DEP0190: Passing args to a child process with shell option true` is a Node 24+ deprecation raised whenever `child_process.spawn`/`execFile` is called with an `args` array and `shell: true`, whatever the path. Playwright's Electron launcher does this on Windows, so renaming the app does not remove it.
 ## Solution
-Use separate names for executable and display:
+Separate executable and display names:
 | Name Type | Convention | Example |
 |-----------|------------|---------|
 | Executable | No spaces, PascalCase or kebab-case | `PraxisManager` |
@@ -38,27 +35,23 @@ packagerConfig: {
 | Executable file | `MyApp.exe` |
 | Window title bar | `My App Name` |
 | Taskbar/Dock | `My App Name` (from HTML title) |
-| Output directory | `out/MyApp-win32-x64/` |
+| Output directory | `out/MyApp-<platform>-<arch>/` (e.g. `out/MyApp-win32-x64/`, `out/MyApp-darwin-arm64/`) |
 ## Detection Pattern
-If app name in `package.json` or `forge.config.ts` contains spaces, warn about potential issues with:
-- Playwright E2E tests
-- CI scripts
-- Git Bash commands
+If the app name in `package.json` or `forge.config.ts` contains spaces, warn about Playwright E2E tests, CI scripts and Git Bash commands.
 ## E2E Test Path Helper
 ```typescript
 const APP_EXECUTABLE_NAME = 'MyApp';  // No spaces
 
 function getExecutablePath(): string {
-  const basePath = path.join(__dirname, '..', 'out');
+  // Forge names the folder <name>-<platform>-<arch>, arch defaulting to the host's
+  const outDir = path.join(__dirname, '..', 'out', `${APP_EXECUTABLE_NAME}-${process.platform}-${process.arch}`);
 
   if (process.platform === 'win32') {
-    return path.join(basePath, `${APP_EXECUTABLE_NAME}-win32-x64`, `${APP_EXECUTABLE_NAME}.exe`);
+    return path.join(outDir, `${APP_EXECUTABLE_NAME}.exe`);
   } else if (process.platform === 'darwin') {
-    return path.join(basePath, `${APP_EXECUTABLE_NAME}-darwin-x64`,
-      `${APP_EXECUTABLE_NAME}.app`, 'Contents', 'MacOS', APP_EXECUTABLE_NAME);
+    return path.join(outDir, `${APP_EXECUTABLE_NAME}.app`, 'Contents', 'MacOS', APP_EXECUTABLE_NAME);
   } else {
-    return path.join(basePath, `${APP_EXECUTABLE_NAME}-linux-x64`,
-      APP_EXECUTABLE_NAME.toLowerCase());
+    return path.join(outDir, APP_EXECUTABLE_NAME.toLowerCase());
   }
 }
 ```

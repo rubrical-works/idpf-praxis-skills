@@ -1,7 +1,7 @@
 {
   "generatedAt": "2020-01-01T00:00:00.000Z",
-  "version": "0.22.0",
-  "skillCount": 55,
+  "version": "0.23.0",
+  "skillCount": 56,
   "skills": [
     {
       "name": "anti-pattern-analysis",
@@ -33,7 +33,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-03-17",
-      "checksum": "1452ef548d812b2e72a77a90988e8f9c233d68bee7e90ac52e5ea335416a121d",
+      "checksum": "13361dc7ced6a18ae65dbd472366b7307879291d504dc9b241e50e0b94b5d548",
       "category": "api",
       "categoryLabel": "API",
       "relevantTechStack": [
@@ -219,6 +219,24 @@
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
+      "name": "diff-review",
+      "description": "Lightweight, unanchored per-diff code review against an issue's acceptance criteria and the project charter, emitting machine-readable findings",
+      "triggers": [],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.108.0",
+      "lastUpdated": "2026-10-18",
+      "checksum": "4ec338ba70a675a53a180f05c91c636d6611cf5b35a28afb0c62696fa1729595",
+      "category": "code-quality",
+      "categoryLabel": "Code Quality",
+      "relevantTechStack": [
+        "code-review",
+        "git",
+        "json-schema"
+      ],
+      "defaultSkill": true,
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
       "name": "digitalocean-app-setup",
       "description": "Configure automated preview, staging, and production deployments with DigitalOcean App Platform",
       "triggers": [],
@@ -280,12 +298,12 @@
     },
     {
       "name": "electron-development",
-      "description": "Patterns and solutions for Electron app development with Vite, Playwright E2E testing, and Windows platform considerations",
+      "description": "Patterns and solutions for Electron app development with Vite, Playwright E2E testing, and per-OS notes for Windows, macOS and Linux hosts",
       "triggers": [],
-      "version": "1.1.1",
+      "version": "1.3.0",
       "frameworkCompatibility": ">=0.60.0",
-      "lastUpdated": "2026-09-12",
-      "checksum": "e15f72ebe5f0c53e252f3c5e601ee1bb560bcc9aff357cf64e72e3b690235eef",
+      "lastUpdated": "2026-10-18",
+      "checksum": "2083866f2164bd4ca5dd1202cdecc977525a991434a54ac5284f1b1fc87772f8",
       "category": "platform",
       "categoryLabel": "Platforms & Frameworks",
       "relevantTechStack": [
@@ -293,7 +311,9 @@
         "vite",
         "playwright",
         "typescript",
-        "windows"
+        "windows",
+        "macos",
+        "linux"
       ],
       "defaultSkill": false,
       "copyright": "\"Rubrical Works (c) 2026\""
@@ -587,7 +607,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.60.0",
       "lastUpdated": "2026-05-15",
-      "checksum": "ed135a85705de1fdcc9ec95e9e9a5c52537ba75280af3d8d9f93d0f262cdf03f",
+      "checksum": "bbcaf5765e0b5a2605b36d146a82d0c523a8ff286e6098dd17c549ecd9d76481",
       "category": "analysis",
       "categoryLabel": "Analysis",
       "relevantTechStack": [
@@ -787,7 +807,7 @@
       "version": "1.0.0",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-10-17",
-      "checksum": "2912048cf518e0e8dcfc9b0e8ee4bcfaa0538e969fa826f00aca5fe2bad76adf",
+      "checksum": "a35afad3a9e6baf6416de88bbe02acf992794882d688f17223646b8dddf0286c",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [
@@ -850,7 +870,7 @@
       "version": "1.0.1",
       "frameworkCompatibility": ">=0.80.0",
       "lastUpdated": "2026-10-17",
-      "checksum": "4537d656cf537e51434180a44e71bc4f5f99a82324464b84d52a28d01aa2147f",
+      "checksum": "ad18cd7e1e205c2fb6142f3d97554befbc9fc95d279d6deb9cd9696062557d68",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [

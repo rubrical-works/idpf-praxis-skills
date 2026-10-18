@@ -3,7 +3,7 @@
 [![Skill CI](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml)
 [![CodeQL](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml)
 [![Latest Release](https://img.shields.io/github/v/release/rubrical-works/idpf-praxis-skills)](https://github.com/rubrical-works/idpf-praxis-skills/releases/latest)
-[![Skills](https://img.shields.io/badge/skills-55-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
+[![Skills](https://img.shields.io/badge/skills-56-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 Ready-to-use skills for [Claude Code](https://claude.ai/code). Browse skill documentation below, then install what you need.
@@ -41,7 +41,7 @@ Each skill directory in [Skills/](Skills/) contains the full documentation. Clic
 
 ## Available Skills
 
-### Injector Skills (3)
+### Injector Skills (4)
 
 These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf-praxis-dev). Framework commands read their config at runtime. Each includes a `resources/HOWTO.md` explaining how to use the skill without the framework.
 
@@ -50,6 +50,7 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [tdd-process](Skills/tdd-process/) | Testing | TDD phase enforcement checklists (RED/GREEN/REFACTOR + failure recovery) |
 | [anti-pattern-analysis](Skills/anti-pattern-analysis/) | Code Quality | Anti-pattern detection checklist |
 | [error-handling-patterns](Skills/error-handling-patterns/) | Development | Error handling hierarchy and API error responses |
+| [diff-review](Skills/diff-review/) | Code Quality | Per-diff code review contract: criteria, count-first read budget and a single-verdict JSON findings document for merge gates |
 
 ### Invokable Skills (26)
 
@@ -92,7 +93,7 @@ Domain knowledge loaded on demand during relevant work.
 |-------|----------|-------------|
 | [drawio-generation](Skills/drawio-generation/) | Documentation | Diagram styles and structure |
 | [electron-cross-build](Skills/electron-cross-build/) | Platform | Cross-compile Electron apps from Linux to Windows |
-| [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, Windows considerations |
+| [electron-development](Skills/electron-development/) | Platform | Electron app development with Vite, Playwright, and per-OS notes for Windows, macOS and Linux hosts |
 | [test-scaffold](Skills/test-scaffold/) | Testing | Domain-specific test patterns |
 | [api-versioning](Skills/api-versioning/) | API | Compatibility and deprecation workflows |
 | [astro-development](Skills/astro-development/) | Web | Islands architecture and content collections |

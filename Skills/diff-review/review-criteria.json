@@ -1,0 +1,107 @@
+{
+  "$schema": "review-criteria-schema.json",
+  "version": 1,
+  "budget": {
+    "filesReadInFull": 20,
+    "diffLinesReadInFull": 1500,
+    "countFirst": "Run git diff --numstat <base>..<branch> and git log --oneline <base>..<branch> before reading any hunk. Record every file with its line counts, and every commit, in the findings document's budget block.",
+    "readOrder": [
+      "files the issue declares under Files to modify",
+      "test files",
+      "remaining files by diff size ascending"
+    ],
+    "overBudget": "A file not read in full because a cap was reached is listed in budget.countedNotRead with its path and line count. It is never silently dropped: the count is evidence, and a non-empty countedNotRead caps the verdict at warn."
+  },
+  "criteria": [
+    {
+      "id": "hunk-maps-to-ac",
+      "name": "Every hunk maps to an acceptance criterion",
+      "severity": "warn",
+      "description": "Each hunk in the range serves at least one of the issue's acceptance criteria, or is flagged as unrelated work.",
+      "check": "For each hunk, name the AC it serves. A hunk serving no AC is a finding: unrelated work landing under this issue's Refs #N misattributes it to the gates that key off that commit set.",
+      "evidence": "File, hunk header, and either the AC it maps to or the word 'unrelated' with one line saying what the hunk does instead."
+    },
+    {
+      "id": "scope-declared",
+      "name": "No files outside the declared scope",
+      "severity": "fail",
+      "description": "Every changed file is named by the issue's Files to modify declaration or its Files Changed section.",
+      "check": "Compare git diff --name-only <base>..<branch> against the declared paths. A changed file the declaration does not name is a finding. Always-protected paths (framework-config.json, framework-manifest.json, .claude/metadata/**, .gh-pmu.json, CHARTER.md) are findings even when a Files Changed section lists them, because only the authored declaration can license them.",
+      "evidence": "The undeclared path and the declaration it is absent from."
+    },
+    {
+      "id": "tests-present",
+      "name": "Tests present for new behavior",
+      "severity": "fail",
+      "description": "New or changed behavior in the range has a test in the same range that exercises it.",
+      "check": "For each source hunk that adds or changes behavior, find a test hunk in the range that asserts it. A behavior with no test in the range is a finding; a non-code artifact (spec, JSON, markdown) needs a contract test declaring it as a subject.",
+      "evidence": "The source file and line, and either the test file and test name that covers it or the statement that none was found in the range."
+    },
+    {
+      "id": "tests-authentic",
+      "name": "Tests are authentic",
+      "severity": "warn",
+      "description": "Tests in the range verify behavior rather than mirror the implementation or assert trivially.",
+      "check": "Judge each test in the range by the framework's /bad-test-review criteria, read from .claude/commands/bad-test-review.md at review time. Do not restate those criteria here; a second definition drifts silently from the first.",
+      "evidence": "The test file and test name, the /bad-test-review criterion it fails, and the assertion that shows it."
+    },
+    {
+      "id": "charter-conventions",
+      "name": "Charter conventions honored",
+      "severity": "warn",
+      "description": "The change uses the tech stack and follows the conventions the project charter declares.",
+      "check": "Read the charter's Tech Stack and any conventions it states. A hunk that introduces a dependency, language, or pattern the charter excludes, or ignores a convention it names, is a finding.",
+      "evidence": "The file and line, and the charter line it conflicts with."
+    },
+    {
+      "id": "security-obvious",
+      "name": "No obvious security faults",
+      "severity": "fail",
+      "description": "The range introduces no hard-coded secret, no string-built query or command from untrusted input, and no unsafe shell invocation.",
+      "check": "Scan added lines for credentials, tokens and keys; for SQL, shell or template strings assembled from request or file input without parameterization or escaping; for shell execution with string concatenation or shell: true on user-influenced input; for disabled security defaults.",
+      "evidence": "The file and line, and the category (secret, injection, unsafe shell, disabled default)."
+    },
+    {
+      "id": "commit-refs",
+      "name": "Every commit carries the expected Refs #N",
+      "severity": "fail",
+      "description": "Each commit in the range references the issue under review.",
+      "check": "From git log <base>..<branch>, check that every commit subject or body contains Refs #N for the issue number given as input. A commit without it, or with a different issue number, is a finding.",
+      "evidence": "The commit SHA and subject, and the reference it carries or lacks."
+    },
+    {
+      "id": "spelling-policy",
+      "name": "Declared spelling policy honored",
+      "severity": "warn",
+      "description": "User-facing text and identifiers follow the spelling policy the charter or project configuration declares, when one is declared.",
+      "check": "If the charter or project configuration declares a spelling policy (for example en-GB or en-US), check added prose and identifiers against it. When no policy is declared, emit one pass finding saying so.",
+      "evidence": "The file and line, the word, and the policy it breaks."
+    },
+    {
+      "id": "no-debug-leftovers",
+      "name": "No debugging leftovers",
+      "severity": "warn",
+      "description": "The range leaves no debug output, breakpoints, commented-out code, or placeholder markers behind.",
+      "check": "Scan added lines for console.log and print-style debug output outside logging infrastructure, debugger statements, large commented-out blocks, and TODO, FIXME, XXX or HACK markers that the issue did not ask for.",
+      "evidence": "The file and line and the leftover text."
+    }
+  ],
+  "findingsPolicy": {
+    "perCriterion": "Emit at least one finding per criterion. A criterion with no violation emits one pass finding; each violation emits its own finding at the criterion's severity.",
+    "lineAnchoring": "file and line are null only for findings that are not line-anchored, such as a commit message or a whole-range observation."
+  },
+  "verdict": {
+    "fail": "Any finding with status fail.",
+    "warn": "Otherwise, any finding with status warn, or a non-empty budget.countedNotRead.",
+    "pass": "Otherwise."
+  },
+  "extensions": {
+    "anti-pattern-analysis": {
+      "domainId": "anti-patterns",
+      "loadedByDefault": false,
+      "path": ".claude/skills/anti-pattern-analysis/resources/code-review-checklist.md",
+      "criterionPrefix": "anti-pattern/",
+      "whenMissing": "Emit one pass finding with criterion anti-pattern/not-installed and continue."
+    }
+  }
+}

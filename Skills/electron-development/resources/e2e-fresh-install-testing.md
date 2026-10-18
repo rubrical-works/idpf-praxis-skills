@@ -1,10 +1,11 @@
 # E2E Fresh Install Testing
 ## Problem
-E2E tests need to simulate first-run experience, but electron-store persists settings between test runs.
+E2E tests need to simulate the first-run experience, but electron-store persists settings between runs.
 ## Solution
-Use environment variables to trigger settings clear on app startup.
+Trigger a settings clear on app startup via an environment variable.
 ## Implementation
 ### Main Process
+electron-store is ESM-only and needs Electron 35+; see [electron-store-settings.md](electron-store-settings.md) for a bundled or CommonJS main process.
 ```typescript
 // main.ts
 import Store from 'electron-store';
@@ -67,13 +68,12 @@ test('shows main screen when setup complete', async () => {
 | Delete config file | No code changes | Path varies by platform |
 | Test-specific config | Isolated tests | More complex setup |
 ## Config File Locations
-For manual cleanup:
 | Platform | Path |
 |----------|------|
 | Windows | `%APPDATA%/{app-name}/config.json` |
 | macOS | `~/Library/Application Support/{app-name}/config.json` |
 | Linux | `~/.config/{app-name}/config.json` |
 ## Consequences
-- Each test suite can choose fresh vs persisted state
-- Main process has test-aware code (minimal)
-- Works with packaged app (no source access needed)
+- Each test suite chooses fresh vs persisted state
+- Main process carries minimal test-aware code
+- Works with the packaged app (no source access needed)

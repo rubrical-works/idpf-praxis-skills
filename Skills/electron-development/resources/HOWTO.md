@@ -1,5 +1,5 @@
 # Using electron-development Without IDPF Framework
-Patterns and solutions for Electron app development with Vite, Playwright E2E testing, and Windows platform considerations — organized as a problem/solution reference library.
+Patterns and solutions for Electron app development with Vite, Playwright E2E testing, and per-OS notes for Windows, macOS and Linux hosts — a problem/solution reference library.
 ## What's Included
 | File | Purpose |
 |------|---------|
@@ -9,13 +9,13 @@ Patterns and solutions for Electron app development with Vite, Playwright E2E te
 | `resources/electron-app-naming.md` | Handle spaces in app/product names |
 | `resources/e2e-testing-packaged.md` | E2E testing against packaged apps |
 | `resources/e2e-fresh-install-testing.md` | First-run and fresh install test strategies |
-| `resources/windows-process-kill.md` | Windows process locking and cleanup |
+| `resources/process-cleanup.md` | Stopping the app before a rebuild (Windows, macOS, Linux) |
 | `resources/electron-ipc-pattern.md` | Three-layer contextBridge IPC pattern |
 | `resources/electron-store-settings.md` | Settings persistence with electron-store |
 | `resources/github-api-update-checking.md` | Update checking via GitHub API |
 | `resources/download-extraction-progress.md` | Download and extraction progress tracking |
 | `resources/multi-screen-navigation.md` | Multi-screen navigation patterns |
-| `resources/cross-platform-deb-build.md` | Linux .deb package building |
+| `resources/cross-platform-deb-build.md` | Windows host → Linux `.deb` target build |
 | `resources/fail-safe-file-reading.md` | Fail-safe file I/O patterns |
 ## Quick Start
 > This is one approach. Adapt it to your project's structure.
@@ -27,14 +27,14 @@ Load specific resources from .claude/skills/electron-development/resources/ as n
 
 - IPC setup: electron-ipc-pattern.md
 - E2E testing: e2e-testing-packaged.md, electron-fuses-playwright.md
-- Windows issues: windows-process-kill.md
+- Process cleanup before rebuild: process-cleanup.md
 - Vite config: vite-renderer-output-path.md
 - Load other resources matching the current problem from the quick reference table
 ```
 ## Customization
-The resources are self-contained markdown files. You can:
-- **Load selectively** — reference only the resources relevant to your current problem
+The resources are self-contained markdown files:
+- **Load selectively** — reference only the resources relevant to the current problem
 - **Add patterns** — create new resource files for project-specific Electron patterns
 - **Adjust for your stack** — if not using Vite or Playwright, omit those resources from your rule
 ## How IDPF Projects Use This
-In IDPF projects, framework commands automatically load this skill's resources from `.claude/skills/electron-development/` when Electron development work is detected. The approach above replicates that behavior for any Claude Code project.
+In IDPF projects, framework commands load this skill's resources from `.claude/skills/electron-development/` when Electron development work is detected. The approach above replicates that for any Claude Code project.

@@ -2,7 +2,7 @@
 ## Problem
 Electron apps need to check for updates without bundling a full auto-update framework.
 ## Solution
-Use Electron's `net` module with GitHub Releases API for update checking, with graceful error handling.
+Electron's `net` module with the GitHub Releases API, with graceful error handling.
 ## Pattern
 ### Version Comparison
 ```typescript
@@ -29,7 +29,8 @@ import { net } from 'electron';
 async function fetchWithElectron(url: string) {
   return new Promise((resolve, reject) => {
     const request = net.request({ url, method: 'GET' });
-    request.setHeader('Accept', 'application/vnd.github.v3+json');
+    request.setHeader('Accept', 'application/vnd.github+json');
+    request.setHeader('X-GitHub-Api-Version', '2026-03-10'); // pin a supported REST API version
     request.setHeader('User-Agent', 'my-app');
 
     let data = '';
@@ -49,10 +50,11 @@ async function fetchWithElectron(url: string) {
 }
 ```
 ## Rationale
-- **Electron net module:** Respects system proxy settings (unlike Node's fetch)
-- **GitHub Releases API:** Standard endpoint, no auth required for public repos
-- **Semantic versioning:** Handles major.minor.patch with variable lengths
-- **Graceful degradation:** App works offline, just shows "check failed"
+- **Electron net module:** respects system proxy settings (unlike Node's fetch)
+- **GitHub Releases API:** standard endpoint, no auth required for public repos
+- **Pinned API version:** GitHub versions the REST API with the `X-GitHub-Api-Version` header (the old `vnd.github.v3` media type is no longer how versioning works). Unpinned requests default to `2022-11-28`, which reaches end of support on 2028-03-10
+- **Semantic versioning:** handles major.minor.patch with variable lengths
+- **Graceful degradation:** app works offline, shows "check failed"
 ## Update Status States
 | State | Badge Color | When |
 |-------|-------------|------|
@@ -77,20 +79,17 @@ switch (result.status) {
 }
 ```
 ## API Response Parsing
-GitHub releases API returns:
 ```json
 {
   "tag_name": "v0.30.0",
   "html_url": "https://github.com/owner/repo/releases/tag/v0.30.0"
 }
 ```
-Strip `v` prefix for comparison, store download URL for update action.
+Strip the `v` prefix for comparison; store the download URL for the update action.
 ## Rate Limiting
-- Unauthenticated: 60 requests/hour
-- Consider caching results for session
-- Only check on app launch or user action
+Unauthenticated: 60 requests/hour. Cache results for the session; check only on app launch or user action.
 ## Consequences
-- Requires network access for update checking
+- Requires network access
 - Rate limited by GitHub (60 requests/hour unauthenticated)
-- Only checks latest release (not pre-releases)
-- Update badge updates each time main screen is shown
+- Checks the latest release only (not pre-releases)
+- Update badge refreshes each time the main screen is shown

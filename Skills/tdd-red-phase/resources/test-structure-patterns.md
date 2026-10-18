@@ -1,5 +1,5 @@
 # Test Structure Patterns
-**Version:** v0.22.0
+**Version:** v0.23.0
 Patterns for organizing and structuring tests in the RED phase of TDD.
 ## Arrange-Act-Assert (AAA)
 ```python

@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.22.0
+**Version:** v0.23.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -25,10 +25,11 @@
 | command-spec-audit | 1.0.0 | 2026-04-02 | Active |
 | common-errors | 1.0.0 | 2026-03-17 | Active |
 | debate-prism | 1.0.2 | 2026-05-18 | Active |
+| diff-review | 1.0.0 | 2026-10-18 | Active |
 | digitalocean-app-setup | 2.0.0 | 2026-04-25 | Active |
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
 | electron-cross-build | 1.1.0 | 2026-09-10 | Active |
-| electron-development | 1.1.1 | 2026-09-12 | Active |
+| electron-development | 1.3.0 | 2026-10-18 | Active |
 | electron-error-capture | 1.0.0 | 2026-09-12 | Active |
 | engage-apothecary | 1.0.1 | 2026-05-18 | Active |
 | engage-chorus | 1.0.1 | 2026-05-18 | Active |
@@ -106,7 +107,7 @@ Skills use independent semantic versioning, decoupled from the framework version
 - code-path-discovery - Scan source files for behavioral paths in 6-category format
 - codebase-analysis - Analyze codebases for structure, tech stack, and patterns
 - electron-cross-build - Cross-platform Electron builds for Windows, macOS, and Linux
-- electron-development - Electron app development with Vite, Playwright, Windows considerations
+- electron-development - Electron app development with Vite, Playwright, and per-OS notes for Windows, macOS and Linux
 - electron-error-capture - Interactive Electron error capture session with report generation
 - error-handling-patterns - Error hierarchy and API error responses
 - i18n-setup - Internationalization setup and locale management

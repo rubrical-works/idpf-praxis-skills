@@ -1,25 +1,24 @@
 # Electron Fuses and Playwright E2E Testing
 ## Problem
-Playwright E2E tests timeout during `electron.launch()` even though the packaged Electron app works correctly when launched manually.
+Playwright E2E tests time out during `electron.launch()` although the packaged app works when launched manually.
 ## Symptoms
 - `electron.launch()` times out after 30 seconds
-- Deprecation warning: `DEP0190: Passing args to a child process with shell option true`
+- `DEP0190: Passing args to a child process with shell option true` may also appear — unrelated to the fuse (see Troubleshooting)
 - App visible on screen but Playwright can't connect
 - Direct `spawn()` works, Playwright doesn't
 ## Root Cause
-Electron Fuses in `forge.config.ts` block the debugging port Playwright needs:
+The `EnableNodeCliInspectArguments` fuse in `forge.config.ts` disables the Node inspector flags Playwright depends on:
 ```typescript
 new FusesPlugin({
   [FuseV1Options.EnableNodeCliInspectArguments]: false,  // BLOCKS PLAYWRIGHT
 });
 ```
 ## How Playwright Connects
-1. Playwright launches Electron with `--remote-debugging-port=XXXXX`
-2. Playwright connects to that port via Chrome DevTools Protocol (CDP)
-3. If fuse is `false`, Electron ignores the debugging port argument
-4. Playwright can never connect → timeout
+1. Playwright launches Electron with both `--inspect=0` (Node inspector for the main process) and `--remote-debugging-port=0` (Chromium DevTools Protocol for windows)
+2. It waits for the main process to print `Debugger listening on ws://…`, connects to the **Node inspector**, and uses that connection to bootstrap the app
+3. The `nodeCliInspect` fuse (`EnableNodeCliInspectArguments`) controls only whether `--inspect`, `--inspect-brk` and similar flags are respected — not `--remote-debugging-port`
+4. With the fuse `false`, `--inspect=0` is ignored, the Node inspector never starts, and `electron.launch()` times out
 ## Solution
-Enable the fuse for testing:
 ```typescript
 new FusesPlugin({
   version: FuseVersion.V1,
@@ -32,7 +31,7 @@ new FusesPlugin({
 }),
 ```
 ## Security Considerations
-For production releases, consider environment-based toggle:
+Environment-based toggle for production:
 ```typescript
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -40,16 +39,14 @@ new FusesPlugin({
   [FuseV1Options.EnableNodeCliInspectArguments]: !isProduction,
 });
 ```
-Or maintain separate forge configs:
-- `forge.config.ts` - development/testing (debugging enabled)
-- `forge.config.production.ts` - releases (debugging disabled)
+Or separate configs: `forge.config.ts` (development/testing, debugging enabled) and `forge.config.production.ts` (releases, debugging disabled).
 ## Troubleshooting
 | Symptom | Likely Cause |
 |---------|--------------|
-| Timeout in `electron.launch()` | Fuses blocking debug port |
+| Timeout in `electron.launch()` | `EnableNodeCliInspectArguments` fuse disabling `--inspect` |
 | Timeout in `firstWindow()` | DevTools opening, window not loading |
-| DEP0190 warning | Spaces in path (cosmetic, not blocking) |
-| App opens but tests fail | CDP connection blocked by fuses |
+| DEP0190 warning | Node 24+ deprecation of `spawn`/`execFile` with `args` + `shell: true`, emitted by Playwright's Windows launcher — cosmetic, not blocking |
+| App opens but tests fail | Node inspector unavailable (fuse `false`) |
 ## Diagnostic Script
 ```javascript
 const { spawn } = require('child_process');

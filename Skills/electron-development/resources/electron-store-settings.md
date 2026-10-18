@@ -1,10 +1,14 @@
 # electron-store Settings Persistence
 ## Overview
-Use `electron-store` for cross-platform settings persistence in Electron apps.
+Cross-platform settings persistence for Electron apps with `electron-store`.
 ## Installation
 ```bash
 npm install electron-store
 ```
+**Requirements (electron-store v12):**
+- **ESM-only.** Native ESM since v9 with no CommonJS export, so `require('electron-store')` fails. Either the main process is ESM, or it is bundled (the Electron Forge Vite plugin's main build resolves the ESM import into the bundle). For an unbundled CommonJS main process, pin an older major.
+- **Electron 35 or later.** v12 requires it; on older Electron, pin a compatible major.
+- **Main process only.** Importing from a renderer or preload script fails; reach it through IPC.
 ## Basic Usage
 ### Main Process
 ```typescript
@@ -79,8 +83,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 | Windows | `%APPDATA%/{productName}/app-settings.json` |
 | macOS | `~/Library/Application Support/{productName}/app-settings.json` |
 | Linux | `~/.config/{productName}/app-settings.json` |
-The `productName` comes from package.json.
+`productName` comes from package.json.
 ## Schema Validation (Optional)
+Since v10 the `schema` option is validated as JSON Schema **draft 2020-12** (previously draft-07). Keywords that changed between drafts — `definitions` → `$defs`, array-form `items` → `prefixItems` — must use the 2020-12 form.
 ```typescript
 const store = new Store<Settings>({
   schema: {
@@ -97,6 +102,7 @@ const store = new Store<Settings>({
 });
 ```
 ## Migration Support
+electron-store v12 is built on **conf 16**, which changed migration handling, `.get()` key validation and how `name`/`cwd` are resolved. Check the conf 16 release notes before upgrading a store that already has migrations.
 ```typescript
 const store = new Store<Settings>({
   migrations: {
@@ -111,12 +117,9 @@ const store = new Store<Settings>({
 });
 ```
 ## Best Practices
-1. **Type your store:** Use TypeScript interface for settings
-2. **Provide defaults:** All settings should have sensible defaults
-3. **Use getters/setters:** Wrap store access in functions
-4. **Expose via IPC:** Never import electron-store in renderer
+1. **Type your store:** TypeScript interface for settings
+2. **Provide defaults:** every setting has a sensible default
+3. **Use getters/setters:** wrap store access in functions
+4. **Expose via IPC:** never import electron-store in the renderer
 ## Consequences
-- Settings persist across app restarts
-- No database needed for simple settings
-- JSON format readable by users
-- Clear path for migration as app evolves
+Settings persist across restarts; no database needed for simple settings; JSON readable by users; clear migration path as the app evolves.

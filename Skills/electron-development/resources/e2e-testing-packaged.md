@@ -1,18 +1,12 @@
 # E2E Testing Packaged Electron Apps
 ## Problem
-Testing Electron apps with Playwright has two approaches:
-1. **Dev mode**: Launch with `args: ['.']` - starts dev server
-2. **Packaged mode**: Launch with `executablePath` - tests production build
-Dev mode is unreliable because:
-- Vite dev server may not start correctly
-- Timing issues with server startup
-- Different behavior from production
+Playwright can launch Electron two ways: **dev mode** (`args: ['.']`, starts the dev server) or **packaged mode** (`executablePath`, tests the production build). Dev mode is unreliable: the Vite dev server may not start correctly, startup timing varies, and behavior differs from production.
 ## Solution
-Test against the **packaged executable** for reliable E2E tests.
+Test against the **packaged executable**.
 ## Prerequisites
 1. Run `npm run package` before E2E tests
-2. Enable `EnableNodeCliInspectArguments` fuse (see electron-fuses-playwright.md)
-3. Use no-space executable name (see electron-app-naming.md)
+2. Enable the `EnableNodeCliInspectArguments` fuse (see electron-fuses-playwright.md)
+3. Use a no-space executable name (see electron-app-naming.md)
 ## Test Structure
 ```typescript
 import { _electron as electron, ElectronApplication, Page } from 'playwright';
@@ -23,16 +17,16 @@ const APP_EXECUTABLE_NAME = 'MyApp';
 
 function getExecutablePath(): string {
   const platform = process.platform;
-  const basePath = path.join(__dirname, '..', 'out');
+  // electron-forge package defaults --arch to the host arch, so the folder is
+  // e.g. MyApp-darwin-arm64 on Apple Silicon and MyApp-win32-arm64 on Windows on ARM
+  const outDir = path.join(__dirname, '..', 'out', `${APP_EXECUTABLE_NAME}-${platform}-${process.arch}`);
 
   if (platform === 'win32') {
-    return path.join(basePath, `${APP_EXECUTABLE_NAME}-win32-x64`, `${APP_EXECUTABLE_NAME}.exe`);
+    return path.join(outDir, `${APP_EXECUTABLE_NAME}.exe`);
   } else if (platform === 'darwin') {
-    return path.join(basePath, `${APP_EXECUTABLE_NAME}-darwin-x64`,
-      `${APP_EXECUTABLE_NAME}.app`, 'Contents', 'MacOS', APP_EXECUTABLE_NAME);
+    return path.join(outDir, `${APP_EXECUTABLE_NAME}.app`, 'Contents', 'MacOS', APP_EXECUTABLE_NAME);
   } else {
-    return path.join(basePath, `${APP_EXECUTABLE_NAME}-linux-x64`,
-      APP_EXECUTABLE_NAME.toLowerCase());
+    return path.join(outDir, APP_EXECUTABLE_NAME.toLowerCase());
   }
 }
 
@@ -67,15 +61,13 @@ test.describe('App Tests', () => {
 });
 ```
 ## Test Categories
-### 1. File-Based Tests (No App Launch)
-Fast tests that don't need Electron:
+**1. File-based tests (no app launch)** — fast, no Electron needed:
 ```typescript
 test('icon files exist', () => {
   expect(fs.existsSync('build/icon.ico')).toBe(true);
 });
 ```
-### 2. Window Tests (App Launch Required)
-Tests that need the running app:
+**2. Window tests (app launch required):**
 ```typescript
 test('window title correct', async () => {
   expect(await window.title()).toBe('My App Name');
@@ -93,7 +85,7 @@ export default defineConfig({
 });
 ```
 ## CI Considerations
-CI workflow must package before E2E:
+Package before E2E:
 ```yaml
 steps:
   - run: npm ci

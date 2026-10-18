@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "review-criteria-schema.json",
+  "title": "diff-review criteria",
+  "description": "Validates review-criteria.json: the read budget, the criteria a diff reviewer evaluates, the findings policy, the verdict rule and the opt-in extensions.",
+  "type": "object",
+  "required": ["version", "budget", "criteria", "findingsPolicy", "verdict", "extensions"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "budget": {
+      "type": "object",
+      "required": ["filesReadInFull", "diffLinesReadInFull", "countFirst", "readOrder", "overBudget"],
+      "additionalProperties": false,
+      "properties": {
+        "filesReadInFull": { "type": "integer", "minimum": 1, "description": "Maximum number of files read in full before the remainder are counted, not read" },
+        "diffLinesReadInFull": { "type": "integer", "minimum": 1, "description": "Maximum number of diff lines read in full across all files" },
+        "countFirst": { "type": "string", "minLength": 1 },
+        "readOrder": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "overBudget": { "type": "string", "minLength": 1 }
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/criterion" }
+    },
+    "findingsPolicy": {
+      "type": "object",
+      "required": ["perCriterion", "lineAnchoring"],
+      "additionalProperties": false,
+      "properties": {
+        "perCriterion": { "type": "string", "minLength": 1 },
+        "lineAnchoring": { "type": "string", "minLength": 1 }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": ["fail", "warn", "pass"],
+      "additionalProperties": false,
+      "properties": {
+        "fail": { "type": "string", "minLength": 1 },
+        "warn": { "type": "string", "minLength": 1 },
+        "pass": { "type": "string", "minLength": 1 }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/extension" }
+    }
+  },
+  "definitions": {
+    "criterion": {
+      "type": "object",
+      "required": ["id", "name", "severity", "description", "check", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "severity": { "type": "string", "enum": ["fail", "warn"] },
+        "description": { "type": "string", "minLength": 1 },
+        "check": { "type": "string", "minLength": 1, "description": "What the reviewer looks for" },
+        "evidence": { "type": "string", "minLength": 1, "description": "What a finding under this criterion must cite" }
+      }
+    },
+    "extension": {
+      "type": "object",
+      "required": ["domainId", "loadedByDefault", "path", "criterionPrefix", "whenMissing"],
+      "additionalProperties": false,
+      "properties": {
+        "domainId": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "loadedByDefault": { "type": "boolean" },
+        "path": { "type": "string", "minLength": 1 },
+        "criterionPrefix": { "type": "string", "minLength": 1 },
+        "whenMissing": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
