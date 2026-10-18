@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.2] - 2026-10-18
+
+Files extracted from a skill package now carry a real date instead of 2020-01-01. Every file in a package is dated by the last commit to that skill's `SKILL.md`, so a skill last edited in April reads as April once installed. Packages stay reproducible: rebuilding unchanged sources produces the same bytes, so a package's checksum still changes only when its content does. No skill's content changed in this release.
+
+**Upgrade notes:**
+- **Every package's checksum changes once in this release**, because every package's file dates moved off 2020-01-01. A consumer that detects updates by checksum (idpf-praxis-dev's `/fw-import-skills --update`) will see all skills as updated one time even though their content is unchanged; re-importing is safe. From the next release on, checksums change only with content.
+- **Zip dates carry no timezone.** They are written in UTC, so extracted files can show a time offset from local time by your UTC offset; the day is correct.
+
+### Fixed
+- **Packaged skills stamped every file 2020-01-01 (#381).** The fixed date was chosen in #317 to keep rebuilds byte-identical, but consumers extracted it as every file's modification date. `build-skill-packages.js` now stamps each package with the last commit time of the source `Skills/<name>/SKILL.md`. Minimization passes rewrite only `.min-mirror/`, so they never move the date. `README-DIST.md` documents the policy.
+
+### Repository
+- **Skill CI fetches full git history.** The package-date tests compare commit times per path, which a depth-1 checkout collapses to one commit.
+- **Skill CI runs on each matrix OS.** `runs-on` was pinned to `ubuntu-latest`, so the Windows and macOS matrix jobs had been running on Ubuntu. Each job now runs on its own runner, with steps defaulting to `bash`.
+
 ## [0.23.1] - 2026-10-18
 
 The `diff-review` skill's contract is corrected on three points found by its first content-currency audit. The reviewer is now told to run every `git diff` in the merge-base form, so the diff and the commit log describe the same change set once the base branch has moved on. Binary files in the range are recorded in a new `budget.binaryFiles` list instead of forcing a made-up line count, and `review-criteria.json` carries a proper draft-07 `$schema` value. Nothing else in the catalogue changed.

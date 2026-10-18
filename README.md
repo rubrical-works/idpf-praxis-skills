@@ -26,6 +26,8 @@ If you use Praxis Hub Manager, skills are installed and updated automatically as
    ```
 3. Restart your Claude Code session
 
+**File dates.** Every file in a package carries the same date: the time of the last commit to that skill's `SKILL.md`. Build-time minimization does not change it. Packages built from unchanged sources are byte-identical, so a package's checksum changes only when its content does. Zip dates have no timezone; they are written in UTC, so extracted files may show a time offset from your local clock by your UTC offset.
+
 ### Browse First, Then Download
 
 Each skill directory in [Skills/](Skills/) contains the full documentation. Click any skill link below to read its `SKILL.md` and resources before installing.

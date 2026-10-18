@@ -1,5 +1,5 @@
 # General Programming Errors
-**Version:** v0.23.1
+**Version:** v0.23.2
 
 ## Logic Errors
 
