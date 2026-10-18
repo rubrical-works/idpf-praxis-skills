@@ -7,7 +7,7 @@
   "required": ["version", "budget", "criteria", "findingsPolicy", "verdict", "extensions"],
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
+    "$schema": { "type": "string", "pattern": "^https?://", "description": "The draft-07 meta-schema URI — a URI with a scheme, as draft-07 section 7 requires. Not a pointer to this file: the criteria file validates against this schema, which names itself by $id." },
     "version": { "type": "integer", "minimum": 1 },
     "budget": {
       "type": "object",

@@ -1,10 +1,10 @@
 {
-  "$schema": "review-criteria-schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "version": 1,
   "budget": {
     "filesReadInFull": 20,
     "diffLinesReadInFull": 1500,
-    "countFirst": "Run git diff --numstat <base>..<branch> and git log --oneline <base>..<branch> before reading any hunk. Record every file with its line counts, and every commit, in the findings document's budget block.",
+    "countFirst": "Run git diff --numstat <base>...<branch> and git log --oneline <base>..<branch> before reading any hunk. Three dots for git diff (merge-base form, so the diff holds only the branch's own changes), two for git log (the commit range). Record every file with its line counts, and every commit, in the findings document's budget block. A numstat row of - - is a binary file: list it in budget.binaryFiles by path, count it as 0 lines, and never invent a count for it or drop it.",
     "readOrder": [
       "files the issue declares under Files to modify",
       "test files",
@@ -26,7 +26,7 @@
       "name": "No files outside the declared scope",
       "severity": "fail",
       "description": "Every changed file is named by the issue's Files to modify declaration or its Files Changed section.",
-      "check": "Compare git diff --name-only <base>..<branch> against the declared paths. A changed file the declaration does not name is a finding. Always-protected paths (framework-config.json, framework-manifest.json, .claude/metadata/**, .gh-pmu.json, CHARTER.md) are findings even when a Files Changed section lists them, because only the authored declaration can license them.",
+      "check": "Compare git diff --name-only <base>...<branch> against the declared paths. A changed file the declaration does not name is a finding. Always-protected paths (framework-config.json, framework-manifest.json, .claude/metadata/**, .gh-pmu.json, CHARTER.md) are findings even when a Files Changed section lists them, because only the authored declaration can license them.",
       "evidence": "The undeclared path and the declaration it is absent from."
     },
     {

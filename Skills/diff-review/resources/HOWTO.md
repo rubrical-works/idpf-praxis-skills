@@ -7,7 +7,7 @@ A lightweight, unanchored per-diff code review: a reviewer agent reads one commi
 | File | Purpose |
 |------|---------|
 | `review-criteria.json` | The criteria the reviewer evaluates (id, severity, check, evidence), the read budget caps, the per-criterion findings policy, the verdict rule, and the opt-in `anti-pattern-analysis` extension |
-| `review-criteria-schema.json` | JSON Schema (draft-07) for `review-criteria.json` |
+| `review-criteria-schema.json` | JSON Schema (draft-07) that `review-criteria.json` validates against. Run any draft-07 validator with this schema over the criteria file after editing it; the criteria file's `$schema` names the draft-07 meta-schema, not this file |
 | `output-schema.json` | JSON Schema (draft-07) for the findings document the reviewer returns. Self-contained, so any draft-07 validator can check a review before you act on it |
 
 ## Quick Start
@@ -43,8 +43,11 @@ acceptance criteria and the charter only.
 
 Procedure:
 1. Read .claude/skills/diff-review/review-criteria.json from disk.
-2. Count first: run git diff --numstat main..work/142 and git log --oneline main..work/142.
+2. Count first: run git diff --numstat main...work/142 (three dots: merge-base form) and
+   git log --oneline main..work/142 (two dots: the commit range).
    Record the file list, line counts and commits in the budget block before reading any hunk.
+   A numstat row of - - is a binary file: list it in budget.binaryFiles, count it as 0 lines,
+   never invent a count for it.
 3. Read hunks within budget.filesReadInFull and budget.diffLinesReadInFull, in budget.readOrder.
    List any file you could not read in full in budget.countedNotRead. Never drop one silently.
 4. Evaluate every entry in criteria[]. Emit at least one finding per criterion: one pass
@@ -67,7 +70,8 @@ The findings document the reviewer returned:
     "filesReadInFull": 4,
     "diffLinesListed": 186,
     "diffLinesRead": 186,
-    "countedNotRead": []
+    "countedNotRead": [],
+    "binaryFiles": []
   },
   "findings": [
     { "criterion": "hunk-maps-to-ac", "file": "src/routes/sessions.js", "line": 18, "status": "pass", "evidence": "Hunks at lines 18-44 implement the 201 and 401 responses (AC1, AC2)." },

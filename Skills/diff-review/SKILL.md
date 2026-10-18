@@ -5,7 +5,7 @@ type: injector
 disable-model-invocation: true
 user-invocable: false
 defaultSkill: true
-version: "1.0.0"
+version: "1.1.0"
 frameworkCompatibility: ">=0.108.0"
 lastUpdated: "2026-10-18"
 license: Complete terms in LICENSE.txt
@@ -25,7 +25,7 @@ Primary consumer: the Merge-Back Review Gate (Tier 3) of concurrent `/work --non
 | File | Purpose |
 |------|---------|
 | `review-criteria.json` | The criteria the reviewer evaluates — id, severity, what to check, what counts as evidence — plus the read budget, the verdict rule and the opt-in extension |
-| `review-criteria-schema.json` | JSON Schema (draft-07) for `review-criteria.json` |
+| `review-criteria-schema.json` | JSON Schema (draft-07) that `review-criteria.json` validates against. The criteria file's own `$schema` names the draft-07 meta-schema, as draft-07 requires of that keyword; this companion is named here and by its `$id`, not through `$schema` |
 | `output-schema.json` | JSON Schema (draft-07) for the findings document the reviewer returns |
 | `resources/HOWTO.md` | Worked example: a reviewer prompt, the resulting findings document, and wiring for non-IDPF projects |
 
@@ -35,7 +35,7 @@ The reviewer receives exactly these inputs:
 
 | Input | Form | Why |
 |-------|------|-----|
-| Commit range | `<base>..<branch>`, e.g. `skills/0.23.0..work/375` | The only code under review. Nothing outside the range is judged |
+| Commit range | `<base>..<branch>`, e.g. `skills/0.23.0..work/375` | The only code under review: the branch's commits since its merge base with `<base>`. Nothing outside that set is judged — see Read Budget for why `git diff` is run with three dots |
 | Issue number and its acceptance criteria | `#N` plus the AC checklist text, and the issue's `Files to modify:` declaration when one exists | Every hunk is mapped against these |
 | Charter path | `CHARTER.md` (or the project's equivalent) | Tech stack, conventions and declared spelling policy |
 | Domain ids | Optional list, e.g. `security`, `accessibility` | Narrows which extension checks apply; absent means core criteria only |
@@ -46,7 +46,7 @@ The reviewer receives exactly these inputs:
 
 What makes this review lightweight is a **count-first** read, the same pattern the framework's prior-art sweep uses:
 
-1. **Count before reading.** Run `git diff --numstat <base>..<branch>` to list every changed file with its added and removed line counts, and `git log --oneline <base>..<branch>` to list the commits. Record the file list, the per-file counts and the totals in the findings document's `budget` block before any hunk is read.
+1. **Count before reading.** Run `git diff --numstat <base>...<branch>` to list every changed file with its added and removed line counts, and `git log --oneline <base>..<branch>` to list the commits. Record the file list, the per-file counts and the totals in the findings document's `budget` block before any hunk is read. The dot counts differ on purpose: for `git log`, `A..B` is the commit range `^A B`; for `git diff`, `A..B` compares the two endpoints and `A...B` compares from their merge base, so only the three-dot form confines the diff to the branch's own commits once `<base>` has moved on. Every `git diff` the reviewer runs uses three dots; `git log` keeps two. A numstat row of `-` `-` is a binary file: list it in `budget.binaryFiles[]` by path, count it as 0 lines in the totals and treat it as changed but unreadable. Never invent a line count for it and never drop it — a binary file in the range is itself something the `scope-declared` check must see.
 2. **Read within caps.** The caps come from `review-criteria.json` → `budget`: `filesReadInFull` (default 20) and `diffLinesReadInFull` (default 1500). The caller may override either. Read files in `budget.readOrder`: files the issue declares in `Files to modify:` first, then test files, then the remaining files by diff size ascending, so the files most likely to decide the verdict are read while budget remains.
 3. **Report what was not read.** A file not read in full because a cap was reached is listed in `budget.countedNotRead[]` with its path and line count. Counted-not-read files are never silently dropped or omitted: the count is itself evidence, and the verdict rule below caps a review that could not read everything at `warn`.
 

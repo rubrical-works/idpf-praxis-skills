@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.1] - 2026-10-18
+
+The `diff-review` skill's contract is corrected on three points found by its first content-currency audit. The reviewer is now told to run every `git diff` in the merge-base form, so the diff and the commit log describe the same change set once the base branch has moved on. Binary files in the range are recorded in a new `budget.binaryFiles` list instead of forcing a made-up line count, and `review-criteria.json` carries a proper draft-07 `$schema` value. Nothing else in the catalogue changed.
+
+**Upgrade notes:**
+- **`diff-review` moved 1.0.0 → 1.1.0, so re-import to pick this up.** The findings document now **requires** `budget.binaryFiles` (an empty array when the range held no binary file); a consumer validating reviewer output against `output-schema.json` must expect the field, and a reviewer prompt built from the old HOWTO template must run `git diff --numstat <base>...<branch>` with three dots.
+- **`review-criteria.json`'s `$schema` is now the draft-07 meta-schema URI**, not a pointer to `review-criteria-schema.json`. Editors that used the old relative value for schema association should be pointed at the companion schema directly; the companion still names itself by `$id`.
+
+### Fixed
+- **`diff-review` ran `git diff` on a two-dot range (#378).** `git diff A..B` compares two endpoints while `git log A..B` is a commit range, so the skill's paired invocations enumerated different change sets whenever the shared tracker branch had advanced past the fork point, and the budget, `hunk-maps-to-ac` and `scope-declared` criteria judged code the branch never touched. Every `git diff` in `SKILL.md`, `review-criteria.json` and the HOWTO prompt now uses `<base>...<branch>`; `git log` keeps `<base>..<branch>`; the Input Contract says the review covers the branch's commits since the merge base.
+- **`diff-review` had no way to record a binary file (#378).** `git diff --numstat` prints `-` `-` for a binary file, and the integer-typed budget could not carry that. `SKILL.md`, `budget.countFirst` and the HOWTO now say a binary row is listed in `budget.binaryFiles` by path and counted as 0 lines; `output-schema.json` adds the required array.
+- **`review-criteria.json` used a relative filename as `$schema` (#378).** Draft-07 requires a URI with a scheme naming the meta-schema. The value is now `http://json-schema.org/draft-07/schema#`, `review-criteria-schema.json` rejects a relative value, and `SKILL.md` and the HOWTO state that the criteria file validates against the companion schema.
+
 ## [0.23.0] - 2026-10-18
 
 A new `diff-review` injector skill gives a reviewer agent the contract for a lightweight, unanchored read of one commit range against an issue's acceptance criteria and the project charter: a declared read budget, nine criteria with severities, and a single JSON findings document with exactly one verdict that a merge gate can act on without reading prose. `/fw-audit-skills` now audits skill content for currency against the frameworks, tools and practices each skill covers, using two independent analysts with a reconciliation pass, a cheaper `--single-agent` mode, and `--skill` targeting. `electron-development` treats Windows, macOS and Linux as equal development hosts, and its guidance on electron-store, Playwright fuses, the GitHub API and CI actions is current again.
