@@ -1,5 +1,5 @@
 # REFACTOR Phase Checklist
-**Version:** v0.23.2
+**Version:** v0.24.0
 Quick reference for completing REFACTOR phase successfully.
 ## Before Refactoring
 - [ ] GREEN phase complete with all tests passing

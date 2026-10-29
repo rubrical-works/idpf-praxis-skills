@@ -1,6 +1,6 @@
 {
   "generatedAt": "2020-01-01T00:00:00.000Z",
-  "version": "0.23.2",
+  "version": "0.24.0",
   "skillCount": 56,
   "skills": [
     {
@@ -222,10 +222,10 @@
       "name": "diff-review",
       "description": "Lightweight, unanchored per-diff code review against an issue's acceptance criteria and the project charter, emitting machine-readable findings",
       "triggers": [],
-      "version": "1.1.0",
+      "version": "1.2.0",
       "frameworkCompatibility": ">=0.108.0",
-      "lastUpdated": "2026-10-18",
-      "checksum": "6668542fc836f6f12a86efd638b52f997a583d51d591684930ff529c0b74f5a5",
+      "lastUpdated": "2026-10-28",
+      "checksum": "1009f55acbfd1c9859f99c01a6d89d8f0fdbdc86741d631394d8e53337e5ae60",
       "category": "code-quality",
       "categoryLabel": "Code Quality",
       "relevantTechStack": [

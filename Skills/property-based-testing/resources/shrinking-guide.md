@@ -1,5 +1,5 @@
 # Shrinking Guide
-**Version:** v0.23.2
+**Version:** v0.24.0
 
 Understanding how property-based testing frameworks minimize failing inputs.
 

@@ -84,6 +84,46 @@
       "description": "The range leaves no debug output, breakpoints, commented-out code, or placeholder markers behind.",
       "check": "Scan added lines for console.log and print-style debug output outside logging infrastructure, debugger statements, large commented-out blocks, and TODO, FIXME, XXX or HACK markers that the issue did not ask for.",
       "evidence": "The file and line and the leftover text."
+    },
+    {
+      "id": "error-path-outcome",
+      "name": "Failures are not reported as success",
+      "severity": "fail",
+      "description": "A changed catch block, error branch or early return reports the failure it handled, rather than success.",
+      "check": "For each added or changed catch, error branch, early return and exit path, read what the caller receives. A finding is any path that reports success after a failure (ok: true, a success message, a repaired or done status), discards a returned { success: false } or error value without acting on it, exits 0 after a failure, or promises a warning that is never added to the warnings it returns.",
+      "evidence": "The file and line of the error path, the failure it handles, and the success it reports instead or the result it discards."
+    },
+    {
+      "id": "edge-input",
+      "name": "Edge-case input handled in changed parsing or matching",
+      "severity": "warn",
+      "description": "Changed code that parses or matches input handles the edge cases that real input carries.",
+      "check": "For each added or changed parser, split, regex or comparison over text, file content, paths or JSON, ask whether it handles: CRLF line endings; git-quoted paths (spaces or non-ASCII characters, which git wraps in quotes and escapes); a JSON null, an empty value or a non-array where an array is expected; and whole-word or whole-token matching where a substring match is wrong (java inside JavaScript). An unhandled case that the input source can produce is a finding.",
+      "evidence": "The file and line of the parse or match, the input case it mishandles, and what it does with that input."
+    },
+    {
+      "id": "path-containment",
+      "name": "Paths from external input stay inside their root",
+      "severity": "fail",
+      "description": "A path built from external input is checked to resolve inside the root it is meant to stay under.",
+      "check": "For each added or changed path built from input this code does not control (a manifest or config file entry, renderer IPC arguments, CLI arguments, an API response), find the check that the resolved path stays inside its intended root: rejecting .. segments and absolute paths, or resolving the path and comparing it against the resolved root. A path used for a read, write, delete, spawn or network call without that check is a finding.",
+      "evidence": "The file and line where the path is built, its external source, and the file-system or process operation it reaches without a containment check."
+    },
+    {
+      "id": "state-composition",
+      "name": "Writes merge into shared state rather than replacing it",
+      "severity": "warn",
+      "description": "A write to a structure that another feature or an earlier step also writes merges into it instead of replacing it whole.",
+      "check": "For each added or changed write of a whole key, block, section or file (JSON written back from a partial object, a config rewritten from a fixed key list, a directory wiped before re-population, a managed block replaced), find who else writes that structure. If another feature or an earlier step writes it, a replace that drops their fields is a finding unless the range shows it reads and preserves them, or the overwrite is the stated intent.",
+      "evidence": "The file and line of the write, the structure it replaces, and the other writer whose state it can drop."
+    },
+    {
+      "id": "external-contract",
+      "name": "External tool behavior is checked, not assumed",
+      "severity": "warn",
+      "description": "A call to an external CLI or API relies only on flags, output shape and executable names that the range shows were checked.",
+      "check": "For each added or changed call to an external CLI or API, note what the code assumes: flags and their spelling, the output format it parses, exit codes, and the platform executable name (npm versus npm.cmd on Windows, a shell built-in versus a binary). An assumption the range does not support with a test, a recorded fixture of real output, or a cited help or documentation output is a finding.",
+      "evidence": "The file and line of the call, the assumption it makes, and either the test or fixture that supports it or the statement that none is in the range."
     }
   ],
   "findingsPolicy": {

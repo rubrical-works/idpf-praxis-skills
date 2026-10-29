@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.24.0] - 2026-10-28
+
+`diff-review` now asks whether changed logic is correct, not only whether a diff is in scope, tested and tidy. Five new criteria catch a failure reported as success, edge-case input such as CRLF line endings or git-quoted paths, a path from external input that escapes its root, a write that overwrites another feature's state, and an assumption about an external tool that nothing in the change checks. Each has a worked example in the skill's HOWTO. Every packaged skill is now checked against its source before release, so a package cannot ship older instructions under a newer version number. No other skill's content changed.
+
+**Upgrade notes:**
+- **`diff-review` moved 1.1.0 → 1.2.0, so re-import to pick this up.** The findings document schema is unchanged, so existing consumers keep validating; a reviewer now evaluates 14 criteria instead of 9 and emits at least one finding for each.
+- **Two of the new criteria fail a review.** `error-path-outcome` and `path-containment` carry `fail` severity, so a range that trips either now gets a `fail` verdict; `edge-input`, `state-composition` and `external-contract` are `warn`. The read budget caps (`filesReadInFull` 20, `diffLinesReadInFull` 1500) are unchanged.
+
+### Added
+- **Correctness criteria in `diff-review` (#389).** `review-criteria.json` adds `error-path-outcome`, `edge-input`, `path-containment`, `state-composition` and `external-contract`, each with a check and an evidence rule. `resources/HOWTO.md` gains a Correctness Criteria Examples section with a short diff and the resulting finding for each, and the original worked example covers all 14 criteria. A race and stale-async criterion was considered and deferred: one diff rarely shows the concurrent writer or the stale read.
+
+### Repository
+- **Packaged skills are tested against their sources (#391).** `build-skill-packages.js` packages `SKILL.md` and `resources/` from `.min-mirror/`, so a source edit packaged without a mirror refresh shipped the previous text, which is how the first `diff-review` 1.2.0 package carried a 1.1.0 `SKILL.md` before it was rebuilt (#389). `tests/skills/packaged-skill-sources.test.js` now requires unminimized skills to package byte-identical to source and minimized skills to keep their source `name`, `version` and `lastUpdated`, with fixture zips proving the check rejects a stale package. The zip reader is shared in `tests/helpers/zip-entry.js`.
+- **`/fw-audit-skills` keeps an audit manifest (#373).** Step 5a records each audited skill in `.claude/local-metadata/skill-audit-manifest.json`, validated by a schema: when it was audited, at which skill version, in which mode, the structural and currency results, and the issues and documents that hold its findings. Dry runs are marked and record no issues.
+- **`/fw-audit-skills` issue bodies are fuller (#374).** The Step 5 template describes each finding by kind and adds Motivation, Scope and standard regression-test, version-bump and re-fetch acceptance criteria.
+- **The CI-gate contract test accepts `--sha` (#390).** The hub's post-merge gate in `/prepare-release` scopes `wait-for-ci.js` by commit, which idpf-praxis-dev#3312 made an accepted scope beside `--branch`; the test predicate now agrees and still rejects an unscoped call.
+- **Dependencies.** `fast-uri` 3.1.8 → 3.1.9 (#388), and a project `.npmrc` sets a 7-day minimum release age for installs.
+- **Hub upgraded from v0.108.0 to v0.113.0.** The retired `domain-entities.json` is removed, `@framework-script` headers are synced, and code-review output for this release is recorded in `.code-review-manifest.json`.
+
 ## [0.23.2] - 2026-10-18
 
 Files extracted from a skill package now carry a real date instead of 2020-01-01. Every file in a package is dated by the last commit to that skill's `SKILL.md`, so a skill last edited in April reads as April once installed. Packages stay reproducible: rebuilding unchanged sources produces the same bytes, so a package's checksum still changes only when its content does. No skill's content changed in this release.

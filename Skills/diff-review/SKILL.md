@@ -5,9 +5,9 @@ type: injector
 disable-model-invocation: true
 user-invocable: false
 defaultSkill: true
-version: "1.1.0"
+version: "1.2.0"
 frameworkCompatibility: ">=0.108.0"
-lastUpdated: "2026-10-18"
+lastUpdated: "2026-10-28"
 license: Complete terms in LICENSE.txt
 category: code-quality
 relevantTechStack: [code-review, git, json-schema]
@@ -52,9 +52,21 @@ What makes this review lightweight is a **count-first** read, the same pattern t
 
 Every criterion is still evaluated against what was read; the `budget` block tells the consumer how complete the read was.
 
+**The correctness criteria leave the caps unchanged** — `filesReadInFull` stays 20 and `diffLinesReadInFull` stays 1500 — because they judge the same hunks the read already covers: they add evaluation per hunk, not lines read. Where `state-composition` needs to know who else writes a structure, the reviewer searches the repository for that structure's name rather than reading further files in full, so the lookup costs a search, not budget.
+
 ## Criteria
 
 Re-read `review-criteria.json` from disk and evaluate **every** entry in `criteria[]` — the reviewer cannot skip one. Each criterion carries an `id`, a `severity` (`fail` or `warn`), a `check` describing what to look for and an `evidence` line describing what a finding must cite. The core set covers: every hunk maps to an acceptance criterion or is flagged unrelated; no files outside the declared scope; tests present for new behavior; tests authentic (judged by the framework's `/bad-test-review` criteria, which this skill points at rather than restates); charter conventions honored; obvious security faults; every commit in range carries `Refs #N`; the declared spelling policy honored; no debugging leftovers.
+
+Five more criteria ask whether the changed logic is **correct**, the class of defect a scope-and-tests read misses:
+
+- `error-path-outcome` (fail) — a changed catch, error branch or early return reports success, discards a returned failure, exits 0 on failure, or drops a warning it promised.
+- `edge-input` (warn) — changed parsing or matching mishandles CRLF, git-quoted paths, `null`, empty or non-array values, or matches a substring where a whole word is meant.
+- `path-containment` (fail) — a path built from external input (a manifest, a config file, renderer or CLI arguments) is used without a check that it stays inside its root.
+- `state-composition` (warn) — a write replaces a whole structure that another feature or an earlier step also writes, instead of merging into it.
+- `external-contract` (warn) — a call to an external CLI or API relies on flags, output shape or a platform executable name (`npm` versus `npm.cmd`) that nothing in the range shows was checked.
+
+`resources/HOWTO.md` § Correctness Criteria Examples has a short diff and the resulting finding for each.
 
 **Emit at least one finding per criterion.** A criterion with no violation emits one `pass` finding so the consumer can see it was evaluated; each violation emits its own `warn` or `fail` finding at the criterion's severity, naming the file and line.
 

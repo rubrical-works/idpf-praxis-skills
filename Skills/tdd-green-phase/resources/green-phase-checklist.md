@@ -1,5 +1,5 @@
 # GREEN Phase Checklist
-**Version:** v0.23.2
+**Version:** v0.24.0
 ## Before Implementing
 - [ ] RED phase complete with verified failing test
 - [ ] Test requirements clearly understood

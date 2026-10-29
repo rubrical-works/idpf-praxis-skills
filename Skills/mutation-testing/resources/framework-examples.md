@@ -1,5 +1,5 @@
 # Framework Examples
-**Version:** v0.23.2
+**Version:** v0.24.0
 Setup and usage examples for popular mutation testing frameworks.
 ## Python - mutmut
 ### Installation

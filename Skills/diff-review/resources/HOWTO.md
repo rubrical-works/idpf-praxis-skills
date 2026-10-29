@@ -84,13 +84,163 @@ The findings document the reviewer returned:
     { "criterion": "security-obvious", "file": "src/routes/sessions.js", "line": 40, "status": "pass", "evidence": "401 body is the fixed string 'invalid credentials'; the caught error is logged, not returned." },
     { "criterion": "commit-refs", "file": null, "line": null, "status": "pass", "evidence": "3 commits (a1f09c2, 7be4d10, c93e5a7) each carry Refs #142." },
     { "criterion": "spelling-policy", "file": null, "line": null, "status": "pass", "evidence": "No spelling policy declared in CHARTER.md." },
-    { "criterion": "no-debug-leftovers", "file": "src/auth/verify.js", "line": 22, "status": "warn", "evidence": "console.log('verify', username) left in the credential path." }
+    { "criterion": "no-debug-leftovers", "file": "src/auth/verify.js", "line": 22, "status": "warn", "evidence": "console.log('verify', username) left in the credential path." },
+    { "criterion": "error-path-outcome", "file": "src/routes/sessions.js", "line": 38, "status": "pass", "evidence": "The catch around verify() responds 401 and returns; no path after a failed verify sends 201." },
+    { "criterion": "edge-input", "file": "src/auth/verify.js", "line": 9, "status": "pass", "evidence": "Rejects a missing, null or empty username or password before comparing; credentials are compared whole, never by substring." },
+    { "criterion": "path-containment", "file": null, "line": null, "status": "pass", "evidence": "No path in the range is built from external input." },
+    { "criterion": "state-composition", "file": "src/routes/sessions.js", "line": 30, "status": "pass", "evidence": "Creates a new session entry; does not rewrite the session store or any shared structure." },
+    { "criterion": "external-contract", "file": null, "line": null, "status": "pass", "evidence": "No external CLI or API is called in the range." }
   ],
   "verdict": "fail"
 }
 ```
 
 The gate blocks the merge on the `scope-declared` fail, and the two warnings travel with it: the unrelated health-endpoint hunk and the leftover `console.log`. Nothing in the document needs a human to read prose to act on it.
+
+## Correctness Criteria Examples
+
+Five criteria ask whether the changed logic is correct, not only whether it is in scope and tested. Each example below is a short diff showing a defect the criterion catches, and the findings document it produces. To keep them short, each document is trimmed to the finding being illustrated. A real review still emits at least one finding for every criterion, as the Worked Example above does.
+
+### `error-path-outcome`
+
+A copy step whose failure is logged but still reported as a clean success:
+
+```diff
+--- a/src/upgrade/copy-rules.js
++++ b/src/upgrade/copy-rules.js
+@@ -12,5 +12,9 @@ function copyRules(files, dest) {
+   for (const file of files) {
+-    fs.copyFileSync(file, path.join(dest, path.basename(file)));
++    try {
++      fs.copyFileSync(file, path.join(dest, path.basename(file)));
++    } catch (err) {
++      log.warn(`could not copy ${file}: ${err.message}`);
++    }
+   }
+   return { success: true, copied: files.length };
+ }
+```
+
+```json
+{
+  "issue": 201,
+  "range": "main..work/201",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 6, "diffLinesRead": 6, "countedNotRead": [], "binaryFiles": [] },
+  "findings": [
+    { "criterion": "error-path-outcome", "file": "src/upgrade/copy-rules.js", "line": 15, "status": "fail", "evidence": "The catch logs the failed copy and continues; the function still returns { success: true, copied: files.length }, so a failed copy is reported as a clean upgrade." }
+  ],
+  "verdict": "fail"
+}
+```
+
+### `edge-input`
+
+A tech-stack detector that matches a substring where a whole word is meant:
+
+```diff
+--- a/src/charter/detect-stack.js
++++ b/src/charter/detect-stack.js
+@@ -4,3 +4,3 @@ const LANGUAGES = ['java', 'go', 'rust', 'python'];
+ function detectLanguages(text) {
+-  return LANGUAGES.filter((lang) => text.split(/\s+/).includes(lang));
++  return LANGUAGES.filter((lang) => text.toLowerCase().includes(lang));
+ }
+```
+
+```json
+{
+  "issue": 202,
+  "range": "main..work/202",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 2, "diffLinesRead": 2, "countedNotRead": [], "binaryFiles": [] },
+  "findings": [
+    { "criterion": "edge-input", "file": "src/charter/detect-stack.js", "line": 5, "status": "warn", "evidence": "includes() is a substring match: 'JavaScript' yields java and 'Django' yields go. The lowercase comparison is wanted, but the match must be whole-word." }
+  ],
+  "verdict": "warn"
+}
+```
+
+### `path-containment`
+
+Rule paths read from a downloaded manifest and joined onto the project root unchecked:
+
+```diff
+--- a/src/hub/setup-rules.js
++++ b/src/hub/setup-rules.js
+@@ -20,2 +20,5 @@ function installRules(manifest, projectRoot) {
+-  // rules are copied by the hub installer
++  for (const rule of manifest.rules) {
++    const target = path.join(projectRoot, rule.path);
++    fs.writeFileSync(target, rule.content);
++  }
+ }
+```
+
+```json
+{
+  "issue": 203,
+  "range": "main..work/203",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 5, "diffLinesRead": 5, "countedNotRead": [], "binaryFiles": [] },
+  "findings": [
+    { "criterion": "path-containment", "file": "src/hub/setup-rules.js", "line": 21, "status": "fail", "evidence": "rule.path comes from the downloaded manifest and is joined onto projectRoot with no check; a value such as ../../.ssh/config or an absolute path writes outside the project." }
+  ],
+  "verdict": "fail"
+}
+```
+
+### `state-composition`
+
+A pull that writes every hub command over the project's copy, including commands the project owns:
+
+```diff
+--- a/src/hub/pull-commands.js
++++ b/src/hub/pull-commands.js
+@@ -8,6 +8,4 @@ function pullCommands(hubDir, projectDir) {
+   for (const name of fs.readdirSync(hubDir)) {
+-    if (isManaged(path.join(projectDir, name))) {
+-      fs.copyFileSync(path.join(hubDir, name), path.join(projectDir, name));
+-    }
++    fs.copyFileSync(path.join(hubDir, name), path.join(projectDir, name));
+   }
+ }
+```
+
+```json
+{
+  "issue": 204,
+  "range": "main..work/204",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 4, "diffLinesRead": 4, "countedNotRead": [], "binaryFiles": [] },
+  "findings": [
+    { "criterion": "state-composition", "file": "src/hub/pull-commands.js", "line": 9, "status": "warn", "evidence": "The isManaged() guard is removed, so the pull replaces project-owned command files whole; the project's own edits to an extensible command are reverted on every pull." }
+  ],
+  "verdict": "warn"
+}
+```
+
+### `external-contract`
+
+A bare `npm` spawned without a shell, which Windows does not resolve:
+
+```diff
+--- a/src/project/install.js
++++ b/src/project/install.js
+@@ -3,4 +3,4 @@ const { spawnSync } = require('child_process');
+ function installDependencies(cwd) {
+-  return spawnSync('npm.cmd', ['ci'], { cwd, shell: false });
++  return spawnSync('npm', ['ci'], { cwd, shell: false });
+ }
+```
+
+```json
+{
+  "issue": 205,
+  "range": "main..work/205",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 2, "diffLinesRead": 2, "countedNotRead": [], "binaryFiles": [] },
+  "findings": [
+    { "criterion": "external-contract", "file": "src/project/install.js", "line": 4, "status": "warn", "evidence": "spawnSync('npm') without a shell assumes the executable is named npm; on Windows it is npm.cmd, so the call fails with ENOENT. No test or recorded output in the range shows the name was checked per platform." }
+  ],
+  "verdict": "warn"
+}
+```
 
 ## Customization
 
