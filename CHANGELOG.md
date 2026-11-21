@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.25.1] - 2026-11-20
+
+This release publishes the skills from v0.25.0, which was tagged but never reached the distribution repository. The deploy workflows now run on the same Node version as CI, so the distribution deploy and individual skill releases install their dependencies again. No skill content changed.
+
+**Upgrade notes:**
+- **No skill changes.** Every skill and package is identical to v0.25.0; this is the first release that actually publishes them.
+
+### Fixed
+- **Distribution and individual-skill deploys failed at `npm ci` (#403).** `deploy-dist.yml` and `deploy-skill.yml` ran Node 20, whose npm rejects the lock file written for the v0.25.0 dependency overrides. Both now run Node 24, matching Skill CI, and `tests/workflows/deploy-node-major-matches-ci.test.js` fails if a deploy workflow drifts from Skill CI's Node major.
+
+### Repository
+- **Branch diff review recorded** in `.code-review-manifest.json`; pre-existing findings in the two deploy workflows are tracked in #406–#412.
+- **`Inception/` lifecycle documents are now tracked.**
+
+## [0.25.0] - 2026-11-20
+
+Two new host-setup skills prepare a machine for mobile game development. `godot-mobile-setup` installs the Godot editor build for GDScript or C#, its matching export templates and, for Android, the JDK, SDK, build tools and NDK, and points the editor at them. `mobile-emulator-setup` installs the Android emulator and a system image, creates a virtual device under a folder you choose and checks that it boots, and on macOS reports whether an iOS Simulator is ready. Both were installed end to end on Windows before release, so their Windows steps are marked verified. The skill catalog now also publishes each setup skill's host questions and supported operating systems, so a project template can pick the right setup skill without reading its files.
+
+**Upgrade notes:**
+- **Two new skills: `godot-mobile-setup` 1.1.0 and `mobile-emulator-setup` 1.0.0.** Both are `invokable` and need an absolute tool root you choose; neither has a default location. Admin steps (JDK, .NET SDK, emulator hardware acceleration) run from an elevated shell, and macOS and Linux steps are declared but not yet verified on a host.
+- **`godot-mobile-setup` installs .NET SDK 11 on Windows for C# projects.** .NET 8 and 9 reached end of support on 2026-11-10; the check still accepts any SDK at major 9 or later.
+- **`react-native-android-setup` moved 1.0.0 → 1.1.0** for its catalog metadata; its instructions are unchanged.
+- **`SKILLS-manifest.json` entries may carry a `hostSetup` object** (`hostKeys`, `automates`, `leavesToUser`, `os`). It is optional and appears only on setup skills that declare it; consumers that ignore unknown fields are unaffected.
+
+### Added
+- **`godot-mobile-setup` skill (#395).** Checks and sets up the Godot 4.7 editor (standard or .NET build), export templates in self-contained editor mode, and for Android the JDK 17, Android SDK packages, environment variables and the editor's Java and Android SDK paths, with a responsibility gate, per-step consent, a separate admin phase and a headless verification.
+- **`mobile-emulator-setup` skill (#398).** Android emulator, system image and one AVD kept under the tool root (`ANDROID_AVD_HOME`), Windows Hypervisor Platform or KVM acceleration in an admin phase, and a headless boot confirmed by `sys.boot_completed`; on macOS it reports Xcode and iOS Simulator runtimes without installing them.
+- **Host-setup metadata in the skill catalog (#394).** `SKILLS-manifest-schema.json` gains an optional `hostSetup` entry, and `build-skills-manifest.js` copies it from a skill's `resources/<skill>.config.json`. `react-native-android-setup`, `godot-mobile-setup` and `mobile-emulator-setup` declare it.
+
+### Changed
+- **`godot-mobile-setup` Windows fixes from its first install (#395, QA #396).** Editor checks run the `_console` binary (the GUI binary returns no output or exit code); SDK package ids use `/`, which the cmdline-tools 23.0 wrapper needs on Windows; the cmdline-tools check uses `--list_installed`; and the Windows package install no longer lists `cmdline-tools/latest`, which made the install fail over its own running tools.
+- **Windows entries of `godot-mobile-setup` and `mobile-emulator-setup` are `verified` (QA #396, #399).** Each skill's `source.evidence` records the run and which entries were verified by their checks on an existing install.
+
+### Fixed
+- **`npm audit` failed the verification sweep on moderate `glob` and `minimatch` advisories (#397).** Range-scoped overrides lift only the vulnerable versions (GHSA-3g3m-2fjr-6pw4, GHSA-g3hv-75wg-m249) pulled in by jest, archiver and eslint.
+
+### Repository
+- **On-demand host-run harnesses (QA #396, #399).** `Skills/godot-mobile-setup/tests/host-run/` and `Skills/mobile-emulator-setup/tests/host-run/` run a profile's Windows commands into a scratch tool root, save and restore user environment variables, and write per-item evidence. They are test infrastructure and are not packaged.
+- **Hub upgraded from v0.113.0 to v0.120.0**, with `@framework-script` headers synced, the announce ledger untracked, and the ci-status-check and semgrep-sast extension recipes installed.
+- **Branch diff review recorded** in `.code-review-manifest.json`; findings in the repository-owned manifest builder are tracked in #401.
+
 ## [0.24.0] - 2026-10-28
 
 `diff-review` now asks whether changed logic is correct, not only whether a diff is in scope, tested and tidy. Five new criteria catch a failure reported as success, edge-case input such as CRLF line endings or git-quoted paths, a path from external input that escapes its root, a write that overwrites another feature's state, and an assumption about an external tool that nothing in the change checks. Each has a worked example in the skill's HOWTO. Every packaged skill is now checked against its source before release, so a package cannot ship older instructions under a newer version number. No other skill's content changed.

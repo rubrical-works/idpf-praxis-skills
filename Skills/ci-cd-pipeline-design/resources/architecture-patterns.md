@@ -1,5 +1,5 @@
 # Pipeline Architecture Patterns
-**Version:** v0.24.0
+**Version:** v0.25.1
 ## Pattern Selection Guide
 | Project Type | Recommended Pattern |
 |--------------|---------------------|

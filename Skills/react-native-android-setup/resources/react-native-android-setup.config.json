@@ -1,7 +1,7 @@
 {
   "$schema": "react-native-android-setup.config.schema.json",
   "_description": "Host environment profile for react-native-android-setup. Re-read and validated at every invocation by SKILL.md Step 0. Every pinned version, URL, package ID and command the skill uses lives here; SKILL.md names fields, never values.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "source": {
     "evidence": "rubrical-works/idpf-phm-project-templates#3 (Proposal: Host Environment Profiles), lessons 1-12, observed 2026-10-13 to 2026-10-16",
     "pilotStack": {
@@ -17,6 +17,34 @@
     "_noDefault": "No default, by decision of the pilot: the default location is what filled the system drive (lessons 5-6). Ask on every invocation that has no recorded answer.",
     "pathSeparator": "/",
     "normalize": "Replace every backslash in the user's answer with a forward slash and strip a trailing slash before deriving paths (lesson 7)."
+  },
+  "hostSetup": {
+    "hostKeys": [
+      {
+        "key": "toolRoot",
+        "question": "Where should the Android SDK, emulator (AVD) images, Maestro and tool temp folders live? Give an absolute folder path on a drive with room for them (the pilot used about 51 GB for the SDK and AVD images)."
+      }
+    ],
+    "automates": [
+      "JDK 17 install and the JAVA_HOME user variable",
+      "Android command-line tools, SDK packages and emulator system images under the tool root",
+      "ANDROID_HOME, ANDROID_AVD_HOME, MAESTRO_OPTS and PATH user variables",
+      "Moving existing emulator (AVD) images under the tool root",
+      "Maestro CLI install and its temp folder",
+      "Emulator hardware and GPU acceleration settings",
+      "Windows settings for Metro's port and gradlew.bat lookup (admin phase)"
+    ],
+    "leavesToUser": [
+      "Running admin-phase commands from an elevated shell and rebooting the machine",
+      "Opening a new terminal and restarting the IDE after environment variables change",
+      "Installing Node.js (see the install-node skill)",
+      "Starting Metro detached and waking snapshot-restored emulators while running the app",
+      "Project code, Maestro flows and app-level guidance"
+    ],
+    "os": {
+      "verified": ["windows"],
+      "untested": ["macos", "linux"]
+    }
   },
   "paths": {
     "sdk": "{toolRoot}/Android/Sdk",

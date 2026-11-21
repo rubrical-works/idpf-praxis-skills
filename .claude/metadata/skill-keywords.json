@@ -170,6 +170,18 @@
       "flask",
       "setup"
     ],
+    "godot-mobile-setup": [
+      "godot setup",
+      "godot mobile setup",
+      "godot export templates",
+      "godot android export",
+      "godot csharp setup",
+      "godot dotnet editor",
+      "android sdk for godot",
+      "jdk 17 for godot",
+      "godot headless verify",
+      "host environment profile"
+    ],
     "i18n-setup": [
       "i18n-setup",
       "i18n",
@@ -189,6 +201,18 @@
       "migration-patterns",
       "migration",
       "patterns"
+    ],
+    "mobile-emulator-setup": [
+      "android emulator setup",
+      "avd setup",
+      "android virtual device",
+      "emulator hardware acceleration",
+      "emulator boot check",
+      "ios simulator check",
+      "xcode check",
+      "mobile emulator",
+      "android system image",
+      "host environment profile"
     ],
     "mutation-testing": [
       "mutation-testing",
@@ -363,10 +387,12 @@
     "engage-prism": "analysis",
     "error-handling-patterns": "code-quality",
     "flask-setup": "platform",
+    "godot-mobile-setup": "devops",
     "i18n-setup": "platform",
     "install-node": "devops",
     "json-validator": "analysis",
     "migration-patterns": "database",
+    "mobile-emulator-setup": "devops",
     "mutation-testing": "testing",
     "observability-setup": "devops",
     "playwright-explorer": "testing",

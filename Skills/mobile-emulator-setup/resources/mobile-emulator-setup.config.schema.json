@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "mobile-emulator-setup.config.schema.json",
+  "type": "object",
+  "required": ["version", "source", "toolRoot", "projectAnswers", "hostSetup", "paths", "sdkPackages", "avd", "downloads", "items", "verify"],
+  "additionalProperties": true,
+  "definitions": {
+    "toolRootPath": {
+      "type": "string",
+      "pattern": "^\\{toolRoot\\}/[^\\\\]*$",
+      "description": "A path derived from the tool root, forward slashes only."
+    },
+    "status": { "type": "string", "enum": ["verified", "declared-but-untested"] },
+    "os": { "type": "string", "enum": ["windows", "macos", "linux"] },
+    "commandOrSteps": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+      ]
+    },
+    "perOsList": {
+      "type": "object",
+      "required": ["windows", "macos", "linux"],
+      "additionalProperties": false,
+      "properties": {
+        "windows": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "macos": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "linux": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+      }
+    },
+    "perOsString": {
+      "type": "object",
+      "required": ["windows", "macos", "linux"],
+      "additionalProperties": false,
+      "properties": {
+        "windows": { "type": "string", "minLength": 1 },
+        "macos": { "type": "string", "minLength": 1 },
+        "linux": { "type": "string", "minLength": 1 }
+      }
+    },
+    "platformEntry": {
+      "type": "object",
+      "required": ["status", "check", "apply", "requiresAdmin", "requiresReboot"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "$ref": "#/definitions/status" },
+        "check": { "type": "string", "minLength": 1 },
+        "apply": { "$ref": "#/definitions/commandOrSteps" },
+        "requiresAdmin": { "type": "boolean" },
+        "requiresReboot": { "type": "boolean" }
+      }
+    },
+    "platforms": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "windows": { "$ref": "#/definitions/platformEntry" },
+        "macos": { "$ref": "#/definitions/platformEntry" },
+        "linux": { "$ref": "#/definitions/platformEntry" }
+      }
+    },
+    "when": {
+      "type": "object",
+      "description": "Project answers that select the entry. Empty: always applies.",
+      "additionalProperties": false,
+      "properties": {
+        "targets": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["android", "ios", "both"] },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "required": ["id", "kind", "summary", "when", "platforms"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "kind": { "type": "string", "enum": ["tool", "envVar", "folder", "osSetting", "device", "check"] },
+        "summary": { "type": "string", "minLength": 1 },
+        "when": { "$ref": "#/definitions/when" },
+        "dependsOn": { "type": "array", "items": { "type": "string" } },
+        "leftToUser": {
+          "type": "boolean",
+          "description": "true: the skill checks and reports the item but never installs it; apply describes what the user does."
+        },
+        "platforms": { "$ref": "#/definitions/platforms" }
+      }
+    },
+    "verifyCheck": {
+      "type": "object",
+      "required": ["id", "summary", "pass", "platforms"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "summary": { "type": "string", "minLength": 1 },
+        "pass": { "type": "string", "minLength": 1 },
+        "when": { "$ref": "#/definitions/when" },
+        "platforms": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "patternProperties": {
+            "^(windows|macos|linux)$": {
+              "type": "object",
+              "required": ["status", "run"],
+              "additionalProperties": false,
+              "properties": {
+                "status": { "$ref": "#/definitions/status" },
+                "run": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "_description": { "type": "string" },
+    "version": { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["evidence", "pilotStack"],
+      "additionalProperties": true
+    },
+    "toolRoot": {
+      "type": "object",
+      "required": ["question", "default", "pathSeparator"],
+      "additionalProperties": true,
+      "properties": {
+        "question": { "type": "string", "minLength": 1 },
+        "default": { "type": "null" },
+        "pathSeparator": { "const": "/" }
+      }
+    },
+    "projectAnswers": {
+      "type": "object",
+      "required": ["targets"],
+      "additionalProperties": true,
+      "properties": {
+        "targets": {
+          "type": "object",
+          "required": ["values", "question"],
+          "additionalProperties": true,
+          "properties": {
+            "values": { "type": "array", "items": { "type": "string", "enum": ["android", "ios", "both"] }, "minItems": 1 },
+            "question": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "hostSetup": {
+      "type": "object",
+      "description": "Published verbatim in this skill's SKILLS-manifest.json entry by build-skills-manifest.js (#394); same shape as hostSetupEntry in SKILLS-manifest-schema.json. Keep hostKeys[].question equal to the question it names, and os in step with the items' platforms statuses.",
+      "required": ["hostKeys", "automates", "leavesToUser", "os"],
+      "additionalProperties": false,
+      "properties": {
+        "hostKeys": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["key", "question"],
+            "additionalProperties": false,
+            "properties": {
+              "key": { "type": "string", "minLength": 1 },
+              "question": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "automates": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "leavesToUser": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "os": {
+          "type": "object",
+          "required": ["verified", "untested"],
+          "additionalProperties": false,
+          "properties": {
+            "verified": { "type": "array", "items": { "$ref": "#/definitions/os" }, "uniqueItems": true },
+            "untested": { "type": "array", "items": { "$ref": "#/definitions/os" }, "uniqueItems": true }
+          }
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "required": ["downloads", "sdk", "avd"],
+      "additionalProperties": { "$ref": "#/definitions/toolRootPath" }
+    },
+    "sdkPackages": {
+      "type": "object",
+      "required": ["packages"],
+      "additionalProperties": true,
+      "properties": {
+        "packages": {
+          "$ref": "#/definitions/perOsList",
+          "description": "Package ids per OS, in the form that OS's pinned sdkmanager accepts."
+        }
+      }
+    },
+    "avd": {
+      "type": "object",
+      "required": ["name", "device", "systemImage"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+        "device": { "type": "string", "minLength": 1 },
+        "systemImage": {
+          "$ref": "#/definitions/perOsString",
+          "description": "The system image avdmanager creates the AVD from, per OS, in avdmanager's semicolon form."
+        },
+        "bootTimeoutSeconds": { "type": "integer", "minimum": 60 }
+      }
+    },
+    "downloads": {
+      "type": "object",
+      "required": ["cmdlineTools"],
+      "additionalProperties": true
+    },
+    "items": { "type": "array", "items": { "$ref": "#/definitions/item" }, "minItems": 1 },
+    "verify": {
+      "type": "object",
+      "required": ["checks"],
+      "additionalProperties": true,
+      "properties": { "checks": { "type": "array", "items": { "$ref": "#/definitions/verifyCheck" }, "minItems": 1 } }
+    }
+  }
+}

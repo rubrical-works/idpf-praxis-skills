@@ -1,7 +1,7 @@
 {
   "generatedAt": "2020-01-01T00:00:00.000Z",
-  "version": "0.24.0",
-  "skillCount": 56,
+  "version": "0.25.1",
+  "skillCount": 58,
   "skills": [
     {
       "name": "anti-pattern-analysis",
@@ -559,6 +559,39 @@
       "copyright": "\"Rubrical Works (c) 2026\""
     },
     {
+      "name": "godot-mobile-setup",
+      "description": "Check and set up the host a Godot mobile game needs — the Godot editor build matching GDScript or C#, its export templates, and for Android the JDK, Android SDK, build tools, NDK and the editor's export paths — under a tool root the user chooses, with per-step consent, then verify the install. Use when preparing a machine for Godot mobile development, or when a Godot export fails for missing templates, a missing JDK or Android SDK, or an editor that does not start.",
+      "triggers": [
+        "godot setup",
+        "godot mobile setup",
+        "godot export templates",
+        "godot android export",
+        "godot csharp setup",
+        "godot dotnet editor",
+        "android sdk for godot",
+        "jdk 17 for godot",
+        "godot headless verify",
+        "host environment profile"
+      ],
+      "version": "1.1.0",
+      "frameworkCompatibility": ">=0.80.0",
+      "lastUpdated": "2026-11-20",
+      "checksum": "5f3f67301efb49cefe35df438554d7d5737dfb6466d8e5eae523f483b48ab6e4",
+      "category": "devops",
+      "categoryLabel": "DevOps",
+      "relevantTechStack": [
+        "godot",
+        "gdscript",
+        "csharp",
+        "dotnet",
+        "android",
+        "android-sdk",
+        "jdk",
+        "windows"
+      ],
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
       "name": "i18n-setup",
       "description": "Scaffold internationalization infrastructure including i18n library config, string extraction tooling, locale file scaffolding, and translation workflow setup",
       "triggers": [],
@@ -635,6 +668,39 @@
         "migrations",
         "knex",
         "prisma"
+      ],
+      "copyright": "\"Rubrical Works (c) 2026\""
+    },
+    {
+      "name": "mobile-emulator-setup",
+      "description": "Check and set up a mobile emulator host — for Android the JDK, command-line tools, emulator, a system image, one virtual device (AVD) kept under a tool root the user chooses and the hardware acceleration it needs; for iOS on macOS a report of whether Xcode and a Simulator runtime are installed — with per-step consent, then verify the device boots. Use when a mobile project (Godot, React Native or any other stack) needs to run a debug build on an emulator, or when an emulator will not start, has no acceleration, or keeps its images on the system drive.",
+      "triggers": [
+        "android emulator setup",
+        "avd setup",
+        "android virtual device",
+        "emulator hardware acceleration",
+        "emulator boot check",
+        "ios simulator check",
+        "xcode check",
+        "mobile emulator",
+        "android system image",
+        "host environment profile"
+      ],
+      "version": "1.0.0",
+      "frameworkCompatibility": ">=0.80.0",
+      "lastUpdated": "2026-11-20",
+      "checksum": "f569fd7ac366da898d1432ea4679427b34f06205178e6053173a38bb298955f8",
+      "category": "devops",
+      "categoryLabel": "DevOps",
+      "relevantTechStack": [
+        "android",
+        "android-sdk",
+        "android-emulator",
+        "avd",
+        "jdk",
+        "ios-simulator",
+        "xcode",
+        "windows"
       ],
       "copyright": "\"Rubrical Works (c) 2026\""
     },
@@ -804,10 +870,10 @@
         "gradlew.bat not found",
         "host environment profile"
       ],
-      "version": "1.0.0",
+      "version": "1.1.0",
       "frameworkCompatibility": ">=0.80.0",
-      "lastUpdated": "2026-10-17",
-      "checksum": "643ce861a994ae6949a5754b161403bb3344b49da219691da8a51dea0b9585cc",
+      "lastUpdated": "2026-11-20",
+      "checksum": "0c6df775ac81377d4a887d796fb52de38710d1815dc1b02c65e365c5c9c7e658",
       "category": "devops",
       "categoryLabel": "DevOps",
       "relevantTechStack": [

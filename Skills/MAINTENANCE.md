@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.24.0
+**Version:** v0.25.1
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -41,10 +41,12 @@
 | engage-prism | 1.0.2 | 2026-05-18 | Active |
 | error-handling-patterns | 1.0.0 | 2026-03-17 | Active |
 | flask-setup | 2.0.0 | 2026-04-25 | Active |
+| godot-mobile-setup | 1.1.0 | 2026-11-20 | Active |
 | i18n-setup | 2.0.0 | 2026-04-25 | Active |
 | install-node | 2.0.0 | 2026-04-25 | Active |
 | json-validator | 1.0.1 | 2026-05-15 | Active |
 | migration-patterns | 1.0.0 | 2026-03-17 | Active |
+| mobile-emulator-setup | 1.0.0 | 2026-11-20 | Active |
 | mutation-testing | 1.0.0 | 2026-03-17 | Active |
 | observability-setup | 1.0.0 | 2026-03-17 | Active |
 | playwright-explorer | 1.0.0 | 2026-03-17 | Active |
@@ -53,7 +55,7 @@
 | privacy-compliance | 1.0.0 | 2026-03-17 | Active |
 | property-based-testing | 1.0.0 | 2026-03-17 | Active |
 | railway-project-setup | 2.0.0 | 2026-04-25 | Active |
-| react-native-android-setup | 1.0.0 | 2026-10-17 | Active |
+| react-native-android-setup | 1.1.0 | 2026-11-20 | Active |
 | render-project-setup | 2.0.0 | 2026-04-25 | Active |
 | resilience-patterns | 1.0.0 | 2026-04-01 | Active |
 | responsibility-gate | 1.0.1 | 2026-10-17 | Active |

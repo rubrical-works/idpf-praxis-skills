@@ -3,7 +3,7 @@
 [![Skill CI](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/skill-ci.yml)
 [![CodeQL](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml/badge.svg)](https://github.com/rubrical-works/idpf-praxis-skills/actions/workflows/codeql.yml)
 [![Latest Release](https://img.shields.io/github/v/release/rubrical-works/idpf-praxis-skills)](https://github.com/rubrical-works/idpf-praxis-skills/releases/latest)
-[![Skills](https://img.shields.io/badge/skills-56-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
+[![Skills](https://img.shields.io/badge/skills-58-blue)](https://github.com/rubrical-works/idpf-praxis-skills#available-skills)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 Ready-to-use skills for [Claude Code](https://claude.ai/code). Browse skill documentation below, then install what you need.
@@ -54,7 +54,7 @@ These require the [IDPF Praxis framework](https://github.com/rubrical-works/idpf
 | [error-handling-patterns](Skills/error-handling-patterns/) | Development | Error handling hierarchy and API error responses |
 | [diff-review](Skills/diff-review/) | Code Quality | Per-diff code review contract: criteria, count-first read budget and a single-verdict JSON findings document for merge gates |
 
-### Invokable Skills (26)
+### Invokable Skills (28)
 
 Interactive guided workflows. Install and use as slash commands.
 
@@ -73,9 +73,11 @@ Interactive guided workflows. Install and use as slash commands.
 | [engage-lexicon](Skills/engage-lexicon/) | Analysis | Adversarial for/against/judge analyst for contested legal, policy, compliance claims &mdash; [real-run case study](Docs/case-studies/engage-lexicon/saas-click-through-arbitration-california-mcgill-2026.md) |
 | [engage-prism](Skills/engage-prism/) | Analysis | JSON-driven parallel analyst for business/marketing/finance questions with citation-first contract &mdash; [real-run case study](Docs/case-studies/engage-prism/b2b-saas-ai-features-make-vs-buy-2026.md) |
 | [flask-setup](Skills/flask-setup/) | Platforms & Frameworks | Python Flask development environment scaffolding for beginners |
+| [godot-mobile-setup](Skills/godot-mobile-setup/) | DevOps | Guided host setup for Godot mobile games: the GDScript or C# editor build, matching export templates, and for Android the JDK, SDK, build tools, NDK and editor export paths, under a tool root you choose, with per-step consent and a headless verification |
 | [i18n-setup](Skills/i18n-setup/) | Platforms & Frameworks | Internationalization infrastructure scaffolding with locale/string extraction |
 | [install-node](Skills/install-node/) | DevOps | Safe, guided Node.js installer with dry-run default and responsibility gate |
 | [json-validator](Skills/json-validator/) | Analysis | Validate JSON files against companion JSON Schema definitions |
+| [mobile-emulator-setup](Skills/mobile-emulator-setup/) | DevOps | Guided Android emulator setup (emulator, system image, AVD kept under a tool root you choose, hardware acceleration in an admin phase, headless boot check) plus an iOS Simulator check on macOS |
 | [playwright-explorer](Skills/playwright-explorer/) | Testing | Interactive browser exploration using Playwright with natural-language interaction |
 | [playwright-setup](Skills/playwright-setup/) | Testing | Playwright installation verification and troubleshooting |
 | [postgresql-integration](Skills/postgresql-integration/) | Database | PostgreSQL setup, connection configuration, query patterns |

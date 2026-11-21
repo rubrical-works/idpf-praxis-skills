@@ -1,0 +1,346 @@
+{
+  "$schema": "mobile-emulator-setup.config.schema.json",
+  "_description": "Host environment profile for mobile-emulator-setup. Re-read and validated at every invocation by SKILL.md Step 0. Every pinned version, URL, package ID and command the skill uses lives here; SKILL.md names fields, never values.",
+  "version": "1.0.0",
+  "source": {
+    "evidence": [
+      "react-native-android-setup (#343): the emulator, AVD-home, acceleration, JDK and environment-variable items, verified on Windows in its pilot; copied here as this skill's own items, not shared (#398 decision)",
+      "QA #396 (godot-mobile-setup, 2026-11-20): cmdline-tools 23.0 on Windows wraps sdkmanager over the Android CLI; '/' package ids, --list_installed checks",
+      "Design-time probes on a Windows 11 host, 2026-11-20, in a scratch tool root with process-scoped variables: sdkmanager installed emulator 37.3.10 and system-images/android-35/google_apis/x86_64; emulator -accel-check reported WHPX installed and usable (exit 0); 'no' piped into avdmanager --% create avd --name <n> --package \"system-images;android-35;google_apis;x86_64\" --device pixel_6 created the AVD (exit 0) without the platforms package; emulator -avd <n> -no-window -no-audio -no-snapshot-save booted, adb shell getprop sys.boot_completed returned 1 after 60 s, adb emu kill stopped it",
+      "android sdk list --all (Android CLI 1.0.16500706, 2026-11-20): system-images/android-35/google_apis/x86_64 and arm64-v8a both listed; avdmanager list device -c lists pixel_6",
+      "QA #399 Windows run, 2026-11-20, Windows 11 Pro 10.0.26300, non-elevated, targets=android, on a fresh tool root (E:/Scratch/qa-399/run1v2) through the host-run harness (Skills/mobile-emulator-setup/tests/host-run/qa-host-run.js): PASS — every item check present and every verify check pass: emulator -accel-check exit 0 with WHPX installed and usable; avdmanager list avd -c listed mobile-emulator-api35 with its .avd folder and .ini under the tool root's Android/avd (ANDROID_AVD_HOME); the headless boot reported sys.boot_completed=1 after 55 s (timeout 300 s), then adb emu kill. tool-folders, android-cmdline-tools, android-sdk-packages, env-android-home (both Path entries), env-android-avd-home and avd-create were applied by the config's own commands and re-checked present. jdk-17, env-java-home and hardware-acceleration are verified by their checks against a JDK 17.0.12, a user JAVA_HOME and WHPX that already existed; their apply commands, and hardware-acceleration's reboot, did not run. The harness stopped emulator processes still running about 1 s after adb emu kill returned."
+    ],
+    "pilotStack": {
+      "androidApi": 35,
+      "hostOs": "windows"
+    },
+    "_statusNote": "status 'verified' means the entry was run and confirmed on that OS through this skill's sequence, with the evidence in source.evidence. Every Windows entry is verified by the QA #399 run (see the evidence line for which applies ran and which entries were verified by their checks on an existing install). Every macOS and Linux entry is 'declared-but-untested' until a run on that OS confirms it."
+  },
+  "toolRoot": {
+    "question": "Where should the Android SDK, the emulator and its system images, the virtual devices (AVDs) and the downloads live? Give an absolute folder path on a drive with room for them (one system image and one AVD take several GB).",
+    "default": null,
+    "_noDefault": "No default, following react-native-android-setup: a default location is how the system drive fills. Ask on every invocation that has no recorded answer.",
+    "pathSeparator": "/",
+    "normalize": "Replace every backslash in the user's answer with a forward slash and strip a trailing slash before deriving paths."
+  },
+  "projectAnswers": {
+    "_description": "Answers the project's answers file supplies. Read them when present; otherwise ask. They select items through each item's `when`. A template that names this answer gamePlatform (android | ios | both) supplies the same values.",
+    "targets": {
+      "values": ["android", "ios", "both"],
+      "question": "Which emulators should this machine run: android, ios or both?"
+    }
+  },
+  "hostSetup": {
+    "hostKeys": [
+      {
+        "key": "toolRoot",
+        "question": "Where should the Android SDK, the emulator and its system images, the virtual devices (AVDs) and the downloads live? Give an absolute folder path on a drive with room for them (one system image and one AVD take several GB)."
+      }
+    ],
+    "automates": [
+      "JDK 17 install and the JAVA_HOME user variable, which avdmanager needs (Android)",
+      "Android command-line tools, platform-tools, the emulator and one system image under the tool root (Android)",
+      "ANDROID_HOME, ANDROID_AVD_HOME and PATH user variables, so AVD data stays under the tool root (Android)",
+      "Creating one AVD from the configured device profile and system image (Android)",
+      "Emulator hardware acceleration in a separate admin phase: Windows Hypervisor Platform, KVM on Linux (Android)",
+      "Verification: acceleration check, AVD listed, a headless boot confirmed by sys.boot_completed, and on macOS an iOS Simulator runtime present, reported pass or fail per check"
+    ],
+    "leavesToUser": [
+      "Installing Xcode on macOS, and adding an iOS Simulator runtime to it; the skill only reports whether they are present",
+      "iOS Simulator on Windows and Linux: it needs macOS with Xcode",
+      "Running admin-phase steps (JDK, acceleration) from an elevated shell, and the reboot Windows Hypervisor Platform needs",
+      "Opening a new terminal after environment variables change, before creating or starting an AVD",
+      "Moving AVDs that already exist outside the tool root",
+      "Physical-device setup"
+    ],
+    "os": {
+      "verified": ["windows"],
+      "untested": ["macos", "linux"]
+    }
+  },
+  "paths": {
+    "downloads": "{toolRoot}/downloads",
+    "sdk": "{toolRoot}/Android/Sdk",
+    "avd": "{toolRoot}/Android/avd"
+  },
+  "sdkPackages": {
+    "packages": {
+      "windows": ["platform-tools", "emulator", "system-images/android-35/google_apis/x86_64"],
+      "macos": ["platform-tools", "emulator", "system-images;android-35;google_apis;arm64-v8a"],
+      "linux": ["platform-tools", "emulator", "system-images/android-35/google_apis/x86_64"]
+    },
+    "_note": "Substitute {packages} with sdkPackages.packages.<os>, each package double-quoted. The id form follows the pinned cmdline-tools archive (QA #396): the Windows and Linux archives (cmdline-tools 23.0) wrap sdkmanager over the Android CLI, whose ids use '/' (cmd splits an unquoted ';' id on Windows); the macOS archive (21.0) is the classic sdkmanager, which takes ';'. The platforms package is not needed to create or boot an AVD (probed 2026-11-20). macOS lists the arm64-v8a image for Apple silicon; an Intel Mac uses the x86_64 image of the same API level and tag."
+  },
+  "avd": {
+    "name": "mobile-emulator-api35",
+    "device": "pixel_6",
+    "systemImage": {
+      "windows": "system-images;android-35;google_apis;x86_64",
+      "macos": "system-images;android-35;google_apis;arm64-v8a",
+      "linux": "system-images;android-35;google_apis;x86_64"
+    },
+    "bootTimeoutSeconds": 300,
+    "_note": "{avd.name}, {avd.device} and {avd.systemImage} (avd.systemImage.<os>) are substituted into avd-create and the verification. avdmanager is the classic Java tool on every pinned archive and takes the semicolon form; from PowerShell the arguments follow the stop-parsing token so the semicolons reach it (react-native-android-setup lesson 3). It asks whether to create a custom hardware profile; the answer 'no' is piped in."
+  },
+  "downloads": {
+    "cmdlineTools": {
+      "archives": {
+        "windows": "https://dl.google.com/android/repository/commandlinetools-win-16111833_latest.zip",
+        "macos": "https://dl.google.com/android/repository/commandlinetools-mac-15641748_latest.zip",
+        "linux": "https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip"
+      },
+      "installLayout": "{paths.sdk}/cmdline-tools/latest",
+      "_note": "Same archives as react-native-android-setup and godot-mobile-setup."
+    }
+  },
+  "items": [
+    {
+      "id": "tool-folders",
+      "kind": "folder",
+      "summary": "The downloads, SDK and AVD folders under the tool root.",
+      "when": { "targets": ["android", "both"] },
+      "platforms": {
+        "windows": { "status": "verified", "check": "Test-Path '{paths.downloads}'; Test-Path '{paths.sdk}'; Test-Path '{paths.avd}'", "apply": "New-Item -ItemType Directory -Force '{paths.downloads}','{paths.sdk}','{paths.avd}'", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "test -d '{paths.downloads}' && test -d '{paths.sdk}' && test -d '{paths.avd}'", "apply": "mkdir -p '{paths.downloads}' '{paths.sdk}' '{paths.avd}'", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "test -d '{paths.downloads}' && test -d '{paths.sdk}' && test -d '{paths.avd}'", "apply": "mkdir -p '{paths.downloads}' '{paths.sdk}' '{paths.avd}'", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "jdk-17",
+      "kind": "tool",
+      "summary": "A JDK 17. avdmanager is a Java tool and fails without one.",
+      "requiredVersion": "17",
+      "when": { "targets": ["android", "both"] },
+      "platforms": {
+        "windows": { "status": "verified", "check": "& \"$env:JAVA_HOME/bin/java.exe\" -version  # expect a version string starting 17", "apply": "winget install --id EclipseAdoptium.Temurin.17.JDK --exact", "requiresAdmin": true, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "\"$JAVA_HOME/bin/java\" -version  # expect a version string starting 17", "apply": "brew install --cask temurin@17", "requiresAdmin": true, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "\"$JAVA_HOME/bin/java\" -version  # expect a version string starting 17", "apply": "sudo apt-get install -y openjdk-17-jdk", "requiresAdmin": true, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "env-java-home",
+      "kind": "envVar",
+      "summary": "JAVA_HOME as a user variable pointing at the JDK 17 home.",
+      "variable": "JAVA_HOME",
+      "value": "{jdk17Home}",
+      "valueFrom": "The home folder of the JDK 17 that jdk-17 installed or found (the folder containing bin/java), written with forward slashes.",
+      "when": { "targets": ["android", "both"] },
+      "dependsOn": ["jdk-17"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "[Environment]::GetEnvironmentVariable('JAVA_HOME','User')", "apply": "[Environment]::SetEnvironmentVariable('JAVA_HOME','{value}','User')", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "grep -n '^export JAVA_HOME=' ~/.zshrc", "apply": "echo 'export JAVA_HOME=\"{value}\"' >> ~/.zshrc", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "grep -n '^export JAVA_HOME=' ~/.profile", "apply": "echo 'export JAVA_HOME=\"{value}\"' >> ~/.profile", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "android-cmdline-tools",
+      "kind": "tool",
+      "summary": "The Android command-line tools (sdkmanager, avdmanager) from downloads.cmdlineTools for this OS, unpacked into downloads.cmdlineTools.installLayout.",
+      "when": { "targets": ["android", "both"] },
+      "dependsOn": ["tool-folders"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --sdk_root='{paths.sdk}' --list_installed; $LASTEXITCODE  # expect exit 0 and a cmdline-tools/latest line; --version exits 1 on cmdline-tools 23.0 even when the tools work (QA #396)",
+          "apply": [
+            "Invoke-WebRequest '{downloads.cmdlineTools.archives.windows}' -OutFile '{paths.downloads}/cmdline-tools.zip'",
+            "Expand-Archive '{paths.downloads}/cmdline-tools.zip' -DestinationPath '{paths.sdk}/cmdline-tools-unpack'",
+            "New-Item -ItemType Directory -Force '{paths.sdk}/cmdline-tools'; Move-Item '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' --list_installed; echo $?  # expect exit 0",
+          "apply": [
+            "curl -L -o '{paths.downloads}/cmdline-tools.zip' '{downloads.cmdlineTools.archives.macos}'",
+            "unzip -q '{paths.downloads}/cmdline-tools.zip' -d '{paths.sdk}/cmdline-tools-unpack'",
+            "mkdir -p '{paths.sdk}/cmdline-tools' && mv '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' --list_installed; echo $?  # expect exit 0",
+          "apply": [
+            "curl -L -o '{paths.downloads}/cmdline-tools.zip' '{downloads.cmdlineTools.archives.linux}'",
+            "unzip -q '{paths.downloads}/cmdline-tools.zip' -d '{paths.sdk}/cmdline-tools-unpack'",
+            "mkdir -p '{paths.sdk}/cmdline-tools' && mv '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "android-sdk-packages",
+      "kind": "tool",
+      "summary": "platform-tools, the emulator and the system image in sdkPackages.packages for this OS, installed into paths.sdk.",
+      "when": { "targets": ["android", "both"] },
+      "dependsOn": ["android-cmdline-tools"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --sdk_root='{paths.sdk}' --list_installed  # expect every package in sdkPackages.packages.<os>", "apply": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --sdk_root='{paths.sdk}' {packages}", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' --list_installed  # expect every package in sdkPackages.packages.<os>", "apply": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' {packages}", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' --list_installed  # expect every package in sdkPackages.packages.<os>", "apply": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' {packages}", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "env-android-home",
+      "kind": "envVar",
+      "summary": "ANDROID_HOME as a user variable pointing at paths.sdk, plus platform-tools (adb) and the emulator folder on PATH.",
+      "variable": "ANDROID_HOME",
+      "value": "{paths.sdk}",
+      "when": { "targets": ["android", "both"] },
+      "dependsOn": ["android-sdk-packages"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "[Environment]::GetEnvironmentVariable('ANDROID_HOME','User'); [Environment]::GetEnvironmentVariable('Path','User') -split ';'  # expect {paths.sdk}, {paths.sdk}/platform-tools and {paths.sdk}/emulator",
+          "apply": [
+            "[Environment]::SetEnvironmentVariable('ANDROID_HOME','{paths.sdk}','User')",
+            "$p = [Environment]::GetEnvironmentVariable('Path','User'); [Environment]::SetEnvironmentVariable('Path', ($p.TrimEnd(';') + ';{entry}'), 'User')  # once per missing entry: {paths.sdk}/platform-tools, {paths.sdk}/emulator"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export ANDROID_HOME=' ~/.zshrc",
+          "apply": [
+            "echo 'export ANDROID_HOME=\"{paths.sdk}\"' >> ~/.zshrc",
+            "echo 'export PATH=\"$PATH:{paths.sdk}/platform-tools:{paths.sdk}/emulator\"' >> ~/.zshrc"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export ANDROID_HOME=' ~/.profile",
+          "apply": [
+            "echo 'export ANDROID_HOME=\"{paths.sdk}\"' >> ~/.profile",
+            "echo 'export PATH=\"$PATH:{paths.sdk}/platform-tools:{paths.sdk}/emulator\"' >> ~/.profile"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "env-android-avd-home",
+      "kind": "envVar",
+      "summary": "ANDROID_AVD_HOME as a user variable, so avdmanager writes AVDs under the tool root instead of the user profile on the system drive.",
+      "variable": "ANDROID_AVD_HOME",
+      "value": "{paths.avd}",
+      "when": { "targets": ["android", "both"] },
+      "dependsOn": ["tool-folders"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "[Environment]::GetEnvironmentVariable('ANDROID_AVD_HOME','User')", "apply": "[Environment]::SetEnvironmentVariable('ANDROID_AVD_HOME','{paths.avd}','User')", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "grep -n '^export ANDROID_AVD_HOME=' ~/.zshrc", "apply": "echo 'export ANDROID_AVD_HOME=\"{paths.avd}\"' >> ~/.zshrc", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "grep -n '^export ANDROID_AVD_HOME=' ~/.profile", "apply": "echo 'export ANDROID_AVD_HOME=\"{paths.avd}\"' >> ~/.profile", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "avd-create",
+      "kind": "device",
+      "summary": "One AVD named avd.name, from avd.device and avd.systemImage for this OS, created in paths.avd. Run from a new terminal so JAVA_HOME and ANDROID_AVD_HOME are set.",
+      "when": { "targets": ["android", "both"] },
+      "dependsOn": ["android-sdk-packages", "env-java-home", "env-android-avd-home"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "& '{paths.sdk}/cmdline-tools/latest/bin/avdmanager.bat' list avd -c  # expect a line {avd.name}", "apply": "'no' | & '{paths.sdk}/cmdline-tools/latest/bin/avdmanager.bat' --% create avd --name {avd.name} --package \"{avd.systemImage}\" --device {avd.device}", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "'{paths.sdk}/cmdline-tools/latest/bin/avdmanager' list avd -c  # expect a line {avd.name}", "apply": "echo no | '{paths.sdk}/cmdline-tools/latest/bin/avdmanager' create avd --name '{avd.name}' --package '{avd.systemImage}' --device '{avd.device}'", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "'{paths.sdk}/cmdline-tools/latest/bin/avdmanager' list avd -c  # expect a line {avd.name}", "apply": "echo no | '{paths.sdk}/cmdline-tools/latest/bin/avdmanager' create avd --name '{avd.name}' --package '{avd.systemImage}' --device '{avd.device}'", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "hardware-acceleration",
+      "kind": "osSetting",
+      "summary": "Emulator hardware acceleration: Windows Hypervisor Platform (WHPX) on Windows, Hypervisor.framework on macOS, KVM on Linux. The emulator's own accel check reports the result on every OS.",
+      "when": { "targets": ["android", "both"] },
+      "dependsOn": ["android-sdk-packages"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "& '{paths.sdk}/emulator/emulator.exe' -accel-check", "apply": "Enable-WindowsOptionalFeature -Online -FeatureName HypervisorPlatform -All", "requiresAdmin": true, "requiresReboot": true },
+        "macos": { "status": "declared-but-untested", "check": "'{paths.sdk}/emulator/emulator' -accel-check", "apply": "Nothing to install: Hypervisor.framework ships with macOS. If the check fails, report its output.", "requiresAdmin": false, "requiresReboot": false },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/emulator/emulator' -accel-check",
+          "apply": [
+            "sudo apt-get install -y qemu-kvm",
+            "sudo usermod -aG kvm \"$USER\"  # takes effect at next login"
+          ],
+          "requiresAdmin": true,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "xcode",
+      "kind": "check",
+      "summary": "Xcode and its command-line tools. Checked and reported only: installing Xcode is left to the user.",
+      "leftToUser": true,
+      "when": { "targets": ["ios", "both"] },
+      "platforms": {
+        "macos": { "status": "declared-but-untested", "check": "xcode-select -p; xcodebuild -version  # expect a developer directory inside Xcode.app and an Xcode version line", "apply": "Left to the user: install Xcode, open it once to finish its component install, and select it as the active developer directory.", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "ios-simulator-runtime",
+      "kind": "check",
+      "summary": "An installed iOS Simulator runtime. Checked and reported only: adding a runtime is done in Xcode by the user.",
+      "leftToUser": true,
+      "when": { "targets": ["ios", "both"] },
+      "dependsOn": ["xcode"],
+      "platforms": {
+        "macos": { "status": "declared-but-untested", "check": "xcrun simctl list runtimes  # expect at least one iOS runtime not marked unavailable", "apply": "Left to the user: add an iOS Simulator runtime through Xcode's platform settings.", "requiresAdmin": false, "requiresReboot": false }
+      }
+    }
+  ],
+  "verify": {
+    "_description": "Run after every apply phase, and on its own when the user asks whether the host is ready. Each check reports pass or fail; the install is verified only when every check that applies passes. Run from a new terminal so the user variables are set.",
+    "checks": [
+      {
+        "id": "emulator-acceleration",
+        "summary": "The emulator finds a usable hardware accelerator.",
+        "pass": "Exit code 0, and the output names an accelerator as installed and usable (WHPX, HVF or KVM).",
+        "when": { "targets": ["android", "both"] },
+        "platforms": {
+          "windows": { "status": "verified", "run": "& \"$env:ANDROID_HOME/emulator/emulator.exe\" -accel-check; $LASTEXITCODE" },
+          "macos": { "status": "declared-but-untested", "run": "\"$ANDROID_HOME/emulator/emulator\" -accel-check; echo $?" },
+          "linux": { "status": "declared-but-untested", "run": "\"$ANDROID_HOME/emulator/emulator\" -accel-check; echo $?" }
+        }
+      },
+      {
+        "id": "avd-listed",
+        "summary": "The AVD exists under ANDROID_AVD_HOME.",
+        "pass": "avdmanager lists avd.name, and its .avd folder and .ini file are in paths.avd.",
+        "when": { "targets": ["android", "both"] },
+        "platforms": {
+          "windows": { "status": "verified", "run": "& \"$env:ANDROID_HOME/cmdline-tools/latest/bin/avdmanager.bat\" list avd -c; Get-ChildItem \"$env:ANDROID_AVD_HOME\" -Filter '{avd.name}*'" },
+          "macos": { "status": "declared-but-untested", "run": "\"$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager\" list avd -c; ls \"$ANDROID_AVD_HOME\" | grep '{avd.name}'" },
+          "linux": { "status": "declared-but-untested", "run": "\"$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager\" list avd -c; ls \"$ANDROID_AVD_HOME\" | grep '{avd.name}'" }
+        }
+      },
+      {
+        "id": "avd-boots",
+        "summary": "The AVD boots headless and Android reports boot completed, then the emulator is stopped.",
+        "pass": "adb shell getprop sys.boot_completed prints 1 within avd.bootTimeoutSeconds. Report the value and the seconds it took; anything else, or the timeout, is fail.",
+        "when": { "targets": ["android", "both"] },
+        "platforms": {
+          "windows": { "status": "verified", "run": "$p = Start-Process \"$env:ANDROID_HOME/emulator/emulator.exe\" -ArgumentList '-avd','{avd.name}','-no-window','-no-audio','-no-snapshot-save' -PassThru; & \"$env:ANDROID_HOME/platform-tools/adb.exe\" wait-for-device; $t = 0; do { Start-Sleep -Seconds 5; $t += 5; $b = (& \"$env:ANDROID_HOME/platform-tools/adb.exe\" shell getprop sys.boot_completed) -join '' } until ($b.Trim() -eq '1' -or $t -ge {avd.bootTimeoutSeconds}); \"sys.boot_completed=$($b.Trim()) after ${t}s\"; & \"$env:ANDROID_HOME/platform-tools/adb.exe\" emu kill" },
+          "macos": { "status": "declared-but-untested", "run": "\"$ANDROID_HOME/emulator/emulator\" -avd '{avd.name}' -no-window -no-audio -no-snapshot-save & \"$ANDROID_HOME/platform-tools/adb\" wait-for-device; t=0; until [ \"$(\"$ANDROID_HOME/platform-tools/adb\" shell getprop sys.boot_completed | tr -d '\\r')\" = 1 ] || [ $t -ge {avd.bootTimeoutSeconds} ]; do sleep 5; t=$((t+5)); done; echo \"sys.boot_completed=$(\"$ANDROID_HOME/platform-tools/adb\" shell getprop sys.boot_completed | tr -d '\\r') after ${t}s\"; \"$ANDROID_HOME/platform-tools/adb\" emu kill" },
+          "linux": { "status": "declared-but-untested", "run": "\"$ANDROID_HOME/emulator/emulator\" -avd '{avd.name}' -no-window -no-audio -no-snapshot-save & \"$ANDROID_HOME/platform-tools/adb\" wait-for-device; t=0; until [ \"$(\"$ANDROID_HOME/platform-tools/adb\" shell getprop sys.boot_completed | tr -d '\\r')\" = 1 ] || [ $t -ge {avd.bootTimeoutSeconds} ]; do sleep 5; t=$((t+5)); done; echo \"sys.boot_completed=$(\"$ANDROID_HOME/platform-tools/adb\" shell getprop sys.boot_completed | tr -d '\\r') after ${t}s\"; \"$ANDROID_HOME/platform-tools/adb\" emu kill" }
+        }
+      },
+      {
+        "id": "ios-simulator",
+        "summary": "On macOS: Xcode is present and at least one iOS Simulator runtime is installed.",
+        "pass": "xcodebuild -version prints an Xcode version, and xcrun simctl list runtimes lists at least one iOS runtime not marked unavailable. Report both outputs; if either is missing, report what the user has to install.",
+        "when": { "targets": ["ios", "both"] },
+        "platforms": {
+          "macos": { "status": "declared-but-untested", "run": "xcodebuild -version; xcrun simctl list runtimes" }
+        }
+      }
+    ]
+  }
+}

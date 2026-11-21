@@ -1,0 +1,444 @@
+{
+  "$schema": "godot-mobile-setup.config.schema.json",
+  "_description": "Host environment profile for godot-mobile-setup. Re-read and validated at every invocation by SKILL.md Step 0. Every pinned version, URL, package ID and command the skill uses lives here; SKILL.md names fields, never values.",
+  "version": "1.1.0",
+  "source": {
+    "evidence": [
+      "Godot 4.7.2-stable release assets (github.com/godotengine/godot releases, tag 4.7.2-stable, published 2026-08-18), read through the GitHub API on 2026-11-20",
+      "docs.godotengine.org/en/stable/tutorials/export/exporting_for_android.html — JDK 17 recommended; SDK packages and the sdkmanager line; Java SDK Path and Android SDK Path in Editor Settings",
+      "docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html — export templates must be installed; TPZ install",
+      "docs.godotengine.org/en/stable/tutorials/editor/command_line_tutorial.html — --headless, --version, --quit, --export-release",
+      "docs.godotengine.org/en/stable/tutorials/io/data_paths.html — editor data/settings folders and self-contained mode (_sc_ marker, editor_data/)",
+      "docs.godotengine.org/en/4.7/tutorials/scripting/c_sharp/c_sharp_basics.html — .NET SDK 8+; Android export from C# needs .NET 9+",
+      "dotnet.microsoft.com/en-us/platform/support/policy — .NET 11 STS and .NET 10 LTS supported to 2028-11-14; .NET 8 and 9 end of support 2026-11-10 (read 2026-11-20). winget Microsoft.DotNet.SDK.11 offered 11.0.100 on 2026-11-20",
+      "godotengine/godot 4.7 source: platform/android/export/export.cpp (export/android/java_sdk_path defaults to JAVA_HOME, export/android/android_sdk_path to ANDROID_HOME); editor/export/export_template_manager.cpp and core/version.h (templates folder export_templates/<GODOT_VERSION_FULL_CONFIG>, e.g. 4.7.2.stable, .mono for .NET builds)",
+      "QA #396 Windows runs, 2026-11-20, Windows 11 Pro 10.0.26300, non-elevated, each on a fresh tool root through the host-run harness (Skills/godot-mobile-setup/tests/host-run/qa-host-run.js): run 1 gdscript/android (E:/Scratch/qa-396/run1v2-gdscript) and run 2 csharp/android (E:/Scratch/qa-396/run2-csharp) both PASS — every item check present, every verify check pass, and the editor's first launch reported Java SDK Path = JAVA_HOME and Android SDK Path = ANDROID_HOME. tool-folders, godot-editor, self-contained-mode, export-templates, android-cmdline-tools, android-sdk-packages and env-android-home were applied by the config's own commands and re-checked present. jdk-17 and env-java-home are verified by their checks against a JDK 17.0.12 and user JAVA_HOME that already existed; their apply commands did not run. dotnet-sdk's apply (winget install --id Microsoft.DotNet.SDK.11 --exact) was run by hand before run 2 and its check verified present (11.0.100)."
+    ],
+    "pilotStack": {
+      "godot": "4.7.2",
+      "hostOs": "windows"
+    },
+    "_statusNote": "status 'verified' means the entry was run and confirmed on that OS, with the evidence in source.evidence. Every Windows entry is verified by the QA #396 runs (see the evidence line for which applies ran there and which entries were verified by their checks on an existing install). Every macOS and Linux entry is 'declared-but-untested' until a run on that OS confirms it."
+  },
+  "toolRoot": {
+    "question": "Where should the Godot editor, its export templates and editor data, the Android SDK and the downloads live? Give an absolute folder path on a drive with room for them (export templates alone are over 1 GB per build).",
+    "default": null,
+    "_noDefault": "No default, following react-native-android-setup: a default location is how the system drive fills. Ask on every invocation that has no recorded answer.",
+    "pathSeparator": "/",
+    "normalize": "Replace every backslash in the user's answer with a forward slash and strip a trailing slash before deriving paths."
+  },
+  "projectAnswers": {
+    "_description": "Answers the project (its template's answers file) supplies. Read them from the project when present; otherwise ask. They select builds and items through each item's `when`.",
+    "godotLanguage": { "values": ["gdscript", "csharp"], "question": "Will the project use GDScript or C#?" },
+    "gamePlatform": { "values": ["android", "ios", "both"], "question": "Which mobile platforms will the game export to: android, ios or both?" }
+  },
+  "hostSetup": {
+    "hostKeys": [
+      {
+        "key": "toolRoot",
+        "question": "Where should the Godot editor, its export templates and editor data, the Android SDK and the downloads live? Give an absolute folder path on a drive with room for them (export templates alone are over 1 GB per build)."
+      }
+    ],
+    "automates": [
+      "Godot editor download and unpack under the tool root: the standard build for GDScript, the .NET build for C#",
+      "Self-contained editor mode, so editor data, settings and export templates stay under the tool root",
+      "Export templates matching the editor version and build",
+      ".NET SDK install for a C# project",
+      "JDK 17 install and the JAVA_HOME user variable (Android)",
+      "Android command-line tools and the SDK, platform, build-tools, NDK and CMake packages under the tool root (Android)",
+      "ANDROID_HOME and PATH user variables, which the editor reads as its Java SDK and Android SDK paths (Android)",
+      "Install verification: headless editor run and an export-templates version check, reported pass or fail per check"
+    ],
+    "leavesToUser": [
+      "iOS export: it needs macOS with Xcode, which this skill does not install; on Windows and Linux iOS export is not possible",
+      "Running admin-phase installs (JDK, .NET SDK) from an elevated shell",
+      "Opening a new terminal after environment variables change, before the editor's first launch",
+      "Setting Java SDK Path and Android SDK Path in Editor Settings by hand when an existing editor settings file already holds other values",
+      "Release keystores, signing and store submission",
+      "Creating the project, its export presets and the Android build template"
+    ],
+    "os": {
+      "verified": ["windows"],
+      "untested": ["macos", "linux"]
+    }
+  },
+  "godot": {
+    "version": "4.7.2",
+    "status": "stable",
+    "releaseBase": "https://github.com/godotengine/godot/releases/download/4.7.2-stable/",
+    "checksums": "SHA512-SUMS.txt",
+    "_note": "Asset names below are the 4.7.2-stable release assets as listed by the GitHub API. Download each from releaseBase and compare its SHA-512 with the line for it in checksums."
+  },
+  "builds": {
+    "gdscript": {
+      "editorArchive": {
+        "windows": "Godot_v4.7.2-stable_win64.exe.zip",
+        "macos": "Godot_v4.7.2-stable_macos.universal.zip",
+        "linux": "Godot_v4.7.2-stable_linux.x86_64.zip"
+      },
+      "exportTemplates": "Godot_v4.7.2-stable_export_templates.tpz",
+      "templateFolder": "4.7.2.stable"
+    },
+    "csharp": {
+      "editorArchive": {
+        "windows": "Godot_v4.7.2-stable_mono_win64.zip",
+        "macos": "Godot_v4.7.2-stable_mono_macos.universal.zip",
+        "linux": "Godot_v4.7.2-stable_mono_linux_x86_64.zip"
+      },
+      "exportTemplates": "Godot_v4.7.2-stable_mono_export_templates.tpz",
+      "templateFolder": "4.7.2.stable.mono"
+    },
+    "_editorExecutable": "After unpacking, {editorExe} is the editor binary in paths.editor: the single Godot_v*-stable* executable that is not the _console variant (Windows), the binary inside the .app bundle's Contents/MacOS (macOS), or the single Godot_v* file (Linux). A .NET archive unpacks into its own folder with the binary and its GodotSharp folder beside it; keep them together.",
+    "_editorConsoleExecutable": "{editorConsoleExe} is the binary a scripted check runs. On Windows it is the _console variant beside {editorExe} (Godot_v*-stable*_console.exe): {editorExe} is a GUI-subsystem executable that returns at once with no captured output and no exit code, so a check run through it can never pass (QA #396). On macOS and Linux it is {editorExe} itself. The user still launches {editorExe}.",
+    "_templateArchive": "A TPZ file is a zip archive. Its templates/ folder holds the template files and version.txt; their contents go into {paths.templates}/{templateFolder}."
+  },
+  "paths": {
+    "downloads": "{toolRoot}/downloads",
+    "editor": "{toolRoot}/godot/editor",
+    "editorData": "{toolRoot}/godot/editor/editor_data",
+    "templates": "{toolRoot}/godot/editor/editor_data/export_templates",
+    "sdk": "{toolRoot}/Android/Sdk"
+  },
+  "selfContained": {
+    "markerFile": "._sc_",
+    "_note": "Per data_paths.html, a file named ._sc_ (or _sc_) next to the editor binary makes the editor keep its data, settings and cache in editor_data/ beside the binary. On macOS the binary is inside the .app bundle."
+  },
+  "dotnet": {
+    "minimumMajor": 9,
+    "_note": "minimumMajor is the floor the check accepts: the 4.7 C# docs need .NET SDK 8 or later, and 9 or later for Android export; 9 covers both. It is not the install target. .NET 8 and 9 reached end of support on 2026-11-10, so the Windows apply installs SDK 11 (STS, supported to 2028-11-14); a newer SDK builds a Godot 4.7 project, which keeps its own target framework."
+  },
+  "sdkPackages": {
+    "packages": {
+      "windows": [
+        "platform-tools",
+        "build-tools/35.0.1",
+        "platforms/android-35",
+        "cmake/3.10.2.4988404",
+        "ndk/28.1.13356709"
+      ],
+      "macos": [
+        "platform-tools",
+        "build-tools;35.0.1",
+        "platforms;android-35",
+        "cmdline-tools;latest",
+        "cmake;3.10.2.4988404",
+        "ndk;28.1.13356709"
+      ],
+      "linux": [
+        "platform-tools",
+        "build-tools/35.0.1",
+        "platforms/android-35",
+        "cmdline-tools/latest",
+        "cmake/3.10.2.4988404",
+        "ndk/28.1.13356709"
+      ]
+    },
+    "_note": "The packages are the sdkmanager line in exporting_for_android.html (stable, 4.7). Substitute {packages} with sdkPackages.packages.<os>, each package double-quoted. The id form follows the pinned cmdline-tools archive for that OS (QA #396): the Windows and Linux archives (16111833, cmdline-tools 23.0) ship sdkmanager as a wrapper over the Android CLI, whose ids use '/'; on Windows that wrapper is a cmd batch file, and cmd splits an unquoted 'build-tools;35.0.1' on ';' (PowerShell drops the quotes), installing only platform-tools and still exiting 0. The Linux wrapper maps ';' to '/' itself, so '/' is used there for the same build. The macOS archive (15641748, cmdline-tools 21.0) is the classic sdkmanager, which takes the documented ';' form. --list_installed prints ids in the same form, so each OS's check compares against its own list. Windows omits cmdline-tools/latest (QA #396): sdkmanager.bat runs android.exe from cmdline-tools/latest/bin, and asked to install cmdline-tools/latest it fails to extract over its own running android.exe, exits 1 and installs none of the packages. The android-cmdline-tools item's unpack already provides cmdline-tools/latest, and that item's check still requires it."
+  },
+  "downloads": {
+    "cmdlineTools": {
+      "archives": {
+        "windows": "https://dl.google.com/android/repository/commandlinetools-win-16111833_latest.zip",
+        "macos": "https://dl.google.com/android/repository/commandlinetools-mac-15641748_latest.zip",
+        "linux": "https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip"
+      },
+      "installLayout": "{paths.sdk}/cmdline-tools/latest",
+      "_note": "Same archives as react-native-android-setup's downloads.cmdlineTools (highest builds listed on 2026-10-17)."
+    }
+  },
+  "items": [
+    {
+      "id": "tool-folders",
+      "kind": "folder",
+      "summary": "The downloads, editor and Android SDK folders under the tool root.",
+      "when": {},
+      "platforms": {
+        "windows": { "status": "verified", "check": "Test-Path '{paths.downloads}'; Test-Path '{paths.editor}'", "apply": "New-Item -ItemType Directory -Force '{paths.downloads}','{paths.editor}'", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "test -d '{paths.downloads}' && test -d '{paths.editor}'", "apply": "mkdir -p '{paths.downloads}' '{paths.editor}'", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "test -d '{paths.downloads}' && test -d '{paths.editor}'", "apply": "mkdir -p '{paths.downloads}' '{paths.editor}'", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "godot-editor",
+      "kind": "tool",
+      "summary": "The Godot editor for the project's language: builds.<godotLanguage>.editorArchive for this OS, checksum-verified and unpacked into paths.editor.",
+      "when": {},
+      "dependsOn": ["tool-folders"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "& '{editorConsoleExe}' --headless --version  # expect output starting {godot.version}.{godot.status}",
+          "apply": [
+            "Invoke-WebRequest '{godot.releaseBase}{editorArchive}' -OutFile '{paths.downloads}/{editorArchive}'",
+            "Invoke-WebRequest '{godot.releaseBase}{godot.checksums}' -OutFile '{paths.downloads}/{godot.checksums}'",
+            "(Get-FileHash '{paths.downloads}/{editorArchive}' -Algorithm SHA512).Hash  # must equal the line for {editorArchive} in {godot.checksums}",
+            "Expand-Archive '{paths.downloads}/{editorArchive}' -DestinationPath '{paths.editor}'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "'{editorExe}' --headless --version  # expect output starting {godot.version}.{godot.status}",
+          "apply": [
+            "curl -L -o '{paths.downloads}/{editorArchive}' '{godot.releaseBase}{editorArchive}'",
+            "curl -L -o '{paths.downloads}/{godot.checksums}' '{godot.releaseBase}{godot.checksums}'",
+            "shasum -a 512 '{paths.downloads}/{editorArchive}'  # must equal the line for {editorArchive} in {godot.checksums}",
+            "unzip -q '{paths.downloads}/{editorArchive}' -d '{paths.editor}'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "'{editorExe}' --headless --version  # expect output starting {godot.version}.{godot.status}",
+          "apply": [
+            "curl -L -o '{paths.downloads}/{editorArchive}' '{godot.releaseBase}{editorArchive}'",
+            "curl -L -o '{paths.downloads}/{godot.checksums}' '{godot.releaseBase}{godot.checksums}'",
+            "sha512sum '{paths.downloads}/{editorArchive}'  # must equal the line for {editorArchive} in {godot.checksums}",
+            "unzip -q '{paths.downloads}/{editorArchive}' -d '{paths.editor}'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "self-contained-mode",
+      "kind": "folder",
+      "summary": "The selfContained.markerFile next to the editor binary, so the editor's data, settings and export templates live under paths.editorData instead of the user profile.",
+      "when": {},
+      "dependsOn": ["godot-editor"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "Test-Path (Join-Path (Split-Path '{editorExe}') '{selfContained.markerFile}')", "apply": "New-Item -ItemType File -Force (Join-Path (Split-Path '{editorExe}') '{selfContained.markerFile}')", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "test -f \"$(dirname '{editorExe}')/{selfContained.markerFile}\"", "apply": "touch \"$(dirname '{editorExe}')/{selfContained.markerFile}\"", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "test -f \"$(dirname '{editorExe}')/{selfContained.markerFile}\"", "apply": "touch \"$(dirname '{editorExe}')/{selfContained.markerFile}\"", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "export-templates",
+      "kind": "tool",
+      "summary": "Export templates for the editor's exact version and build: builds.<godotLanguage>.exportTemplates, checksum-verified, its templates/ contents placed in {paths.templates}/{templateFolder}.",
+      "when": {},
+      "dependsOn": ["self-contained-mode"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "Get-Content '{paths.templates}/{templateFolder}/version.txt'  # expect {templateFolder}",
+          "apply": [
+            "Invoke-WebRequest '{godot.releaseBase}{exportTemplates}' -OutFile '{paths.downloads}/{exportTemplates}'",
+            "(Get-FileHash '{paths.downloads}/{exportTemplates}' -Algorithm SHA512).Hash  # must equal the line for {exportTemplates} in {godot.checksums}",
+            "Copy-Item '{paths.downloads}/{exportTemplates}' '{paths.downloads}/templates.zip'; Expand-Archive '{paths.downloads}/templates.zip' -DestinationPath '{paths.downloads}/templates-unpack' -Force",
+            "New-Item -ItemType Directory -Force '{paths.templates}/{templateFolder}'; Move-Item '{paths.downloads}/templates-unpack/templates/*' '{paths.templates}/{templateFolder}'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "cat '{paths.templates}/{templateFolder}/version.txt'  # expect {templateFolder}",
+          "apply": [
+            "curl -L -o '{paths.downloads}/{exportTemplates}' '{godot.releaseBase}{exportTemplates}'",
+            "shasum -a 512 '{paths.downloads}/{exportTemplates}'  # must equal the line for {exportTemplates} in {godot.checksums}",
+            "unzip -q '{paths.downloads}/{exportTemplates}' -d '{paths.downloads}/templates-unpack'",
+            "mkdir -p '{paths.templates}/{templateFolder}' && mv '{paths.downloads}/templates-unpack/templates/'* '{paths.templates}/{templateFolder}/'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "cat '{paths.templates}/{templateFolder}/version.txt'  # expect {templateFolder}",
+          "apply": [
+            "curl -L -o '{paths.downloads}/{exportTemplates}' '{godot.releaseBase}{exportTemplates}'",
+            "sha512sum '{paths.downloads}/{exportTemplates}'  # must equal the line for {exportTemplates} in {godot.checksums}",
+            "unzip -q '{paths.downloads}/{exportTemplates}' -d '{paths.downloads}/templates-unpack'",
+            "mkdir -p '{paths.templates}/{templateFolder}' && mv '{paths.downloads}/templates-unpack/templates/'* '{paths.templates}/{templateFolder}/'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "dotnet-sdk",
+      "kind": "tool",
+      "summary": "The .NET SDK the .NET editor builds C# with, at dotnet.minimumMajor or later.",
+      "when": { "godotLanguage": "csharp" },
+      "platforms": {
+        "windows": { "status": "verified", "check": "dotnet --list-sdks  # expect a version at dotnet.minimumMajor or later", "apply": "winget install --id Microsoft.DotNet.SDK.11 --exact", "requiresAdmin": true, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "dotnet --list-sdks  # expect a version at dotnet.minimumMajor or later", "apply": "brew install --cask dotnet-sdk", "requiresAdmin": true, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "dotnet --list-sdks  # expect a version at dotnet.minimumMajor or later", "apply": "sudo apt-get install -y dotnet-sdk-9.0", "requiresAdmin": true, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "jdk-17",
+      "kind": "tool",
+      "summary": "JDK 17, which the Android export docs recommend for compatibility and stability.",
+      "when": { "gamePlatform": ["android", "both"] },
+      "platforms": {
+        "windows": { "status": "verified", "check": "& \"$env:JAVA_HOME/bin/java.exe\" -version  # expect a version string starting 17", "apply": "winget install --id EclipseAdoptium.Temurin.17.JDK --exact", "requiresAdmin": true, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "\"$JAVA_HOME/bin/java\" -version  # expect a version string starting 17", "apply": "brew install --cask temurin@17", "requiresAdmin": true, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "\"$JAVA_HOME/bin/java\" -version  # expect a version string starting 17", "apply": "sudo apt-get install -y openjdk-17-jdk", "requiresAdmin": true, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "env-java-home",
+      "kind": "envVar",
+      "summary": "JAVA_HOME as a user variable pointing at the JDK 17 home, with forward slashes. The editor reads it as the default for its Java SDK Path.",
+      "variable": "JAVA_HOME",
+      "value": "{jdk17Home}",
+      "when": { "gamePlatform": ["android", "both"] },
+      "dependsOn": ["jdk-17"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "[Environment]::GetEnvironmentVariable('JAVA_HOME','User')", "apply": "[Environment]::SetEnvironmentVariable('JAVA_HOME','{value}','User')", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "grep -n '^export JAVA_HOME=' ~/.zshrc", "apply": "echo 'export JAVA_HOME=\"{value}\"' >> ~/.zshrc", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "grep -n '^export JAVA_HOME=' ~/.profile", "apply": "echo 'export JAVA_HOME=\"{value}\"' >> ~/.profile", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "android-cmdline-tools",
+      "kind": "tool",
+      "summary": "Android command-line tools (sdkmanager) unpacked into downloads.cmdlineTools.installLayout.",
+      "when": { "gamePlatform": ["android", "both"] },
+      "dependsOn": ["tool-folders", "env-java-home"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --sdk_root='{paths.sdk}' --list_installed; $LASTEXITCODE  # expect exit 0 and a cmdline-tools/latest line; --version exits 1 on cmdline-tools 23.0 even when the tools work (QA #396)",
+          "apply": [
+            "Invoke-WebRequest '{downloads.cmdlineTools.archives.windows}' -OutFile '{paths.downloads}/cmdline-tools.zip'",
+            "Expand-Archive '{paths.downloads}/cmdline-tools.zip' -DestinationPath '{paths.sdk}/cmdline-tools-unpack'",
+            "New-Item -ItemType Directory -Force '{paths.sdk}/cmdline-tools'; Move-Item '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --version",
+          "apply": [
+            "curl -L -o '{paths.downloads}/cmdline-tools.zip' '{downloads.cmdlineTools.archives.macos}'",
+            "unzip -q '{paths.downloads}/cmdline-tools.zip' -d '{paths.sdk}/cmdline-tools-unpack'",
+            "mkdir -p '{paths.sdk}/cmdline-tools' && mv '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --version",
+          "apply": [
+            "curl -L -o '{paths.downloads}/cmdline-tools.zip' '{downloads.cmdlineTools.archives.linux}'",
+            "unzip -q '{paths.downloads}/cmdline-tools.zip' -d '{paths.sdk}/cmdline-tools-unpack'",
+            "mkdir -p '{paths.sdk}/cmdline-tools' && mv '{paths.sdk}/cmdline-tools-unpack/cmdline-tools' '{paths.sdk}/cmdline-tools/latest'"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "android-sdk-packages",
+      "kind": "tool",
+      "summary": "The SDK, platform, build-tools, NDK and CMake packages in sdkPackages.packages for this OS, installed into paths.sdk.",
+      "when": { "gamePlatform": ["android", "both"] },
+      "dependsOn": ["android-cmdline-tools"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --sdk_root='{paths.sdk}' --list_installed  # expect every package in sdkPackages.packages.<os>", "apply": "& '{paths.sdk}/cmdline-tools/latest/bin/sdkmanager.bat' --sdk_root='{paths.sdk}' {packages}", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' --list_installed  # expect every package in sdkPackages.packages.<os>", "apply": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' {packages}", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' --list_installed  # expect every package in sdkPackages.packages.<os>", "apply": "'{paths.sdk}/cmdline-tools/latest/bin/sdkmanager' --sdk_root='{paths.sdk}' {packages}", "requiresAdmin": false, "requiresReboot": false }
+      }
+    },
+    {
+      "id": "env-android-home",
+      "kind": "envVar",
+      "summary": "ANDROID_HOME as a user variable pointing at paths.sdk, plus platform-tools on PATH. The editor reads ANDROID_HOME as the default for its Android SDK Path.",
+      "variable": "ANDROID_HOME",
+      "value": "{paths.sdk}",
+      "when": { "gamePlatform": ["android", "both"] },
+      "dependsOn": ["android-sdk-packages"],
+      "platforms": {
+        "windows": {
+          "status": "verified",
+          "check": "[Environment]::GetEnvironmentVariable('ANDROID_HOME','User'); [Environment]::GetEnvironmentVariable('Path','User') -split ';'  # expect {paths.sdk} and {paths.sdk}/platform-tools",
+          "apply": [
+            "[Environment]::SetEnvironmentVariable('ANDROID_HOME','{paths.sdk}','User')",
+            "$p = [Environment]::GetEnvironmentVariable('Path','User'); [Environment]::SetEnvironmentVariable('Path', ($p.TrimEnd(';') + ';{paths.sdk}/platform-tools'), 'User')  # only when missing"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "macos": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export ANDROID_HOME=' ~/.zshrc",
+          "apply": [
+            "echo 'export ANDROID_HOME=\"{paths.sdk}\"' >> ~/.zshrc",
+            "echo 'export PATH=\"$PATH:{paths.sdk}/platform-tools\"' >> ~/.zshrc"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        },
+        "linux": {
+          "status": "declared-but-untested",
+          "check": "grep -n '^export ANDROID_HOME=' ~/.profile",
+          "apply": [
+            "echo 'export ANDROID_HOME=\"{paths.sdk}\"' >> ~/.profile",
+            "echo 'export PATH=\"$PATH:{paths.sdk}/platform-tools\"' >> ~/.profile"
+          ],
+          "requiresAdmin": false,
+          "requiresReboot": false
+        }
+      }
+    },
+    {
+      "id": "editor-android-paths",
+      "kind": "editorSetting",
+      "summary": "The editor's export/android/java_sdk_path and export/android/android_sdk_path (Editor Settings > Export > Android: Java SDK Path, Android SDK Path). In Godot 4.7 they default to JAVA_HOME and ANDROID_HOME when the editor settings file does not already hold them, so with self-contained mode a first launch from a new terminal picks both up. If the settings file in paths.editorData already holds other values, the user sets them in Editor Settings.",
+      "settings": ["export/android/java_sdk_path", "export/android/android_sdk_path"],
+      "when": { "gamePlatform": ["android", "both"] },
+      "dependsOn": ["self-contained-mode", "env-java-home", "env-android-home"],
+      "platforms": {
+        "windows": { "status": "verified", "check": "Select-String -Path '{paths.editorData}/editor_settings-*.tres' -Pattern 'export/android/(java|android)_sdk_path' -ErrorAction SilentlyContinue  # absent: defaults come from JAVA_HOME and ANDROID_HOME; present: values must equal them", "apply": "Open a new terminal so JAVA_HOME and ANDROID_HOME are set, then launch '{editorExe}' once and close it", "requiresAdmin": false, "requiresReboot": false },
+        "macos": { "status": "declared-but-untested", "check": "grep -E 'export/android/(java|android)_sdk_path' '{paths.editorData}'/editor_settings-*.tres  # absent: defaults come from JAVA_HOME and ANDROID_HOME; present: values must equal them", "apply": "Open a new terminal so JAVA_HOME and ANDROID_HOME are set, then launch '{editorExe}' once and close it", "requiresAdmin": false, "requiresReboot": false },
+        "linux": { "status": "declared-but-untested", "check": "grep -E 'export/android/(java|android)_sdk_path' '{paths.editorData}'/editor_settings-*.tres  # absent: defaults come from JAVA_HOME and ANDROID_HOME; present: values must equal them", "apply": "Open a new terminal so JAVA_HOME and ANDROID_HOME are set, then launch '{editorExe}' once and close it", "requiresAdmin": false, "requiresReboot": false }
+      }
+    }
+  ],
+  "verify": {
+    "_description": "Run after every apply phase, and on its own when the user asks whether the host is ready. Each check reports pass or fail; the install is verified only when every check passes.",
+    "checks": [
+      {
+        "id": "editor-headless",
+        "summary": "The installed editor runs headless and reports the configured version.",
+        "pass": "Exit code 0, and the first output line starts with {godot.version}.{godot.status} (followed by .mono for the C# build).",
+        "platforms": {
+          "windows": { "status": "verified", "run": "& '{editorConsoleExe}' --headless --version; $LASTEXITCODE" },
+          "macos": { "status": "declared-but-untested", "run": "'{editorExe}' --headless --version; echo $?" },
+          "linux": { "status": "declared-but-untested", "run": "'{editorExe}' --headless --version; echo $?" }
+        }
+      },
+      {
+        "id": "export-templates",
+        "summary": "Export templates exist for that exact editor version and build.",
+        "pass": "{paths.templates}/{templateFolder}/version.txt exists and its content is {templateFolder}.",
+        "platforms": {
+          "windows": { "status": "verified", "run": "Get-Content '{paths.templates}/{templateFolder}/version.txt'" },
+          "macos": { "status": "declared-but-untested", "run": "cat '{paths.templates}/{templateFolder}/version.txt'" },
+          "linux": { "status": "declared-but-untested", "run": "cat '{paths.templates}/{templateFolder}/version.txt'" }
+        }
+      },
+      {
+        "id": "android-toolchain",
+        "summary": "For an Android target: JDK 17 and the SDK packages are present where the editor will look.",
+        "pass": "JAVA_HOME's java reports version 17, and sdkmanager --list_installed under ANDROID_HOME lists every package in sdkPackages.packages for this OS.",
+        "when": { "gamePlatform": ["android", "both"] },
+        "platforms": {
+          "windows": { "status": "verified", "run": "& \"$env:JAVA_HOME/bin/java.exe\" -version; & \"$env:ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager.bat\" --sdk_root=\"$env:ANDROID_HOME\" --list_installed" },
+          "macos": { "status": "declared-but-untested", "run": "\"$JAVA_HOME/bin/java\" -version; \"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager\" --sdk_root=\"$ANDROID_HOME\" --list_installed" },
+          "linux": { "status": "declared-but-untested", "run": "\"$JAVA_HOME/bin/java\" -version; \"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager\" --sdk_root=\"$ANDROID_HOME\" --list_installed" }
+        }
+      }
+    ]
+  }
+}

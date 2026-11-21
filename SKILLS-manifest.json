@@ -164,6 +164,47 @@
       "category": "platform",
       "path": "Skills/flask-setup"
     },
+    "godot-mobile-setup": {
+      "version": "1.1.0",
+      "type": "invokable",
+      "category": "devops",
+      "path": "Skills/godot-mobile-setup",
+      "hostSetup": {
+        "hostKeys": [
+          {
+            "key": "toolRoot",
+            "question": "Where should the Godot editor, its export templates and editor data, the Android SDK and the downloads live? Give an absolute folder path on a drive with room for them (export templates alone are over 1 GB per build)."
+          }
+        ],
+        "automates": [
+          "Godot editor download and unpack under the tool root: the standard build for GDScript, the .NET build for C#",
+          "Self-contained editor mode, so editor data, settings and export templates stay under the tool root",
+          "Export templates matching the editor version and build",
+          ".NET SDK install for a C# project",
+          "JDK 17 install and the JAVA_HOME user variable (Android)",
+          "Android command-line tools and the SDK, platform, build-tools, NDK and CMake packages under the tool root (Android)",
+          "ANDROID_HOME and PATH user variables, which the editor reads as its Java SDK and Android SDK paths (Android)",
+          "Install verification: headless editor run and an export-templates version check, reported pass or fail per check"
+        ],
+        "leavesToUser": [
+          "iOS export: it needs macOS with Xcode, which this skill does not install; on Windows and Linux iOS export is not possible",
+          "Running admin-phase installs (JDK, .NET SDK) from an elevated shell",
+          "Opening a new terminal after environment variables change, before the editor's first launch",
+          "Setting Java SDK Path and Android SDK Path in Editor Settings by hand when an existing editor settings file already holds other values",
+          "Release keystores, signing and store submission",
+          "Creating the project, its export presets and the Android build template"
+        ],
+        "os": {
+          "verified": [
+            "windows"
+          ],
+          "untested": [
+            "macos",
+            "linux"
+          ]
+        }
+      }
+    },
     "i18n-setup": {
       "version": "2.0.0",
       "type": "invokable",
@@ -187,6 +228,45 @@
       "type": "reference",
       "category": "database",
       "path": "Skills/migration-patterns"
+    },
+    "mobile-emulator-setup": {
+      "version": "1.0.0",
+      "type": "invokable",
+      "category": "devops",
+      "path": "Skills/mobile-emulator-setup",
+      "hostSetup": {
+        "hostKeys": [
+          {
+            "key": "toolRoot",
+            "question": "Where should the Android SDK, the emulator and its system images, the virtual devices (AVDs) and the downloads live? Give an absolute folder path on a drive with room for them (one system image and one AVD take several GB)."
+          }
+        ],
+        "automates": [
+          "JDK 17 install and the JAVA_HOME user variable, which avdmanager needs (Android)",
+          "Android command-line tools, platform-tools, the emulator and one system image under the tool root (Android)",
+          "ANDROID_HOME, ANDROID_AVD_HOME and PATH user variables, so AVD data stays under the tool root (Android)",
+          "Creating one AVD from the configured device profile and system image (Android)",
+          "Emulator hardware acceleration in a separate admin phase: Windows Hypervisor Platform, KVM on Linux (Android)",
+          "Verification: acceleration check, AVD listed, a headless boot confirmed by sys.boot_completed, and on macOS an iOS Simulator runtime present, reported pass or fail per check"
+        ],
+        "leavesToUser": [
+          "Installing Xcode on macOS, and adding an iOS Simulator runtime to it; the skill only reports whether they are present",
+          "iOS Simulator on Windows and Linux: it needs macOS with Xcode",
+          "Running admin-phase steps (JDK, acceleration) from an elevated shell, and the reboot Windows Hypervisor Platform needs",
+          "Opening a new terminal after environment variables change, before creating or starting an AVD",
+          "Moving AVDs that already exist outside the tool root",
+          "Physical-device setup"
+        ],
+        "os": {
+          "verified": [
+            "windows"
+          ],
+          "untested": [
+            "macos",
+            "linux"
+          ]
+        }
+      }
     },
     "mutation-testing": {
       "version": "1.0.0",
@@ -237,10 +317,43 @@
       "path": "Skills/railway-project-setup"
     },
     "react-native-android-setup": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "invokable",
       "category": "devops",
-      "path": "Skills/react-native-android-setup"
+      "path": "Skills/react-native-android-setup",
+      "hostSetup": {
+        "hostKeys": [
+          {
+            "key": "toolRoot",
+            "question": "Where should the Android SDK, emulator (AVD) images, Maestro and tool temp folders live? Give an absolute folder path on a drive with room for them (the pilot used about 51 GB for the SDK and AVD images)."
+          }
+        ],
+        "automates": [
+          "JDK 17 install and the JAVA_HOME user variable",
+          "Android command-line tools, SDK packages and emulator system images under the tool root",
+          "ANDROID_HOME, ANDROID_AVD_HOME, MAESTRO_OPTS and PATH user variables",
+          "Moving existing emulator (AVD) images under the tool root",
+          "Maestro CLI install and its temp folder",
+          "Emulator hardware and GPU acceleration settings",
+          "Windows settings for Metro's port and gradlew.bat lookup (admin phase)"
+        ],
+        "leavesToUser": [
+          "Running admin-phase commands from an elevated shell and rebooting the machine",
+          "Opening a new terminal and restarting the IDE after environment variables change",
+          "Installing Node.js (see the install-node skill)",
+          "Starting Metro detached and waking snapshot-restored emulators while running the app",
+          "Project code, Maestro flows and app-level guidance"
+        ],
+        "os": {
+          "verified": [
+            "windows"
+          ],
+          "untested": [
+            "macos",
+            "linux"
+          ]
+        }
+      }
     },
     "render-project-setup": {
       "version": "2.0.0",

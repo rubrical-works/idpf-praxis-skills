@@ -2,9 +2,9 @@
 name: react-native-android-setup
 description: Check and set up the host toolchain a React Native + Android + Maestro project needs (JDK 17, Android SDK and emulators, Maestro, user environment variables, tool folders, OS settings), with a tool root the user chooses, per-step consent, and a separate admin phase that survives a reboot. Use when preparing a machine for React Native Android work, or when a build or Maestro run fails with a JDK, SDK, emulator, port or temp-folder symptom.
 type: invokable
-version: "1.0.0"
+version: "1.1.0"
 frameworkCompatibility: ">=0.80.0"
-lastUpdated: "2026-10-17"
+lastUpdated: "2026-11-20"
 license: Complete terms in LICENSE.txt
 category: devops
 relevantTechStack: [react-native, android, android-sdk, android-emulator, maestro, jdk, gradle, windows]

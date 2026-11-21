@@ -51,6 +51,61 @@
         },
         "renamed": {
           "$ref": "#/definitions/renamedEntry"
+        },
+        "hostSetup": {
+          "$ref": "#/definitions/hostSetupEntry"
+        }
+      }
+    },
+    "hostSetupEntry": {
+      "type": "object",
+      "description": "Host-setup metadata for a skill that prepares a host machine, copied from the hostSetup block of the skill's resources/<skill>.config.json by build-skills-manifest.js. Present only on skills that declare it.",
+      "required": ["hostKeys", "automates", "leavesToUser", "os"],
+      "additionalProperties": false,
+      "properties": {
+        "hostKeys": {
+          "type": "array",
+          "description": "Host answers the skill reads, each with the question that asks for it",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["key", "question"],
+            "additionalProperties": false,
+            "properties": {
+              "key": { "type": "string", "minLength": 1 },
+              "question": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "automates": {
+          "type": "array",
+          "description": "Steps the skill carries out (each with the user's consent)",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "leavesToUser": {
+          "type": "array",
+          "description": "Steps the skill does not carry out and leaves to the user",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "os": {
+          "type": "object",
+          "description": "Operating systems the skill is verified on, and those declared but untested",
+          "required": ["verified", "untested"],
+          "additionalProperties": false,
+          "properties": {
+            "verified": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["windows", "macos", "linux"] },
+              "uniqueItems": true
+            },
+            "untested": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["windows", "macos", "linux"] },
+              "uniqueItems": true
+            }
+          }
         }
       }
     },
