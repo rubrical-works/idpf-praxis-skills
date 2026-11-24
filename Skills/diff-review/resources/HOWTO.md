@@ -48,11 +48,16 @@ Procedure:
    Record the file list, line counts and commits in the budget block before reading any hunk.
    A numstat row of - - is a binary file: list it in budget.binaryFiles, count it as 0 lines,
    never invent a count for it.
-3. Read hunks within budget.filesReadInFull and budget.diffLinesReadInFull, in budget.readOrder.
+3. Read hunks with function context: run git diff -W main...work/142, which widens each hunk
+   to its whole enclosing function. Read within budget.filesReadInFull and
+   budget.diffLinesReadInFull, counting function-context lines, in budget.readOrder, and set
+   budget.lineCountBasis to "function-context".
    List any file you could not read in full in budget.countedNotRead. Never drop one silently.
-4. Evaluate every entry in criteria[]. Emit at least one finding per criterion: one pass
+4. For each changed function, search the same file for its callers (a search, not a full-file
+   read) and judge the change against those call sites.
+5. Evaluate every entry in criteria[]. Emit at least one finding per criterion: one pass
    finding when it holds, one finding per violation otherwise, at the criterion's severity.
-5. Derive the verdict from the verdict rule in review-criteria.json.
+6. Derive the verdict from the verdict rule in review-criteria.json.
 
 Output: your final message is ONE JSON document valid against
 .claude/skills/diff-review/output-schema.json, and nothing else. No prose before or after it.
@@ -69,9 +74,10 @@ The findings document the reviewer returned:
     "filesListed": 4,
     "filesReadInFull": 4,
     "diffLinesListed": 186,
-    "diffLinesRead": 186,
+    "diffLinesRead": 316,
     "countedNotRead": [],
-    "binaryFiles": []
+    "binaryFiles": [],
+    "lineCountBasis": "function-context"
   },
   "findings": [
     { "criterion": "hunk-maps-to-ac", "file": "src/routes/sessions.js", "line": 18, "status": "pass", "evidence": "Hunks at lines 18-44 implement the 201 and 401 responses (AC1, AC2)." },
@@ -89,7 +95,10 @@ The findings document the reviewer returned:
     { "criterion": "edge-input", "file": "src/auth/verify.js", "line": 9, "status": "pass", "evidence": "Rejects a missing, null or empty username or password before comparing; credentials are compared whole, never by substring." },
     { "criterion": "path-containment", "file": null, "line": null, "status": "pass", "evidence": "No path in the range is built from external input." },
     { "criterion": "state-composition", "file": "src/routes/sessions.js", "line": 30, "status": "pass", "evidence": "Creates a new session entry; does not rewrite the session store or any shared structure." },
-    { "criterion": "external-contract", "file": null, "line": null, "status": "pass", "evidence": "No external CLI or API is called in the range." }
+    { "criterion": "external-contract", "file": null, "line": null, "status": "pass", "evidence": "No external CLI or API is called in the range." },
+    { "criterion": "cross-site-inconsistency", "file": "src/routes/sessions.js", "line": 18, "status": "pass", "evidence": "Both branches of the handler call verify() the same way, and the caller search finds no other call site of the changed route function in the file." },
+    { "criterion": "partial-failure-and-race", "file": "src/routes/sessions.js", "line": 30, "status": "pass", "evidence": "The session entry is created in one insert after verify() succeeds; no step runs before it that a failure would leave half-done." },
+    { "criterion": "time-bound", "file": null, "line": null, "status": "pass", "evidence": "The range adds no process spawn, network call or file-system walk; verify() compares against the in-memory user store." }
   ],
   "verdict": "fail"
 }
@@ -97,9 +106,66 @@ The findings document the reviewer returned:
 
 The gate blocks the merge on the `scope-declared` fail, and the two warnings travel with it: the unrelated health-endpoint hunk and the leftover `console.log`. Nothing in the document needs a human to read prose to act on it.
 
+`diffLinesListed` is the numstat total of added and removed lines; `diffLinesRead` is larger because it counts the function-context lines `git diff -W` returned, the basis `lineCountBasis` names and the `diffLinesReadInFull` cap is measured in.
+
+## Function Context Example
+
+A defect can live between a new line and unchanged lines of the same function, where the hunk alone never shows it. This change adds an early return to a rule-copy step. The hunk-only read, `git diff main...work/206`, shows three lines of context either side:
+
+```diff
+--- a/src/upgrade/copy-rules.js
++++ b/src/upgrade/copy-rules.js
+@@ -17,6 +17,7 @@ function copyRules(srcDir, dest) {
+   }
+   fs.mkdirSync(dest, { recursive: true });
+ 
++  if (files.length === 0) return { success: true, copied: 0, warnings: [] };
+   for (const file of files) {
+     fs.copyFileSync(path.join(srcDir, file), path.join(dest, file));
+   }
+```
+
+Nothing there is wrong: an empty rule list copies nothing, and the early return says so. The function-context read, `git diff -W main...work/206`, widens the same hunk to the whole of `copyRules`:
+
+```diff
+--- a/src/upgrade/copy-rules.js
++++ b/src/upgrade/copy-rules.js
+@@ -10,15 +10,16 @@ const log = require('../log');
+ function copyRules(srcDir, dest) {
+   const warnings = [];
+   let files = [];
+   if (fs.existsSync(srcDir)) {
+     files = fs.readdirSync(srcDir).filter((f) => f.endsWith('.md'));
+   } else {
+     warnings.push(`rules source ${srcDir} is missing`);
+   }
+   fs.mkdirSync(dest, { recursive: true });
+ 
++  if (files.length === 0) return { success: true, copied: 0, warnings: [] };
+   for (const file of files) {
+     fs.copyFileSync(path.join(srcDir, file), path.join(dest, file));
+   }
+   return { success: true, copied: files.length, warnings };
+ }
+```
+
+Now the unchanged `else` branch is in view: `files` is empty whenever the rule list is empty, including when the source directory is missing, and in that case the `else` branch has already pushed a warning. The new return replaces `warnings` with an empty array, so a missing rules source is reported as a clean success with nothing to warn about. The findings document, trimmed to that finding:
+
+```json
+{
+  "issue": 206,
+  "range": "main..work/206",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 1, "diffLinesRead": 16, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
+  "findings": [
+    { "criterion": "error-path-outcome", "file": "src/upgrade/copy-rules.js", "line": 20, "status": "fail", "evidence": "The new early return reports { success: true, warnings: [] } whenever files is empty, and files is empty when srcDir is missing (as well as when it holds no .md files), after the unchanged else branch at line 16 has already run `warnings.push` for that failure. The promised warning is dropped and the missing source is reported as success." }
+  ],
+  "verdict": "fail"
+}
+```
+
 ## Correctness Criteria Examples
 
-Five criteria ask whether the changed logic is correct, not only whether it is in scope and tested. Each example below is a short diff showing a defect the criterion catches, and the findings document it produces. To keep them short, each document is trimmed to the finding being illustrated. A real review still emits at least one finding for every criterion, as the Worked Example above does.
+The correctness criteria ask whether the changed logic is correct, not only whether it is in scope and tested. Each example below is a short diff, shown as the function-context read returns it (each hunk widened to its whole enclosing function, so `diffLinesRead` counts those lines), showing a defect the criterion catches, and the findings document it produces. To keep them short, each document is trimmed to the finding being illustrated. A real review still emits at least one finding for every criterion, as the Worked Example above does.
 
 ### `error-path-outcome`
 
@@ -108,7 +174,8 @@ A copy step whose failure is logged but still reported as a clean success:
 ```diff
 --- a/src/upgrade/copy-rules.js
 +++ b/src/upgrade/copy-rules.js
-@@ -12,5 +12,9 @@ function copyRules(files, dest) {
+@@ -11,6 +11,10 @@
+ function copyRules(files, dest) {
    for (const file of files) {
 -    fs.copyFileSync(file, path.join(dest, path.basename(file)));
 +    try {
@@ -125,7 +192,7 @@ A copy step whose failure is logged but still reported as a clean success:
 {
   "issue": 201,
   "range": "main..work/201",
-  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 6, "diffLinesRead": 6, "countedNotRead": [], "binaryFiles": [] },
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 6, "diffLinesRead": 11, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
   "findings": [
     { "criterion": "error-path-outcome", "file": "src/upgrade/copy-rules.js", "line": 15, "status": "fail", "evidence": "The catch logs the failed copy and continues; the function still returns { success: true, copied: files.length }, so a failed copy is reported as a clean upgrade." }
   ],
@@ -151,7 +218,7 @@ A tech-stack detector that matches a substring where a whole word is meant:
 {
   "issue": 202,
   "range": "main..work/202",
-  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 2, "diffLinesRead": 2, "countedNotRead": [], "binaryFiles": [] },
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 2, "diffLinesRead": 4, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
   "findings": [
     { "criterion": "edge-input", "file": "src/charter/detect-stack.js", "line": 5, "status": "warn", "evidence": "includes() is a substring match: 'JavaScript' yields java and 'Django' yields go. The lowercase comparison is wanted, but the match must be whole-word." }
   ],
@@ -166,7 +233,8 @@ Rule paths read from a downloaded manifest and joined onto the project root unch
 ```diff
 --- a/src/hub/setup-rules.js
 +++ b/src/hub/setup-rules.js
-@@ -20,2 +20,5 @@ function installRules(manifest, projectRoot) {
+@@ -19,3 +19,6 @@
+ function installRules(manifest, projectRoot) {
 -  // rules are copied by the hub installer
 +  for (const rule of manifest.rules) {
 +    const target = path.join(projectRoot, rule.path);
@@ -179,7 +247,7 @@ Rule paths read from a downloaded manifest and joined onto the project root unch
 {
   "issue": 203,
   "range": "main..work/203",
-  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 5, "diffLinesRead": 5, "countedNotRead": [], "binaryFiles": [] },
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 5, "diffLinesRead": 7, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
   "findings": [
     { "criterion": "path-containment", "file": "src/hub/setup-rules.js", "line": 21, "status": "fail", "evidence": "rule.path comes from the downloaded manifest and is joined onto projectRoot with no check; a value such as ../../.ssh/config or an absolute path writes outside the project." }
   ],
@@ -194,7 +262,8 @@ A pull that writes every hub command over the project's copy, including commands
 ```diff
 --- a/src/hub/pull-commands.js
 +++ b/src/hub/pull-commands.js
-@@ -8,6 +8,4 @@ function pullCommands(hubDir, projectDir) {
+@@ -7,7 +7,5 @@
+ function pullCommands(hubDir, projectDir) {
    for (const name of fs.readdirSync(hubDir)) {
 -    if (isManaged(path.join(projectDir, name))) {
 -      fs.copyFileSync(path.join(hubDir, name), path.join(projectDir, name));
@@ -208,7 +277,7 @@ A pull that writes every hub command over the project's copy, including commands
 {
   "issue": 204,
   "range": "main..work/204",
-  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 4, "diffLinesRead": 4, "countedNotRead": [], "binaryFiles": [] },
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 4, "diffLinesRead": 8, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
   "findings": [
     { "criterion": "state-composition", "file": "src/hub/pull-commands.js", "line": 9, "status": "warn", "evidence": "The isManaged() guard is removed, so the pull replaces project-owned command files whole; the project's own edits to an extensible command are reverted on every pull." }
   ],
@@ -223,7 +292,7 @@ A bare `npm` spawned without a shell, which Windows does not resolve:
 ```diff
 --- a/src/project/install.js
 +++ b/src/project/install.js
-@@ -3,4 +3,4 @@ const { spawnSync } = require('child_process');
+@@ -3,3 +3,3 @@ const { spawnSync } = require('child_process');
  function installDependencies(cwd) {
 -  return spawnSync('npm.cmd', ['ci'], { cwd, shell: false });
 +  return spawnSync('npm', ['ci'], { cwd, shell: false });
@@ -234,11 +303,155 @@ A bare `npm` spawned without a shell, which Windows does not resolve:
 {
   "issue": 205,
   "range": "main..work/205",
-  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 2, "diffLinesRead": 2, "countedNotRead": [], "binaryFiles": [] },
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 2, "diffLinesRead": 4, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
   "findings": [
     { "criterion": "external-contract", "file": "src/project/install.js", "line": 4, "status": "warn", "evidence": "spawnSync('npm') without a shell assumes the executable is named npm; on Windows it is npm.cmd, so the call fails with ENOENT. No test or recorded output in the range shows the name was checked per platform." }
   ],
   "verdict": "warn"
+}
+```
+
+### `cross-site-inconsistency`
+
+A setting whose writer moved to a new key while its reader, further down the same file, did not:
+
+```diff
+--- a/src/config/store.js
++++ b/src/config/store.js
+@@ -4,4 +4,4 @@
+ function saveReviewMode(cfg, mode) {
+-  cfg.reviewMode = mode;
++  cfg.review = { ...cfg.review, mode };
+   return write(cfg);
+ }
+```
+
+```json
+{
+  "issue": 209,
+  "range": "main..work/209",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 2, "diffLinesRead": 5, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
+  "findings": [
+    { "criterion": "cross-site-inconsistency", "file": "src/config/store.js", "line": 5, "status": "warn", "evidence": "src/config/store.js:5 now writes cfg.review.mode, but its reader loadReviewMode at src/config/store.js:12, found by the same-file caller search, still reads cfg.reviewMode. The saved mode is never read back, so the default always applies." }
+  ],
+  "verdict": "warn"
+}
+```
+
+### `partial-failure-and-race`
+
+A reinstall that removes the current hub before the new one has downloaded:
+
+```diff
+--- a/src/upgrade/install-hub.js
++++ b/src/upgrade/install-hub.js
+@@ -20,4 +20,5 @@
+ async function installHub(dir, version) {
++  fs.rmSync(dir, { recursive: true, force: true });
+   await downloadAndExtract(version, dir);
+   return { ok: true, version };
+ }
+```
+
+```json
+{
+  "issue": 210,
+  "range": "main..work/210",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 1, "diffLinesRead": 5, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
+  "findings": [
+    { "criterion": "partial-failure-and-race", "file": "src/upgrade/install-hub.js", "line": 21, "status": "warn", "evidence": "Step order: line 21 removes the installed hub before downloadAndExtract at line 22 has succeeded. A network error or a bad archive leaves no hub at all, and nothing restores the previous version; extracting to a temporary directory and swapping it in afterwards would not." }
+  ],
+  "verdict": "warn"
+}
+```
+
+### `time-bound`
+
+A session-start hook that gains a network call with no timeout:
+
+```diff
+--- a/src/hooks/session-start.js
++++ b/src/hooks/session-start.js
+@@ -30,4 +30,5 @@
+ function branchStatus(cwd) {
++  execFileSync('git', ['fetch', '--quiet'], { cwd });
+   const out = execFileSync('git', ['status', '-sb'], { cwd, encoding: 'utf8' });
+   return parseStatus(out);
+ }
+```
+
+```json
+{
+  "issue": 211,
+  "range": "main..work/211",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 1, "diffLinesRead": 5, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
+  "findings": [
+    { "criterion": "time-bound", "file": "src/hooks/session-start.js", "line": 31, "status": "warn", "evidence": "execFileSync('git', ['fetch']) at line 31 is a network call with no timeout option, inside a session-start hook that the host kills after 10 seconds. A slow or unreachable remote holds the hook until it is killed, and the status it builds is never printed. A timeout well under 10 seconds bounds it." }
+  ],
+  "verdict": "warn"
+}
+```
+
+## Findings Policy Examples
+
+`findingsPolicy.describedDefect` makes a defect the reviewer writes down a `warn` or `fail`, never a `pass`. Calling it an observation, pre-existing or outside the acceptance criteria does not change its status; `preExisting` and `outsideScope` record its age and scope so a consumer can file it rather than fix it. The diffs are shown in function-context form, as the Read Budget reads them.
+
+### A defect outside the acceptance criteria
+
+The issue's only acceptance criterion is "`status --json` prints the issues as one JSON object". The change also sorts the list, which no criterion asks for:
+
+```diff
+--- a/src/cli/status.js
++++ b/src/cli/status.js
+@@ -8,3 +8,5 @@
+ function printStatus(issues, opts) {
+-  for (const n of issues) console.log(`#${n}`);
++  const sorted = [...issues].sort();
++  if (opts.json) return console.log(JSON.stringify({ issues: sorted }));
++  for (const n of sorted) console.log(`#${n}`);
+ }
+```
+
+A reviewer once passed this as "outside AC scope". Under the policy it is an `edge-input` warning that carries `outsideScope: true`:
+
+```json
+{
+  "issue": 207,
+  "range": "main..work/207",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 4, "diffLinesRead": 6, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
+  "findings": [
+    { "criterion": "edge-input", "file": "src/cli/status.js", "line": 9, "status": "warn", "outsideScope": true, "evidence": "sort() with no comparator orders the issue numbers as strings, so [9, 10] prints as [10, 9] in both the JSON and the text output. No acceptance criterion asks for the sort; the defect is in the changed hunk all the same." }
+  ],
+  "verdict": "warn"
+}
+```
+
+### An unhandled throw under `error-path-outcome`
+
+A CLI that promises one JSON result on stdout gains a step that can throw or reject:
+
+```diff
+--- a/src/cli/sync.js
++++ b/src/cli/sync.js
+@@ -12,4 +12,5 @@
+ async function main(args) {
+   const result = { ok: true, synced: [] };
++  result.synced = await pullAll(readManifest(args.manifest));
+   process.stdout.write(JSON.stringify(result) + '\n');
+ }
+```
+
+Nothing here reports success after a failure, and that was once the reason to pass it: "it throws, so it is not reported as success". The failure is unhandled, which `error-path-outcome` now counts:
+
+```json
+{
+  "issue": 208,
+  "range": "main..work/208",
+  "budget": { "filesListed": 1, "filesReadInFull": 1, "diffLinesListed": 1, "diffLinesRead": 5, "countedNotRead": [], "binaryFiles": [], "lineCountBasis": "function-context" },
+  "findings": [
+    { "criterion": "error-path-outcome", "file": "src/cli/sync.js", "line": 14, "status": "fail", "evidence": "readManifest throws on a missing or malformed manifest and pullAll rejects on a network error; the added line has no catch and main has none, so the failure is unhandled. The CLI promises one JSON result on stdout and instead exits with a stack trace and no JSON." }
+  ],
+  "verdict": "fail"
 }
 ```
 

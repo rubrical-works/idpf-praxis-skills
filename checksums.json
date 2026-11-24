@@ -1,7 +1,7 @@
 {
   "manifestVersion": "1.0.0",
-  "frameworkVersion": "0.25.1",
-  "generatedAt": "2026-11-21T00:22:25.983Z",
+  "frameworkVersion": "0.26.0",
+  "generatedAt": "2026-11-24T20:19:08.436Z",
   "fileCount": 19,
   "files": [
     {
@@ -51,13 +51,13 @@
     },
     {
       "relativePath": "Skills/playwright-explorer/lib/detect-components.js",
-      "sha256": "cb3edd9b6dc2c8ee7716d841569359a038d998c1112e88f31d19c64b9a942d23",
-      "sizeBytes": 5128
+      "sha256": "83f616b31e4603437dd2f305da4713303c70e936f02c35cb097065f310f00bec",
+      "sizeBytes": 5297
     },
     {
       "relativePath": "Skills/playwright-explorer/lib/dom-reader.js",
-      "sha256": "b9976147b67f8dd7feacfa0aa9612ac5090f84b98edd67fcafe21b6206c1cf13",
-      "sizeBytes": 7333
+      "sha256": "a02697916cf4428862995a5f049f9fd4d68f472ff803a4870d34e228669fbb3a",
+      "sizeBytes": 7794
     },
     {
       "relativePath": "Skills/playwright-explorer/lib/error-recovery.js",
@@ -66,8 +66,8 @@
     },
     {
       "relativePath": "Skills/playwright-explorer/lib/nl-interaction.js",
-      "sha256": "be7cd26eae35d2d085b8dd053a7ea3253989e038d17c3e1d737a5c5b246ddcc5",
-      "sizeBytes": 7602
+      "sha256": "001af8cb6d2dffc078cf3401a6c8770f7e303c00fb818314e4ef6ff658f6d22b",
+      "sizeBytes": 8078
     },
     {
       "relativePath": "Skills/playwright-explorer/lib/preflight.js",

@@ -3,7 +3,7 @@
   "version": 1,
   "budget": {
     "filesReadInFull": 20,
-    "diffLinesReadInFull": 1500,
+    "diffLinesReadInFull": 2600,
     "countFirst": "Run git diff --numstat <base>...<branch> and git log --oneline <base>..<branch> before reading any hunk. Three dots for git diff (merge-base form, so the diff holds only the branch's own changes), two for git log (the commit range). Record every file with its line counts, and every commit, in the findings document's budget block. A numstat row of - - is a binary file: list it in budget.binaryFiles by path, count it as 0 lines, and never invent a count for it or drop it.",
     "readOrder": [
       "files the issue declares under Files to modify",
@@ -87,11 +87,11 @@
     },
     {
       "id": "error-path-outcome",
-      "name": "Failures are not reported as success",
+      "name": "Failures are reported, not hidden or unhandled",
       "severity": "fail",
-      "description": "A changed catch block, error branch or early return reports the failure it handled, rather than success.",
-      "check": "For each added or changed catch, error branch, early return and exit path, read what the caller receives. A finding is any path that reports success after a failure (ok: true, a success message, a repaired or done status), discards a returned { success: false } or error value without acting on it, exits 0 after a failure, or promises a warning that is never added to the warnings it returns.",
-      "evidence": "The file and line of the error path, the failure it handles, and the success it reports instead or the result it discards."
+      "description": "A changed catch block, error branch or early return reports the failure it handled, rather than success, and a changed or added path that can throw or reject handles the failure rather than leaving it unhandled.",
+      "check": "For each added or changed catch, error branch, early return and exit path, read what the caller receives. A finding is any path that reports success after a failure (ok: true, a success message, a repaired or done status), discards a returned { success: false } or error value without acting on it, exits 0 after a failure, or promises a warning that is never added to the warnings it returns. It is also a finding when a changed or added path can throw or reject and leaves the failure unhandled: an uncaught throw that breaks the caller's output contract (a CLI that promises a JSON result exits with a stack trace instead), or an await with no catch that leaves a busy flag, lock or dead-end state set. A missing handler counts, not only a changed one, and that the path throws rather than reporting success is not a reason to pass it.",
+      "evidence": "The file and line of the error path, the failure it handles, and the success it reports instead or the result it discards; for an unhandled failure, the call that throws or rejects and what the caller is left with."
     },
     {
       "id": "edge-input",
@@ -124,11 +124,36 @@
       "description": "A call to an external CLI or API relies only on flags, output shape and executable names that the range shows were checked.",
       "check": "For each added or changed call to an external CLI or API, note what the code assumes: flags and their spelling, the output format it parses, exit codes, and the platform executable name (npm versus npm.cmd on Windows, a shell built-in versus a binary). An assumption the range does not support with a test, a recorded fixture of real output, or a cited help or documentation output is a finding.",
       "evidence": "The file and line of the call, the assumption it makes, and either the test or fixture that supports it or the statement that none is in the range."
+    },
+    {
+      "id": "cross-site-inconsistency",
+      "name": "A change agrees with its counterparts",
+      "severity": "warn",
+      "description": "A change made in one place is matched in the places that must agree with it.",
+      "check": "For each changed function, find its counterparts and confirm they agree with the change: the sibling branches of the same conditional or switch, the reader of a value whose writer changed (and the writer of one whose reader changed), the repair step of a detection that changed, and the other call sites of a changed function or format. Use the function-context read and the same-file caller search the Read Budget already makes, and search the repository by name for a counterpart in another file. A finding is a counterpart left on the old behavior: one branch updated and its siblings not, a writer changed and its reader not, detection changed and repair not, or a value read from configuration in one place and hard-coded in another.",
+      "evidence": "Both locations, as file and line: the changed site and the counterpart, and what differs between them."
+    },
+    {
+      "id": "partial-failure-and-race",
+      "name": "A multi-step change cannot stop halfway or interleave",
+      "severity": "warn",
+      "description": "A change made of several steps leaves a consistent state when a step fails and when two runs overlap.",
+      "check": "For each added or changed sequence of steps, ask what state is left if it stops after any one of them, and what happens if a second run starts before the first ends. A finding is: a destroy or replace that runs before its replacement has succeeded, with no rollback; a multi-file or multi-record write that is not atomic, so a failure part-way leaves some written and some not; a check-then-act on shared state (exists then create, read then write back) that another run can change in between; a stale async response that can arrive after a newer one and overwrite it; or a control or entry point left enabled while its operation runs, allowing an overlap.",
+      "evidence": "The step order as file and line, and the failure point or the interleaving that leaves the inconsistent state."
+    },
+    {
+      "id": "time-bound",
+      "name": "Calls in a time-limited context are bounded",
+      "severity": "warn",
+      "description": "A synchronous or external call made where time is limited carries a timeout within the caller's own budget.",
+      "check": "For each added or changed synchronous or external call (a process spawn, a network request, a file-system walk of unbounded size), find the context it runs in. When that context is time-limited (a hook, startup, a request handler or an IPC handler, or anything else the host kills or the user waits on), the call is a finding if it has no timeout, or a timeout longer than the context's own budget, so one slow call can exhaust the whole budget.",
+      "evidence": "The file and line of the call, the context and its time limit, and the timeout that is missing or exceeds that limit."
     }
   ],
   "findingsPolicy": {
     "perCriterion": "Emit at least one finding per criterion. A criterion with no violation emits one pass finding; each violation emits its own finding at the criterion's severity.",
-    "lineAnchoring": "file and line are null only for findings that are not line-anchored, such as a commit message or a whole-range observation."
+    "lineAnchoring": "file and line are null only for findings that are not line-anchored, such as a commit message or a whole-range observation.",
+    "describedDefect": "A finding whose evidence describes a defect is warn or fail, never pass: calling it an observation, a minor note, pre-existing or outside the acceptance criteria does not make it pass. Record it at the criterion's severity and mark its age or scope with the finding's preExisting or outsideScope flag instead. A pass finding's evidence states why the code is correct, not a defect seen and set aside."
   },
   "verdict": {
     "fail": "Any finding with status fail.",

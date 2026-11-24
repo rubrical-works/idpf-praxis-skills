@@ -1,5 +1,5 @@
 # Skills Maintenance Process
-**Version:** v0.25.1
+**Version:** v0.26.0
 
 **Purpose:** Define the process for reviewing, updating, versioning, and releasing skills in the IDPF Framework.
 
@@ -25,7 +25,7 @@
 | command-spec-audit | 1.0.0 | 2026-04-02 | Active |
 | common-errors | 1.0.0 | 2026-03-17 | Active |
 | debate-prism | 1.0.2 | 2026-05-18 | Active |
-| diff-review | 1.2.0 | 2026-10-28 | Active |
+| diff-review | 1.3.0 | 2026-11-24 | Active |
 | digitalocean-app-setup | 2.0.0 | 2026-04-25 | Active |
 | drawio-generation | 1.0.0 | 2026-03-17 | Active |
 | electron-cross-build | 1.1.0 | 2026-09-10 | Active |
@@ -49,7 +49,7 @@
 | mobile-emulator-setup | 1.0.0 | 2026-11-20 | Active |
 | mutation-testing | 1.0.0 | 2026-03-17 | Active |
 | observability-setup | 1.0.0 | 2026-03-17 | Active |
-| playwright-explorer | 1.0.0 | 2026-03-17 | Active |
+| playwright-explorer | 1.0.1 | 2026-11-24 | Active |
 | playwright-setup | 2.0.0 | 2026-04-25 | Active |
 | postgresql-integration | 2.0.0 | 2026-04-25 | Active |
 | privacy-compliance | 1.0.0 | 2026-03-17 | Active |

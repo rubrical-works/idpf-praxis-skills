@@ -170,6 +170,12 @@ function formatStatusSummary(components) {
     if (c.skipped) {
       return `  - ${c.component}: skipped (not applicable)`;
     }
+    if (c.stale === false) {
+      return `  ✓ ${c.component}`;
+    }
+    if (c.stale === true) {
+      return `  ✗ ${c.component}: stale (version mismatch)`;
+    }
     if (c.installed === true) {
       const ver = c.version ? ` ${c.version}` : '';
       return `  ✓ ${c.component}${ver}`;

@@ -1,5 +1,5 @@
 # Schema Versioning Strategies
-**Version:** v0.25.1
+**Version:** v0.26.0
 Detailed comparison of migration versioning approaches.
 ## Strategy Comparison
 | Strategy | Team Size | Merge Conflicts | Tooling Support |

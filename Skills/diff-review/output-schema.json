@@ -12,13 +12,18 @@
     "reviewedAt": { "type": "string", "description": "ISO 8601 timestamp of the review" },
     "budget": {
       "type": "object",
-      "required": ["filesListed", "filesReadInFull", "diffLinesListed", "diffLinesRead", "countedNotRead", "binaryFiles"],
+      "required": ["filesListed", "filesReadInFull", "diffLinesListed", "diffLinesRead", "countedNotRead", "binaryFiles", "lineCountBasis"],
       "additionalProperties": false,
       "properties": {
         "filesListed": { "type": "integer", "minimum": 0, "description": "Files in the range, from git diff --numstat, binary files included" },
         "filesReadInFull": { "type": "integer", "minimum": 0 },
         "diffLinesListed": { "type": "integer", "minimum": 0, "description": "Added plus removed lines across the range; a binary file contributes 0" },
-        "diffLinesRead": { "type": "integer", "minimum": 0 },
+        "diffLinesRead": { "type": "integer", "minimum": 0, "description": "Lines read, counted in the basis lineCountBasis names, against the diffLinesReadInFull cap" },
+        "lineCountBasis": {
+          "type": "string",
+          "enum": ["function-context"],
+          "description": "The basis diffLinesRead, countedNotRead lines and the diffLinesReadInFull cap are counted in: function-context lines, from git diff -W (or git show -W per named commit), each hunk widened to its enclosing function. Never omitted, so a consumer can tell these counts from hunk-only ones."
+        },
         "countedNotRead": {
           "type": "array",
           "description": "Files not read in full because a cap was reached. Never omitted: an empty array is the claim that everything was read.",
@@ -59,7 +64,9 @@
           "file": { "type": ["string", "null"], "description": "Path the finding is anchored to; null when not line-anchored" },
           "line": { "type": ["integer", "null"], "minimum": 1, "description": "Line in the post-change file; null when not line-anchored" },
           "status": { "type": "string", "enum": ["pass", "warn", "fail"] },
-          "evidence": { "type": "string", "minLength": 1, "description": "What was seen: a quoted line, a commit subject, or the AC a hunk maps to" }
+          "evidence": { "type": "string", "minLength": 1, "description": "What was seen: a quoted line, a commit subject, or the AC a hunk maps to" },
+          "preExisting": { "type": "boolean", "description": "Optional. The defect was already present before the range, so a consumer may file it rather than fix it. Never turns a defect into a pass." },
+          "outsideScope": { "type": "boolean", "description": "Optional. The defect lies outside the issue's acceptance criteria, so a consumer may file it rather than fix it. Never turns a defect into a pass." }
         }
       }
     },

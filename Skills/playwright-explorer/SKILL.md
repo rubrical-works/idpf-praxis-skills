@@ -2,9 +2,9 @@
 name: playwright-explorer
 description: Interactive browser exploration using Playwright with natural language interaction, DOM reading, and session management
 type: invokable
-version: "1.0.0"
+version: "1.0.1"
 frameworkCompatibility: ">=0.60.0"
-lastUpdated: "2026-03-17"
+lastUpdated: "2026-11-24"
 license: Complete terms in LICENSE.txt
 category: testing
 relevantTechStack: [playwright, e2e, browser-testing, web-app, frontend]

@@ -12,6 +12,11 @@
 
 'use strict';
 
+// Every callback passed to page.evaluate carries /* istanbul ignore next */.
+// Playwright re-creates the callback from its source text inside the browser,
+// where Istanbul's coverage counters (cov_…) do not exist, so an instrumented
+// callback throws "cov_… is not defined" under `jest --coverage` (#422).
+
 /**
  * Escape a value for safe use in a CSS attribute selector.
  * Prevents selector injection when values contain quotes or brackets.
@@ -77,7 +82,7 @@ async function executeAction(page, intent) {
     // Post-action DOM re-read
     let domSummary = null;
     try {
-      domSummary = await page.evaluate(() => 'DOM re-read');
+      domSummary = await page.evaluate(/* istanbul ignore next */ () => 'DOM re-read');
     } catch (_) {
       // DOM re-read failure is non-blocking
     }
@@ -110,8 +115,8 @@ async function resolveSelector(page, description) {
   // Strategy 1: data-testid match
   triedStrategies.push('data-testid');
   try {
-    const testIdResult = await page.evaluate((doc) => {
-      const elements = doc.querySelectorAll('[data-testid]');
+    const testIdResult = await page.evaluate(/* istanbul ignore next */ () => {
+      const elements = document.querySelectorAll('[data-testid]');
       return Array.from(elements).map(el => ({
         testId: el.getAttribute('data-testid'),
         tag: el.tagName,
@@ -148,8 +153,8 @@ async function resolveSelector(page, description) {
   // Strategy 2: ARIA role + accessible name
   triedStrategies.push('role');
   try {
-    const roleResult = await page.evaluate((doc) => {
-      const elements = doc.querySelectorAll('[role]');
+    const roleResult = await page.evaluate(/* istanbul ignore next */ () => {
+      const elements = document.querySelectorAll('[role]');
       return Array.from(elements).map(el => ({
         role: el.getAttribute('role'),
         label: el.getAttribute('aria-label') || '',
@@ -179,8 +184,8 @@ async function resolveSelector(page, description) {
   // Strategy 3: Visible text match
   triedStrategies.push('text');
   try {
-    const textResult = await page.evaluate((doc) => {
-      const elements = doc.querySelectorAll('button, a, input, select, textarea, label, span');
+    const textResult = await page.evaluate(/* istanbul ignore next */ () => {
+      const elements = document.querySelectorAll('button, a, input, select, textarea, label, span');
       return Array.from(elements).map(el => ({
         tag: el.tagName,
         text: el.textContent ? el.textContent.trim() : '',
@@ -216,11 +221,11 @@ async function resolveSelector(page, description) {
   // Strategy 4: CSS selector (try description as literal CSS selector)
   triedStrategies.push('css');
   try {
-    const cssResult = await page.evaluate((doc) => {
-      const el = doc.querySelector(description);
+    const cssResult = await page.evaluate(/* istanbul ignore next */ (selector) => {
+      const el = document.querySelector(selector);
       if (el) return { tag: el.tagName };
       return null;
-    });
+    }, description);
 
     if (cssResult) {
       return {

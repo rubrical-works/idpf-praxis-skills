@@ -28,11 +28,12 @@
     },
     "findingsPolicy": {
       "type": "object",
-      "required": ["perCriterion", "lineAnchoring"],
+      "required": ["perCriterion", "lineAnchoring", "describedDefect"],
       "additionalProperties": false,
       "properties": {
         "perCriterion": { "type": "string", "minLength": 1 },
-        "lineAnchoring": { "type": "string", "minLength": 1 }
+        "lineAnchoring": { "type": "string", "minLength": 1 },
+        "describedDefect": { "type": "string", "minLength": 1, "description": "A finding whose evidence describes a defect is warn or fail, never pass; a pass finding's evidence states why the code is correct" }
       }
     },
     "verdict": {

@@ -5,9 +5,9 @@ type: injector
 disable-model-invocation: true
 user-invocable: false
 defaultSkill: true
-version: "1.2.0"
+version: "1.3.0"
 frameworkCompatibility: ">=0.108.0"
-lastUpdated: "2026-10-28"
+lastUpdated: "2026-11-24"
 license: Complete terms in LICENSE.txt
 category: code-quality
 relevantTechStack: [code-review, git, json-schema]
@@ -47,24 +47,30 @@ The reviewer receives exactly these inputs:
 What makes this review lightweight is a **count-first** read, the same pattern the framework's prior-art sweep uses:
 
 1. **Count before reading.** Run `git diff --numstat <base>...<branch>` to list every changed file with its added and removed line counts, and `git log --oneline <base>..<branch>` to list the commits. Record the file list, the per-file counts and the totals in the findings document's `budget` block before any hunk is read. The dot counts differ on purpose: for `git log`, `A..B` is the commit range `^A B`; for `git diff`, `A..B` compares the two endpoints and `A...B` compares from their merge base, so only the three-dot form confines the diff to the branch's own commits once `<base>` has moved on. Every `git diff` the reviewer runs uses three dots; `git log` keeps two. A numstat row of `-` `-` is a binary file: list it in `budget.binaryFiles[]` by path, count it as 0 lines in the totals and treat it as changed but unreadable. Never invent a line count for it and never drop it — a binary file in the range is itself something the `scope-declared` check must see.
-2. **Read within caps.** The caps come from `review-criteria.json` → `budget`: `filesReadInFull` (default 20) and `diffLinesReadInFull` (default 1500). The caller may override either. Read files in `budget.readOrder`: files the issue declares in `Files to modify:` first, then test files, then the remaining files by diff size ascending, so the files most likely to decide the verdict are read while budget remains.
-3. **Report what was not read.** A file not read in full because a cap was reached is listed in `budget.countedNotRead[]` with its path and line count. Counted-not-read files are never silently dropped or omitted: the count is itself evidence, and the verdict rule below caps a review that could not read everything at `warn`.
+2. **Read within caps, with function context.** Read the hunks with `git diff -W <base>...<branch>` — `-W` is git's built-in `--function-context`, which widens each hunk to its whole enclosing function, and the three dots keep the merge-base form. A defect that lives between new code and the unchanged code of the same function — a value the unchanged lines set, a cleanup or a warning they owe — is invisible from the hunk alone. When the caller confines the review to named commits rather than a branch range, run `git show -W <sha>` for each named commit instead. The caps come from `review-criteria.json` → `budget`: `filesReadInFull` (default 20) and `diffLinesReadInFull` (default 2600), counted in function-context lines — record that basis as `budget.lineCountBasis: "function-context"` in the findings document, so `diffLinesRead` and each `countedNotRead` line count are never mistaken for hunk-only counts. The caller may override either. Read files in `budget.readOrder`: files the issue declares in `Files to modify:` first, then test files, then the remaining files by diff size ascending, so the files most likely to decide the verdict are read while budget remains.
+3. **Search the same file for callers.** For each changed function, search its own file for the function's callers — a search, not a full-file read, as `state-composition` already does for other writers — and judge the change against those call sites: a changed return shape, a newly thrown error, a dropped side effect or a new precondition is a defect where an unchanged caller in that file still relies on the old behavior. Cite the call site's file and line in the finding.
+4. **Report what was not read.** A file not read in full because a cap was reached is listed in `budget.countedNotRead[]` with its path and line count. Counted-not-read files are never silently dropped or omitted: the count is itself evidence, and the verdict rule below caps a review that could not read everything at `warn`.
 
 Every criterion is still evaluated against what was read; the `budget` block tells the consumer how complete the read was.
 
-**The correctness criteria leave the caps unchanged** — `filesReadInFull` stays 20 and `diffLinesReadInFull` stays 1500 — because they judge the same hunks the read already covers: they add evaluation per hunk, not lines read. Where `state-composition` needs to know who else writes a structure, the reviewer searches the repository for that structure's name rather than reading further files in full, so the lookup costs a search, not budget.
+**The line cap is re-derived for function-context reads** — `diffLinesReadInFull` moves from 1500 to 2600 because the 1500 default was set against hunk-only lines, and reading each hunk with its enclosing function widens the same change by about 1.7× (measured on a JavaScript commit: 152 hunk lines became 263 function-context lines). 1500 × 1.7 is 2550, rounded up to 2600 so that a range the hunk-only read covered in full does not land in `countedNotRead`, and cap its verdict at `warn`, from the widening alone. `filesReadInFull` stays 20: function context widens each file's read, not the number of files.
+
+**The correctness criteria leave the caps unchanged** — `filesReadInFull` and `diffLinesReadInFull` are not raised for them — because they judge the same function-context hunks the read already covers: they add evaluation per hunk, not lines read. Where `state-composition` needs to know who else writes a structure, the reviewer searches the repository for that structure's name rather than reading further files in full, so the lookup costs a search, not budget.
 
 ## Criteria
 
 Re-read `review-criteria.json` from disk and evaluate **every** entry in `criteria[]` — the reviewer cannot skip one. Each criterion carries an `id`, a `severity` (`fail` or `warn`), a `check` describing what to look for and an `evidence` line describing what a finding must cite. The core set covers: every hunk maps to an acceptance criterion or is flagged unrelated; no files outside the declared scope; tests present for new behavior; tests authentic (judged by the framework's `/bad-test-review` criteria, which this skill points at rather than restates); charter conventions honored; obvious security faults; every commit in range carries `Refs #N`; the declared spelling policy honored; no debugging leftovers.
 
-Five more criteria ask whether the changed logic is **correct**, the class of defect a scope-and-tests read misses:
+More criteria ask whether the changed logic is **correct**, the class of defect a scope-and-tests read misses:
 
-- `error-path-outcome` (fail) — a changed catch, error branch or early return reports success, discards a returned failure, exits 0 on failure, or drops a warning it promised.
+- `error-path-outcome` (fail) — a changed catch, error branch or early return reports success, discards a returned failure, exits 0 on failure, or drops a warning it promised; or a changed or added path leaves a throw or rejection unhandled, a missing handler included.
 - `edge-input` (warn) — changed parsing or matching mishandles CRLF, git-quoted paths, `null`, empty or non-array values, or matches a substring where a whole word is meant.
 - `path-containment` (fail) — a path built from external input (a manifest, a config file, renderer or CLI arguments) is used without a check that it stays inside its root.
 - `state-composition` (warn) — a write replaces a whole structure that another feature or an earlier step also writes, instead of merging into it.
 - `external-contract` (warn) — a call to an external CLI or API relies on flags, output shape or a platform executable name (`npm` versus `npm.cmd`) that nothing in the range shows was checked.
+- `cross-site-inconsistency` (warn) — a change made in one place leaves a counterpart on the old behavior: a sibling branch, the reader of a changed writer, the repair of a changed detection, another call site, or a value hard-coded where it is read from configuration elsewhere.
+- `partial-failure-and-race` (warn) — a multi-step change can stop halfway or interleave: a replace before its replacement succeeds with no rollback, a non-atomic multi-step write, a check-then-act on shared state, a stale async response overwriting a newer one, or an operation that can overlap itself.
+- `time-bound` (warn) — a process spawn, network call or file-system walk in a time-limited context (a hook, startup, a request or IPC handler) has no timeout, or one longer than the caller's own budget.
 
 `resources/HOWTO.md` § Correctness Criteria Examples has a short diff and the resulting finding for each.
 
@@ -75,7 +81,8 @@ Five more criteria ask whether the changed logic is **correct**, the class of de
 The reviewer's final message is **one JSON document and nothing else**, valid against `output-schema.json`:
 
 - `issue`, `range`, `budget` — what was reviewed and how completely.
-- `findings[]` — one entry per finding: `criterion` id, `file`, `line` (null when the finding is not line-anchored, such as a commit message), `status` of `pass` / `warn` / `fail`, and `evidence` quoting or locating what was seen. Same shape as the framework's `findings-schema.json` entries so review tooling can read both.
+- `findings[]` — one entry per finding: `criterion` id, `file`, `line` (null when the finding is not line-anchored, such as a commit message), `status` of `pass` / `warn` / `fail`, and `evidence` quoting or locating what was seen. Same shape as the framework's `findings-schema.json` entries so review tooling can read both. A finding whose evidence describes a defect is `warn` or `fail`, never `pass`; a `pass` finding's evidence says why the code is correct (`review-criteria.json` → `findingsPolicy.describedDefect`).
+- `preExisting` / `outsideScope` — optional booleans on a finding, set when the defect predates the range or lies outside the acceptance criteria, so a consumer can file it rather than fix it. A flag never turns a defect into a `pass`: the finding keeps the criterion's severity.
 - `verdict` — **exactly one** of `pass`, `warn`, `fail`, derived by `review-criteria.json` → `verdict`: any `fail` finding → `fail`; otherwise any `warn` finding or a non-empty `countedNotRead[]` → `warn`; otherwise `pass`.
 
 The gate acts on `verdict` and routes `findings[]` without reading prose. No recommendation text, no summary paragraph.

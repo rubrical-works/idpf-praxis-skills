@@ -11,6 +11,11 @@
 
 'use strict';
 
+// Every callback passed to page.evaluate carries /* istanbul ignore next */.
+// Playwright re-creates the callback from its source text inside the browser,
+// where Istanbul's coverage counters (cov_…) do not exist, so an instrumented
+// callback throws "cov_… is not defined" under `jest --coverage` (#422).
+
 /**
  * Extract all visible text content from the page.
  * Excludes elements that are hidden (offsetParent === null).
@@ -18,8 +23,8 @@
  * @returns {Promise<string>} Visible text content
  */
 async function extractVisibleText(page) {
-  return page.evaluate((doc) => {
-    const elements = doc.querySelectorAll('p, span, div, li, td, th, label, h1, h2, h3, h4, h5, h6');
+  return page.evaluate(/* istanbul ignore next */ () => {
+    const elements = document.querySelectorAll('p, span, div, li, td, th, label, h1, h2, h3, h4, h5, h6');
     const texts = [];
     for (const el of elements) {
       if (el.offsetParent !== null && el.textContent.trim()) {
@@ -36,8 +41,8 @@ async function extractVisibleText(page) {
  * @returns {Promise<Array<{ tag: string, text?: string, role?: string, type?: string, name?: string, href?: string }>>}
  */
 async function inventoryInteractiveElements(page) {
-  return page.evaluate((doc) => {
-    const elements = doc.querySelectorAll('button, a, input, select, textarea, [role]');
+  return page.evaluate(/* istanbul ignore next */ () => {
+    const elements = document.querySelectorAll('button, a, input, select, textarea, [role]');
     const inventory = [];
     for (const el of elements) {
       const entry = {
@@ -74,15 +79,15 @@ async function inventoryInteractiveElements(page) {
  * @returns {Promise<{ headings: Array<{ level: number, text: string }>, landmarks: Array<{ tag: string, role?: string }> }>}
  */
 async function extractLayoutStructure(page) {
-  return page.evaluate((doc) => {
-    const headingEls = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  return page.evaluate(/* istanbul ignore next */ () => {
+    const headingEls = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
     const headings = [];
     for (const el of headingEls) {
       const level = parseInt(el.tagName.charAt(1), 10);
       headings.push({ level, text: el.textContent.trim() });
     }
 
-    const landmarkEls = doc.querySelectorAll('main, nav, aside, header, footer, section, [role="main"], [role="navigation"], [role="complementary"]');
+    const landmarkEls = document.querySelectorAll('main, nav, aside, header, footer, section, [role="main"], [role="navigation"], [role="complementary"]');
     const landmarks = [];
     for (const el of landmarkEls) {
       const entry = { tag: el.tagName };
@@ -104,8 +109,8 @@ async function extractLayoutStructure(page) {
  * @returns {Promise<{ visibility: string, display: string, opacity: string, disabled: boolean }>}
  */
 async function sampleComputedStyles(page, element) {
-  return page.evaluate((el, win) => {
-    const styles = win.getComputedStyle(el);
+  return page.evaluate(/* istanbul ignore next */ (el) => {
+    const styles = window.getComputedStyle(el);
     return {
       visibility: styles.visibility,
       display: styles.display,
@@ -121,8 +126,8 @@ async function sampleComputedStyles(page, element) {
  * @returns {Promise<Array<{ tag: string, testId: string }>>}
  */
 async function discoverTestIds(page) {
-  return page.evaluate((doc) => {
-    const elements = doc.querySelectorAll('[data-testid]');
+  return page.evaluate(/* istanbul ignore next */ () => {
+    const elements = document.querySelectorAll('[data-testid]');
     const testIds = [];
     for (const el of elements) {
       testIds.push({

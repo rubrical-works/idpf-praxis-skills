@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.26.0] - 2026-11-24
+
+`diff-review` now reads each changed function in full, together with its callers in the same file, so it judges logic in context instead of only the changed lines. It also adds criteria for inconsistencies across call sites, partial failures, races and calls that have no time limit, and it no longer passes a review whose findings describe a defect. `playwright-explorer` now reads the DOM and resolves natural-language selectors on real pages: its page callbacks no longer expect an argument Playwright never passes, and the stale-browser status line is reported correctly. The distribution and single-skill deploy workflows are also hardened against script injection and against building or tagging the wrong commit.
+
+**Upgrade notes:**
+- **`diff-review` moved 1.2.0 → 1.3.0, so re-import to pick this up.** Reviews read more of each changed file and can raise findings under the new criteria, so a range that passed before may now get `warn` or `fail`.
+- **`playwright-explorer` moved 1.0.0 → 1.0.1.** DOM reads and selector lookups that returned nothing on a live page now work; re-import to pick this up.
+
+### Added
+- **`diff-review` criteria for cross-site inconsistency, partial failure, races and time-bound calls (#417).**
+
+### Changed
+- **`diff-review` reads each changed function whole, plus its same-file callers (#414).**
+- **A defect the `diff-review` reviewer describes is never a pass; `error-path-outcome` covers unhandled failures (#415).**
+
+### Fixed
+- **`playwright-explorer` page callbacks expected a `document` argument Playwright never passes (#418)**, so DOM reads failed and natural-language selector lookups never found anything. A live test drives the fix on a real Chromium page (#421).
+- **`playwright-explorer` printed "✗ Browser Version: not installed" when the stale-browser check passed (#419).**
+- **`playwright-explorer` page callbacks threw `cov_… is not defined` under Jest coverage (#422)**, which failed the release coverage gate; a test now fails if a callback lacks the coverage-ignore hint.
+- **Deploy workflows expanded `workflow_dispatch` inputs and step outputs inline into shell (#406).**
+- **`deploy-skill.yml` dispatch runs built the release asset from the dispatching branch rather than the skill tag (#407).**
+- **`deploy-dist.yml` re-runs of an existing version left the tag on the old commit (#408).**
+
+### Repository
+- **Hub upgraded from v0.120.0 to v0.122.0.**
+- **Charter scope now includes filing framework defects and enhancements found here to idpf-praxis-dev.**
+- **Branch diff review recorded** in `.code-review-manifest.json` and `Construction/Code-Reviews/2026-11-24-report.md`; findings are tracked in #423–#432.
+
 ## [0.25.1] - 2026-11-20
 
 This release publishes the skills from v0.25.0, which was tagged but never reached the distribution repository. The deploy workflows now run on the same Node version as CI, so the distribution deploy and individual skill releases install their dependencies again. No skill content changed.
